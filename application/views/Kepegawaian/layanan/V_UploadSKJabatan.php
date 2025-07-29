@@ -337,7 +337,7 @@ $(function(){
     
         })
 
-        $('#upload_form_jabatan').on('submit', function(e){  
+$('#upload_form_jabatan').on('submit', function(e){  
 
 e.preventDefault();
 var formvalue = $('#upload_form_jabatan');

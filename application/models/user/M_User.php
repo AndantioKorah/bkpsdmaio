@@ -2447,10 +2447,10 @@
             // dd($data);
             $result = null;
             $flag_use_masa_kerja = 0;
-            $this->db->select('a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
+            $this->db->select('m.nama_kelurahan,n.nama_kecamatan,o.nama_kabupaten_kota,a.tptlahir,nm_sk,k.nm_tktpendidikan,a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai, k.jenis as jenis_plt_plh, k.id_jabatan as id_jabatan_plt_plh, a.jabatan,
                     h.nama_status_pegawai, f.nm_statuspeg')
-                    ->from('db_pegawai.pegawai a')
+                    ->from('db_pegawai.pegawaix a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.agama d', 'a.agama = d.id_agama')
@@ -2461,6 +2461,11 @@
                     ->join('m_user i', 'a.nipbaru_ws = i.username','left')
                     ->join('t_plt_plh k', '(i.id = k.id_m_user AND k.flag_active = 1 AND k.tanggal_akhir >= '.date('Y-m-d').')', 'left')
                     ->join('m_bidang j', 'i.id_m_bidang = j.id','left')
+                    ->join('db_pegawai.tktpendidikan k', 'a.pendidikan = k.id_tktpendidikan','left')
+                    ->join('db_pegawai.statuskawin l', 'a.status = l.id_sk','left')
+                    ->join('m_kelurahan m', 'a.id_m_kelurahan = m.id', 'left')
+                    ->join('m_kecamatan n', 'a.id_m_kecamatan = n.id', 'left')
+                    ->join('m_kabupaten_kota o', 'a.id_m_kabupaten_kota = o.id', 'left')
                     ->where('i.flag_active', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030])
                     ->group_by('a.nipbaru_ws')

@@ -9,6 +9,8 @@
           <th class="text-left">Tempat/Tanggal Lahir</th>
           <th class="text-left">Pendidikan</th>
           <th class="text-left">Pekerjaan</th>
+          <th class="text-left">Tanggal Nikah</th>
+
           <th></th>
           <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
           <th></th>
@@ -31,6 +33,7 @@
               <td class="text-left"><?= $rs['tptlahir']?>, <?= formatDateNamaBulan($rs['tgllahir'])?></td>  
               <td class="text-left"><?= $rs['pendidikan']?></td>               
               <td class="text-left"><?= $rs['pekerjaan']?></td> 
+              <td class="text-left"><?= formatDateNamaBulan($rs['tglnikah'])?></td> 
               <td>
               <?php if($rs['gambarsk'] != "") { ?>
                 <button href="#modal_view_file_keluarga" onclick="openFileJabatan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">

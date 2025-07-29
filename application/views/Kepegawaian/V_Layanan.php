@@ -245,7 +245,15 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananSuratKeteranganTidakTubel/")?>'+val, function(){
       $('#loader').hide()
     })
-    }     else {
+    } else if(val == 25) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananTugasBelajaar/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 26) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananTugasBelajaar/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else {
       $('#form_layanan').html('')
     }
 

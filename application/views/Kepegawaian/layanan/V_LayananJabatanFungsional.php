@@ -400,7 +400,7 @@ ol {
         <li>
 				<a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
 				onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir* <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir <i
 				class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
         </li>
         <li>
@@ -727,10 +727,10 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-        if(sk_jabatan_fungsional == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(sk_jabatan_fungsional == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false; 
+        // }
         if(ijazah == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

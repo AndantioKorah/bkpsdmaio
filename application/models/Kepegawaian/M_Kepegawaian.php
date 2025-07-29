@@ -13133,7 +13133,7 @@ public function getFileForVerifLayanan()
         ->where('a.id_m_user', $this->general_library->getId())
         ->where('a.flag_active', 1)
         ->where('a.id_m_layanan', $id_m_layanan)
-        ->where_in('a.status', [3,6])
+        ->where_in('a.status', [2,6])
         ->get()->result_array();
         } else {
         $cek =  $this->db->select('*')

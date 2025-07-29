@@ -4028,6 +4028,8 @@ public function getAllPelanggaranByNip($nip){
                 "jabatanStrukturalId" => $data['jenis_jabatan'] == 'Struktural' ? $data['id_jabatan_siasn'] : null,
                 "jenisJabatan" => $jenis_jabatan,
                 "nomorSk" => $data['nosk'],
+                "jenisMutasiId" => "MJ",
+                "jenisPenugasanId" => "D",
                 // "path" => $path,
                 "pnsId" => $data['id_pns_siasn'],
                 "satuanKerjaId" => ID_SATUAN_KERJA_SIASN,
@@ -4037,9 +4039,9 @@ public function getAllPelanggaranByNip($nip){
                 "tmtMutasi" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "unorId" => $data['id_unor_siasn']
             ];
-            // dd(json_encode($update));
+            dd(json_encode($update));
             $ws = $this->siasnlib->saveJabatan($update);
-            
+            // dd($ws);
             $rs = json_decode($ws['data'], true);
             if($ws['code'] == 0 && $rs['message'] != "Not Found"){
                 $data_success = json_decode($ws['data'], true);
@@ -4069,7 +4071,7 @@ public function getAllPelanggaranByNip($nip){
                 }
             } else {
                 $ws['code'] = 1;
-                $ws['message'] = $rs['message'];
+                $ws['message'] = json_encode($ws);
             }
 
             return $ws;

@@ -938,7 +938,8 @@
                         $req = $this->maxchatlibrary->sendDocument($l['sendTo'], $l['fileurl'], $l['filename'], $l['message']);
                     }
                     $req = json_decode($req, true);
-                    $temp_count = $l['temp_count'] == null ? 0 : $l['temp_count']+1;
+                    $temp_count = $l['temp_count'] == null ? 0 : $l['temp_count'];
+                    $temp_count++;
                     if(!isset($req['error'])){
                         if($l['sendTo'] == GROUP_CHAT_HELPDESK || $l['sendTo'] == GROUP_CHAT_PRAKOM){
                             $this->db->where('id', $l['id'])
@@ -1590,7 +1591,7 @@
             // dd('asd');
             $timeNow = date("H:i:s");
             $expl = explode(":", $timeNow);
-            $flag_cek = 1;
+            $flag_cek = 0;
             if($expl[0] == "11" && $expl[1] == "00"){
                 $flag_cek = 1;
             }

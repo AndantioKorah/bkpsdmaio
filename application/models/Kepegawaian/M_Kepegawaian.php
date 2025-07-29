@@ -3995,6 +3995,7 @@ public function getAllPelanggaranByNip($nip){
         function syncSiasnJabatan($id){
             $siasn = null;
             $data = $this->getJabatanPegawaiEdit($id)[0];
+            // dd(json_encode($data));
             if($data['meta_data_siasn']){
                 $siasn = json_decode($data['meta_data_siasn'], true);
             }
@@ -4028,6 +4029,8 @@ public function getAllPelanggaranByNip($nip){
                 "jabatanStrukturalId" => $data['jenis_jabatan'] == 'Struktural' ? $data['id_jabatan_siasn'] : null,
                 "jenisJabatan" => $jenis_jabatan,
                 "nomorSk" => $data['nosk'],
+                "jenisMutasiId" => "MJ",
+                "jenisPenugasanId" => "D",
                 // "path" => $path,
                 "pnsId" => $data['id_pns_siasn'],
                 "satuanKerjaId" => ID_SATUAN_KERJA_SIASN,
@@ -4035,11 +4038,19 @@ public function getAllPelanggaranByNip($nip){
                 "tmtJabatan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "tmtPelantikan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "tmtMutasi" => formatDateOnlyForEdit2($data['tmtjabatan']),
-                "unorId" => $data['id_unor_siasn']
+                "unorId" => $data['id_unor_siasn'],
             ];
-            // dd(json_encode($update));
+
+            $idSubJabatan = $data['id_m_ref_sub_jabatan_siasn'];
+            if($idSubJabatan == null){
+                if(in_array($data['kel_jabatan_id'], LIST_ID_NEED_SUB_JABATAN)){
+                    $idSubJabatan = getDefaultSubJabatan($data['kel_jabatan_id']);
+                }
+
+                $update['subJabatanId'] = $idSubJabatan;
+            }
             $ws = $this->siasnlib->saveJabatan($update);
-            
+            // dd($ws);
             $rs = json_decode($ws['data'], true);
             if($ws['code'] == 0 && $rs['message'] != "Not Found"){
                 $data_success = json_decode($ws['data'], true);
@@ -4069,7 +4080,7 @@ public function getAllPelanggaranByNip($nip){
                 }
             } else {
                 $ws['code'] = 1;
-                $ws['message'] = $rs['message'];
+                $ws['message'] = json_encode($ws);
             }
 
             return $ws;
@@ -4078,12 +4089,14 @@ public function getAllPelanggaranByNip($nip){
         function getJabatanPegawaiEdit($id){
             $this->db->select('d.jenis_jabatan,c.id_unitkerja,b.skpd as unitkerja_id,c.eselon,c.pejabat,c.jenisjabatan, b.id_pns_siasn, c.id_siasn,
             c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan, d.id_jabatan_siasn, b.nipbaru_ws,
-            c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.id_unor_siasn, c.meta_data_siasn, e.id_eselon, e.id_eselon_siasn')
+            c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.id_unor_siasn, c.meta_data_siasn, e.id_eselon, e.id_eselon_siasn,
+            c.id_m_ref_sub_jabatan_siasn, f.kel_jabatan_id')
                           ->from('m_user a')
                           ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                           ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
                           ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg','left')
                           ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
+                          ->join('db_siasn.m_ref_jabatan_fungsional f', 'd.id_jabatan_siasn = f.id', 'left')
                           ->where('a.flag_active', 1)
                           ->where('c.id', $id);
                           $query = $this->db->get()->result_array();

@@ -5109,6 +5109,49 @@
 
             
         }
+    
+    public function deleteBackuppedDokpen($bulan, $tahun){
+        $dir = "backup/dokpen/dokpen_"."20".$tahun."_".getNamaBulan($bulan);
+        if(!file_exists($dir)){
+            dd($dir.' tidak ditemukan');
+        } else {
+            $listEntryBackupped = null;
+            if($handle = opendir($dir)) {
+                while (false !== ($entry = readdir($handle))) {
+                    if ($entry != "." && $entry != "..") {
+                        if(file_exists($dir."/".$entry)){
+                            $listEntryBackupped[$entry] = $entry;
+                        }
+                    }
+                }
+                closedir($handle);
+            }
+            
+            if($listEntryBackupped){
+                // dd($listEntryBackupped);
+                $rootDir = "assets/dokumen_pendukung_disiplin_kerja";
+                $totalDeleted = 0;
+                if($handle = opendir($rootDir)) {
+                    while (false !== ($backuppedEntry = readdir($handle))) {
+                        if ($backuppedEntry != "." && $backuppedEntry != "..") {
+                            if(file_exists($rootDir."/".$backuppedEntry)){
+                                if(isset($listEntryBackupped[$backuppedEntry])){
+                                    echo "deleting ".$backuppedEntry."<br>";
+                                    $totalDeleted++;
+                                    unlink($rootDir."/".$backuppedEntry);
+                                }
+                            }
+                        }
+                    }
+                    closedir($handle);
+                }
+                echo "total deleted ".($totalDeleted)." data";
+            }
+            // else {
+            //     echo "no backupped data, maybe already deleted";
+            // }
+        }
+    }
 
     public function manageDokpen($bulan, $tahun){
         // $tahun = "23";
@@ -5176,13 +5219,6 @@
                 }
 
                 $zip->open($zipname.".zip", ZipArchive::CREATE || ZipArchive::OVERWRITE);
-
-                // $fileDone = $this->db->select('*')
-                //                 ->where('bulan', $bulan)
-                //                 ->where('tahun', '20'.$tahun)
-                //                 ->from('t_filedone_zip')
-                //                 ->get()->result_array();
-
                 $zippedFile = null;
                 if($handle = opendir($folderName)) {
                     while (false !== ($entry = readdir($handle))) {
@@ -5195,33 +5231,105 @@
                     closedir($handle);
                 }
 
-                $insertFile = null;
                 foreach($listDok as $lDok){
                     if(!isset($zippedFile[$lDok])){ // cek jika belum dibackup sebelumnya
                         $fileContent = file_get_contents($dir."/".$lDok);
                         $zip->addFromString($lDok, $fileContent); // taruh di zip
 
                         copy($dir."/".$lDok, $folderName."/".$lDok); // copy file taruh di folder
-
-                        $insertFile[$lDok] = [
-                            'nama_file' => $lDok,
-                            'bulan' => $bulan,
-                            'tahun' => "20".$tahun
-                        ];
                     }
                 }
                 $zip->close();
             }
 
             if($listDeleteDok){
+                $deleted = 0;
                 foreach($listDeleteDok as $lDelDok){
-                    if(file_exists($dir."/".$lDelDok)){
+                    if(file_exists($dir."/".$lDelDok) && $lDelDok != "" && $lDelDok != null){
+                        echo "deleting ".$lDelDok."<br>";
                         unlink($dir."/".$lDelDok);
+                        $deleted++;
                     }
                 }
+                echo "total deleted ".$deleted;
             }
             // break;
         // }
+    }
+
+    public function customManageDokpen(){
+        // cari mana yg tahun ini punya, jangan hapus.
+        // semua file yg masih ada di assets/dokumen_pendukung_disiplin_kerja dan tidak ada di t_dokumen_pendukung tahun 2025 punya, itu yang dihapus
+
+        $listDokpenTY = null; //list dokpen this year
+        $listDokpenTYDelete = null; //list dokpen this year delete
+        $tDokpen = $this->db->select('*')
+                            ->from('t_dokumen_pendukung')
+                            ->where('tahun', '2025')
+                            ->group_by('dokumen_pendukung')
+                            ->get()->result_array();
+        if($tDokpen){
+            // dd($tDokpen);
+            foreach($tDokpen as $td){
+                if($td['dokumen_pendukung'] && $td['dokumen_pendukung'] != '[""]'){
+                    $foreachDokpen = json_decode($td['dokumen_pendukung'], true);
+                    // dd($foreachDokpen);
+                    foreach($foreachDokpen as $tdDokpen){
+                        $listDokpenTY[$tdDokpen] = $tdDokpen;
+                    }
+                }   
+            }
+        }
+        // dd(($listDokpenTY));
+
+        $oldFile = null;
+        $filesTY = null;
+        $dir = "assets/dokumen_pendukung_disiplin_kerja";
+        if($handle = opendir($dir)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry != "." && $entry != "..") {
+                    if(file_exists($dir."/".$entry)){
+                        if(isset($listDokpenTY[$entry])){
+                            $filesTY[$entry] = $entry; // cari di folder jika 
+                        } else {
+                            $oldFile[$entry] = $entry;
+                        }
+                    }
+                }
+            }
+            closedir($handle);
+        }
+
+        // dd(count($filesTY));
+
+        // echo(count($oldFile))." sebelum hapus.<br>";
+        if($oldFile){
+            $customDirBu = "backup/dokpen/custom_backup";
+            $customDirFileBacked = null;
+            if($handle = opendir($customDirBu)) {
+                while (false !== ($entry = readdir($handle))) {
+                    if ($entry != "." && $entry != "..") {
+                       $customDirFileBacked[$entry] = $entry; 
+                    }
+                }
+                closedir($handle);
+            }
+
+            $total = 0;
+            foreach($oldFile as $of){
+                if(!isset($customDirFileBacked[$of])){
+                    $total++;
+                    copy($dir."/".$of, $customDirBu."/".$of); // copy ke folder baru untuk backup     
+                    unlink($dir."/".$of); // hapus dari folder lama
+                    if($total == 10000){
+                        break;
+                    }
+                }
+            }
+            echo "total: ".$total."<br>";
+            echo "oldFile: ".count($oldFile)."<br>";
+            echo "customDirFileBacked: ".count($customDirFileBacked)."<br>";
+        }
     }
     
 }

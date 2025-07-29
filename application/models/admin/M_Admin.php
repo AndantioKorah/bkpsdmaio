@@ -177,6 +177,7 @@ class M_Admin extends CI_Model
                     ->order_by('a.flag_prioritas', 'desc')
                     ->order_by('a.created_date', 'desc')
                     ->group_by('a.id')
+                    ->where('a.flag_active', 1)
                     ->get()->result_array();
     }
 

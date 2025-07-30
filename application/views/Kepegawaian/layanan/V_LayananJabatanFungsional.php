@@ -313,7 +313,7 @@ ol {
 					<input type="hidden" id="cltn" value="<?php if(isset($cltn)) echo $cltn['id']; else echo "";?>">
 					<input type="hidden" id="rekom_kepala_pd" value="<?php if(isset($rekom_kepala_pd)) echo $rekom_kepala_pd['id']; else echo "";?>">
 					<input type="hidden" id="sk_mutasi_instansi" value="<?php if(isset($sk_mutasi_instansi)) echo $sk_mutasi_instansi['id']; else echo "";?>">
-
+					<input type="hidden" id="tangkap_layar_myasn" value="<?php if(isset($tangkap_layar_myasn)) echo $tangkap_layar_myasn['id']; else echo "";?>">
           
         
 				
@@ -344,8 +344,14 @@ ol {
         <li>
 				<a class="<?php if($sertiukom){ if($sertiukom['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sertiukom) { ?>
 				onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi (maximal 6 bulan sebelum expired)* <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi* <i
 				class="fas fa-<?php if($sertiukom) echo ''; else echo '';?>"></i></a>
+				</li>
+        <li>
+				<a class="<?php if($tangkap_layar_myasn){ if($tangkap_layar_myasn['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($tangkap_layar_myasn) { ?>
+				onclick="viewBerkasPangkat('<?=$tangkap_layar_myasn['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Tangkap Layar MyASN (sertifikat sudah diunggah sesuai format)* <i
+				class="fas fa-<?php if($tangkap_layar_myasn) echo ''; else echo '';?>"></i></a>
 				</li>
                 <li>
 				<a class="<?php if($peta_jabatan){ if($peta_jabatan['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($peta_jabatan) { ?>
@@ -388,8 +394,14 @@ ol {
           <li>
 				<a class="<?php if($sertiukom){ if($sertiukom['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sertiukom) { ?>
 				onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi (maximal 6 bulan sebelum expired)* <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi* <i
 				class="fas fa-<?php if($sertiukom) echo ''; else echo '';?>"></i></a>
+				</li>
+         <li>
+				<a class="<?php if($tangkap_layar_myasn){ if($tangkap_layar_myasn['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($tangkap_layar_myasn) { ?>
+				onclick="viewBerkasPangkat('<?=$tangkap_layar_myasn['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Tangkap Layar MyASN (sertifikat sudah diunggah sesuai format)* <i
+				class="fas fa-<?php if($tangkap_layar_myasn) echo ''; else echo '';?>"></i></a>
 				</li>
         <li>
 				<a class="<?php if($peta_jabatan){ if($peta_jabatan['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($peta_jabatan) { ?>
@@ -577,6 +589,13 @@ ol {
 					</button> Berkas belum diupload<br>
           <button style="width:3%" class="btn btn-sm filter-btn filter-warning mt-2">  &nbsp;
 		  </button> Menunggu Verifikasi BKPSDM<br><br>
+      <p style="text-align: justify;">
+         Pengusulan pengangkatan/kenaikan jabatan fungsional yang mensyaratkan sertifikat uji kompetensi, sertifikat tersebut wajib 
+         diupload di MyASN masing-masing pegawai pada menu riwayat sertifikasi klik tambah baru masukan data Jenis sertifikasi pilih 
+         sertifikasi selanjutnya mengisi semua kolom yang tersedia, untuk kolom Nama Sertifikasi 
+         wajib tercantum SERTIFIKASI UJI KOMPETENSI contoh  <b> SERTIFIKASI UJI KOMPETENSI GURU AHLI MUDA </b> (nama jabatan menyesuaikan) untuk kolom gelar diisikan - (garis) saja;
+         mohon menjadi perhatian agar proses usulan pada aplikasi imut BKN berjalan lancar
+          </p>
           <span class="mt-2">Berkas dengan tanda * Wajib diupload</span><br>
 					Berkas diupload Pada Menu Profil <br>
           <?php if($id_m_layanan == 12) { ?>
@@ -669,6 +688,8 @@ $(function(){
         var sk_pengaktifan_kembali = $('#sk_pengaktifan_kembali').val()
         var cltn = $('#cltn').val()
         var sk_mutasi_instansi = $('#sk_mutasi_instansi').val()
+        var tangkap_layar_myasn = $('#tangkap_layar_myasn').val()
+
 
 
         var id_m_layanan = "<?=$id_m_layanan;?>"
@@ -698,6 +719,10 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
+         if(tangkap_layar_myasn == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
         
         }
 
@@ -720,6 +745,10 @@ $(function(){
             return false;
         }
         if(sertiukom == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(tangkap_layar_myasn == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }

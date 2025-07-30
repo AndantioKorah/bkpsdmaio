@@ -221,7 +221,9 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Lulus Uji Komptensi</button>
   </li>
-  
+   <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='tangkap_layar_myasn')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Tangkap Layar MyASN</button>
+  </li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sk_jabatan_fungsional')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir</button>
   </li>
@@ -232,6 +234,9 @@
   <?php if($id_m_layanan == 13) { ?>
     <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sertiukom')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Lulus Uji Komptensi</button>
+  </li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='tangkap_layar_myasn')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Tangkap Layar MyASN</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sk_jabatan_fungsional')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir</button>
@@ -543,7 +548,9 @@
 		<input type="hidden" name="sk_pemberhentian_dari_jabfung" value="<?php if(isset($sk_pemberhentian_dari_jabfung)) echo $sk_pemberhentian_dari_jabfung['id']; else echo "";?>">
 		<input type="hidden" name="sk_pengaktifan_kembali" value="<?php if(isset($sk_pengaktifan_kembali)) echo $sk_pengaktifan_kembali['id']; else echo "";?>">
 		<input type="hidden" name="cltn" value="<?php if(isset($cltn)) echo $cltn['id']; else echo "";?>">
-      <div class="mb-3">
+     
+    
+    <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
         <option >--</option>
@@ -705,7 +712,7 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file =="sk_pengaktifan_kembali" || file == "sk_mutasi_instasi" || file == "rekom_kepala_pd" || file =="sk_pemberhentian_dari_jabfung" || file =="pengunduran_diri" || file =="surat_usul_pyb" || file =="rekom_instansi_pembina" || file =="str_serdik" || file == "dok_lain" || file == "formasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi" || file == "peta_jabatan"){
+        } else if(file == "tangkap_layar_myasn" || file =="sk_pengaktifan_kembali" || file == "sk_mutasi_instasi" || file == "rekom_kepala_pd" || file =="sk_pemberhentian_dari_jabfung" || file =="pengunduran_diri" || file =="surat_usul_pyb" || file =="rekom_instansi_pembina" || file =="str_serdik" || file == "dok_lain" || file == "formasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi" || file == "peta_jabatan"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";

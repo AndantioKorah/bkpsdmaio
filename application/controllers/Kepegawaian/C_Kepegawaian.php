@@ -2589,6 +2589,7 @@ class C_Kepegawaian extends CI_Controller
 				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
 				$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
 				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');
+				$data['tangkap_layar_myasn'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','91','0');
 				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
 				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','22','0');
                 if($data['str_serdik'] == null){
@@ -2601,6 +2602,8 @@ class C_Kepegawaian extends CI_Controller
 				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','69','0');	
 				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
 				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','65','0');
+				$data['tangkap_layar_myasn'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','91','0');
+
 				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
 				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','22','0');
                 if($data['str_serdik'] == null){
@@ -2836,6 +2839,8 @@ class C_Kepegawaian extends CI_Controller
 				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','69','0',$id_peg);	
 				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','11','0',$id_peg);	
 				$data['sertiukom'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','65','0',$id_peg);
+				$data['tangkap_layar_myasn'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','91','0',$id_peg);
+				
 				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','66','0',$id_peg);	
 				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','76','0',$id_peg);
 				if($data['str_serdik'] == null){

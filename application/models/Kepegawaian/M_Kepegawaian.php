@@ -11809,6 +11809,16 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "tangkap_layar_myasn"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 91)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         } else if($this->input->post('file') == "uraiantugas"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')
@@ -13199,7 +13209,7 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 24){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/suratkettidaktubel';
-            } else {
+            }  else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
 

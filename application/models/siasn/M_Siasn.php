@@ -343,6 +343,80 @@
             }
         }
 
+        public function cronSyncJabatanSiasn(){
+            $rs['code'] = 0;
+            $rs['message'] = 'Sinkronisasi Riwayat Jabatan dengan SIASN sudah berhasil';
+
+            $listPegawai = $this->db->select('a.*, b.nip as nip_done')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('t_log_sync_jabatan b', 'a.nipbaru_ws = b.nip', 'left')
+                                ->where('id_m_status_pegawai', 1)
+                                ->where('b.nip IS NULL')
+                                ->where('a.nipbaru_ws', "198009132009022003")
+                                ->limit(10)
+                                ->get()->result_array();
+
+            if($listPegawai){
+                foreach($listPegawai as $lp){
+                    $log = "";
+                    $listJabatan = $this->db->select('a.*, b.id_unor_siasn, c.id_jabatan_siasn, d.kel_jabatan_id')
+                                        ->from('db_pegawai.pegjabatan a')
+                                        ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja', 'left')
+                                        ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg')
+                                        ->join('db_siasn.m_ref_jabatan_fungsional d', 'c.id_jabatan_siasn = d.id', 'left')
+                                        ->where('statusjabatan', 1)
+                                        ->where('a.flag_active', 1)
+                                        ->where('a.id_pegawai', $lp['id_peg'])
+                                        ->order_by('a.tmtjabatan', 'desc')
+                                        ->limit(2)
+                                        ->get()->result_array();
+
+                    if($listJabatan){
+                        $flagProceed = 1;
+                        if($listJabatan[0]['id_unor_siasn'] == null){ // jika id_unor_siasn null harus mapping dulu
+                            $flagProceed = 0;
+                            $log = "ID UNOR SIASN belum dimapping";
+                        } else if($listJabatan[0]['id_jabatan_siasn'] == null) { // jika id_jabatan_siasn null harus mapping dulu
+                            $flagProceed = 0;
+                            $log = "ID JABATAN SIASN belum dimapping";
+                        }
+                    }
+
+                    if($flagProceed == 1){
+                        $dataSync['subJabatanId'] = $listJabatan[0]['id_m_ref_sub_jabatan_siasn'];
+                        if(in_array($listJabatan[0]['kel_jabatan_id'], LIST_ID_NEED_SUB_JABATAN)){
+                            if($listJabatan[0]['id_m_ref_sub_jabatan_siasn'] == null){ // jika null ambil default
+                                $dataSync['subJabatanId'] = getDefaultSubJabatan($listJabatan[0]['kel_jabatan_id']);
+                                $this->db->where('id', $listJabatan[0]['id'])
+                                        ->update('db_pegawai.pegjabatan', [
+                                            'id_m_ref_sub_jabatan' => $dataSync['subJabatanId']
+                                        ]);
+                            }
+                        }
+
+                        $dataSync['jenisMutasiId'] = "MJ";
+                        if(isset($listJabatan[1])){
+                            if($listJabatan[0]['id_unitkerja'] != $listJabatan[1]['id_unitkerja']){
+                                $dataSync['jenisMutasiId'] = "MU";
+                            }
+                        }
+
+                        $dataSync['jenisPenugasanId'] = "D";
+
+                        $rs = $this->kepegawaian->syncSiasnJabatan($listJabatan[0], 1, $dataSync);
+                        $log = json_encode($rs);
+                    }
+
+                    $this->db->insert('t_log_sync_jabatan', [
+                        'nip' => $lp['nipbaru_ws'],
+                        'log' => $log
+                    ]);
+
+                    echo $nip." => ".$log."<br><br>";
+                }
+            }
+        }
+
         public function syncRiwayatJabatanSiasn($id_m_user){
             $rs['code'] = 0;
             $rs['message'] = 'Sinkronisasi Riwayat Jabatan dengan SIASN sudah berhasil';

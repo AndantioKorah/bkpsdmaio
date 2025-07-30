@@ -4038,7 +4038,7 @@ public function getAllPelanggaranByNip($nip){
                 "tmtJabatan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "tmtPelantikan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "tmtMutasi" => formatDateOnlyForEdit2($data['tmtjabatan']),
-                "unorId" => $flagCronSync == 1 ? $dataSync['id_unor_siasn'] :$data['id_unor_siasn'],
+                "unorId" => $flagCronSync == 1 ? $dataSync['id_unor_siasn'] : $data['id_unor_siasn'],
             ];
             
             $idSubJabatan = $flagCronSync == 1 ? $dataSync['subJabatanId'] : $data['id_m_ref_sub_jabatan_siasn'];
@@ -4048,6 +4048,8 @@ public function getAllPelanggaranByNip($nip){
                 }
                 $update['subJabatanId'] = $idSubJabatan;
             }
+            $update['subJabatanId'] = $flagCronSync == 1 ? $dataSync['subJabatanId'] : $data['id_m_ref_sub_jabatan_siasn'];
+
             $ws = $this->siasnlib->saveJabatan($update);
             // dd($ws);
             $rs = json_decode($ws['data'], true);

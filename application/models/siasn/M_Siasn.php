@@ -354,8 +354,9 @@
                                 ->join('m_bidang d', 'c.id_m_bidang = d.id', 'left')
                                 ->join('m_sub_bidang e', 'c.id_m_sub_bidang = e.id', 'left')
                                 ->where('id_m_status_pegawai', 1)
-                                ->where('b.nip IS NULL')
-                                ->where('a.nipbaru_ws', "198009132009022003")
+                                ->where('(b.nip IS NULL OR b.flag_success = 0)')
+                                ->where('a.skpd', 6130000)
+                                // ->where('a.nipbaru_ws', "198410272015031001")
                                 ->where('c.flag_active', 1)
                                 ->group_by('a.nipbaru_ws')
                                 ->limit(10)
@@ -365,11 +366,13 @@
                 foreach($listPegawai as $lp){
                     $log = "";
                     $dataSync = null;
-                    $listJabatan = $this->db->select('a.*, b.id_unor_siasn as id_unor_siasn_unitkerja, c.id_jabatan_siasn, d.kel_jabatan_id')
+                    $listJabatan = $this->db->select('a.*, b.id_unor_siasn as id_unor_siasn_pegjabatan, c.id_jabatan_siasn,
+                                        d.kel_jabatan_id, e.id_unor_siasn as id_unor_siasn_unitkerja')
                                         ->from('db_pegawai.pegjabatan a')
                                         ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja', 'left')
                                         ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg')
                                         ->join('db_siasn.m_ref_jabatan_fungsional d', 'c.id_jabatan_siasn = d.id', 'left')
+                                        ->join('db_pegawai.unitkerja e', $lp['skpd'].' = e.id_unitkerja')
                                         ->where('statusjabatan', 1)
                                         ->where('a.flag_active', 1)
                                         ->where('a.id_pegawai', $lp['id_peg'])
@@ -377,6 +380,7 @@
                                         ->limit(2)
                                         ->get()->result_array();
 
+                    $flagProceed = 0;
                     if($listJabatan){
                         $flagProceed = 1;
                         if($listJabatan[0]['id_jabatan_siasn'] == null) { // jika id_jabatan_siasn null harus mapping dulu
@@ -389,8 +393,12 @@
                             $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_bidang'];
                         }
 
+                        if($dataSync['id_unor_siasn'] == null){ // jika masih null, ambil id_unor_siasn di pegjabatan
+                            $dataSync['id_unor_siasn'] = $listJabatan[0]['id_unor_siasn_pegjabatan'];
+                        }
+
                         if($dataSync['id_unor_siasn'] == null){ // jika masih null, ambil id_unor_siasn unitkerja
-                            $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_unitkerja'];
+                            $dataSync['id_unor_siasn'] = $listJabatan[0]['id_unor_siasn_unitkerja'];
                         }
 
                         if($dataSync['id_unor_siasn'] == null){ // jika masih null, masukkan di log
@@ -400,13 +408,17 @@
                     }
 
                     if($flagProceed == 1){
+                        if(!isset($listJabatan[0])){
+                            dd($listJabatan);
+                        }
+
                         $dataSync['subJabatanId'] = $listJabatan[0]['id_m_ref_sub_jabatan_siasn'];
                         if(in_array($listJabatan[0]['kel_jabatan_id'], LIST_ID_NEED_SUB_JABATAN)){
                             if($listJabatan[0]['id_m_ref_sub_jabatan_siasn'] == null){ // jika null ambil default
                                 $dataSync['subJabatanId'] = getDefaultSubJabatan($listJabatan[0]['kel_jabatan_id']);
                                 $this->db->where('id', $listJabatan[0]['id'])
                                         ->update('db_pegawai.pegjabatan', [
-                                            'id_m_ref_sub_jabatan' => $dataSync['subJabatanId']
+                                            'id_m_ref_sub_jabatan_siasn' => $dataSync['subJabatanId']
                                         ]);
                             }
                         }
@@ -419,14 +431,18 @@
                         }
 
                         $dataSync['jenisPenugasanId'] = "D";
-
+                        
                         $rs = $this->kepegawaian->syncSiasnJabatan($listJabatan[0]['id'], 1, $dataSync);
+                        if($rs['code'] == 1){
+                            $flagProceed = 0;
+                        }
                         $log = json_encode($rs);
                     }
 
                     $this->db->insert('t_log_sync_jabatan', [
                         'nip' => $lp['nipbaru_ws'],
-                        'log' => $log
+                        'log' => $log,
+                        'flag_success' => $flagProceed
                     ]);
 
                     echo $lp['nipbaru_ws']." => ".$log."<br><br>";

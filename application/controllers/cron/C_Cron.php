@@ -51,9 +51,14 @@ class C_Cron extends CI_Controller
 		$this->kepegawaian->updateSisaCuti($id, $operand);
 	}
 
+    public function cronTestSyncJabatan(){
+        $this->siasn->cronSyncJabatanSiasn();
+    }
+
     public function cronSyncJabatanSiasn(){
-        // $this->general->logCron('cronSyncJabatanSiasn');
+        $this->general->logCron('cronSyncJabatanSiasn');
         // $this->siasn->cronRiwayatJabatanSiasn();
+        // $this->siasn->cronSyncJabatanSiasn();
 
         // $this->cronAsync();
     }

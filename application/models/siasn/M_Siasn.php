@@ -347,19 +347,25 @@
             $rs['code'] = 0;
             $rs['message'] = 'Sinkronisasi Riwayat Jabatan dengan SIASN sudah berhasil';
 
-            $listPegawai = $this->db->select('a.*, b.nip as nip_done')
+            $listPegawai = $this->db->select('a.*, b.nip as nip_done, d.id_unor_siasn as id_unor_siasn_bidang, e.id_unor_siasn as id_unor_siasn_subbidang')
                                 ->from('db_pegawai.pegawai a')
-                                ->join('t_log_sync_jabatan b', 'a.nipbaru_ws = b.nip', 'left')
+                                ->join('t_log_sync_jabatan b', 'a.nipbaru_ws = b.nip AND b.flag_active = 1', 'left')
+                                ->join('m_user c', 'a.nipbaru_ws = c.username')
+                                ->join('m_bidang d', 'c.id_m_bidang = d.id', 'left')
+                                ->join('m_sub_bidang e', 'c.id_m_sub_bidang = e.id', 'left')
                                 ->where('id_m_status_pegawai', 1)
                                 ->where('b.nip IS NULL')
                                 ->where('a.nipbaru_ws', "198009132009022003")
+                                ->where('c.flag_active', 1)
+                                ->group_by('a.nipbaru_ws')
                                 ->limit(10)
                                 ->get()->result_array();
 
             if($listPegawai){
                 foreach($listPegawai as $lp){
                     $log = "";
-                    $listJabatan = $this->db->select('a.*, b.id_unor_siasn, c.id_jabatan_siasn, d.kel_jabatan_id')
+                    $dataSync = null;
+                    $listJabatan = $this->db->select('a.*, b.id_unor_siasn as id_unor_siasn_unitkerja, c.id_jabatan_siasn, d.kel_jabatan_id')
                                         ->from('db_pegawai.pegjabatan a')
                                         ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja', 'left')
                                         ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg')
@@ -373,12 +379,23 @@
 
                     if($listJabatan){
                         $flagProceed = 1;
-                        if($listJabatan[0]['id_unor_siasn'] == null){ // jika id_unor_siasn null harus mapping dulu
-                            $flagProceed = 0;
-                            $log = "ID UNOR SIASN belum dimapping";
-                        } else if($listJabatan[0]['id_jabatan_siasn'] == null) { // jika id_jabatan_siasn null harus mapping dulu
+                        if($listJabatan[0]['id_jabatan_siasn'] == null) { // jika id_jabatan_siasn null harus mapping dulu
                             $flagProceed = 0;
                             $log = "ID JABATAN SIASN belum dimapping";
+                        }
+
+                        $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_subbidang']; // ambil id_unor_siasn subbidang
+                        if($dataSync['id_unor_siasn'] == null){ // jika null, ambil id_unor_siasn bidang
+                            $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_bidang'];
+                        }
+
+                        if($dataSync['id_unor_siasn'] == null){ // jika masih null, ambil id_unor_siasn unitkerja
+                            $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_unitkerja'];
+                        }
+
+                        if($dataSync['id_unor_siasn'] == null){ // jika masih null, masukkan di log
+                            $flagProceed = 0;
+                            $log = "ID UNOR SIASN belum dimapping";
                         }
                     }
 
@@ -403,7 +420,7 @@
 
                         $dataSync['jenisPenugasanId'] = "D";
 
-                        $rs = $this->kepegawaian->syncSiasnJabatan($listJabatan[0], 1, $dataSync);
+                        $rs = $this->kepegawaian->syncSiasnJabatan($listJabatan[0]['id'], 1, $dataSync);
                         $log = json_encode($rs);
                     }
 
@@ -412,7 +429,7 @@
                         'log' => $log
                     ]);
 
-                    echo $nip." => ".$log."<br><br>";
+                    echo $lp['nipbaru_ws']." => ".$log."<br><br>";
                 }
             }
         }

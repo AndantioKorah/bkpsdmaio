@@ -68,6 +68,7 @@
             <div class="col-lg-12 col-md-12 mt-3">
                 <label>Dokumen Pendukung</label>  
                 <input class="form-control" type="file" id="image_file" name="files[]" multiple="multiple" />
+                <span style="color:red; font-style: italic; font-weight: bold; font-size: .75rem">*Maksimal 1MB</span>
             </div>
             <div class="col-lg-12 col-md-12 mt-3" style="margin-top: 28px;">
                 <h5 id="error_label" style="color: red; font-weight: bold; display: none;"></h5>

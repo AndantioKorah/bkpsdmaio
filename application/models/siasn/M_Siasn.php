@@ -383,11 +383,11 @@
                                 ->join('m_sub_bidang e', 'c.id_m_sub_bidang = e.id', 'left')
                                 ->where('id_m_status_pegawai', 1)
                                 ->where_not_in('a.nipbaru_ws', ['001', '002'])
-                                ->where('(b.nip IS NULL OR b.flag_success = 0)') // jika sudah pernah sinkron dan gagal, akan dicoba sinkron lagi
-                                // ->where('b.nip IS NULL') // hanya yg belum pernah disinkron yg akan disinkron
-                                ->where('a.skpd', 6130000)
+                                // ->where('(b.nip IS NULL OR b.flag_success = 0)') // jika sudah pernah sinkron dan gagal, akan dicoba sinkron lagi
+                                ->where('b.nip IS NULL') // hanya yg belum pernah disinkron yg akan disinkron
+                                // ->where('a.skpd', 6130000)
                                 ->where_in('a.statuspeg', [2,1]) // cpns dan pns
-                                ->where('a.nipbaru_ws', "197909272009032001")
+                                // ->where('a.nipbaru_ws', "197909272009032001")
                                 ->where('c.flag_active', 1)
                                 ->group_by('a.nipbaru_ws')
                                 ->where_not_in('a.skpd', [
@@ -422,7 +422,7 @@
                         if($listJabatan[0]['id_pegjabatan'] == null){
                             $this->db->where('id', $listJabatan[0]['id'])
                                     ->update('db_pegawai.pegjabatan', [
-                                        'id_pegjabatan' => $lp['jabatan']
+                                        'id_jabatan' => $lp['jabatan']
                                     ]);
                         }
 
@@ -434,7 +434,7 @@
                                 $log = "ID JABATAN SIASN belum dimapping ".$lp['jabatan']." ".$listJabatan[0]['nm_jabatan'];
                             }
                         }
-                        dd($dataSync);
+                        // dd($dataSync);
 
                         $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_subbidang']; // ambil id_unor_siasn subbidang
                         if($dataSync['id_unor_siasn'] == null){ // jika null, ambil id_unor_siasn bidang

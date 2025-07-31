@@ -606,7 +606,7 @@ class C_Kinerja extends CI_Controller
                     // {
                             
                     // }
-                  
+
                     if ($this->upload->do_upload('file')) {
 
                         $data = $this->upload->data();
@@ -631,9 +631,11 @@ class C_Kinerja extends CI_Controller
                         $this->image_lib->initialize($config);
                         $this->image_lib->resize();
                     } else {
+                        $ress = 0;
                         $error = array('error' => $this->upload->display_errors());
-                        $res = array('msg' => $error, 'success' => false, 'code' => 1, 'message' => $error);
-                        return $res;
+                        $res = array('msg' => $error, 'success' => false, 'code' => 1, 'message' => trim($error['error']));
+                        echo json_encode($res);
+                        return;
                     }
                 }
                 $nama_file[] = $data['file_name'];

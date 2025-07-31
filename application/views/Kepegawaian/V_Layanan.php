@@ -253,6 +253,10 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananTugasBelajaar/")?>'+val, function(){
       $('#loader').hide()
     })
+    } else if(val == 27) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananSuratMasukPt/")?>'+val, function(){
+      $('#loader').hide()
+    })
     } else {
       $('#form_layanan').html('')
     }

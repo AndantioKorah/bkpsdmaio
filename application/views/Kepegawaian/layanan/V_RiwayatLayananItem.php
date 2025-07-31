@@ -247,6 +247,9 @@
                               if(id_layanan == 23){
                                 loadListRiwayatSuratPidana()
                                }
+                                 if(id_layanan == 27){
+                                loadListRiwayatSuratMasukPt()
+                               }
                                
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
@@ -277,6 +280,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
   $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
 } else if(id_layanan == 24){
   $link = "<?=base_url();?>dokumen_layanan/suratkettidaktubel/"+filename+"?v="+number;
+} else if(id_layanan == 27){
+  $link = "<?=base_url();?>dokumen_layanan/suratrekompt/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)

@@ -434,6 +434,7 @@
                                 $log = "ID JABATAN SIASN belum dimapping ".$lp['jabatan']." ".$listJabatan[0]['nm_jabatan'];
                             }
                         }
+                        dd($dataSync);
 
                         $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_subbidang']; // ambil id_unor_siasn subbidang
                         if($dataSync['id_unor_siasn'] == null){ // jika null, ambil id_unor_siasn bidang

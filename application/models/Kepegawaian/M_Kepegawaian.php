@@ -4019,15 +4019,15 @@ public function getAllPelanggaranByNip($nip){
                 $jenis_jabatan = "2";
             }
             
-            $data['id_jabatan_siasn'] = $flagCronSync == 1 ? $dataSync['id_jabatan_siasn'] : $data['id_jabatan_siasn']; 
+            $id_jabatan_siasn = $flagCronSync == 1 ? $dataSync['id_jabatan_siasn'] : $data['id_jabatan_siasn']; 
             $update = [
                 "eselonId" => $data['id_eselon_siasn'],
                 "id" => $data_siasn ? $data_siasn['id'] : null,
                 "instansiIndukId" => ID_INSTANSI_SIASN, 
                 "instansiId" => ID_INSTANSI_SIASN,
-                "jabatanFungsionalId" => $data['jenis_jabatan'] == 'JFT' ? $data['id_jabatan_siasn'] : null,
-                "jabatanFungsionalUmumId" => $data['jenis_jabatan'] == 'JFU' ? $data['id_jabatan_siasn'] : null,
-                "jabatanStrukturalId" => $data['jenis_jabatan'] == 'Struktural' ? $data['id_jabatan_siasn'] : null,
+                "jabatanFungsionalId" => $data['jenis_jabatan'] == 'JFT' ? $id_jabatan_siasn : null,
+                "jabatanFungsionalUmumId" => $data['jenis_jabatan'] == 'JFU' ? $id_jabatan_siasn : null,
+                "jabatanStrukturalId" => $data['jenis_jabatan'] == 'Struktural' ? $id_jabatan_siasn : null,
                 "jenisJabatan" => $jenis_jabatan,
                 "nomorSk" => $data['nosk'],
                 "jenisMutasiId" => $flagCronSync == 1 ? $dataSync['jenisMutasiId'] : "MJ",

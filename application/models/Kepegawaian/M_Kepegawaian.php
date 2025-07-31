@@ -4019,6 +4019,7 @@ public function getAllPelanggaranByNip($nip){
                 $jenis_jabatan = "2";
             }
             
+            $data['id_jabatan_siasn'] = $flagCronSync == 1 ? $dataSync['id_jabatan_siasn'] : $data['id_jabatan_siasn']; 
             $update = [
                 "eselonId" => $data['id_eselon_siasn'],
                 "id" => $data_siasn ? $data_siasn['id'] : null,
@@ -4029,8 +4030,8 @@ public function getAllPelanggaranByNip($nip){
                 "jabatanStrukturalId" => $data['jenis_jabatan'] == 'Struktural' ? $data['id_jabatan_siasn'] : null,
                 "jenisJabatan" => $jenis_jabatan,
                 "nomorSk" => $data['nosk'],
-                "jenisMutasiId" => $flagCronSync == 1 ? $dataSync['jenisPenugasanId'] : "MJ",
-                "jenisPenugasanId" => $flagCronSync == 1 ? $dataSync['jenisMutasiId'] : "D",
+                "jenisMutasiId" => $flagCronSync == 1 ? $dataSync['jenisMutasiId'] : "MJ",
+                "jenisPenugasanId" => $flagCronSync == 1 ? $dataSync['jenisPenugasanId'] : "D",
                 // "path" => $path,
                 "pnsId" => $data['id_pns_siasn'],
                 "satuanKerjaId" => ID_SATUAN_KERJA_SIASN,
@@ -4038,9 +4039,9 @@ public function getAllPelanggaranByNip($nip){
                 "tmtJabatan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "tmtPelantikan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "tmtMutasi" => formatDateOnlyForEdit2($data['tmtjabatan']),
-                "unorId" => $data['id_unor_siasn'],
+                "unorId" => $flagCronSync == 1 ? $dataSync['id_unor_siasn'] : $data['id_unor_siasn'],
             ];
-
+            
             $idSubJabatan = $flagCronSync == 1 ? $dataSync['subJabatanId'] : $data['id_m_ref_sub_jabatan_siasn'];
             if($idSubJabatan == null){
                 if(in_array($data['kel_jabatan_id'], LIST_ID_NEED_SUB_JABATAN)){
@@ -4048,6 +4049,8 @@ public function getAllPelanggaranByNip($nip){
                 }
                 $update['subJabatanId'] = $idSubJabatan;
             }
+            $update['subJabatanId'] = $flagCronSync == 1 ? $dataSync['subJabatanId'] : $data['id_m_ref_sub_jabatan_siasn'];
+
             $ws = $this->siasnlib->saveJabatan($update);
             // dd($ws);
             $rs = json_decode($ws['data'], true);

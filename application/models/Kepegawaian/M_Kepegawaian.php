@@ -4019,6 +4019,7 @@ public function getAllPelanggaranByNip($nip){
                 $jenis_jabatan = "2";
             }
             
+            $data['id_jabatan_siasn'] = $flagCronSync == 1 ? $dataSync['id_jabatan_siasn'] : $data['id_jabatan_siasn']; 
             $update = [
                 "eselonId" => $data['id_eselon_siasn'],
                 "id" => $data_siasn ? $data_siasn['id'] : null,

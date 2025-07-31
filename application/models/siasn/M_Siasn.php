@@ -343,6 +343,34 @@
             }
         }
 
+        public function syncDataUtamaPns(){
+            $listPegawai = $this->db->select('*')
+                                ->from('db_pegawai.pegawai a')
+                                ->where('a.id_pns_siasn IS NULL')
+                                ->where('a.id_m_status_pegawai', 1)
+                                ->where_in('a.statuspeg', [1,2])
+                                ->where_not_in('a.nipbaru_ws', ['001', '002'])
+                                ->where_not_in('a.skpd', [
+                                    9000001 // mahasiswa tugas belajar
+                                ])
+                                ->get()->result_array();
+            if($listPegawai){
+                foreach($listPegawai as $lp){
+                    $ws = $this->siasnlib->getDataUtamaPnsByNip($lp['nipbaru_ws']);
+                    if($ws['code'] == 0){
+                        $res = json_decode($ws['data'], true);
+                        $this->db->where('nipbaru_ws', $lp['nipbaru_ws'])
+                                ->update('db_pegawai.pegawai', [
+                                    'id_pns_siasn' => $res['data']['id'],
+                                ]);
+                    } else {
+                        echo $lp['nipbaru_ws']." ";
+                        dd($ws);
+                    }
+                }
+            }
+        }
+
         public function cronSyncJabatanSiasn(){
             $rs['code'] = 0;
             $rs['message'] = 'Sinkronisasi Riwayat Jabatan dengan SIASN sudah berhasil';
@@ -354,11 +382,17 @@
                                 ->join('m_bidang d', 'c.id_m_bidang = d.id', 'left')
                                 ->join('m_sub_bidang e', 'c.id_m_sub_bidang = e.id', 'left')
                                 ->where('id_m_status_pegawai', 1)
-                                ->where('(b.nip IS NULL OR b.flag_success = 0)')
+                                ->where_not_in('a.nipbaru_ws', ['001', '002'])
+                                ->where('(b.nip IS NULL OR b.flag_success = 0)') // jika sudah pernah sinkron dan gagal, akan dicoba sinkron lagi
+                                // ->where('b.nip IS NULL') // hanya yg belum pernah disinkron yg akan disinkron
                                 ->where('a.skpd', 6130000)
-                                // ->where('a.nipbaru_ws', "198410272015031001")
+                                ->where_in('a.statuspeg', [2,1]) // cpns dan pns
+                                ->where('a.nipbaru_ws', "197909272009032001")
                                 ->where('c.flag_active', 1)
                                 ->group_by('a.nipbaru_ws')
+                                ->where_not_in('a.skpd', [
+                                    9000001 // mahasiswa tugas belajar
+                                ])
                                 ->limit(10)
                                 ->get()->result_array();
 
@@ -367,12 +401,13 @@
                     $log = "";
                     $dataSync = null;
                     $listJabatan = $this->db->select('a.*, b.id_unor_siasn as id_unor_siasn_pegjabatan, c.id_jabatan_siasn,
-                                        d.kel_jabatan_id, e.id_unor_siasn as id_unor_siasn_unitkerja')
+                                        d.kel_jabatan_id, e.id_unor_siasn as id_unor_siasn_unitkerja, f.id_jabatan_siasn as id_jabatan_siasn_profil')
                                         ->from('db_pegawai.pegjabatan a')
                                         ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja', 'left')
-                                        ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg')
+                                        ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg', 'left')
                                         ->join('db_siasn.m_ref_jabatan_fungsional d', 'c.id_jabatan_siasn = d.id', 'left')
                                         ->join('db_pegawai.unitkerja e', $lp['skpd'].' = e.id_unitkerja')
+                                        ->join('db_pegawai.jabatan f', '"'.$lp['jabatan'].'" = f.id_jabatanpeg', 'left')
                                         ->where('statusjabatan', 1)
                                         ->where('a.flag_active', 1)
                                         ->where('a.id_pegawai', $lp['id_peg'])
@@ -381,11 +416,23 @@
                                         ->get()->result_array();
 
                     $flagProceed = 0;
+                    $log = "";
                     if($listJabatan){
                         $flagProceed = 1;
+                        if($listJabatan[0]['id_pegjabatan'] == null){
+                            $this->db->where('id', $listJabatan[0]['id'])
+                                    ->update('db_pegawai.pegjabatan', [
+                                        'id_pegjabatan' => $lp['jabatan']
+                                    ]);
+                        }
+
+                        $dataSync['id_jabatan_siasn'] = $listJabatan[0]['id_jabatan_siasn'];
                         if($listJabatan[0]['id_jabatan_siasn'] == null) { // jika id_jabatan_siasn null harus mapping dulu
-                            $flagProceed = 0;
-                            $log = "ID JABATAN SIASN belum dimapping";
+                            $dataSync['id_jabatan_siasn'] = $listJabatan[0]['id_jabatan_siasn_profil'];
+                            if($listJabatan[0]['id_jabatan_siasn_profil'] == null){
+                                $flagProceed = 0;
+                                $log = "ID JABATAN SIASN belum dimapping ".$lp['jabatan']." ".$listJabatan[0]['nm_jabatan'];
+                            }
                         }
 
                         $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_subbidang']; // ambil id_unor_siasn subbidang
@@ -405,6 +452,8 @@
                             $flagProceed = 0;
                             $log = "ID UNOR SIASN belum dimapping";
                         }
+                    } else {
+                        $log = "LIST JABATAN KOSONG";
                     }
 
                     if($flagProceed == 1){

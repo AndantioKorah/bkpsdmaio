@@ -598,6 +598,7 @@
 	$this->general_library->isVerifPermohonanCuti() ||
 	$this->general_library->isHakAkses('admin_pengajuan_cuti') ||
 	$this->general_library->isKepalaSkpdHardcode() ||
+	stringStartWith('Asisten', $this->general_library->getNamaJabatan()) ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -643,7 +644,8 @@
 				||
 				$this->general_library->isKepalaPd() ||
 				$this->general_library->isVerifPermohonanCuti() ||
-				$this->general_library->isKepalaSkpdHardcode()
+				$this->general_library->isKepalaSkpdHardcode() ||
+				stringStartWith('Asisten', $this->general_library->getNamaJabatan())
 				){
 					?>
 					<li class="sidebar-item ">

@@ -724,6 +724,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Layanan Surat Keterangan <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tidak sedang Tubel/Ikatan Dinas
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/27')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Layanan Surat Rekomendasi <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mengikuti Seleksi Masuk PT
+					</a>
+				</li>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_layanan_suket_pidana_hukdis')){ ?>
 				<li class="sidebar-item ">

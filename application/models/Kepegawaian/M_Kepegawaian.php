@@ -11532,7 +11532,9 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 23);
             } else if($id_m_layanan == 24){ 
                 $this->db->where('a.id_m_layanan', 24);
-            }   else {
+            } else if($id_m_layanan == 27){ 
+                $this->db->where('a.id_m_layanan', 27);
+            }    else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
 
@@ -12100,7 +12102,37 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }    else {
+        }  else if($this->input->post('file') == "pangkalandata"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 12)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rencana_kompetensi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 86)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_pemberitahuan_mhs_baru"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 92)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }  else {
          return [''];
         }
         
@@ -13211,6 +13243,9 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 24){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/suratkettidaktubel';
+            }  else if($id_m_layanan == 27){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/suratrekompt';
             }  else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }

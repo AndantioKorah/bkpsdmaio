@@ -2745,6 +2745,8 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananSuratPidanaHukdisItem', $data);
 		} else if($id_m_layanan == 24){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananSuratKetTidakTubelItem', $data);
+		} else if($id_m_layanan == 27){
+			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananSuratRekomMasukPtItem', $data);
 		}
 	}
 
@@ -2889,6 +2891,17 @@ class C_Kepegawaian extends CI_Controller
 		} else if($layanan == 24){
 			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkatAdmin('db_pegawai.pegskp',$previous1Year,$id_peg);
 			render('kepegawaian/layanan/V_VerifikasiLayananSuratKetTidakTubelDetail', '', '', $data);
+		} else if($layanan == 27){
+			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkatAdmin('db_pegawai.pegskp',$previous1Year,$id_peg);
+			$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkatAdmin('db_pegawai.pegskp',$previous2Year,$id_peg);
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhirAdmin($id_peg); 
+			$data['akreditasi'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','68','0',$id_peg);	
+			$data['transkrip_nilai'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','77','0',$id_peg);	
+			$data['surat_rencana_kompetensi'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','86','0',$id_peg);	
+			$data['surat_pemberitahuan_mhs_baru'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','92','0',$id_peg);	
+
+
+			render('kepegawaian/layanan/V_VerifikasiLayananSuratRekomMasukPtDetail.php', '', '', $data);
 		} 
 		
 
@@ -3220,6 +3233,7 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_LayananSuratKeteranganTidakTubel', $data);
 		}
 
+	
 		public function downloadDraftPidanaHukdis(){
 
 		$nip = $this->input->post('nip');
@@ -3483,5 +3497,28 @@ class C_Kepegawaian extends CI_Controller
 			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
 			$this->load->view('kepegawaian/layanan/V_LayananTugasBelajar', $data);
 		}
+
+		public function layananSuratMasukPt($id_layanan){
+			$currentYear = date('Y'); 
+			$previous1Year = $currentYear - 1;   
+			$previous2Year = $currentYear - 2; 
+			$data['tahun_1_lalu'] = $previous1Year;
+			$data['tahun_2_lalu'] = $previous2Year;
+			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+			$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year);
+			$data['id_m_layanan'] = $id_layanan;
+			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
+			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
+			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+			$data['akreditasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
+			$data['transkrip_nilai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','77','0');	
+			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
+			$data['surat_rencana_kompetensi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','86','0');	
+			$data['surat_pemberitahuan_mhs_baru'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','92','0');	
+
+			$this->load->view('kepegawaian/layanan/V_LayananSuratMasukPt', $data);
+		}
+
 
 }

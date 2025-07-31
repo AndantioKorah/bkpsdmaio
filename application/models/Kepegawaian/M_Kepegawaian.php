@@ -12245,6 +12245,9 @@ public function getFileForVerifLayanan()
         } else if($dataPengajuan[0]['id_m_layanan'] == 24){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 27){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN SURAT REKOMENDASI MENGIKUTI SELEKSI MASUK PERGURUAN TINGGI]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Surat Rekomendasi Mengikuti Seleksi Masuk Perguruan Tinggi anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        
         $cronWaNextVerifikator = [

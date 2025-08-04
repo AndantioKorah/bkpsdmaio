@@ -1374,6 +1374,7 @@ function getNomorSuratSiladen($data = null, $flag_save = 1){
             'counter' => $rs['data']['counter'],
             'perihal' => $dataInsert['perihal'],
             'created_by' => $rs['data']['counter'],
+            'flag_nomor_surat_otomatis' => 1
         ]);
     }
 

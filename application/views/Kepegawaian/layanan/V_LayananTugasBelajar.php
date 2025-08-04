@@ -309,7 +309,7 @@ ol {
          </div>
          <div class="form-group mt-2">
             <label>SURAT PERNYATAAN TIDAK SEDANG MENJALANI CUTI LUAR TANGGUNGAN NEGARA (CLTN) DITANDATANGANI KEPALA PERANGKAT DAERAH</label>
-            <input  class="form-control my-image-field" type="file" id="pdf_surat_pidana" name="file3" required />
+            <input  class="form-control my-image-field" type="file" id="pdf_suket_cltn" name="file3" required />
          </div>
   
       <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
@@ -350,73 +350,73 @@ ol {
 							</li>
                <li>
 			    <a class="<?php if($sk_pangkat){ if($sk_pangkat['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_pangkat) { ?>
-					onclick="viewBerkasPangkat('<?=$sk_pangkat['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SK PANGKAT <i
+					onclick="viewBerkasPangkat('<?=$sk_pangkat['gambarsk'];?>',2)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SK PANGKAT* <i
 					class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
 			  </li>
                <li>
 			    <a class="<?php if($surat_rekom_masuk_pt){ if($surat_rekom_masuk_pt['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($surat_rekom_masuk_pt) { ?>
-					onclick="viewBerkasPangkat('<?=$surat_rekom_masuk_pt['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT REKOMENDASI YANG DITANDATANGANI KEPALA BKPSDM <i
+					onclick="viewBerkasPangkat('<?=$surat_rekom_masuk_pt['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT REKOMENDASI YANG DITANDATANGANI KEPALA BKPSDM* <i
 					class="fas fa-<?php if($surat_rekom_masuk_pt) echo ''; else echo '';?>"></i></a>
 			  </li>
                 <li>
 			    <a class="<?php if($akreditasi){ if($akreditasi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($akreditasi) { ?>
-					onclick="viewBerkasPangkat('<?=$akreditasi['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SERTIFIKAT AKREDITASI PROGRAM STUDI Min. “BAIK SEKALI” DARI LEMBAGA TERAKREDITASI
+					onclick="viewBerkasPangkat('<?=$akreditasi['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SERTIFIKAT AKREDITASI PROGRAM STUDI Min. “BAIK SEKALI” DARI LEMBAGA TERAKREDITASI*
                     <i class="fas fa-<?php if($akreditasi) echo ''; else echo '';?>"></i></a>
 			  </li>
                <li>
 			    <a class="<?php if($surat_ket_lulus_mhs){ if($surat_ket_lulus_mhs['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($surat_ket_lulus_mhs) { ?>
-					onclick="viewBerkasPangkat('<?=$surat_ket_lulus_mhs['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN DARI PERGURUAN TINGGI (LULUS SEBAGAI MAHASISWA)
+					onclick="viewBerkasPangkat('<?=$surat_ket_lulus_mhs['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN DARI PERGURUAN TINGGI (LULUS SEBAGAI MAHASISWA)*
                     <i class="fas fa-<?php if($surat_ket_lulus_mhs) echo ''; else echo '';?>"></i></a>
 			  </li>
                <li>
 			    <a class="<?php if($surat_rencana_kompetensi){ if($surat_rencana_kompetensi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($surat_rencana_kompetensi) { ?>
-					onclick="viewBerkasPangkat('<?=$surat_rencana_kompetensi['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT RENCANA KEBUTUHAN KOMPETENSI DARI PERANGKAT DAERAH
+					onclick="viewBerkasPangkat('<?=$surat_rencana_kompetensi['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT RENCANA KEBUTUHAN KOMPETENSI DARI PERANGKAT DAERAH*
                     <i class="fas fa-<?php if($surat_rencana_kompetensi) echo ''; else echo '';?>"></i></a>
 			  </li>
                <li>
 			    <a class="<?php if($krs){ if($krs['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($krs) { ?>
-					onclick="viewBerkasPangkat('<?=$krs['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> KRS
+					onclick="viewBerkasPangkat('<?=$krs['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> KRS*
                     <i class="fas fa-<?php if($krs) echo ''; else echo '';?>"></i></a>
 			  </li>
               <li>
 			    <a class="<?php if($rencana_pengembangan_diri){ if($rencana_pengembangan_diri['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($rencana_pengembangan_diri) { ?>
-					onclick="viewBerkasPangkat('<?=$rencana_pengembangan_diri['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> RENCANA TAHUNAN KEBUTUHAN PENGEMBANGAN DIRI
+					onclick="viewBerkasPangkat('<?=$rencana_pengembangan_diri['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> RENCANA TAHUNAN KEBUTUHAN PENGEMBANGAN DIRI*
                     <i class="fas fa-<?php if($rencana_pengembangan_diri) echo ''; else echo '';?>"></i></a>
 			  </li>
               <?php } ?>
               <?php if($id_m_layanan == 25) { ?>
               
-              <li>
+              <!-- <li>
 			    <a class="<?php if($surat_permohonan_walikota){ if($surat_permohonan_walikota['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($surat_permohonan_walikota) { ?>
 					onclick="viewBerkasPangkat('<?=$surat_permohonan_walikota['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT PERMOHONAN PNS YANG BERSANGKUTAN MENGETAHUI KEPALA PD DITUJUKAN KE WALIKOTA <i
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT PERMOHONAN PNS YANG BERSANGKUTAN MENGETAHUI KEPALA PD DITUJUKAN KE WALIKOTA* <i
 					class="fas fa-<?php if($surat_permohonan_walikota) echo ''; else echo '';?>"></i></a>
-			  </li>
-              <li>
+			  </li> -->
+              <!-- <li>
 			    <a class="<?php if($surat_rekom_masuk_pt){ if($surat_rekom_masuk_pt['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($surat_rekom_masuk_pt) { ?>
 					onclick="viewBerkasPangkat('<?=$surat_rekom_masuk_pt['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT REKOMENDASI MENGIKUTI SELEKSI MASUK PT YANG DITANDATANGANI KEPALA BKPSDM <i
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT REKOMENDASI MENGIKUTI SELEKSI MASUK PT YANG DITANDATANGANI KEPALA BKPSDM* <i
 					class="fas fa-<?php if($surat_rekom_masuk_pt) echo ''; else echo '';?>"></i></a>
-			  </li>
+			  </li> -->
              <li>
 			    <a class="<?php if($suket_beasiswa){ if($suket_beasiswa['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($suket_beasiswa) { ?>
-					onclick="viewBerkasPangkat('<?=$suket_beasiswa['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN ATAU SEJENISNYA DARI PEMBERI BEASISWA <i
+					onclick="viewBerkasPangkat('<?=$suket_beasiswa['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN ATAU SEJENISNYA DARI PEMBERI BEASISWA* <i
 					class="fas fa-<?php if($suket_beasiswa) echo ''; else echo '';?>"></i></a>
 			  </li>
               <?php } ?>
               <?php if($id_m_layanan == 26) { ?>
               <li>
 			    <a class="<?php if($suket_kuliah_online){ if($suket_kuliah_online['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($suket_kuliah_online) { ?>
-					onclick="viewBerkasPangkat('<?=$suket_kuliah_online['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN DARI PERGURUAN TINGGI BAGI YANG PERKULIAHAN ONLINE
+					onclick="viewBerkasPangkat('<?=$suket_kuliah_online['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN DARI PERGURUAN TINGGI BAGI YANG PERKULIAHAN ONLINE*
                     <i class="fas fa-<?php if($suket_kuliah_online) echo ''; else echo '';?>"></i></a>
 			  </li>
               <?php } ?>
@@ -534,45 +534,56 @@ $(function(){
 
 
         if(id_m_layanan == 25 || id_m_layanan == 26){
+        
           if(skp1 == ""){
+            alert(1)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
           if(skp2 == ""){
+            alert(2)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
            if(sk_pangkat == ""){
+            alert(3)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
            if(surat_rekom_masuk_pt == ""){
+            alert(4)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
            if(akreditasi == ""){
+            alert(5)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
           if(surat_ket_lulus_mhs == ""){
+              alert(6)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
           if(surat_rencana_kompetensi == ""){
+              alert(7)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
           if(ijazah == ""){
+              alert(8)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
           if(transkrip_nilai == ""){
+            
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
         }
         if(id_m_layanan == 25){
           if(suket_beasiswa == ""){
+             alert(5)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
@@ -581,7 +592,7 @@ $(function(){
 
         
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananTugasBelajar/")?>"+id_m_layanan,
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananTubel/")?>"+id_m_layanan,
         method:"POST",  
         data:form_data,  
         contentType: false,  
@@ -683,6 +694,46 @@ $(function(){
       errortoast("Maksimal Ukuran File 1 MB")
       $(this).val('');
     }
+
+    
+      $("#pdf_surat_hd").change(function (e) {
+      var fileSize = this.files[0].size/1024;
+      var MaxSize = 1024
+
+      var doc = pdf_surat_pengantar.value.split('.')
+      var extension = doc[doc.length - 1]
+
+      if (extension != "pdf"){
+        errortoast("Harus File PDF")
+        $(this).val('');
+      }
+
+      if (fileSize > MaxSize ){
+        errortoast("Maksimal Ukuran File 1 MB")
+        $(this).val('');
+      }
+
+      });
+
+      
+      $("#pdf_suket_cltn").change(function (e) {
+      var fileSize = this.files[0].size/1024;
+      var MaxSize = 1024
+
+      var doc = pdf_surat_pengantar.value.split('.')
+      var extension = doc[doc.length - 1]
+
+      if (extension != "pdf"){
+        errortoast("Harus File PDF")
+        $(this).val('');
+      }
+
+      if (fileSize > MaxSize ){
+        errortoast("Maksimal Ukuran File 1 MB")
+        $(this).val('');
+      }
+
+      });
 
 
     });

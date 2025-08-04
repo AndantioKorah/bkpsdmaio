@@ -7477,8 +7477,10 @@ public function submitEditJabatan(){
             $this->db->where('e.skpd', $data['id_unitkerja']);
         }
 
-        if(!$this->general_library->isProgrammer() && !$this->general_library->isKepalaBkpsdm()){ 
-            // jika bukan programmer ato bukan kaban, cari yang hanya bisa diverifikasi
+        if(!$this->general_library->isProgrammer() &&
+        !$this->general_library->isKepalaBkpsdm() &&
+        !$this->general_library->isHakAkses('admin_pengajuan_cuti')){ 
+            // jika bukan programmer ato bukan kaban atau bukan admin pengajuan cuti, cari yang hanya bisa diverifikasi
             $this->db->where('g.id_m_user_verifikasi', $this->general_library->getId());
         }
 
@@ -7501,7 +7503,8 @@ public function submitEditJabatan(){
         //     $this->db->where('e.skpd', $this->general_library->getUnitKerjaPegawai());
         // }
 
-        if($this->general_library->isProgrammer()){ // jika programmer, kirim semua data
+        if($this->general_library->isProgrammer() ||
+        $this->general_library->isHakAkses('admin_pengajuan_cuti')){ // jika programmer atau admin cuti, kirim semua data
             return $result;
         }
 

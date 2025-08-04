@@ -22,7 +22,7 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="card card-body">
-      <?php if($this->general_library->isProgrammer()){ ?>
+      <?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('admin_pengajuan_cuti')){ ?>
         <div class="row">
           <div class="col-lg-12 table-responsive">
             <?php

@@ -89,14 +89,14 @@
        
        
 <?php 
-        if($result[0]['status_layanan'] == 1) {
+        if($result[0]['status_layanan'] == 1 || $result[0]['status_layanan'] == 2) {
            ;?>
             <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Verif
         </button>
-         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftHukdis">
+         <!-- <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftHukdis">
         Draf Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas
-        </button>
+        </button> -->
        
        <?php 
         } 

@@ -1992,5 +1992,52 @@
             }
         }
 
+        public function getLastFormatNomorSurat($nomorSuratLayanan = "800", $tahun = 0){
+            if($tahun == 0){
+                $tahun = date('Y');
+            }
+
+            $counter = 1;
+            $this->db->select('*')
+                ->from('t_nomor_surat')            
+                ->order_by('counter', 'desc')
+                ->where('flag_active', 1)
+                ->limit(1);
+
+            if(FLAG_CONTINUE_NOMOR_SURAT == 0){ // jika tetap lanjut walaupun ada perubahan format baru format baru
+                $this->db->where('nomor_surat LIKE "'.FORMAT_NOMOR_SURAT.$tahun.'"');
+            }
+            $data = $this->db->get()->row_array();
+
+            if($data){
+                $counter = $data['counter']+1;
+            }
+
+            // format [0] harus dicek agar pas dengan parameter yang akan dimasukkan pada format nomor surat
+            $format[0] = $nomorSuratLayanan;
+            $format[4] = $counter;
+
+            $expl = explode("/", FORMAT_NOMOR_SURAT);
+            $i = 0;
+            $generatedNomorSurat = "";
+            foreach($expl as $e){
+                if(isset($format[$i])){
+                    $generatedNomorSurat .= $format[$i];
+                } else {
+                    $generatedNomorSurat .= $e;
+                }
+                if($i < count($expl)-1){
+                    $generatedNomorSurat .= "/";
+                }
+                $i++;
+            }
+            $generatedNomorSurat .= $tahun;
+
+            return [
+                'nomor_surat' => $generatedNomorSurat,
+                'counter' => $counter
+            ];
+        }
+
 	}
 ?>

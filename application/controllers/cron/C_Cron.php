@@ -187,4 +187,11 @@ class C_Cron extends CI_Controller
     public function syncDataUtamaPns(){
         $this->siasn->syncDataUtamaPns();
     }
+
+    public function testNomorSurat($data = null){
+        $data['jenis_layanan'] = isset($data['jenis_layanan']) ? $data['jenis_layanan'] : 104;
+        $data['tahun'] = isset($data['tahun']) ? $data['tahun'] : date('Y');
+        $data['perihal'] = isset($data['perihal']) ? $data['perihal'] : "";
+        dd(getNomorSuratSiladen($data, 0));
+    }
 }

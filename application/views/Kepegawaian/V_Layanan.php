@@ -246,11 +246,11 @@
       $('#loader').hide()
     })
     } else if(val == 25) {
-      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananTugasBelajaar/")?>'+val, function(){
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananTugasBelajar/")?>'+val, function(){
       $('#loader').hide()
     })
     } else if(val == 26) {
-      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananTugasBelajaar/")?>'+val, function(){
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananTugasBelajar/")?>'+val, function(){
       $('#loader').hide()
     })
     } else if(val == 27) {

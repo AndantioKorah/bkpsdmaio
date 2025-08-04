@@ -2688,6 +2688,13 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->insertUsulLayananNew2($id));
 	}
 
+	public function insertUsulLayananTubel($id)
+	{ 
+		echo json_encode( $this->kepegawaian->insertUsulLayananTubel($id));
+	}
+
+	
+
 	public function deleteRiwayatLayanan($id){
         $this->general->delete('id', $id, 't_layanan');
     }
@@ -3469,7 +3476,7 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->Output($file_pdf, 'D');
     }
 
-	public function layananTugasBelajaar($id_layanan){
+	public function layananTugasBelajar($id_layanan){
 			$currentYear = date('Y'); 
 			$previous1Year = $currentYear - 1;   
 			$previous2Year = $currentYear - 2; 
@@ -3478,10 +3485,10 @@ class C_Kepegawaian extends CI_Controller
 			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
 			$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year);
 			$data['surat_permohonan_walikota'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','83','0');	
-			$data['surat_rekom_masuk_pt'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','83','0');	
+			$data['surat_rekom_masuk_pt'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','84','0');	
 			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 			$data['akreditasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
-			$data['transkrip_nilai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','78','0');	
+			$data['transkrip_nilai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','77','0');	
 			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
 			$data['surat_ket_lulus_mhs'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','85','0');	
 			$data['surat_rencana_kompetensi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','86','0');	
@@ -3513,6 +3520,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 			$data['akreditasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
 			$data['transkrip_nilai'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','77','0');	
+			
 			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
 			$data['surat_rencana_kompetensi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','86','0');	
 			$data['surat_pemberitahuan_mhs_baru'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','92','0');	

@@ -289,7 +289,7 @@ ol {
 		<div class="card card-default">
 			<div class="card-header">
 				<div class="card-title">
-					<h5>FORM LAYANAN KENAIKAN PANGKAT</h5>
+				<h5>FORM LAYANAN <?= strtoupper($nm_layanan);?></h5>
 				</div>
 				<hr>
       <span><b>Berkas Persyaratan :</b></span>
@@ -300,14 +300,19 @@ ol {
 					style="margin-top: -35px;">
           <?php if($id_m_layanan == 25 || $id_m_layanan == 26) { ?>
          <div class="form-group mb-2">
-            <label>SURAT PERNYATAAN TIDAK SEDANG MENJALANI HUKDIS TINGKAT SEDANG ATAUPUN BERAT DARI KEPALA PERANGKAT DAERAH</label>
-            <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
+            <label>SURAT PERMOHONAN PNS YANG BERSANGKUTAN MENGETAHUI KEPALA PD DITUJUKAN KE WALIKOTA</label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
           </div>
-           <div class="form-group">
-            <label>SURAT PERNYATAAN TIDAK SEDANG MENJALANI CUTI LUAR TANGGUNGAN NEGARA (CLTN)</label>
+          <div class="form-group mt-2">
+            <label>SURAT PERNYATAAN TIDAK SEDANG MENJALANI HUKDIS TINGKAT SEDANG ATAUPUN BERAT DITANDATANGANI KEPALA PERANGKAT DAERAH</label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
-          </div>
-          <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
+         </div>
+         <div class="form-group mt-2">
+            <label>SURAT PERNYATAAN TIDAK SEDANG MENJALANI CUTI LUAR TANGGUNGAN NEGARA (CLTN) DITANDATANGANI KEPALA PERANGKAT DAERAH</label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_pidana" name="file3" required />
+         </div>
+  
+      <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
 		  <input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
 		  <input type="hidden" id="skp1" value="<?php if($skp1 && $skp1['gambarsk'] != null) echo $skp1['id']; else echo "";?>">
 		  <input type="hidden" id="skp2" value="<?php if($skp2 && $skp2['gambarsk'] != null) echo $skp2['id']; else echo "";?>">

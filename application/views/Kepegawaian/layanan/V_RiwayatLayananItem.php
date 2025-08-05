@@ -8,8 +8,12 @@
           <th class="text-left">Tanggal Pengajuan</th>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
+          <?php if($m_layanan == 25) { ?>
+          <th class="text-left">Surat Permohonan</th>
+          <?php } else { ?>
           <th class="text-left">Surat Pengantar</th>
-          <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23) { ?>
+          <?php } ?>
+          <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25) { ?>
           <th class="text-left">Surat Pernyataan tidak sedang Hukuman Disiplin</th>
           <?php } ?>
           <?php if($m_layanan == 23) { ?>
@@ -20,6 +24,9 @@
           <?php } ?>
           <?php if($m_layanan == 21) { ?>
           <th class="text-left">SK Peningkatan Pendidikan / Penambahan Gelar</th>
+          <?php } ?>
+           <?php if($m_layanan == 25) { ?>
+          <th class="text-left">Surat Pernyataan tidak sedang Cuti Luar Tanggungan Negara</th>
           <?php } ?>
           <th style="width:40%;"></th>
         </thead>
@@ -52,7 +59,7 @@
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>
             </td>
-            <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23) { ?>
+            <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25) { ?>
           <td class="text-left">
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
@@ -70,6 +77,12 @@
           <button href="#modal_view_file" onclick="openFileSK('<?=$rs['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
           <?php } ?>
+          </td>
+          <?php } ?>
+           <?php if($m_layanan == 25) { ?>
+          <td class="text-left">
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_cltn']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
           </td>
           <?php } ?>
               <td>
@@ -282,6 +295,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
   $link = "<?=base_url();?>dokumen_layanan/suratkettidaktubel/"+filename+"?v="+number;
 } else if(id_layanan == 27){
   $link = "<?=base_url();?>dokumen_layanan/suratrekompt/"+filename+"?v="+number;
+} else if(id_layanan == 25){
+  $link = "<?=base_url();?>dokumen_layanan/tugasbelajar/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)
@@ -299,6 +314,8 @@ $('.iframe_loader').show()
 var number = Math.floor(Math.random() * 2000);
 if(id_layanan == 12 || id_layanan == 13){
   $link = "<?=base_url();?>dokumen_layanan/jabatan_fungsional/surat_ket_hd/"+filename+"?v="+number;
+} else if(id_layanan == 25){
+  $link = "<?=base_url();?>dokumen_layanan/tugasbelajar/"+filename+"?v="+number;
 } else {
   $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
 }

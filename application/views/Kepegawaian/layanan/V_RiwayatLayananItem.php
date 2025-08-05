@@ -183,9 +183,9 @@
       </div>
       <div class="modal-body">
       <form method="post" id="form_ubah_surat_pengantar" enctype="multipart/form-data" >
-        <input type="text" name="id_pengajuan" id="id_pengajuan">
-        <input type="text" name="file_pengantar" id="file_pengantar">
-        <input type="text" name="id_m_layanan" id="id_m_layanan" >
+        <input type="hidden" name="id_pengajuan" id="id_pengajuan">
+        <input type="hidden" name="file_pengantar" id="file_pengantar">
+        <input type="hidden" name="id_m_layanan" id="id_m_layanan" >
         <div class="form-group">
         <label>Surat Pengantar</label>
         <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar_ubah" name="file"   />

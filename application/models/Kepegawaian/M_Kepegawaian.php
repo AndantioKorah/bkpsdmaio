@@ -13540,6 +13540,8 @@ public function getFileForVerifLayanan()
             $target_dir	= './dokumen_layanan/jabatan_fungsional';
         } else if($id_m_layanan == 21){
             $target_dir	= './dokumen_layanan/peningkatan_penambahan_gelar';
+        } else if($id_m_layanan == 24){
+            $target_dir	= './dokumen_layanan/suratkettidaktubel';
         }
 
         $this->db->trans_begin();
@@ -14281,8 +14283,10 @@ public function checkListIjazahCpns($id, $id_pegawai){
     }
 
     function uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf){
+        // dd($dataPost);
         $this->db->trans_begin();
-
+        $result['done'] = true;
+        $result['message'] = "";
         $bulan = getNamaBulan(date('m'));
         $tahun = date('Y');
 
@@ -14299,16 +14303,24 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $batchId = generateRandomString();
             $data['id_m_user'] = $dataLayanan['id_m_user'];
             $data['created_by'] = $this->general_library->getId();
+            if($dataPost['id_m_layanan'] == 23){
+            $data['keterangan'] = "Surat Keterangan Tidak Pernah Dijatuhun Hukuman Disiplin Tingkat Sedang/Berat a.n. ".$dataLayanan['nama'] ;
+            } else {
             $data['keterangan'] = "Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas a.n. ".$dataLayanan['nama'] ;
+            }
             $data['ds_code'] = "^";
             $data['page'] = 1;
             $data['table_ref'] = 't_layanan';
             $data['ref_id'] = $id_usul;
+            if($dataPost['id_m_layanan'] == 23){
+            $data['meta_view'] = "kepegawaian/surat/V_SuratHukdis2";
+            } else {
             $data['meta_view'] = "kepegawaian/surat/V_SuratKetTidakTubel";
-            $data['nama_kolom_ds'] = "flag_ds_suket_tidak_tubel";
+            }
+            $data['nama_kolom_ds'] = "";
             $data['url_ds'] = $url2;
             $data['batch_id'] = $batchId;
-            $data['id_m_jenis_layanan'] = 30;
+            $data['id_m_jenis_layanan'] = 39;
             $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
 
             $this->db->insert('t_usul_ds', $data);
@@ -14342,7 +14354,19 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $this->db->where('id', $id_usul)
                 ->update('t_layanan', $dataUpdate);
 
+            // $counter = qounterNomorSurat($tahun);
+            // $this->db->insert('t_nomor_surat', [
+            //                 'perihal' => $perihal,
+            //                 'counter' => $counter,
+            //                 'nomor_surat' => $dataPost['nomor_surat_siladen'],
+            //                 // 'created_by' => $kepala_bkpsdm['id_m_user'],
+            //                 'tanggal_surat' => $dataCuti['created_date'],
+            //                 'id_m_jenis_layanan' => $master['id']
+            //             ]);
+           
+
         if($this->db->trans_status() == FALSE && $result['code'] != 0){
+            $result['done'] = false;
             $this->db->trans_rollback();
         } else {
             $this->db->trans_commit();

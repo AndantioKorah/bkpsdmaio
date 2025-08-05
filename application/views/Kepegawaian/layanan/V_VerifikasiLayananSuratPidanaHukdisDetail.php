@@ -458,7 +458,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftPidanaHukdis')?>" target="_blank">
+        <!-- <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftPidanaHukdis')?>" target="_blank">
          <div class="form-group">
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
@@ -467,6 +467,20 @@
           <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
           </div> 
           <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+        </form> -->
+         <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftPidanaHukdis')?>" target="_blank">
+         <div class="form-group">
+        <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="jenis" name="jenis" value="1" readonly>
+          <label for="exampleInputEmail1">Nomor Surat</label>
+          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
+          </div> 
+          <button id="" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
+        </form>
+         <form method="post" id="form_usul_ds" enctype="multipart/form-data"  >
+          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+           <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button>
         </form>
       </div>
     </div>
@@ -496,6 +510,7 @@
           </div> 
           <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
         </form>
+        
       </div>
     </div>
   </div>
@@ -917,5 +932,31 @@ function kirimBkad(id,status){
         })
     }
 
+
+    $('#form_usul_ds').on('submit', function(e){
+        //  document.getElementById('btn_usul_ds').disabled = true;
+         $('#btn_usul_ds').html('Loading.. <i class="fas fa-spinner fa-spin"></i>')
+            e.preventDefault()
+            $.ajax({
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/usulDShd")?>',
+                method: 'post',
+                // data: $(this).serialize(),
+                data: {
+                  nip : $('#nip').val(),
+                  id_usul : $('#id_usul').val(),
+                  nomor_surat : $('#nomor_surat').val(),
+                  instansi_tujuan : $('#instansi_tujuan').val(),
+                  id_pegawai : $('#id_pegawai').val(),
+                  id_m_layanan : $('#id_m_layanan').val()
+                },
+
+                success: function(datares){
+                  successtoast('Berhasil Usul DS')
+                  // location.reload()
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
+        })
   
 </script>

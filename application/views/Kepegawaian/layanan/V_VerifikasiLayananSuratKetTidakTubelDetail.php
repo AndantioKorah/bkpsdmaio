@@ -495,10 +495,10 @@
           <button id="" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
 
         </form>
-         <form method="post" id="form_usul_ds" enctype="multipart/form-data"  >
+         <!-- <form method="post" id="form_usul_ds" enctype="multipart/form-data"  >
       <div class="form-group">
-          <!-- <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button> -->
-        </form>
+           <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button>
+        </form> -->
 
       </div>
     </div>

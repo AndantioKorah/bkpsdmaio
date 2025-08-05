@@ -14304,7 +14304,11 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $data['id_m_user'] = $dataLayanan['id_m_user'];
             $data['created_by'] = $this->general_library->getId();
             if($dataPost['id_m_layanan'] == 23){
-            $data['keterangan'] = "Surat Keterangan Tidak Pernah Dijatuhun Hukuman Disiplin Tingkat Sedang/Berat a.n. ".$dataLayanan['nama'] ;
+                if($dataPost['jenis'] == 1){
+                $data['keterangan'] = "Surat Pernyataan Tidak Pernah Dijatuhun Hukuman Disiplin Tingkat Sedang/Berat a.n. ".$dataLayanan['nama'] ;
+                } else {
+                $data['keterangan'] = "Surat Pernyataan Tidak Sedang Menjalani Proses Pidana Atau Pernah dipidana a.n. ".$dataLayanan['nama'] ;
+                }
             } else {
             $data['keterangan'] = "Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas a.n. ".$dataLayanan['nama'] ;
             }
@@ -14313,7 +14317,11 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $data['table_ref'] = 't_layanan';
             $data['ref_id'] = $id_usul;
             if($dataPost['id_m_layanan'] == 23){
-            $data['meta_view'] = "kepegawaian/surat/V_SuratHukdis2";
+            if($dataPost['jenis'] == 1){
+                $data['meta_view'] = "kepegawaian/surat/V_SuratHukdis2";
+            } else {
+                $data['meta_view'] = "kepegawaian/surat/V_SuratPidana";
+            }
             } else {
             $data['meta_view'] = "kepegawaian/surat/V_SuratKetTidakTubel";
             }
@@ -14349,20 +14357,27 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $progress2['flag_ds_now'] = 0;
             $this->db->insert('t_usul_ds_detail_progress', $progress2);
 
+           
             $dataUpdate['id_t_usul_ds'] = $id_t_usul_ds;
-            $dataUpdate['status'] = 3;
+            $dataUpdate['nomor_surat'.$dataPost['jenis']] = $dataPost['nomor_surat_siladen'];
+            // $dataUpdate['status'] = 3;
             $this->db->where('id', $id_usul)
                 ->update('t_layanan', $dataUpdate);
 
-            // $counter = qounterNomorSurat($tahun);
-            // $this->db->insert('t_nomor_surat', [
-            //                 'perihal' => $perihal,
-            //                 'counter' => $counter,
-            //                 'nomor_surat' => $dataPost['nomor_surat_siladen'],
-            //                 // 'created_by' => $kepala_bkpsdm['id_m_user'],
-            //                 'tanggal_surat' => $dataCuti['created_date'],
-            //                 'id_m_jenis_layanan' => $master['id']
-            //             ]);
+            if($dataPost['jenis'] == 1){
+                 $perihal = "SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT a.n.".getNamaPegawaiFull($dataLayanan);
+            } else {
+                 $perihal = "SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA a.n.".getNamaPegawaiFull($dataLayanan);
+            }
+            $counter = qounterNomorSurat($tahun);
+            $this->db->insert('t_nomor_surat', [
+                            'perihal' => $perihal,
+                            'counter' => $counter,
+                            'nomor_surat' => $dataPost['nomor_surat_siladen'],
+                            // 'created_by' => $kepala_bkpsdm['id_m_user'],
+                            'tanggal_surat' => date('Y-m-d'),
+                            'id_m_jenis_layanan' =>39
+                        ]);
            
 
         if($this->db->trans_status() == FALSE && $result['code'] != 0){

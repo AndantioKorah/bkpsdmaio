@@ -96,13 +96,16 @@
  <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Verif
         </button>
-       
+        <?php if($result[0]['nomor_surat1'] == null) { ?>
          <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftHukdis">
-        Download Draf Surat Keterangan Hukuman Disiplin
+        Download Surat Keterangan Hukuman Disiplin
         </button>
+         <?php } ?>
+         <?php if($result[0]['nomor_surat2'] == null) { ?>
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftPidana">
-        Download Draf Surat Keterangan Pidana
+        Download Surat Keterangan Pidana
         </button>
+         <?php } ?>
        <?php } ?>
         <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
         <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
@@ -458,7 +461,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftPidanaHukdis')?>" target="_blank">
+        <!-- <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftPidanaHukdis')?>" target="_blank">
          <div class="form-group">
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
@@ -467,7 +470,21 @@
           <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
           </div> 
           <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+        </form> -->
+         <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/usulDShd')?>" target="_blank">
+         <div class="form-group">
+        <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="jenis" name="jenis" value="1" readonly>
+          <input type="hidden" class="form-control" id="id_usul_layanan" name="id_usul_layanan" value="<?=$id_usul;?>" readonly>
+          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          
+          </div> 
+          <button id="btn_dwnload" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
         </form>
+         <!-- <form method="post" id="form_usul_ds" enctype="multipart/form-data"  >
+           <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button>
+        </form> -->
       </div>
     </div>
   </div>
@@ -485,17 +502,18 @@
         </button>
       </div>
       <div class="modal-body">
-              <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftPidanaHukdis')?>" target="_blank">
+              <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/usulDShd')?>" target="_blank">
          <div class="form-group">
-          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+        <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
+          <input type="hidden" class="form-control" id="id_usul_layanan" name="id_usul_layanan" value="<?=$id_usul;?>" readonly>
+          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
           
-          <label for="exampleInputEmail1">Nomor Surat</label>
-          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
           </div> 
-          <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+          <button id="btn_dwnload2" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
         </form>
+        
       </div>
     </div>
   </div>
@@ -917,5 +935,41 @@ function kirimBkad(id,status){
         })
     }
 
+
+    $('#form_usul_ds').on('submit', function(e){
+         document.getElementById('btn_usul_ds').disabled = true;
+         document.getElementById('btn_dwnload').disabled = true;
+         
+         $('#btn_usul_ds').html('Loading.. <i class="fas fa-spinner fa-spin"></i>')
+            e.preventDefault()
+            $.ajax({
+                url: '<?=base_url("kepegawaian/C_Kepegawaian/usulDShd")?>',
+                method: 'post',
+                // data: $(this).serialize(),
+                data: {
+                  nip : $('#nip').val(),
+                  id_usul : $('#id_usul').val(),
+                  nomor_surat : $('#nomor_surat').val(),
+                  instansi_tujuan : $('#instansi_tujuan').val(),
+                  id_pegawai : $('#id_pegawai').val(),
+                  id_m_layanan : $('#id_m_layanan').val()
+                },
+
+                success: function(datares){
+                  successtoast('Berhasil Usul DS')
+                  location.reload()
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
+        })
   
+   $("#btn_dwnload").click(function() { 
+     setTimeout(window.location.reload.bind(window.location), 500);
+    });
+
+    $("#btn_dwnload2").click(function() { 
+     setTimeout(window.location.reload.bind(window.location), 500);
+    });
+
 </script>

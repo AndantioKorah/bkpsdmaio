@@ -439,7 +439,7 @@
           <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
           <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
           
-          <label for="exampleInputEmail1">Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas</label>
+          <label for="exampleInputEmail1">Surat Rekomendasi Mengikuti Seleksi Masuk PT</label>
           <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file" required>
 
           </div> 
@@ -864,7 +864,7 @@ function kirimBkad(id,status){
         // }
       
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSuratLayananSuketTidakTubel")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSuratLayananRekomSeleksiPT")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  

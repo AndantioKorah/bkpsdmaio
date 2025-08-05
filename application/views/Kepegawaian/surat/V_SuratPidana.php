@@ -101,7 +101,7 @@
 			}
 		?>
 		<?php if(isset($nomor_surat)){ ?>
-		<p class="judul" style="margin-top:-18px;"> Nomor :  800.1.6.2/B.04/BKPSDM/<?= $ns ?>/2025  </p>
+		<p class="judul" style="margin-top:-18px;"> Nomor :  <?= $ns ?></p>
 		<?php } else { ?>
 		<p class="judul" style="margin-top:-18px;"> Nomor :  <?= $ns ?></p>
 		<?php }  ?>

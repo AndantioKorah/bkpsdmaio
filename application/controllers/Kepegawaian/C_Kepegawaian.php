@@ -2990,6 +2990,13 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->uploadSuratLayananSuketTidakTubel());
 	}
 
+	public function uploadSuratLayananRekomSeleksiPT()
+	{ 
+		echo json_encode( $this->kepegawaian->uploadSuratLayananRekomSeleksiPT());
+	}
+
+	
+
 
 	public function deleteFileLayanan($id,$reference_id_dok,$id_m_layanan, $id_pegawai=null)
     {
@@ -3527,6 +3534,85 @@ class C_Kepegawaian extends CI_Controller
 
 			$this->load->view('kepegawaian/layanan/V_LayananSuratMasukPt', $data);
 		}
+
+
+		public function usulDShd(){
+		
+		$nip = $this->input->post('nip');
+		$id_usul = $this->input->post('id_usul_layanan');
+		$jenis = $this->input->post('jenis');
+		$id_m_layanan = $this->input->post('id_m_layanan');
+		$data['nomor_pertek'] = $this->input->post('nomor_pertek');
+		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
+		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
+		
+		$dataNomorSurat = getNomorSuratSiladen([
+                'jenis_layanan' => 39,
+                'tahun' => 2025,
+                'perihal' => "usul DS"
+            ], 0);
+		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
+		$data['instansi_tujuan'] = $this->input->post('instansi_tujuan');
+		// $this->load->view('kepegawaian/surat/V_SuratHukdis2', $data, true); 
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'A4',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+
+		$bulan = getNamaBulan(date('m'));
+		$tahun = date('Y');
+		
+		if(!file_exists('arsipusulds/'.$tahun)){
+                mkdir('arsipusulds/'.$tahun, 0777);
+            }
+
+        if(!file_exists('arsipusulds/'.$tahun.'/'.$bulan)){
+                mkdir('arsipusulds/'.$tahun.'/'.$bulan, 0777);
+            }
+		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+		
+		// $html = $this->load->view('kepegawaian/surat/V_SuratHukdis2', $data, true); 
+		// $file_pdf = $random_number."surat_ket_tidak_hd_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	
+	    
+		if($jenis == 1){
+		$mpdf->adjustFontDescLineheight = 1.80;
+		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis2', $data, true); 
+		$file_pdf = $random_number."surat_ket_tidak_hd_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	 	
+		}
+		if($jenis == 2){
+		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
+		$file_pdf = $random_number."surat_ket_pidana_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	 	
+		} 
+		
+		$url1 = 'arsipusulds/'.$tahun.'/'.$bulan.'/'.$file_pdf;
+	    $url2 = 'dokumen_layanan/suratpidanahukdis/arsipsuket/'.$file_pdf;
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($url1, 'F');
+		$mpdf->Output($url2, 'F');
+		$mpdf->Output($file_pdf, 'D');
+		$dataPost = $this->input->post();
+		$dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
+		$dataPost['jenis'] = $jenis;
+		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
+
+    }
+
+
 
 
 }

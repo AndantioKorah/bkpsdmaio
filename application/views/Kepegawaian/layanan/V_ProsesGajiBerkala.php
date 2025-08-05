@@ -104,10 +104,11 @@
         
 
         <?php if($result[0]['status'] == 1){ ?>
+        <?php if($result[0]['nosk'] == ""){ ?>
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exampleModal">
         Download Draf SK
         </button>
-       
+       <?php } ?>
         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadSKKgb">
         Upload SK 
         </button>
@@ -864,8 +865,8 @@
           <input type="text" class="form-control" id="edit_gb_masa_kerja" name="edit_gb_masa_kerja" value="<?=$result[0]['masakerja'];?>" required>
           </div>
           <div class="form-group">
-          <label >Nomor SK Gaji Berkala</label>
-          <input type="text" class="form-control" id="edit_gb_no_sk" name="edit_gb_no_sk"  value="<?php if($result[0]['nosk'] != "") echo $result[0]['nosk']; else echo "800.1.11.13/BKPSDM/SK/xxxx/2025";?>">
+          <!-- <label >Nomor SK Gaji Berkala</label>
+          <input type="text" class="form-control" id="edit_gb_no_sk" name="edit_gb_no_sk"  value="<?php if($result[0]['nosk'] != "") echo $result[0]['nosk']; else echo "800.1.11.13/BKPSDM/SK/xxxx/2025";?>"> -->
         <!-- <div class="row">
             <div class="col-sm-4">
           <input type="text" class="form-control" id="" name=""  value="800.1.11.13/BKPSDM/SK/" readonly>
@@ -880,10 +881,10 @@
         </div>
          
           <div class="form-group">
-          <label >Tgl SK Gaji Berkala</label>
-          <input autocomplete="off" type="text" class="form-control datepickerr"  id="edit_gb_tanggal_sk" name="edit_gb_tanggal_sk" value="<?php if($result[0]['tglsk'] != "0000-00-00") echo $result[0]['tglsk']; else echo date('Y-m-d');?>" required>
+        
+          <input autocomplete="off" type="hidden" class="form-control datepickerr"  id="edit_gb_tanggal_sk" name="edit_gb_tanggal_sk" value="<?php echo date('Y-m-d');?>" required>
           </div>
-          <button type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
+          <button id="btn_dwnload" type="submit" class="btn btn-sm btn-info float-right mt-2"><i class="fa fa-file-pdf"></i> Download</button>
         </form>
       </div>
     </div>
@@ -1346,4 +1347,8 @@ $('#bulan').on('change', function(){
     document.getElementById("keterangan").innerHTML = "";
   }
 }
+
+ $("#btn_dwnload").click(function() { 
+     setTimeout(window.location.reload.bind(window.location), 500);
+    });
 </script>

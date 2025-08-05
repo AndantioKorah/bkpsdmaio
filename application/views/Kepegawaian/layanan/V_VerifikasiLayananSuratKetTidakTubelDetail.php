@@ -487,8 +487,8 @@
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
 
-          <label for="exampleInputEmail1">Nomor Surat</label>
-          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
+          <!-- <label for="exampleInputEmail1">Nomor Surat</label>
+          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat"> -->
           <label for="exampleInputEmail1">Instansi Tujuan</label>
           <input type="text" class="form-control" id="instansi_tujuan" name="instansi_tujuan">
           </div> 

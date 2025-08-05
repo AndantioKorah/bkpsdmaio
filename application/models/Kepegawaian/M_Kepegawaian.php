@@ -14283,7 +14283,6 @@ public function checkListIjazahCpns($id, $id_pegawai){
     }
 
     function uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf){
-        // dd($dataPost);
         $this->db->trans_begin();
         $result['done'] = true;
         $result['message'] = "";
@@ -14374,7 +14373,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             'perihal' => $perihal,
                             'counter' => $counter,
                             'nomor_surat' => $dataPost['nomor_surat_siladen'],
-                            // 'created_by' => $kepala_bkpsdm['id_m_user'],
+                            'created_by' => $this->general_library->getId(),
                             'tanggal_surat' => date('Y-m-d'),
                             'id_m_jenis_layanan' =>39
                         ]);
@@ -14487,5 +14486,95 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             $query = $this->db->get()->row_array();
                             return $query;
         }
+
+        function uploadFileUsulDsBerkala($id_usul,$dataPost,$url1,$url2,$file_pdf){
+        $this->db->trans_begin();
+        $result['done'] = true;
+        $result['message'] = "";
+        $bulan = getNamaBulan(date('m'));
+        $tahun = date('Y');
+
+         $dataLayanan = $this->db->select('c.*,a.*,c.id as id_m_user')
+                ->from('t_gajiberkala a')
+                ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
+                ->join('m_user c', 'b.nipbaru_ws = c.username')
+                ->where('a.id', $id_usul)
+                ->where('c.flag_active', 1)
+                ->get()->row_array();
+        
+            $pegawai = $this->kinerja->getAtasanPegawai(0, $this->general_library->getId(), 1);
+            $sekbkpsdm = $this->layanan->getPegawaiByIdJabatan(ID_JABATAN_SEKBAN_BKPSDM);
+
+            $batchId = generateRandomString();
+            $data['id_m_user'] = $dataLayanan['id_m_user'];
+            $data['created_by'] = $this->general_library->getId();
+            
+            $data['keterangan'] = "SK Kenaikan Gaji Berkala a.n. ".$dataLayanan['nama'] ;
+            $data['ds_code'] = "^";
+            $data['page'] = 1;
+            $data['table_ref'] = 't_gajiberkala';
+            $data['ref_id'] = $id_usul;
+            $data['meta_view'] = "kepegawaian/layanan/V_DrafSkKgb";
+            $data['nama_kolom_ds'] = "";
+            $data['url_ds'] = $url2;
+            $data['batch_id'] = $batchId;
+            $data['id_m_jenis_layanan'] = 64;
+            $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
+
+            $this->db->insert('t_usul_ds', $data);
+            $id_t_usul_ds = $this->db->insert_id();
+
+            $usulDetail['id_t_usul_ds'] = $id_t_usul_ds;
+            $usulDetail['url'] = $url1;
+            $usulDetail['created_by'] = $this->general_library->getId();
+            $usulDetail['filename'] = $file_pdf;
+            $usulDetail['batch_id_detail'] = generateRandomString();
+
+            $this->db->insert('t_usul_ds_detail', $usulDetail);
+            $id_t_usul_ds_detail = $this->db->insert_id();
+
+            $progress1['urutan'] = 1;
+            $progress1['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
+            $progress1['id_m_user_verif'] = $pegawai['atasan']['id'];
+            $progress1['nama_jabatan'] = $pegawai['atasan']['nama_jabatan'];
+            $progress1['flag_ds_now'] = 1;
+            $this->db->insert('t_usul_ds_detail_progress', $progress1);
+
+            $progress2['urutan'] = 2;
+            $progress2['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
+            $progress2['id_m_user_verif'] = $sekbkpsdm['id_m_user'];
+            $progress2['nama_jabatan'] = $sekbkpsdm['nama_jabatan'];
+            $progress2['flag_ds_now'] = 0;
+            $this->db->insert('t_usul_ds_detail_progress', $progress2);
+
+           
+            // $dataUpdate['id_t_usul_ds'] = $id_t_usul_ds;
+            $dataUpdate['nosk'] = $dataPost['nomor_surat_siladen'];
+            $dataUpdate['tglsk'] = date('Y-m-d');
+
+            $this->db->where('id', $id_usul)
+                ->update('t_gajiberkala', $dataUpdate);
+
+            $perihal = "SK Kenaikan Gaji Berkala a.n.".getNamaPegawaiFull($dataLayanan);
+            $counter = qounterNomorSurat($tahun);
+            $this->db->insert('t_nomor_surat', [
+                            'perihal' => $perihal,
+                            'counter' => $counter,
+                            'nomor_surat' => $dataPost['nomor_surat_siladen'],
+                            'created_by' => $this->general_library->getId(),
+                            'tanggal_surat' => date('Y-m-d'),
+                            'id_m_jenis_layanan' =>64
+                        ]);
+           
+
+        if($this->db->trans_status() == FALSE && $result['code'] != 0){
+            $result['done'] = false;
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $result;
+    }
 
 }

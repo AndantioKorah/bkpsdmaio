@@ -3103,7 +3103,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['gaji_baru'] = $this->input->post('gajibaru');
 		$data['masa_kerja'] = $this->input->post('edit_gb_masa_kerja');
 		$data['tmt_kgb_baru'] = $this->input->post('edit_tmt_gaji_berkala');
-		$data['nosk'] = $this->input->post('edit_gb_no_sk');
+		
 		$data['tglsk'] = $this->input->post('edit_gb_tanggal_sk');
 		$data['pangkat_pejabat'] = $this->input->post('pangkat_pejabat');
 		$data['pangkat_tmt'] = formatDateNamaBulan($this->input->post('pangkat_tmt'));
@@ -3112,16 +3112,36 @@ class C_Kepegawaian extends CI_Controller
 		$data['pangkat_tglsk'] = $this->input->post('pangkat_tglsk');
 		
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['skpd']);
-        $nama = str_replace('.', '', $data['profil_pegawai']['nama']);
+        $nama = str_replace('.', '', $data['profil_pegawai']['nipbaru_ws']);
 
 		$nominal = str_replace('.', '', $this->input->post('gajibaru'));
 		// $nominal = 50;
 
 		$data['terbilang']= terbilang($nominal);
 
+		
+		$bulan = getNamaBulan(date('m'));
+		$tahun = date('Y');
+		
+		if(!file_exists('arsipusulds/'.$tahun)){
+                mkdir('arsipusulds/'.$tahun, 0777);
+            }
 
+        if(!file_exists('arsipusulds/'.$tahun.'/'.$bulan)){
+                mkdir('arsipusulds/'.$tahun.'/'.$bulan, 0777);
+            }
+
+		$dataNomorSurat = getNomorSuratSiladen([
+                'jenis_layanan' => 64,
+                'tahun' => 2025,
+                'perihal' => "usul DS"
+            ], 0);
+		$data['nosk'] = $dataNomorSurat['data']['nomor_surat'];
+		$dataPost = $this->input->post();
+		$id_usul = $this->input->post('id');  
 		$this->kepegawaian->simpanDataDrafKgb();
-
+		
+		
 
         $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data);
 
@@ -3132,11 +3152,21 @@ class C_Kepegawaian extends CI_Controller
 					'default_font' => 'times',
 					'debug' => true
 				]);
+				$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+
+				$file_pdf = $random_number.'_SK_Kenaikan_Gaji_Berkala_'.$nama.'.pdf';
+
+				$url1 = 'arsipusulds/'.$tahun.'/'.$bulan.'/'.$file_pdf;
+	            $url2 = 'dokumen_layanan/gajiberkala/'.$file_pdf;
+
 				$html = $this->load->view('kepegawaian/layanan/V_DrafSkKgb', $data, true);
 				$mpdf->WriteHTML($html);
 				$mpdf->showImageErrors = true;
-				$mpdf->Output('Draf_SK_Kenaikan_Gaji_Berkala '.$nama.'.pdf', 'D');
-		
+				$mpdf->Output($url1, 'F');
+				$mpdf->Output($url2, 'F');
+				$mpdf->Output($file_pdf, 'D');
+				$dataPost['nomor_surat_siladen'] = $data['nosk'];
+				$this->kepegawaian->uploadFileUsulDsBerkala($id_usul,$dataPost,$url1,$url2,$file_pdf);
         }
 
 		public function loadListGajiBerkalaSelesai(){
@@ -3550,7 +3580,7 @@ class C_Kepegawaian extends CI_Controller
 		$dataNomorSurat = getNomorSuratSiladen([
                 'jenis_layanan' => 39,
                 'tahun' => 2025,
-                'perihal' => "usul DS"
+                'perihal' => "Usul DS"
             ], 0);
 		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
 		$data['instansi_tujuan'] = $this->input->post('instansi_tujuan');

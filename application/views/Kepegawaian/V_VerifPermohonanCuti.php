@@ -37,7 +37,8 @@
           <div class="row" style="margin-top: -40px;">
             <?php
               if($this->general_library->isProgrammer() ||
-                $this->general_library->isKepalaBkpsdm()){
+                $this->general_library->isKepalaBkpsdm() ||
+                $this->general_library->isHakAkses('admin_pengajuan_cuti')){
               ?>
             <div class="col-lg-6 col-md-12">
               <label>PERANGKAT DAERAH</label>

@@ -1344,6 +1344,43 @@ function getDefaultSubJabatan($idJabatanSiasn){
     }
 }
 
+function getNomorSuratSiladen($data = null, $flag_save = 1){
+    $CI = &get_instance();
+    $CI->load->model('general/M_General', 'general');
+
+    $dataInsert['jenis_layanan'] = isset($data['jenis_layanan']) ? $data['jenis_layanan'] : 104; // 104 itu lainnya (kode: 800)
+    $dataInsert['tahun'] = isset($data['tahun']) ? $data['tahun'] : date('Y');
+    $dataInsert['perihal'] = isset($data['perihal']) ? $data['perihal'] : "Lainnya";
+    
+    $rs['code'] = 0;
+    $rs['message'] = "";
+    $rs['data']['nomor_surat'] = "";
+    $rs['data']['counter'] = "";
+
+    $layanan = $CI->general->getOne('m_jenis_layanan', 'id', $dataInsert['jenis_layanan'], 1);
+    if(!$layanan){
+        $rs['code'] = 1;
+        $rs['message'] = "Jenis Layanan tidak ditemukan";
+        return $rs;
+    }
+    $nomorSurat = $CI->general->getLastFormatNomorSurat($layanan['nomor_surat'], $dataInsert['tahun']);
+
+    $rs['data']['nomor_surat'] = $nomorSurat['nomor_surat'];
+    $rs['data']['counter'] = $nomorSurat['counter'];
+
+    if($flag_save == 1){
+        $CI->general->insert('t_nomor_surat', [
+            'nomor_surat' => $rs['data']['nomor_surat'],
+            'counter' => $rs['data']['counter'],
+            'perihal' => $dataInsert['perihal'],
+            'created_by' => $rs['data']['counter'],
+            'flag_nomor_surat_otomatis' => 1
+        ]);
+    }
+
+    return $rs;
+}
+
 function isKapus($nama_jabatan){
     return (stringStartWith('Kepala Puskesmas', $nama_jabatan)); 
 }

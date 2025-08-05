@@ -2755,10 +2755,10 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 21;
-            $bulan = 6;
+            $tanggal = 14;
+            $bulan = 7;
             $tahun = 2025;
-            $namaKegiatan = "Festival Bung Karno Manado"; 
+            $namaKegiatan = "Upacara Peringatan HUT Kota Manado"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -2771,13 +2771,14 @@
                                 ->where('a.id_m_status_pegawai', 1)
                                 ->where('a.statuspeg !=' , 1)
                                 ->where_not_in('c.id_unitkerja', [9000001]) // exclude tubel
-                                // ->where_not_in('c.id_unitkerja', [7005010, 7005020]) // exclude tubel
-                                // ->where_not_in('c.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
+                                ->where_not_in('c.id_unitkerja', [7005010, 7005020]) // exclude tubel
+                                ->where_not_in('c.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
                                 ->get()->result_array();
 
             $event = $this->db->select('*')
                             ->from('db_sip.absen_event')
-                            ->where('tgl', $dateLengkap)
+                            // ->where('tgl', $dateLengkap)
+                            ->where('tgl', '2025-07-15')
                             ->get()->result_array();
 
             $absenReguler = $this->db->select('a.user_id, a.masuk, a.pulang, b.username, d.nm_unitkerja, c.handphone, c.nama, c.gelar1, c.gelar2')
@@ -2788,8 +2789,8 @@
                                     ->where('a.tgl', $dateLengkap)
                                     ->where('c.id_m_status_pegawai', 1)
                                     ->where_not_in('d.id_unitkerja', [9000001]) // exclude tubel
-                                    // ->where_not_in('d.id_unitkerja', [7005010, 7005020]) // exclude tubel
-                                    // ->where_not_in('d.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
+                                    ->where_not_in('d.id_unitkerja', [7005010, 7005020]) // exclude tubel
+                                    ->where_not_in('d.id_unitkerjamaster', [9000000, 8010000, 8020000, 8030000, 8000000, 6000000]) // exclude guru, puskes
                                     ->where('c.statuspeg !=' , 1)
                                     ->get()->result_array();
 
@@ -2870,32 +2871,33 @@
             }
 
             $EXCLUDE_NIP_FBKM_ADVENT = [
-                199611292022031012,
-                199310222022032010,
-                199011152022031005,
-                197711062006041006,
-                200002042025052001,
-                197004101991032008,
-                196811062002121003,
-                198307082010012007,
-                198510172003121001,
-                197902042009022003,
-                198209112014102002,
-                199606102024211030,
-                197112182003121005,
-                196711151987021001,
-                197307272002122006,
-                198511252010012008,
-                198307262009021001,
-                198302132002121003,
-                197005212000121004,
-                198009132009022003,
-                198212072006042015,
-                199310302020122017,
-                197812272006042006,
-                198902102019031001,
-                197707042010011005,
-                199608092020122017
+                0
+            //     199611292022031012,
+            //     199310222022032010,
+            //     199011152022031005,
+            //     197711062006041006,
+            //     200002042025052001,
+            //     197004101991032008,
+            //     196811062002121003,
+            //     198307082010012007,
+            //     198510172003121001,
+            //     197902042009022003,
+            //     198209112014102002,
+            //     199606102024211030,
+            //     197112182003121005,
+            //     196711151987021001,
+            //     197307272002122006,
+            //     198511252010012008,
+            //     198307262009021001,
+            //     198302132002121003,
+            //     197005212000121004,
+            //     198009132009022003,
+            //     198212072006042015,
+            //     199310302020122017,
+            //     197812272006042006,
+            //     198902102019031001,
+            //     197707042010011005,
+            //     199608092020122017
             ];
 
             $excludeNipPegawai = null;
@@ -2912,6 +2914,7 @@
             
             $out = null;
             foreach($kenegaraan as $k){
+                dd($kenegaraan);
                 if(!isset($dokpen[$k['user_id']])
                 && !isset($peninjauanAbsensi[$k['user_id']])
                 && $k['user_id'] != 122

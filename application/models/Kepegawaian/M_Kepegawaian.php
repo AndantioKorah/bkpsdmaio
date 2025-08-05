@@ -8,6 +8,7 @@ class M_Kepegawaian extends CI_Model
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->model('simata/M_Simata', 'simata');
         $this->load->model('kepegawaian/M_Layanan', 'layanan');
+        $this->load->model('general/M_General', 'general');
         // $this->db = $this->load->database('main', true);
     }
 
@@ -7478,8 +7479,10 @@ public function submitEditJabatan(){
             $this->db->where('e.skpd', $data['id_unitkerja']);
         }
 
-        if(!$this->general_library->isProgrammer() && !$this->general_library->isKepalaBkpsdm()){ 
-            // jika bukan programmer ato bukan kaban, cari yang hanya bisa diverifikasi
+        if(!$this->general_library->isProgrammer() &&
+        !$this->general_library->isKepalaBkpsdm() &&
+        !$this->general_library->isHakAkses('admin_pengajuan_cuti')){ 
+            // jika bukan programmer ato bukan kaban atau bukan admin pengajuan cuti, cari yang hanya bisa diverifikasi
             $this->db->where('g.id_m_user_verifikasi', $this->general_library->getId());
         }
 
@@ -7502,7 +7505,8 @@ public function submitEditJabatan(){
         //     $this->db->where('e.skpd', $this->general_library->getUnitKerjaPegawai());
         // }
 
-        if($this->general_library->isProgrammer()){ // jika programmer, kirim semua data
+        if($this->general_library->isProgrammer() ||
+        $this->general_library->isHakAkses('admin_pengajuan_cuti')){ // jika programmer atau admin cuti, kirim semua data
             return $result;
         }
 
@@ -8688,6 +8692,10 @@ public function submitEditJabatan(){
         $this->db->insert('t_nomor_surat', $data);
     }
 
+    public function getLastFormatNomorSurat(){
+
+    }
+
     public function deleteNomorSuratManualSkCuti($id){
         $res['code'] = 0;
         $res['message'] = '';
@@ -8796,7 +8804,7 @@ public function submitEditJabatan(){
         return $res;
     }
 
-    public function saveNomorSuratManual($id, $tableName = "t_checklist_pensiun"){
+    public function saveNomorSuratManual($id, $tableName = "t_checklist_pensiun", $flagGenerateNomorSurat = 0){
         $res['code'] = 0;
         $res['message'] = '';
 
@@ -8806,12 +8814,8 @@ public function submitEditJabatan(){
         $explode_data = explode("/", $data['nomor_surat']);
         $tahun = $explode_data[count($explode_data)-1];
 
-        $exists = $this->db->select('*')
-                        ->from('t_nomor_surat')
-                        ->where('(counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'")')
-                        ->where('flag_active', 1)
-                        ->where('YEAR(tanggal_surat)', $tahun)
-                        ->get()->row_array();
+        $dataNomorSurat = null;
+        $exists = null;
 
         $usulDs = $this->db->select('a.*, b.url as url_file, c.meta_data, a.id_m_jenis_layanan')
                         ->from('t_usul_ds a')
@@ -8821,6 +8825,17 @@ public function submitEditJabatan(){
                         ->where('a.id', $id)
                         ->where('a.flag_active', 1)
                         ->get()->row_array();
+
+        if($flagGenerateNomorSurat == 1){
+            $exists = null;
+        } else {
+            $exists = $this->db->select('*')
+                        ->from('t_nomor_surat')
+                        ->where('(counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'")')
+                        ->where('flag_active', 1)
+                        ->where('YEAR(tanggal_surat)', $tahun)
+                        ->get()->row_array();
+        }
 
         if($exists){
             if($exists['id'] == $usulDs['id_t_nomor_surat']){
@@ -8834,9 +8849,23 @@ public function submitEditJabatan(){
             $res['code'] = 1;
             $res['message'] = 'Terjadi Kesalahan';
         } else {
-            //insert nomor surat manual
-            $data_input['counter'] = $data['counter_nomor_surat'];
-            $data_input['nomor_surat'] = $data['nomor_surat'];
+            //get generated nomor surat
+            $dataNomorSurat = getNomorSuratSiladen([
+                'jenis_layanan' => $usulDs['id_m_jenis_layanan'],
+                'tahun' => $tahun,
+                'perihal' => $usulDs['keterangan']
+            ], 0);
+
+            if($dataNomorSurat['code'] != 0){
+                $res['code'] = $dataNomorSurat['code'];
+                $res['message'] = $dataNomorSurat['message'];
+                $this->db->trans_rollback();
+                return $res;
+            }
+            
+            //insert nomor surat
+            $data_input['counter'] = $dataNomorSurat['data']['counter'];
+            $data_input['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
             $data_input['id_m_jenis_layanan'] = $usulDs['id_m_jenis_layanan'];
             $data_input['perihal'] = $usulDs['keterangan'];
             $data_input['tanggal_surat'] = formatDateOnlyForEdit($usulDs['created_date']);

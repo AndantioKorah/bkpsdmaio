@@ -1785,7 +1785,7 @@
                 return $res;
             }
 
-            if($disiplin[0] != 19 && $disiplin[0] != 20){
+            if($disiplin[0] != 19 && $disiplin[0] != 20){ // jika bukan TLS dan TLP, cek ST Event
                 $stEvent = $this->db->select('a.*, c.judul, c.tgl')
                                 ->from('t_pegawai_event_detail a')
                                 ->join('t_pegawai_event b', 'a.id_t_pegawai_event = b.id')
@@ -1805,6 +1805,62 @@
                     return $res;
                 }
             }
+
+            if($this->general_library->isProgrammer()){
+                    $opCuti = $this->db->select('*')
+                                    ->from('t_verif_sisa_cuti')
+                                    ->where('id_m_user', $d['id'])
+                                    ->where('flag_active', 1)
+                                    ->order_by('created_date', 'desc')
+                                    ->get()->row_array();
+
+                    if($opCuti && $opCuti['status_verifikasi'] == 0){ // belum diverif operator cuti
+                        $mData = json_decode($opCuti['meta_data'], true);
+                        $list_tanggal_cuti = getDateBetweenDates($mData['tanggal_mulai'], $mData['tanggal_akhir']);
+                        $ltCuti = null;
+                        foreach($list_tanggal_cuti as $ltc){
+                            $ltCuti[$ltc] = $ltc;
+                        }
+                        foreach($listTanggalInput as $lti){
+                            if(isset($ltCuti[$lti])){
+                                $this->db->trans_rollback();
+                                $res['code'] = 1;
+                                $res['message'] = 'Gagal mengisi Dokumen Pendukung karena pegawai atas nama '.$d['nama'].' memiliki data Permohonan Cuti pada '.formatDateNamaBulan($lti);
+                                $res['data'] = null;
+                                return $res;
+                            }
+                        }
+                    } else { // jika tidak ada cari di t_pengajuan_cuti
+                        $flagAdaPengajuanCuti = 0;
+                        $tPengajuanCutiMulai = $this->db->select('*')
+                                ->from('t_pengajuan_cuti')
+                                ->where('id_m_user', $d['id'])
+                                ->where_in('tanggal_mulai', $listTanggalInput)
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+                        if($tPengajuanCutiMulai){
+                            $this->db->trans_rollback();
+                            $res['code'] = 1;
+                            $res['message'] = 'Gagal mengisi Dokumen Pendukung karena pegawai atas nama '.$d['nama'].' memiliki data Permohonan Cuti pada '.formatDateNamaBulan($tPengajuanCutiMulai['tanggal_mulai']);
+                            $res['data'] = null;
+                            return $res;
+                        }
+
+                        $tPengajuanCutiAkhir = $this->db->select('*')
+                                ->from('t_pengajuan_cuti')
+                                ->where('id_m_user', $d['id'])
+                                ->where_in('tanggal_akhir', $listTanggalInput)
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+                       if($tPengajuanCutiAkhir){
+                            $this->db->trans_rollback();
+                            $res['code'] = 1;
+                            $res['message'] = 'Gagal mengisi Dokumen Pendukung karena pegawai atas nama '.$d['nama'].' memiliki data Permohonan Cuti pada '.formatDateNamaBulan($tPengajuanCutiAkhir['tanggal_mulai']);
+                            $res['data'] = null;
+                            return $res;
+                        } 
+                    }
+                }
             // foreach($list_tanggal as $l){
             foreach($listTanggalInput as $l){
                 $explTanggal = explode("-", $l);
@@ -3655,7 +3711,6 @@
                 
                 $result[$p['id_m_user']]['beban_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['beban_kerja'];
                 $result[$p['id_m_user']]['kondisi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['kondisi_kerja'];
-                
                 if($p['jenis_jabatan'] == 'JFT'){ // jika JFT
                     $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                     $namaunitkerja = null;
@@ -5290,9 +5345,9 @@
                 if ($entry != "." && $entry != "..") {
                     if(file_exists($dir."/".$entry)){
                         if(isset($listDokpenTY[$entry])){
-                            $filesTY[$entry] = $entry; // cari di folder jika 
+                            $filesTY[$entry] = $entry; // jika ada di dalam database t_dokumen_pendukung, simpan
                         } else {
-                            $oldFile[$entry] = $entry;
+                            $oldFile[$entry] = $entry; // jika tidak, calon dihapus
                         }
                     }
                 }
@@ -5309,7 +5364,7 @@
             if($handle = opendir($customDirBu)) {
                 while (false !== ($entry = readdir($handle))) {
                     if ($entry != "." && $entry != "..") {
-                       $customDirFileBacked[$entry] = $entry; 
+                       $customDirFileBacked[$entry] = $entry; // simpan semua yang sudah terbackup
                     }
                 }
                 closedir($handle);
@@ -5319,7 +5374,7 @@
             foreach($oldFile as $of){
                 if(!isset($customDirFileBacked[$of])){
                     $total++;
-                    copy($dir."/".$of, $customDirBu."/".$of); // copy ke folder baru untuk backup     
+                    // copy($dir."/".$of, $customDirBu."/".$of); // copy ke folder baru untuk backup     
                     unlink($dir."/".$of); // hapus dari folder lama
                     if($total == 10000){
                         break;

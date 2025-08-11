@@ -400,7 +400,7 @@ class C_Rekap extends CI_Controller
             }
             // dd($html);
             if($this->general_library->isProgrammer()){
-                // dd($html);
+                dd($html);
             }
             // if($data['param']['id_unitkerja'] == '1030550'){
             //     dd($html);   

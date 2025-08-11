@@ -10,8 +10,7 @@
 <!-- Button trigger modal -->
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 	|| $this->general_library->isHakAkses('menu_bidang_pekin') 
-	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-  || isKasubKepegawaian($this->general_library->getNamaJabatan())){ ?>
+	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modalDisiplin">
   Tambah Data Disiplin
 </button>

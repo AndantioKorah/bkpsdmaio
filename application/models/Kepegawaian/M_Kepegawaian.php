@@ -11568,7 +11568,11 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 24);
             } else if($id_m_layanan == 27){ 
                 $this->db->where('a.id_m_layanan', 27);
-            }    else {
+            } else if($id_m_layanan == 25){ 
+                $this->db->where('a.id_m_layanan', 25);
+            } else if($id_m_layanan == 26){ 
+                $this->db->where('a.id_m_layanan', 26);
+            } else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
 
@@ -12163,6 +12167,32 @@ public function getFileForVerifLayanan()
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 92)
                 ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rekom_masuk_pt"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 84)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surathukdis"){
+            $this->db->select('a.surat_pernyataan_tidak_hd')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "suratcltn"){
+            $this->db->select('a.surat_pernyataan_tidak_cltn')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();

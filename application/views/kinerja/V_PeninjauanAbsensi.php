@@ -46,7 +46,7 @@
     <input type="hidden" id="temp">
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Absensi</label>
-    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" value="<?=date('Y-m-d');?>"  readonly required>
+    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" value="" placeholder="Pilih Tanggal" readonly required>
     </div>
 
     <div class="form-group mt-2">
@@ -271,7 +271,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-
+ $("#jenis_absensi").prop('disabled',true);
         loadListPeninjauan()
         cekPengajuan()
     })
@@ -286,9 +286,10 @@ $('.datepicker2').datepicker({
     datesDisabled: datearray,
     // daysOfWeekDisabled: [0],   //Disable sunday
     autoclose:true,
-    // todayHighlight: true,
+    todayHighlight: true,
     startDate : maxDate,
     endDate: '0d',
+    
 });
 
 
@@ -549,5 +550,27 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
         // }
         // }
         });
+
+        $('#tanggal_absensi').on('change', function(){
+        var tanggal =  $('#tanggal_absensi').val()
+            $("#jenis_absensi").prop('disabled',false);
+           
+
+        if(tanggal == "2025-08-08"){
+           $('#jenis_absensi').val('')
+          document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+            if (opt.value == "1") {
+                opt.disabled = true;
+            }
+        });
+        } else {
+           document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+            if (opt.value == "1") {
+                opt.disabled = false;
+            }
+        });
+        }
+        })
+
 
 </script>

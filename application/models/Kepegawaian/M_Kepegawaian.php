@@ -7048,7 +7048,7 @@ public function submitEditJabatan(){
                                 ->get()->row_array();
 
         $thisuser = $this->db->select('a.*, b.id as id_m_user, d.id_unitkerja, d.id_unitkerjamaster, d.nm_unitkerja, c.nama_jabatan, a.handphone,
-                                d.nip_kepalaskpd_hardcode, d.flag_sekolah_negeri, e.nama_bidang, f.nama_sub_bidang')
+                                d.nip_kepalaskpd_hardcode, d.flag_sekolah_negeri, e.nama_bidang, f.nama_sub_bidang, c.eselon')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_Ws = b.username', 'left')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
@@ -7094,6 +7094,10 @@ public function submitEditJabatan(){
                 //jika atasan dan sama dengan sek, hapus atasan
                 unset($pegawai['atasan']);
             }
+        }
+
+        if(stringStartWith('II', $thisuser['eselon'])){
+            unset($pegawai['sek']);
         }
 
         if(isset($pegawai['atasan']) && $pegawai['atasan']['id'] == 380){ // jika setda pak micler hapus, karena sudah pensiun

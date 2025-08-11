@@ -1344,7 +1344,7 @@ function getDefaultSubJabatan($idJabatanSiasn){
     }
 }
 
-function getNomorSuratSiladen($data = null, $flag_save = 1){
+function getNomorSuratSiladen($data = null, $flag_save = 0){
     $CI = &get_instance();
     $CI->load->model('general/M_General', 'general');
 

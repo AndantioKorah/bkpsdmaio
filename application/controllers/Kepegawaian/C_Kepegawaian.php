@@ -1835,8 +1835,8 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->saveNomorSurat());
 	}
 
-	public function saveNomorSuratManual($id){
-		echo json_encode($this->kepegawaian->saveNomorSuratManual($id));
+	public function saveNomorSuratManual($id, $flagGenerateNomorSurat = 0){
+		echo json_encode($this->kepegawaian->saveNomorSuratManual($id, "t_checklist_pensiun", $flagGenerateNomorSurat));
 	}
 
 	public function saveNomorSuratManualSkCuti($id, $flagGenerateNomorSurat = 0){

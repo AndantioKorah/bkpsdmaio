@@ -5376,7 +5376,7 @@
                     $total++;
                     // copy($dir."/".$of, $customDirBu."/".$of); // copy ke folder baru untuk backup     
                     unlink($dir."/".$of); // hapus dari folder lama
-                    if($total == 10000){
+                    if($total == 50000){
                         break;
                     }
                 }

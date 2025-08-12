@@ -531,6 +531,7 @@ class C_Kinerja extends CI_Controller
         // dd($data['maxDate']['max_date']);
         $data['skpd'] = $this->master->getAllUnitKerja();
         $data['pegawai'] = $this->kinerja->getPegawaiPeninjauanAbsensi();
+        $data['tanggal'] = array("2025-08-08");
         render('kinerja/V_PeninjauanAbsensi', '', '', $data);
     }
 

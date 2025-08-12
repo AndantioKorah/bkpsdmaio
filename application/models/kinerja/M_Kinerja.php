@@ -5155,11 +5155,23 @@
             if($result){
             return $result;
             } else {
+
+            if($jenis_absensi == 1){
             $this->db->select('*')
             ->from('t_image_message a')
-            ->where('date(a.date_received)', $tanggal_absensi);
+            ->where('date(a.date_received)', $tanggal_absensi)
+            ->where('hour(a.date_received) < 12');
             $result = $this->db->get()->result_array();
             return $result;
+            } else {
+            $this->db->select('*')
+            ->from('t_image_message a')
+            ->where('date(a.date_received)', $tanggal_absensi)
+            ->where('hour(a.date_received) >= 12');
+            $result = $this->db->get()->result_array();
+            return $result;
+            }
+           
             }
 
             

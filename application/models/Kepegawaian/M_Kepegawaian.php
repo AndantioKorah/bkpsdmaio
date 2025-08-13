@@ -14589,7 +14589,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $this->db->where('id', $id_usul)
                 ->update('t_gajiberkala', $dataUpdate);
 
-            $perihal = "SK Kenaikan Gaji Berkala a.n.".getNamaPegawaiFull($dataLayanan);
+            $perihal = "SK KENAIKAN GAJI BERKALA a.n.".getNamaPegawaiFull($dataLayanan);
             $counter = qounterNomorSurat($tahun);
             $this->db->insert('t_nomor_surat', [
                             'perihal' => $perihal,

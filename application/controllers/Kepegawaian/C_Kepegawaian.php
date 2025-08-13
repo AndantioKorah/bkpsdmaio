@@ -3133,7 +3133,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['pangkat_tglsk'] = $this->input->post('pangkat_tglsk');
 		
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['skpd']);
-        $nama = str_replace('.', '', $data['profil_pegawai']['nipbaru_ws']);
+        $nama = str_replace('.', '', $data['profil_pegawai']['nama']);
 
 		$nominal = str_replace('.', '', $this->input->post('gajibaru'));
 		// $nominal = 50;
@@ -3175,7 +3175,7 @@ class C_Kepegawaian extends CI_Controller
 				]);
 				$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
 
-				$file_pdf = $random_number.'_SK_Kenaikan_Gaji_Berkala_'.$nama.'.pdf';
+				$file_pdf = 'Draf_SK_Kenaikan_Gaji_Berkala_'.$nama.'.pdf';
 
 				$url1 = 'arsipusulds/'.$tahun.'/'.$bulan.'/'.$file_pdf;
 	            $url2 = 'dokumen_layanan/gajiberkala/'.$file_pdf;

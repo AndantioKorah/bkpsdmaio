@@ -1613,7 +1613,8 @@ class C_Kepegawaian extends CI_Controller
 			}
 		}
 		$zip = new ZipArchive;
-		$zipname = "siladen/SK_PERMOHONANCUTI_".date('ymdhis').".zip";
+		$zipnameraw = "SK_PERMOHONANCUTI_".date('ymdhis').".zip";
+		$zipname = "siladen/".$zipnameraw;
 		$zip->open($zipname, ZipArchive::OVERWRITE || ZipArchive::CREATE);
 		// dd($zip);
 		foreach ($filenames as $file) {
@@ -1626,6 +1627,12 @@ class C_Kepegawaian extends CI_Controller
 		$zip->close();
 
 		header('location: /'.($zipname));
+
+		// header('Content-Type: application/zip');
+		// header('Content-Disposition: attachment; filename="' . basename($zipname) . '"');
+		// header('Content-Length: ' . filesize($zipname));
+
+		// echo "<script>window.open('".base_url($zipnameraw)."', '_blank')</script>";		
 
 		// unlink("siladen/".$zipname);
 	}

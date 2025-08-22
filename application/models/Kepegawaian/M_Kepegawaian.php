@@ -5837,8 +5837,10 @@ public function submitEditJabatan(){
 
          if($this->general_library->isHakAkses('verifikasi_layanan_suket_tidak_tubel')){
             $id_layanan[] = 24;
+            $id_layanan[] = 25;
+            $id_layanan[] = 26;
             $id_layanan[] = 27;
-        }
+         }
         }
 
        

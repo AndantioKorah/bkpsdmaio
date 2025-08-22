@@ -6930,11 +6930,13 @@ public function submitEditJabatan(){
                 
                 if($flagVerifOperator == 1){
                     $this->db->trans_rollback();
-
+                    $meta_data = ($this->input->post());
+                    $meta_data['surat_pendukung'] = $filename;
+                    
                     $this->db->insert('t_verif_sisa_cuti', [
                         'id_cuti' => $data['id_cuti'],
                         'id_m_user' => $data['id_m_user'],
-                        'meta_data' => json_encode($this->input->post()),
+                        'meta_data' => json_encode($meta_data),
                         'created_by' => $this->general_library->getId()
                     ]);
 

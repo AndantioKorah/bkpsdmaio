@@ -188,6 +188,10 @@ class C_Cron extends CI_Controller
         $this->siasn->syncDataUtamaPns();
     }
 
+    public function funcTest(){
+        $this->load->view('adminkit/partials/V_HeaderSKCuti', null);
+    }
+
     public function testNomorSurat($data = null){
         $data['jenis_layanan'] = isset($data['jenis_layanan']) ? $data['jenis_layanan'] : 104;
         $data['tahun'] = isset($data['tahun']) ? $data['tahun'] : date('Y');

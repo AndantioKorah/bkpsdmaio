@@ -3550,7 +3550,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 
 			$data['surat_ket_lulus_mhs'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','85','0');	
 			$data['surat_rencana_kompetensi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','86','0');	
-			$data['suket_kuliah_online'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','86','0');	
+			$data['suket_kuliah_online'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','88','0');	
 			$data['krs'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','89','0');	
 			$data['suket_beasiswa'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','87','0');	
 			$data['rencana_pengembangan_diri'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','90','0');	

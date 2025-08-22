@@ -844,14 +844,14 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-arsip-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
               </li>
-              <?php if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isHakAkses('akses_presensi_profil_pegawai') || $this->general_library->getUserName() == $nip){ ?>
+              <?php if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isHakAkses('akses_presensi_profil_pegawai') || $this->general_library->getUserName() == $nip || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){ ?>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
               </li>
               <?php } ?>
-              <li class="nav-item nav-item-profile" role="presentation">
+              <!-- <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormKp4()" class="nav-link nav-link-profile" id="pills-kp4-tab" data-bs-toggle="pill" data-bs-target="#pills-kp4" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">KP4</button>
-              </li>
+              </li> -->
               <?php 
               // if(
                 // $this->general_library->getIdEselon() < 8 && 

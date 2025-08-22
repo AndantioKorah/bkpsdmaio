@@ -54,8 +54,11 @@
                       <option value="<?=$mc['id_cuti']?>">
                           <?=$mc['nm_cuti']?>
                       </option>
-                  <?php } } } 
-                } ?>
+                  <?php } else if($this->general_library->isProgrammer()){ ?>
+                    <option value="<?=$mc['id_cuti']?>">
+                      <?=$mc['nm_cuti']?>
+                    </option>
+                  <?php } } } } ?>
               </select>
             </div>
             <div class="col" id="div_surat_pendukung" style="display: none;">

@@ -2636,10 +2636,11 @@ class M_Layanan extends CI_Model
         $res['code'] = 0;
         $res['message'] = "";
 
-        $dataEvent = $this->db->select('a.*')
+        $dataEvent = $this->db->select('a.*, c.max_change_date')
                             ->from('t_pegawai_event a')
                             ->join('t_pegawai_event_detail b', 'a.id = b.id_t_pegawai_event')
-                            ->where('flag_active', 1)
+                            ->join('db_sip.event c', 'a.id_event = c.id')
+                            ->where('a.flag_active', 1)
                             ->where('b.id', $id)
                             ->get()->row_array();
 

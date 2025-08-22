@@ -808,6 +808,7 @@
 			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 			|| $this->general_library->isHakAkses('menu_bidang_pekin') 
 			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+			// || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 			|| $this->general_library->isHakAkses('rekap_absensi_aars') 
 			|| $this->general_library->isWalikota()){ ?>
 			<li class="sidebar-item ">

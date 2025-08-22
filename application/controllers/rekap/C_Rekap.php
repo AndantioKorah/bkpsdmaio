@@ -329,7 +329,7 @@ class C_Rekap extends CI_Controller
         $data['param']['nama_tpp_tambahan'] = isset($param['nama_tpp_tambahan']) ? $param['nama_tpp_tambahan'] : null;;
         $param['id_unitkerja'] = $skpd[0];
 
-        $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0]);
+        $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0], $param['bulan'], $param['tahun']);
         $pagu_tpp = $this->kinerja->countPaguTpp([
             'id_unitkerja' => $flag_sekolah_kecamatan == 0 ? $data['param']['id_unitkerja'] : $pd_group,
             'bulan' => $data['param']['bulan'],
@@ -400,7 +400,7 @@ class C_Rekap extends CI_Controller
             }
             // dd($html);
             if($this->general_library->isProgrammer()){
-                dd($html);
+                // dd($html);
             }
             // if($data['param']['id_unitkerja'] == '1030550'){
             //     dd($html);   

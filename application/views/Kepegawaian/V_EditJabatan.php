@@ -68,7 +68,7 @@
               <select class="form-control select2" data-dropdown-parent="#modal_edit_jabatan"  name="id_unor_siasn" id="id_unor_siasn" >
                               <!-- <option value="" disabled selected>Pilih Unor SIASN</option> -->
                               <?php if($unor_siasn){ foreach($unor_siasn as $r){ ?>
-                                  <option <?php if($selectedUnitKerja && ($selectedUnitKerja['id_unor_siasn'] == $r['id'])) echo "selected"; else echo ""; ?> value="<?=$r['id']?>"><?=$r['nama_unor']?></option>
+                                  <option <?php if($selectedUnitKerja && ($selectedUnitKerja['id_unor_siasn'] == $r['id'])) echo "selected"; else echo ""; ?> value="<?=$r['id']?>"><?=$r['nama_unor'].' - '.$r['nama_unor_atasan']?></option>
                               <?php } } ?>
               </select>
 

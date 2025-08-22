@@ -992,7 +992,7 @@
         }
     }
 
-    public function getDataPenandatangananBerkasTpp($id_unitkerja){
+    public function getDataPenandatangananBerkasTpp($id_unitkerja, $bulan, $tahun){
         $result['kepalaskpd'] = null;
         $result['kasubag'] = null;
         $result['bendahara'] = null;
@@ -1176,7 +1176,7 @@
                 }
             }
         } else { //jika dinas atau badan
-            if(!$result['kasubag']){ // jika kasubag kosong
+            if(!$result['kasubag'] || !$result['kepalaskpd']){ // jika kasubag atau kepalaskpd kosong
                 // cek di plt plh
                 $list_plt =  $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                         f.id as id_m_user, a.flag_bendahara, h.nama_jabatan, h.kepalaskpd, h.eselon, g.jenis')
@@ -1189,6 +1189,8 @@
                                         ->where('a.skpd', $unitkerja['id_unitkerja'])
                                         // ->where('e.nama_jabatan', 'Sekretaris Daerah')
                                         ->where('id_m_status_pegawai', 1)
+                                        ->where('g.tanggal_akhir >=', $tahun.'-'.$bulan.'-31')
+                                        // ->where('g.tanggal_mulai <=', date('Y-m-d'))
                                         ->get()->result_array();
                 // dd($list_plt);
                 if($list_plt){
@@ -1196,6 +1198,9 @@
                         if(isKasubKepegawaian($plt['nama_jabatan'], $plt['eselon'])){
                             $result['kasubag'] = $plt;
                             $result['kasubag']['nama_jabatan'] = $plt['jenis'].'. '.$plt['nama_jabatan'];
+                        } else if($plt['kepalaskpd'] == 1 && !$result['kepalaskpd']){
+                            $result['kepalaskpd'] = $plt;
+                            $result['kepalaskpd']['nama_jabatan'] = $plt['jenis'].'. '.$plt['nama_jabatan'];
                         }
                     }
                 }
@@ -1326,9 +1331,9 @@
             }
         }
         
-        // if($this->general_library->isProgrammer()){
-        //     dd($result);
-        // }
+        if($this->general_library->isProgrammer()){
+            // dd($result);
+        }
 
         return $result;
     }

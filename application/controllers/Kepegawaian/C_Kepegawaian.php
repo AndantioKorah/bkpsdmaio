@@ -1389,7 +1389,7 @@ class C_Kepegawaian extends CI_Controller
 		// $data['jenis_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenisjab', 'id_jenisjab', 'asc');
 		$data['jenis_jabatan'] = $this->kepegawaian->getJenisJabatan();
 		$data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
-		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama_unor', 'asc');
+		$data['unor_siasn'] = $this->general->getAllUnorSiasn();
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
 		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
@@ -1613,7 +1613,8 @@ class C_Kepegawaian extends CI_Controller
 			}
 		}
 		$zip = new ZipArchive;
-		$zipname = "siladen/SK_PERMOHONANCUTI_".date('ymdhis').".zip";
+		$zipnameraw = "SK_PERMOHONANCUTI_".date('ymdhis').".zip";
+		$zipname = "siladen/".$zipnameraw;
 		$zip->open($zipname, ZipArchive::OVERWRITE || ZipArchive::CREATE);
 		// dd($zip);
 		foreach ($filenames as $file) {
@@ -1626,6 +1627,12 @@ class C_Kepegawaian extends CI_Controller
 		$zip->close();
 
 		header('location: /'.($zipname));
+
+		// header('Content-Type: application/zip');
+		// header('Content-Disposition: attachment; filename="' . basename($zipname) . '"');
+		// header('Content-Length: ' . filesize($zipname));
+
+		// echo "<script>window.open('".base_url($zipnameraw)."', '_blank')</script>";		
 
 		// unlink("siladen/".$zipname);
 	}
@@ -1835,8 +1842,8 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->saveNomorSurat());
 	}
 
-	public function saveNomorSuratManual($id){
-		echo json_encode($this->kepegawaian->saveNomorSuratManual($id));
+	public function saveNomorSuratManual($id, $flagGenerateNomorSurat = 0){
+		echo json_encode($this->kepegawaian->saveNomorSuratManual($id, "t_checklist_pensiun", $flagGenerateNomorSurat));
 	}
 
 	public function saveNomorSuratManualSkCuti($id, $flagGenerateNomorSurat = 0){

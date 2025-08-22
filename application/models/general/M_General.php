@@ -67,6 +67,16 @@
             return $this->db->get()->result_array(); 
         }
 
+        public function getAllUnorSiasn(){
+            return $this->db->select('a.nama_unor, a.id, c.nama_unor as nama_unor_atasan')
+                        ->from('db_siasn.m_ref_unor a')
+                        ->join('db_siasn.m_unor_perencanaan b', 'a.id = b.id', 'left')
+                        ->join('db_siasn.m_ref_unor c', 'b.diatasan_id = c.id')
+                        ->group_by('a.id')
+                        ->order_by('a.nama_unor', 'asc')
+                        ->get()->result_array();
+        }
+
         public function authenticate($username, $password, $flagSwitchAcc = 0)
         {
             $exclude_username = ['prog', '001'];

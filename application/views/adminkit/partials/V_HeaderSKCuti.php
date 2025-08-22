@@ -36,8 +36,8 @@
 			<h5 class="top_header_secondary">PEMERINTAH KOTA MANADO</h5>
 			<h5 class="top_header">BADAN KEPEGAWAIAN DAN PENGEMBANGAN </h5>
 			<h5 class="top_header">SUMBER DAYA MANUSIA</h5>
-			<h5 class="address_header">Jalan Balai Kota No. 1, Manado, 95124</h5>
-			<h5 class="footer_header">website: bkd.manadokota.go.id | email: bkdkotamanado@gmail.com</h5>
+			<h5 class="address_header"><?= ALAMAT_BKPSDM ?></h5>
+			<h5 class="footer_header">website: <?=WEBSITE_BKPSDM?> | email: <?=EMAIL_BKPSDM?></h5>
 		</td>
 	</tr>
 	<tr>

@@ -1,9 +1,52 @@
 <?php if($result){ $dt = json_decode($result['meta_data'], true); ?>
+  <style>
+    .sp_label_opc{
+      color: grey;
+      font-weight: bold;
+      font-style: italic;
+      font-size: .65rem;
+    }
+
+    .sp_value_opc{
+      color: black;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  </style>
   <div class="col-lg-12" style="padding: 1.5rem;">
     <div class="row">
       <div class="col-lg-12">
-        <h3><?=$result['nm_cuti'].' '.getNamaPegawaiFull($result)?></h3>
-        <h4><?=formatDateNamaBulan($dt['tanggal_mulai']).' s/d '.formatDateNamaBulan($dt['tanggal_akhir']).' ('.$dt['lama_cuti'].')'?></h4>
+        <?php
+          $tanggalCuti = formatDateNamaBulan($dt['tanggal_mulai']);
+          if($dt['tanggal_mulai'] != $dt['tanggal_akhir']){
+            $tanggalCuti .= " s/d ".formatDateNamaBulan($dt['tanggal_akhir']);
+          }
+        ?>
+        <div class="row">
+          <div class="col-lg-6">
+            <span class="sp_label_opc">Jenis Cuti</span><br>
+            <span class="sp_value_opc"><?=$result['nm_cuti']?></span><br>
+            <span class="sp_label_opc">Pegawai</span><br>
+            <span class="sp_value_opc"><?=getNamaPegawaiFull($result)?></span><br>
+            <span class="sp_label_opc">Tanggal Cuti</span><br>
+            <span class="sp_value_opc"><?=$tanggalCuti.' ('.$dt['lama_cuti'].')'?></span><br>
+          </div>
+          <div class="col-lg-6">
+            <span class="sp_label_opc">Alasan</span><br>
+            <span class="sp_value_opc"><?=$dt['alasan']?></span><br>
+            <span class="sp_label_opc">Alamat</span><br>
+            <span class="sp_value_opc"><?=($dt['alamat'])?></span><br>
+            <?php if($result['id_cuti'] != 00){ ?>
+              <span class="sp_label_opc">Dokumen Pendukung</span><br>
+              <?php if(file_exists('assets/dokumen_pendukung_cuti/'.$dt['surat_pendukung'])){ ?>
+                <a href="<?=base_url('assets/dokumen_pendukung_cuti/'.$dt['surat_pendukung'])?>" target="_blank"
+                  class="btn btn-outline-danger"><i class="fa fa-file"></i> Surat Pendukung</a>
+              <?php } else { ?>
+                <span class="" style="font-weight: bold; color: red !important;"><i class="fa fa-exclamation"></i> Dokumen tidak diupload</span><br>
+              <?php } ?>
+            <?php } ?>
+          </div>
+        </div>
         <hr>
       </div>
       <div class="col-lg-12">

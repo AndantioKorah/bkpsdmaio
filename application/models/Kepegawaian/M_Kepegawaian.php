@@ -6795,20 +6795,29 @@ public function submitEditJabatan(){
 
             $filename = null;
             if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
-                if($_FILES['surat_pendukung']['type'] != "application/pdf"){
-                    $res['code'] = 0;
-                    $res['message'] = "Surat Pendukung yang diupload harus dalam format Pdf";
-                } else {
-                    $config['upload_path'] = './assets/dokumen_pendukung_cuti';
-                    $config['allowed_types'] = '*';
-                    $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
-                    $this->load->library('upload',$config);
-                    if($this->upload->do_upload('surat_pendukung')){
-                        $upload = $this->upload->data();
-                        $filename = $upload['file_name'];
+                if($flagVerifOperator == 1){
+                    if($_FILES['surat_pendukung']['type'] != "application/pdf"){
+                        $res['code'] = 0;
+                        $res['message'] = "Surat Pendukung yang diupload harus dalam format Pdf";
                     } else {
+                        $config['upload_path'] = './assets/dokumen_pendukung_cuti';
+                        $config['allowed_types'] = '*';
+                        $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
+                        $this->load->library('upload',$config);
+                        if($this->upload->do_upload('surat_pendukung')){
+                            $upload = $this->upload->data();
+                            $filename = $upload['file_name'];
+                        } else {
+                            $res['code'] = 1;
+                            $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                        }
+                    }
+                } else {
+                    if(!file_exists('assets/dokumen_pendukung_cuti/'.$dataInput['surat_pendukung'])){
                         $res['code'] = 1;
-                        $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                        $res['message'] = "Data tidak dapat disimpan karena tidak ada Dokumen Pendukung";
+                    } else {
+                        $filename = $dataInput['surat_pendukung'];
                     }
                 }
             }

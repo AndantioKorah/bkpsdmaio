@@ -285,10 +285,21 @@ $(function(){
         var MaxSize = 2048;
         var fileSize = this.files[0].size/1024;
 
+
+        if(jenis_arsip == 11){
+        var MaxSize = 1024;
+        if (fileSize > MaxSize ){
+          errortoast("Maksimal Ukuran File 1 MB")
+          $(this).val('');
+        }
+        }  else {
         if (fileSize > MaxSize ){
           errortoast("Maksimal Ukuran File 2 MB")
           $(this).val('');
         }
+        }
+
+      
        
         if(jenis_arsip != 53){
           if (extension != "pdf"){

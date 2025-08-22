@@ -103,7 +103,7 @@
         Verifikasi
         </button>
         <?php } ?>
-        <?php if($result[0]['status_layanan'] == 1) { ;?>
+        <?php if($result[0]['status_layanan'] == 1 || $result[0]['status_layanan'] == 2) { ;?>
         
         <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Verif
@@ -111,9 +111,9 @@
         <?php } ?>
       
         <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
-        <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
+        <!-- <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
         Upload Dokumen
-        </button>
+        </button> -->
         <?php } ?>
         <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
@@ -236,7 +236,9 @@
   <li>
   <?php } ?>
   <?php if($id_m_layanan == 26) { ?>
-  
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='suket_online')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Keterangan Dari Perguruan Tinggi Bagi yang Perkuliahan Online</button>
+  <li>
   <?php } ?>
 
         </li>
@@ -510,7 +512,6 @@
         <input type="hidden" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
         <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
         <input type="hidden" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
-        <input type="hidden" id="ijazah_cpns" name="ijazah_cpns"  value="<?php if($ijazah_cpns) echo $ijazah_cpns['id']; else echo "";?>">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
@@ -695,7 +696,7 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "surat_rekom_masuk_pt" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
+        } else if(file == "suket_online" || file == "suket_beasiswa" || file == "rencana_pengembangan_diri" || file == "krs" || file == "surat_rencana_kompetensi" || file == "surat_ket_lulus_mhs" || file == "surat_rekom_masuk_pt" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";

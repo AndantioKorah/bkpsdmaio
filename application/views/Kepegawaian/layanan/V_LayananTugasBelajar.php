@@ -300,7 +300,7 @@ ol {
 					style="margin-top: -35px;">
           <?php if($id_m_layanan == 25 || $id_m_layanan == 26) { ?>
          <div class="form-group mb-2">
-            <label>SURAT PERMOHONAN PNS YANG BERSANGKUTAN MENGETAHUI KEPALA PD DITUJUKAN KE WALIKOTA</label>
+            <label>SURAT PERMOHONAN PNS YANG BERSANGKUTAN MENGETAHUI KEPALA PD DITUJUKAN KE <?php if($id_m_layanan == 25) echo "WALIKOTA"; else echo "KEPALA BKPSDM";  ?></label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
           </div>
           <div class="form-group mt-2">
@@ -408,7 +408,7 @@ ol {
              <li>
 			    <a class="<?php if($suket_beasiswa){ if($suket_beasiswa['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($suket_beasiswa) { ?>
 					onclick="viewBerkasPangkat('<?=$suket_beasiswa['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN ATAU SEJENISNYA DARI PEMBERI BEASISWA* <i
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN ATAU SEJENISNYA DARI PEMBERI BEASISWA <i
 					class="fas fa-<?php if($suket_beasiswa) echo ''; else echo '';?>"></i></a>
 			  </li>
               <?php } ?>
@@ -416,7 +416,7 @@ ol {
               <li>
 			    <a class="<?php if($suket_kuliah_online){ if($suket_kuliah_online['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($suket_kuliah_online) { ?>
 					onclick="viewBerkasPangkat('<?=$suket_kuliah_online['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN DARI PERGURUAN TINGGI BAGI YANG PERKULIAHAN ONLINE*
+					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT KETERANGAN DARI PERGURUAN TINGGI BAGI YANG PERKULIAHAN ONLINE
                     <i class="fas fa-<?php if($suket_kuliah_online) echo ''; else echo '';?>"></i></a>
 			  </li>
               <?php } ?>
@@ -506,7 +506,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  loadListRiwayatLayananPangkat()
+  loadListRiwayatTugasBelajar()
     })
     $('#form_layanan_tugas_belajar').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -536,42 +536,42 @@ $(function(){
         if(id_m_layanan == 25 || id_m_layanan == 26){
         
           if(skp1 == ""){
-            alert(1)
+            // alert(1)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
           if(skp2 == ""){
-            alert(2)
+            // alert(2)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
            if(sk_pangkat == ""){
-            alert(3)
+            // alert(3)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
            if(surat_rekom_masuk_pt == ""){
-            alert(4)
+            // alert(4)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
            if(akreditasi == ""){
-            alert(5)
+            // alert(5)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
           if(surat_ket_lulus_mhs == ""){
-              alert(6)
+              // alert(6)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
           if(surat_rencana_kompetensi == ""){
-              alert(7)
+              // alert(7)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
           if(ijazah == ""){
-              alert(8)
+              // alert(8)
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
@@ -582,11 +582,11 @@ $(function(){
           }
         }
         if(id_m_layanan == 25){
-          if(suket_beasiswa == ""){
-             alert(5)
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-          }
+          // if(suket_beasiswa == ""){
+          //   //  alert(5)
+          //   errortoast(' Berkas Belum Lengkap')
+          //   return false;
+          // }
         
         }
 
@@ -604,7 +604,7 @@ $(function(){
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListRiwayatLayananPangkat()
+                loadListRiwayatTugasBelajar()
                 // window.scrollTo(0, document.body.scrollHeight);
                 window.scrollTo(0, 0);
               } else {
@@ -668,7 +668,7 @@ $(function(){
 
   }
 
-  function loadListRiwayatLayananPangkat(){
+  function loadListRiwayatTugasBelajar(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
     $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){

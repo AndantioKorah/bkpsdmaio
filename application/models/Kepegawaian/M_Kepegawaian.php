@@ -12196,7 +12196,67 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }  else {
+        } else if($this->input->post('file') == "surat_ket_lulus_mhs"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 85)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rencana_kompetensi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 86)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "krs"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 89)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "rencana_pengembangan_diri"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 90)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "suket_beasiswa"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 87)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "suket_online"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 88)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }   else {
          return [''];
         }
         
@@ -12311,6 +12371,12 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         } else if($dataPengajuan[0]['id_m_layanan'] == 27){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN SURAT REKOMENDASI MENGIKUTI SELEKSI MASUK PERGURUAN TINGGI]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Surat Rekomendasi Mengikuti Seleksi Masuk Perguruan Tinggi anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        }  else if($dataPengajuan[0]['id_m_layanan'] == 25){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN TUGAS BELAJAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Tugas Belajar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 26){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN TUGAS BELAJAR BIAYA MANDIRI]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Tugas Belajar Biaya Mandiri anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        

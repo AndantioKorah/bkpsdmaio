@@ -729,6 +729,16 @@
 						<i class="align-middle me-2 far fa-circle"></i>Layanan Surat Rekomendasi <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mengikuti Seleksi Masuk PT
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/25')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Tugas Belajar 
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/26')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Tugas Belajar Biaya Mandiri
+					</a>
+				</li>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_layanan_suket_pidana_hukdis')){ ?>
 				<li class="sidebar-item ">

@@ -189,7 +189,12 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest(){
-        $this->load->view('adminkit/partials/V_HeaderSKCuti', null);
+        // dd($this->general_library->getDataKabanBkpsdm());
+        $randomString = generateRandomString(30, 1, 't_file_ds'); 
+        $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+        // dd($contentQr);
+        $res['qr'] = generateQr($contentQr);
+        $this->load->view('adminkit/partials/V_TemplateTte', $res);
     }
 
     public function testNomorSurat($data = null){

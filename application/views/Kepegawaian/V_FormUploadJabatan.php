@@ -191,7 +191,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="id_unor_siasn" id="id_unor_siasn"   >
                       <option value="" disabled selected>Pilih Unor SIASN</option>
                       <?php if($unor_siasn){ foreach($unor_siasn as $r){ ?>
-                          <option value="<?=$r['id']?>"><?=$r['nama']?></option>
+                          <option value="<?=$r['id']?>"><?=$r['nama_unor'].' - '.$r['nama_unor_atasan']?></option>
                       <?php } } ?>
       </select>
     </div>

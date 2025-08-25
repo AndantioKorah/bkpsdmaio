@@ -43,12 +43,12 @@
 					</td>
 					<td style="vertical-align: middle; text-align: left !important;" rowspan=1>
 						
-						<span class="sp_tte_nama_pegawai">Donald Franky Supit, SH., MH</span>
+						<span class="sp_tte_nama_pegawai"><?= getNamaPegawaiFull($this->general_library->getDataKabanBkpsdm()) ?></span>
 					</td>
 				</tr>
 				<tr>
 					<td style="vertical-align: middle; text-align: left !important;" rowspan=1>
-						<span class="sp_tte_nip">NIP. 197402061998031008</span>
+						<span class="sp_tte_nip">NIP. <?= ($this->general_library->getDataKabanBkpsdm()['nipbaru_ws']) ?></span>
 					</td>
 				</tr>
 			</table>

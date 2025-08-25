@@ -7,6 +7,7 @@ class General_library
 {
     protected $nikita;
     public $userLoggedIn;
+    public $kabanBkpsdm;
     public $hakAkses;
     public $params;
     public $bios_serial_num;
@@ -15,10 +16,7 @@ class General_library
     {
         // dd(date('Y-m-d H:i:s'));
         $this->nikita = &get_instance();
-        if($this->nikita->session->userdata('user_logged_in')){
-            $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
-            $this->hakAkses = $this->nikita->session->userdata('list_hak_akses');
-        }
+        
         $this->params = $this->nikita->session->userdata('params');
         $this->bios_serial_num = shell_exec('wmic bios get serialnumber 2>&1');
         date_default_timezone_set("Asia/Singapore");
@@ -28,6 +26,16 @@ class General_library
         $this->nikita->load->model('rekap/M_Rekap', 'm_rekap');
         $this->nikita->load->model('kepegawaian/M_Layanan', 'm_layanan');
         $this->nikita->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
+
+        if($this->nikita->session->userdata('user_logged_in')){
+            $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
+            $this->hakAkses = $this->nikita->session->userdata('list_hak_akses');
+            $this->kabanBkpsdm = $this->nikita->kepegawaian->getDataKabanBkd();
+        }
+    }
+    
+    public function getDataKabanBkpsdm(){
+        return $this->kabanBkpsdm;
     }
 
     public function listHakAkses(){

@@ -3625,12 +3625,14 @@ public function copyfoto(){
 
 public function getDataKabanBkd()
 {
-    $this->db->select('*')
+    $this->db->select('a.*, f.*, g.*, h.*, b.id as id_m_user')
     ->from('db_pegawai.pegawai a')
+    ->join('m_user b', 'a.nipbaru_ws = b.username')
     ->join('db_pegawai.pangkat f', 'a.pangkat = f.id_pangkat')
     ->join('db_pegawai.jabatan g', 'a.jabatan = g.id_jabatanpeg')
     ->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
-
+    ->group_by('a.nipbaru_ws')
+    ->where('b.flag_active', 1)
     ->where('a.jabatan', '4018000JS01');
     return $this->db->get()->row_array(); 
 }
@@ -6134,7 +6136,7 @@ public function submitEditJabatan(){
                     
                     // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *YA* untuk menyetujui atau *Tidak* untuk menolak.";
                     $cronWaNextVerifikator = null;
-                    if($progress['next']['nohp'] == NOMOR_HP_KABAN){
+                    if($progress['next']['nohp'] == $this->general_library->getDataKabanBkpsdm()['handphone']){
                         if($dataCuti['skpd'] == 4018000){
                             $cronWaNextVerifikator = [
                                 'sendTo' => convertPhoneNumber($progress['next']['nohp']),
@@ -6162,7 +6164,7 @@ public function submitEditJabatan(){
                         // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                     }
                     if($cronWaNextVerifikator){
-                        if($cronWaNextVerifikator['sendTo'] == CONVERTED_NOMOR_HP_KABAN){ // jika kaban
+                        if($cronWaNextVerifikator['sendTo'] == convertPhoneNumber($this->general_library->getDataKabanBkpsdm()['handphone'])){ // jika kaban
                             if($dataCuti['skpd'] == 4018000){ // hanya pegawai bkpsdm
                                 $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                             }
@@ -6181,7 +6183,7 @@ public function submitEditJabatan(){
                     }
                 }
 
-                if(!$progress['next'] || $progress['next']['id_m_user_verifikasi'] == '193'){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
+                if(!$progress['next'] || $progress['next']['id_m_user_verifikasi'] == $this->general_library->getDataKabanBkpsdm()['id_m_user']){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
                     $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
                             f.nama_jabatan, g.nm_unitkerja, a.id as id_t_pengajuan_cuti,
                             g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, d.nipbaru_ws')
@@ -6797,20 +6799,29 @@ public function submitEditJabatan(){
 
             $filename = null;
             if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
-                if($_FILES['surat_pendukung']['type'] != "application/pdf"){
-                    $res['code'] = 0;
-                    $res['message'] = "Surat Pendukung yang diupload harus dalam format Pdf";
-                } else {
-                    $config['upload_path'] = './assets/dokumen_pendukung_cuti';
-                    $config['allowed_types'] = '*';
-                    $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
-                    $this->load->library('upload',$config);
-                    if($this->upload->do_upload('surat_pendukung')){
-                        $upload = $this->upload->data();
-                        $filename = $upload['file_name'];
+                if($flagVerifOperator == 1){
+                    if($_FILES['surat_pendukung']['type'] != "application/pdf"){
+                        $res['code'] = 0;
+                        $res['message'] = "Surat Pendukung yang diupload harus dalam format Pdf";
                     } else {
+                        $config['upload_path'] = './assets/dokumen_pendukung_cuti';
+                        $config['allowed_types'] = '*';
+                        $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
+                        $this->load->library('upload',$config);
+                        if($this->upload->do_upload('surat_pendukung')){
+                            $upload = $this->upload->data();
+                            $filename = $upload['file_name'];
+                        } else {
+                            $res['code'] = 1;
+                            $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                        }
+                    }
+                } else {
+                    if(!file_exists('assets/dokumen_pendukung_cuti/'.$dataInput['surat_pendukung'])){
                         $res['code'] = 1;
-                        $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                        $res['message'] = "Data tidak dapat disimpan karena tidak ada Dokumen Pendukung";
+                    } else {
+                        $filename = $dataInput['surat_pendukung'];
                     }
                 }
             }
@@ -7655,7 +7666,8 @@ public function submitEditJabatan(){
 
         if($res['progress']){
             $update_data_pengajuan = null;
-            if($res['progress']['current']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){
+            // if($res['progress']['current']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){
+            if($res['progress']['current']['jabatan'] == $this->general_library->getDataKabanBkpsdm()['id_jabatanpeg']){
                 $res['code'] = 1;
                 $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
             } else if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
@@ -7717,7 +7729,7 @@ public function submitEditJabatan(){
                             'id_state' => $res['progress']['next']['id']
                         ];
                         if($cronWaNextVerifikator){
-                            if($res['progress']['next']['nohp'] == NOMOR_HP_KABAN){
+                            if($res['progress']['next']['nohp'] == $this->general_library->getDataKabanBkpsdm()['handphone']){
                                 if($data['id_unitkerja'] == 4018000){
                                     $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                                 }
@@ -7727,7 +7739,7 @@ public function submitEditJabatan(){
                         }
                     }
 
-                    if(!$res['progress']['next'] || $res['progress']['next']['id_m_user_verifikasi'] == '193'){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
+                    if(!$res['progress']['next'] || $res['progress']['next']['id_m_user_verifikasi'] == $this->general_library->getDataKabanBkpsdm()['id_m_user']){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
                         $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
                                 f.nama_jabatan, g.nm_unitkerja, a.id as id_t_pengajuan_cuti,
                                 g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, d.nipbaru_ws')

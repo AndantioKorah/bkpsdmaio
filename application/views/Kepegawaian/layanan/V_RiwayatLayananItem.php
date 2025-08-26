@@ -384,6 +384,12 @@ function ajukanKembali(id){
                                if(id_layanan == 25 || id_layanan == 26){
                                 loadListRiwayatTugasBelajar()
                                }
+                                if(id_layanan == 27){
+                                loadListRiwayatSuratRekomPt()
+                               }
+                               if(id_layanan == 28){
+                                loadListRiwayatMutasiPidahMasuk()
+                               }
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }
@@ -476,6 +482,18 @@ function ajukanKembali(id){
              if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatLayananJabfung, 2000);
+             }
+             if(id_layanan == 25 || id_layanan == 26){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatTugasBelajar, 2000);
+             }
+             if(id_layanan == 27){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatSuratRekomPt, 2000);
+             }
+              if(id_layanan == 28){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatMutasiPidahMasuk, 2000);
              }
 
            } else {

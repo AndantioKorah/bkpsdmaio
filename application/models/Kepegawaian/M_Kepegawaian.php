@@ -13668,6 +13668,14 @@ public function getFileForVerifLayanan()
             $target_dir	= './dokumen_layanan/peningkatan_penambahan_gelar';
         } else if($id_m_layanan == 24){
             $target_dir	= './dokumen_layanan/suratkettidaktubel';
+        } else if($id_m_layanan == 25){
+            $target_dir	= './dokumen_layanan/tugasbelajar';
+        } else if($id_m_layanan == 26){
+            $target_dir	= './dokumen_layanan/tugasbelajarmandiri';
+        } else if($id_m_layanan == 27){
+            $target_dir	= './dokumen_layanan/suratrekompt';
+        } else if($id_m_layanan == 28){
+            $target_dir	= './dokumen_layanan/mutasi_pindah_masuk';
         }
 
         $this->db->trans_begin();

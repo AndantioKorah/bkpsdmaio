@@ -394,7 +394,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  loadListRiwayatSuratPidana()
+  loadListRiwayatMutasiPidahMasuk()
     })
     $('#form_mutasi_pindah_masuk').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -431,7 +431,7 @@ $(function(){
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListRiwayatSuratPidana()
+                loadListRiwayatMutasiPidahMasuk()
                 // window.scrollTo(0, document.body.scrollHeight);
                 window.scrollTo(0, 0);
               } else {
@@ -469,15 +469,15 @@ function viewBerkasPangkat(filename,id){
 
   }
 
-  // function loadListRiwayatSuratPidana(){
+  // function loadListRiwayatMutasiPidahMasuk(){
   //   $('#list_riwayat_karsu').html('')
   //   $('#list_riwayat_karsu').append(divLoaderNavy)
-  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatSuratPidana/")?>', function(){
+  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatMutasiPidahMasuk/")?>', function(){
   //     $('#loader').hide()
   //   })
   //   }
 
-  function loadListRiwayatSuratPidana(){
+  function loadListRiwayatMutasiPidahMasuk(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
     $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){

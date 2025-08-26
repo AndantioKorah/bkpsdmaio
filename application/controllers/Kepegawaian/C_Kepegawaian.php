@@ -733,7 +733,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['statusjabatan'] = $statusjab;
 		$id_peg = $this->general->getIdPeg($this->general_library->getUserName());
 		$data['dok'] = $this->kepegawaian->getDataDok('db_pegawai.pegjabatan', $id_peg );
-		$data['unor_siasn'] = $this->general->getAllWithOrderGeneral('db_siasn.m_ref_unor', 'nama_unor', 'asc');
+		$data['unor_siasn'] = $this->general->getAllUnorSiasn();
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai') || isKasubKepegawaian($this->general_library->getNamaJabatan())){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
 			

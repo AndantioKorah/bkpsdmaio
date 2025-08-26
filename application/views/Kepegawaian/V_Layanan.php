@@ -257,6 +257,10 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananSuratMasukPt/")?>'+val, function(){
       $('#loader').hide()
     })
+    } else if(val == 28) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananMutasiPidahMasuk/")?>'+val, function(){
+      $('#loader').hide()
+    })
     } else {
       $('#form_layanan').html('')
     }

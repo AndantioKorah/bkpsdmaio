@@ -13,7 +13,7 @@
           <?php } else { ?>
           <th class="text-left">Surat Pengantar</th>
           <?php } ?>
-          <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25 || $m_layanan == 26) { ?>
+          <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25 || $m_layanan == 26 || $m_layanan == 28) { ?>
           <th class="text-left">Surat Pernyataan tidak sedang Hukuman Disiplin</th>
           <?php } ?>
           <?php if($m_layanan == 23) { ?>
@@ -59,7 +59,7 @@
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>
             </td>
-            <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25 || $m_layanan == 26) { ?>
+            <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25 || $m_layanan == 26 || $m_layanan == 28) { ?>
           <td class="text-left">
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
@@ -303,6 +303,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
   $link = "<?=base_url();?>dokumen_layanan/tugasbelajar/"+filename+"?v="+number;
 } else if(id_layanan == 26){
   $link = "<?=base_url();?>dokumen_layanan/tugasbelajarmandiri/"+filename+"?v="+number;
+} else if(id_layanan == 28){
+  $link = "<?=base_url();?>dokumen_layanan/mutasi_pindah_masuk/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)
@@ -324,7 +326,9 @@ if(id_layanan == 12 || id_layanan == 13){
   $link = "<?=base_url();?>dokumen_layanan/tugasbelajar/"+filename+"?v="+number;
 } else if(id_layanan == 26){
   $link = "<?=base_url();?>dokumen_layanan/tugasbelajarmandiri/"+filename+"?v="+number;
-}  else {
+} else if(id_layanan == 28){
+  $link = "<?=base_url();?>dokumen_layanan/mutasi_pindah_masuk/"+filename+"?v="+number;
+}   else {
   $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
 }
 

@@ -11588,7 +11588,9 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 25);
             } else if($id_m_layanan == 26){ 
                 $this->db->where('a.id_m_layanan', 26);
-            } else {
+            } else if($id_m_layanan == 28){ 
+                $this->db->where('a.id_m_layanan', 28);
+            }  else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
 
@@ -12393,6 +12395,9 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         } else if($dataPengajuan[0]['id_m_layanan'] == 26){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN TUGAS BELAJAR BIAYA MANDIRI]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Tugas Belajar Biaya Mandiri anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 28){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN MUTASI PINDAH MASUK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Mutasi Pindah Masuk anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        
@@ -13398,6 +13403,9 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 25){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/tugasbelajar';
+            } else if($id_m_layanan == 28){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/mutasi_pindah_masuk';
             }  else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
@@ -13410,9 +13418,11 @@ public function getFileForVerifLayanan()
             if(isset($_FILES['file2']['name'])){
                 // $file2 = str_replace(' ', '', $_FILES['file2']['name']);
                 $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
-                 if($id_m_layanan == 23){
+                if($id_m_layanan == 23){
                 $target_dir_hd	= './dokumen_layanan/suratpidanahukdis';
-                } else {
+                } else if($id_m_layanan == 28){
+                $target_dir_hd	= './dokumen_layanan/mutasi_pindah_masuk';
+                }  else {
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
                 } 
             }

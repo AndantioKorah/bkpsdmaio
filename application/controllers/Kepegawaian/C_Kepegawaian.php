@@ -2763,6 +2763,8 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananSuratRekomMasukPtItem', $data);
 		} else if($id_m_layanan == 25 || $id_m_layanan == 26){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
+		} else if($id_m_layanan == 28){
+			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		}
 	}
 
@@ -2930,7 +2932,11 @@ class C_Kepegawaian extends CI_Controller
 			$data['rencana_pengembangan_diri'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','90','0',$id_peg);
 
 			render('kepegawaian/layanan/V_VerifikasiLayananTubelDetail.php', '', '', $data);
-		}  
+		}  else if($layanan == 28){
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+			$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','66','0',$id_peg);	
+			render('kepegawaian/layanan/V_VerifikasiLayananMutasiPindahMasukDetail.php', '', '', $data);
+		} 
 		
 
 		
@@ -3584,6 +3590,26 @@ class C_Kepegawaian extends CI_Controller
 			$data['surat_pemberitahuan_mhs_baru'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','92','0');	
 
 			$this->load->view('kepegawaian/layanan/V_LayananSuratMasukPt', $data);
+		}
+
+		public function layananMutasiPidahMasuk($id_layanan){
+			$currentYear = date('Y'); 
+			$previous1Year = $currentYear - 1;   
+			$previous2Year = $currentYear - 2; 
+			$data['tahun_1_lalu'] = $previous1Year;
+			$data['tahun_2_lalu'] = $previous2Year;
+			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+			$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year);
+			$data['id_m_layanan'] = $id_layanan;
+			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
+			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
+			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+			$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','66','0');	
+		    $data['dok_lain'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','75','0');	
+			
+
+			$this->load->view('kepegawaian/layanan/V_LayananMutasiPindahMasuk', $data);
 		}
 
 

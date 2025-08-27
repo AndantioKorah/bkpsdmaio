@@ -1740,19 +1740,19 @@
         }
 
         public function getListPengadaan($tahun){
-            $result = $this->siasnlib->getListPengadaan($tahun);
-            dd($result);
-            $res = json_decode($result['data'], true)['data'];
-            dd($res);
-            $pns = null;
-            $pppk = null;
-            foreach($res as $r){
-                if($r['jenis_formasi_id'] == "0101"){
-                    $pns[] = $r;
-                } else if($r['jenis_formasi_id'] == "0101"){
-                    $pppk[] = $r;
-                }
-            }
+            // $result = $this->siasnlib->getListPengadaan($tahun);
+            // dd($result);
+            // $res = json_decode($result['data'], true)['data'];
+            // dd($res);
+            // $pns = null;
+            // $pppk = null;
+            // foreach($res as $r){
+            //     if($r['jenis_formasi_id'] == "0101"){
+            //         $pns[] = $r;
+            //     } else if($r['jenis_formasi_id'] == "0101"){
+            //         $pppk[] = $r;
+            //     }
+            // }
 
             // $listExists = null;
             // $i = 0;
@@ -1761,14 +1761,30 @@
             //     $i++;
             // }
 
-            // $resultJson = $this->db->select('*')
-            //                 ->from('m_parameter')
-            //                 ->where('parameter_name', 'TEMP_CPNS_2024')
-            //                 ->get()->row_array();
+            //0208 pppk teknis
 
-            // $result = json_decode($resultJson['parameter_value'], true);
+            $tNip = null;
+            $tempNip = $this->db->select('*')
+                                ->from('t_temp_data_pppk2024')
+                                ->get()->result_array();
+            foreach($tempNip as $tn){
+                $tNip[$tn['nip']] = $tn;
+            }
+
+            $dataPppk = null;
+            $resultJson = $this->db->select('*')
+                            ->from('m_parameter')
+                            ->where('parameter_name', 'TEMP_PENGADAAN_2024')
+                            ->get()->row_array();
             
-            dd($result);
+            $result = json_decode($resultJson['parameter_value'], true);
+            foreach($result as $rs){
+                if(isset($tNip[$rs['nip']]) && !isset($dataPppk[$rs['nip']])){
+                    $dataPppk[$rs['nip']] = $rs;
+                }
+            }
+            
+            dd($dataPppk);
 
         }
 

@@ -199,8 +199,8 @@ define('FLAG_INPUT_MANUAL_NOMOR_SURAT_CUTI', 1); // 1: YA, 0: TIDAK
 define('FORMAT_NOMOR_SURAT', "%/BKPSDM/SK/SLDN/%/"); // 1: YA, 0: TIDAK
 define('FLAG_CONTINUE_NOMOR_SURAT', 0); // 1: YA, 0: TIDAK, continue tanpa memperhatikan format lama
 
-define('CONVERTED_NOMOR_HP_KABAN', '6281244428882');
-define('NOMOR_HP_KABAN', '081244428882');
+define('CONVERTED_NOMOR_HP_KABAN', '6281356240019');
+define('NOMOR_HP_KABAN', '081356240019');
 
 define('ALAMAT_BKPSDM', 'Jalan Balai Kota No. 1, Manado, 95124');
 define('WEBSITE_BKPSDM', 'bkd.manadokota.go.id');

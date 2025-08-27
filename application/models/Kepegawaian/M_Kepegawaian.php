@@ -6136,8 +6136,8 @@ public function submitEditJabatan(){
                     
                     // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *YA* untuk menyetujui atau *Tidak* untuk menolak.";
                     $cronWaNextVerifikator = null;
-                    // if($progress['next']['nohp'] == $this->getDataKabanBkd()['handphone']){
-                    if($progress['next']['nohp'] == $this->getDataKabanBkd()['handphone']){
+                    // if($progress['next']['nohp'] == NOMOR_HP_KABAN){
+                    if($progress['next']['nohp'] == NOMOR_HP_KABAN){
                         if($dataCuti['skpd'] == 4018000){
                             $cronWaNextVerifikator = [
                                 'sendTo' => convertPhoneNumber($progress['next']['nohp']),
@@ -6165,7 +6165,7 @@ public function submitEditJabatan(){
                         // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                     }
                     if($cronWaNextVerifikator){
-                        if($cronWaNextVerifikator['sendTo'] == convertPhoneNumber($this->getDataKabanBkd()['handphone'])){ // jika kaban
+                        if($cronWaNextVerifikator['sendTo'] == convertPhoneNumber(NOMOR_HP_KABAN)){ // jika kaban
                             if($dataCuti['skpd'] == 4018000){ // hanya pegawai bkpsdm
                                 $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                             }
@@ -7730,7 +7730,7 @@ public function submitEditJabatan(){
                             'id_state' => $res['progress']['next']['id']
                         ];
                         if($cronWaNextVerifikator){
-                            if($res['progress']['next']['nohp'] == $this->getDataKabanBkd()['handphone']){
+                            if($res['progress']['next']['nohp'] == NOMOR_HP_KABAN){
                                 if($data['id_unitkerja'] == 4018000){
                                     $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                                 }

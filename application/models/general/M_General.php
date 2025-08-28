@@ -1776,14 +1776,25 @@
                             ->from('m_parameter')
                             ->where('parameter_name', 'TEMP_PENGADAAN_2024')
                             ->get()->row_array();
-            
             $result = json_decode($resultJson['parameter_value'], true);
+            $exists = null;
+            $double = null;
+
             foreach($result as $rs){
                 if(isset($tNip[$rs['nip']]) && !isset($dataPppk[$rs['nip']])){
                     $dataPppk[$rs['nip']] = $rs;
                 }
+
+                if(!isset($exists[$rs['nip']])){
+                    $exists[$rs['nip']] = $rs;
+                    $double[$rs['nip']] = 1;
+                } else {
+                    $double[$rs['nip']]++;
+                }
             }
-            
+            // dd($double);
+            // dd(($exists));
+            // echo "total_data_m_parameter: ".count($result);
             dd($dataPppk);
 
         }

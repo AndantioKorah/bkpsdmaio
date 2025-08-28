@@ -1618,7 +1618,7 @@
                                     ->from('t_progress_cuti a')
                                     ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
                                     ->join('t_cron_wa c', 'a.chatId = c.chatId')
-                                    ->where('id_m_user_verifikasi !=', 193)
+                                    ->where('id_m_user_verifikasi !=', 527)
                                     ->where('a.flag_verif', 0)
                                     ->where('a.chatId IS NOT NULL')
                                     ->where('b.flag_active', 1)

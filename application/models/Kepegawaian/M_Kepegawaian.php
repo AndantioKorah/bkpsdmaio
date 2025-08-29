@@ -14401,9 +14401,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $result['message'] .= "Kartu Keluarga, ";
         }
 
-        if(!$suratPernyataanTidakPindah){
-            $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
-        }
+        // if(!$suratPernyataanTidakPindah){
+        //     $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
+        // }
 
         if($result['message'] != ""){
             $result['done'] = false;

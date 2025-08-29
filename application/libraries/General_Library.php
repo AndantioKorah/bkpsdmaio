@@ -291,6 +291,10 @@ class General_library
         return $this->userLoggedIn['statuspeg'] == 1;
     }
 
+    public function isPPPKbaru(){
+        return $this->userLoggedIn['statuspeg'] == 3 && (substr($this->getNipPegawai(), 8, 6) == '202521' || substr($this->getNipPegawai(), 8, 6) == '202521');
+    }
+
     public function getKelengkapanBerkasCpns(){
         return $this->nikita->kepegawaian->getKelengkapanBerkasCpns($this->getId());
     }

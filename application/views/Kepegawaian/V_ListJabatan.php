@@ -64,9 +64,9 @@
               <td class="text-left"><?=$rs['ket']?></td>
               <td class="text-left"> 
               <?php 
-                $flagShowFileSkJab = 1;
+                $flagShowFileSkJab = 0;
                 $message = "";
-                if($this->general_library->isCpns()){
+                if($this->general_library->isPPPKbaru()){
                   $kelengkapan = $this->general_library->getKelengkapanBerkasCpns();
                   if($kelengkapan['done'] == true){
                     $flagShowFileSkJab = 1;

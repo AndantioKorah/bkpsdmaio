@@ -5843,6 +5843,12 @@ public function submitEditJabatan(){
             $id_layanan[] = 26;
             $id_layanan[] = 27;
          }
+
+          if($this->general_library->isHakAkses('verifikasi_pengajuan_mutasi_pindah_masuk')){
+            $id_layanan[] = 28;
+        }
+
+
         }
 
        

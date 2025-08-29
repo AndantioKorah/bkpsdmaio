@@ -585,6 +585,7 @@
 	if($this->general_library->isProgrammer() ||
 	$this->general_library->isAdminAplikasi() ||
 	$this->general_library->isHakAksesVerifLayanan() ||
+	$this->general_library->isHakAkses('verifikasi_pengajuan_mutasi_pindah_masuk') ||
 	$this->general_library->isHakAkses('verifikasi_pendataan_mandiri') ||
 	$this->general_library->isHakAkses('verifikasi_pangkat_bkad') ||
 	$this->general_library->isHakAkses('verifikasi_permohonan_cuti') ||
@@ -744,6 +745,13 @@
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/23')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Layanan Surat Keterangan <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tidak Pernah Dijatuhi <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hukuman Disiplin dan Hukuman Pidana
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_pengajuan_mutasi_pindah_masuk')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/28')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Layanan Mutasi Pindah <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Masuk
 					</a>
 				</li>
 				<?php } ?>
@@ -1129,7 +1137,7 @@
 			</a>
 			<ul id="datapkinerja" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
@@ -1138,7 +1146,7 @@
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-kinerja/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
@@ -1164,7 +1172,7 @@
 			</a>
 			<ul id="datappotensial" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
@@ -1173,7 +1181,7 @@
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/penilaian-potensial/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT
@@ -1224,7 +1232,7 @@
 			</a>
 			<ul id="talentpool" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
-				<li class="sidebar-item ">
+				<!-- <li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/1')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Pengawas
 					</a>
@@ -1233,7 +1241,7 @@
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/2')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian Administrator
 					</a>
-				</li>
+				</li> -->
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('mt/ninebox/3')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Pengisian JPT

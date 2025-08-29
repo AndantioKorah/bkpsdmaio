@@ -6142,7 +6142,8 @@ public function submitEditJabatan(){
                     
                     // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *YA* untuk menyetujui atau *Tidak* untuk menolak.";
                     $cronWaNextVerifikator = null;
-                    if($progress['next']['nohp'] == $this->general_library->getDataKabanBkpsdm()['handphone']){
+                    // if($progress['next']['nohp'] == NOMOR_HP_KABAN){
+                    if($progress['next']['nohp'] == NOMOR_HP_KABAN){
                         if($dataCuti['skpd'] == 4018000){
                             $cronWaNextVerifikator = [
                                 'sendTo' => convertPhoneNumber($progress['next']['nohp']),
@@ -6170,7 +6171,7 @@ public function submitEditJabatan(){
                         // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                     }
                     if($cronWaNextVerifikator){
-                        if($cronWaNextVerifikator['sendTo'] == convertPhoneNumber($this->general_library->getDataKabanBkpsdm()['handphone'])){ // jika kaban
+                        if($cronWaNextVerifikator['sendTo'] == convertPhoneNumber(NOMOR_HP_KABAN)){ // jika kaban
                             if($dataCuti['skpd'] == 4018000){ // hanya pegawai bkpsdm
                                 $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                             }
@@ -6189,7 +6190,7 @@ public function submitEditJabatan(){
                     }
                 }
 
-                if(!$progress['next'] || $progress['next']['id_m_user_verifikasi'] == $this->general_library->getDataKabanBkpsdm()['id_m_user']){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
+                if(!$progress['next'] || $progress['next']['id_m_user_verifikasi'] == $this->getDataKabanBkd()['id_m_user']){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
                     $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
                             f.nama_jabatan, g.nm_unitkerja, a.id as id_t_pengajuan_cuti,
                             g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, d.nipbaru_ws')
@@ -7673,7 +7674,7 @@ public function submitEditJabatan(){
         if($res['progress']){
             $update_data_pengajuan = null;
             // if($res['progress']['current']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){
-            if($res['progress']['current']['jabatan'] == $this->general_library->getDataKabanBkpsdm()['id_jabatanpeg']){
+            if($res['progress']['current']['jabatan'] == $this->getDataKabanBkd()['id_jabatanpeg']){
                 $res['code'] = 1;
                 $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
             } else if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
@@ -7735,7 +7736,7 @@ public function submitEditJabatan(){
                             'id_state' => $res['progress']['next']['id']
                         ];
                         if($cronWaNextVerifikator){
-                            if($res['progress']['next']['nohp'] == $this->general_library->getDataKabanBkpsdm()['handphone']){
+                            if($res['progress']['next']['nohp'] == NOMOR_HP_KABAN){
                                 if($data['id_unitkerja'] == 4018000){
                                     $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                                 }
@@ -7745,7 +7746,7 @@ public function submitEditJabatan(){
                         }
                     }
 
-                    if(!$res['progress']['next'] || $res['progress']['next']['id_m_user_verifikasi'] == $this->general_library->getDataKabanBkpsdm()['id_m_user']){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
+                    if(!$res['progress']['next'] || $res['progress']['next']['id_m_user_verifikasi'] == $this->getDataKabanBkd()['id_m_user']){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
                         $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
                                 f.nama_jabatan, g.nm_unitkerja, a.id as id_t_pengajuan_cuti,
                                 g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, d.nipbaru_ws')

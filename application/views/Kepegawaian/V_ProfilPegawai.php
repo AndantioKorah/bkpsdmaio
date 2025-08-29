@@ -190,8 +190,11 @@
                   $badge_aktif = 'badge-mutasi';
                 } else if($profil_pegawai['id_m_status_pegawai'] == 6){
                   $badge_aktif = 'badge-meninggal';
-                } else if($profil_pegawai['id_m_status_pegawai'] == 8){
-                  $badge_aktif = 'badge-tidak-aktif';
+                } else if($profil_pegawai['id_m_status_pegawai'] == 8 ||
+                  $profil_pegawai['id_m_status_pegawai'] == 9 ||
+                  $profil_pegawai['id_m_status_pegawai'] == 10 ||
+                  $profil_pegawai['id_m_status_pegawai'] == 11){
+                  $badge_aktif = 'badge-diberhentikan';
                 }
               ?>
               <div class="mb-3 col-lg-12 col-md-12 col-sm-12 text-left">

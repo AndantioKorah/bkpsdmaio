@@ -3882,6 +3882,9 @@
                             //ambil TPP plt nya saja
                             if(isset($p['flag_timpa_tpp']) && $p['flag_timpa_tpp'] == 1){
                                 $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'];
+                            } else if(isset($p['flag_use_presentase_tpp_plt']) && $p['flag_use_presentase_tpp_plt'] == 1){
+                            // ambil presentase dari TPP plt nya saja
+                                $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
                             } else {
                             // tambahkan dengan tpp plt
                                 $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];

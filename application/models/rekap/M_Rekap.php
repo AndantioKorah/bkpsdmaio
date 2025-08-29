@@ -1569,7 +1569,7 @@
         $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp, d.kelas_jabatan_hardcode,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user, d.id_jabatan_tambahan,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs, f.nm_unitkerja, d.tmt_hitung_absen,
-            concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat, b.flag_override_tpp')
+            concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat, b.flag_override_tpp, a.flag_use_presentase_tpp_plt')
                                 ->from('t_plt_plh a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')
                                 ->join('m_user c', 'a.id_m_user = c.id')
@@ -1607,6 +1607,11 @@
         // jika presentasi >= 50%, maka masuk dalam pegawai tambahan tersebut
         if($pegawai){
             foreach($pegawai as $p){
+                // $bulan = $bulan;
+                // if($bulan < 10){
+                //     $bulan = "0".intval($bulan);
+                // }
+                // if()
                 $hari_kerja_tmt = countHariKerjaDateToDate($p['tanggal_mulai'], $p['tanggal_akhir']);   
                 $jumlah_hari_kerja_tmt = 0;
                 foreach($hari_kerja_tmt[3] as $hkt){

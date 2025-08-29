@@ -324,7 +324,7 @@ function loadListPeninjauan(){
                 total = res[0].total_pengajuan - res[0].total_tolak
               <?php  if( $this->general_library->getId() != '000'){ ?>
                <?php  if( $this->general_library->getIdUnitKerjaPegawai() != '6170000'){ ?>
-                if(total >= 2) {
+                if(total >= 5) {
                   $('#btn_upload').hide()
                   $('#ket').show()
                 } else {

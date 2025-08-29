@@ -2760,7 +2760,7 @@
         } else {
 
         
-        if($result[0]['total_verif'] >= 2 && $id_unitkerja != '6170000') {
+        if($result[0]['total_verif'] >= 5 && $id_unitkerja != '6170000') {
             $rs['code'] = 1;        
             $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
         } else {     

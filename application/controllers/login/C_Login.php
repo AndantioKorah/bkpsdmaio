@@ -155,8 +155,6 @@ class C_Login extends CI_Controller
                 $password = null;
 
                 $progSession['user_logged_in'] = $this->session->userdata('user_logged_in');
-                $progSession['params'] = $this->session->userdata('params');
-                $progSession['list_menu'] = $this->session->userdata('list_menu');
                 $progSession['list_exist_url'] = $this->session->userdata('list_exist_url');
                 $progSession['list_role'] = $this->session->userdata('list_role');
                 $progSession['list_admin_layanan'] = $this->session->userdata('list_admin_layanan');
@@ -166,7 +164,6 @@ class C_Login extends CI_Controller
                 $progSession['active_role_id'] = $this->session->userdata('active_role_id');
                 $progSession['active_role_name'] = $this->session->userdata('active_role_name');
                 $progSession['landing_page'] = $this->session->userdata('landing_page');
-                $progSession['pegawai'] = $this->session->userdata('pegawai');
 
                 $this->session->set_userdata('programmer_session', $progSession);
 
@@ -212,8 +209,8 @@ class C_Login extends CI_Controller
             $active_role = null;
             $list_exist_url = null;
             $pegawai = $this->m_general->getDataPegawai($result[0]['username']);
-            $tpp_kelas_jabatan = $this->m_general->getAll('m_tpp_kelas_jabatan');
-            $tpp_kelas_jabatan_new = $this->m_general->getAll('m_tpp_kelas_jabatan_new');
+            // $tpp_kelas_jabatan = $this->m_general->getAll('m_tpp_kelas_jabatan');
+            // $tpp_kelas_jabatan_new = $this->m_general->getAll('m_tpp_kelas_jabatan_new');
             // $sub_bidang = $this->m_general->getAllSubBidang();
             $list_sub_bidang = null;
           
@@ -243,19 +240,19 @@ class C_Login extends CI_Controller
             //     redirect('login');
             // }
 
-            $list_tpp_kelas_jabatan = null;
-            $list_tpp_kelas_jabatan_new = null;
-            if($tpp_kelas_jabatan){
-                foreach($tpp_kelas_jabatan as $tpp){
-                    $list_tpp_kelas_jabatan[$tpp['kelas_jabatan']] = $tpp['nominal'];
-                }
-            }
+            // $list_tpp_kelas_jabatan = null;
+            // $list_tpp_kelas_jabatan_new = null;
+            // if($tpp_kelas_jabatan){
+            //     foreach($tpp_kelas_jabatan as $tpp){
+            //         $list_tpp_kelas_jabatan[$tpp['kelas_jabatan']] = $tpp['nominal'];
+            //     }
+            // }
 
-            if($tpp_kelas_jabatan_new){
-                foreach($tpp_kelas_jabatan_new as $tpp){
-                    $list_tpp_kelas_jabatan_new[$tpp['kelas_jabatan']] = $tpp['nominal'];
-                }
-            }
+            // if($tpp_kelas_jabatan_new){
+            //     foreach($tpp_kelas_jabatan_new as $tpp){
+            //         $list_tpp_kelas_jabatan_new[$tpp['kelas_jabatan']] = $tpp['nominal'];
+            //     }
+            // }
             
             if($active_role) {
                 $landing_page = $active_role['landing_page'];
@@ -265,9 +262,9 @@ class C_Login extends CI_Controller
             // dd($result);
             $this->session->set_userdata([
                 'user_logged_in' => $result,
-                'params' => $params,
+                // 'params' => $params,
                 'test' => 'tiokors',
-                'list_menu' =>  $list_menu,
+                // 'list_menu' =>  $list_menu,
                 'list_exist_url' =>  $list_exist_url,
                 'list_role' =>  $list_role,
                 'list_hak_akses' =>  $list_hak_akses,
@@ -276,9 +273,9 @@ class C_Login extends CI_Controller
                 'active_role_id' =>  $active_role['id'],
                 'active_role_name' =>  $active_role['role_name'],
                 'landing_page' =>  $landing_page,
-                'pegawai' => $pegawai,
-                'list_tpp_kelas_jabatan' =>  $list_tpp_kelas_jabatan,
-                'list_tpp_kelas_jabatan_new' =>  $list_tpp_kelas_jabatan_new,
+                // 'pegawai' => $pegawai,
+                // 'list_tpp_kelas_jabatan' =>  $list_tpp_kelas_jabatan,
+                // 'list_tpp_kelas_jabatan_new' =>  $list_tpp_kelas_jabatan_new,
                 'live_tpp' => null
             ]);
             if($params){
@@ -286,7 +283,7 @@ class C_Login extends CI_Controller
                     $this->session->set_userdata([$p['parameter_name'] => $p]);
                 }
             }
-           
+        //    dd($this->session->userdata());
 
             redirect(base_url($landing_page));   
             // redirect(base_url($this->session->userdata('landing_page')));                

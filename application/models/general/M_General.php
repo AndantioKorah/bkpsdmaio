@@ -1623,7 +1623,8 @@
                 "t_log_maxchat",
                 "t_log_webhook",
                 "t_log_tte",
-                "t_log_ws_siasn"
+                "t_log_ws_siasn",
+                "t_image_message"
             ];
 
             foreach($arrTable as $ar){
@@ -1631,10 +1632,40 @@
                         ->delete($ar);
                 echo "deleted ".$this->db->affected_rows()." from ".$ar."<br>";
             }
+
+            $arrTableCron = [
+                [
+                    'name' => "t_cron_async",
+                    'col_done' => "flag_done",
+                    'col_done_state' => 1
+                ],
+                [
+                    'name' => "t_cron_rekap_absen",
+                    'col_done' => "flag_sent",
+                    'col_done_state' => 1
+                ],
+                [
+                    'name' => "t_cron_wa",
+                    'col_done' => "flag_sent",
+                    'col_done_state' => 1
+                ],[
+                    'name' => "t_cron_tte_bulk_ds",
+                    'col_done' => "flag_done",
+                    'col_done_state' => 1
+                ]
+            ];
+
+            foreach($arrTableCron as $atc){
+                $this->db->where('created_dates' < formatDateOnlyForEdit($date))
+                        ->where($atc['col_done'] == $atc['col_done_state'])
+                        ->delete($atc['name']);
+                echo "deleted ".$this->db->affected_rows()." from ".$atc['name']."<br>";
+            }
         }
 
         public function cronCheckVerifCuti(){
             // dd('asd');
+            // $this->removeLog(3);
             $timeNow = date("H:i:s");
             $expl = explode(":", $timeNow);
             $flag_cek = 1;

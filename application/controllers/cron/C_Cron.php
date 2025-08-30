@@ -63,6 +63,10 @@ class C_Cron extends CI_Controller
         // $this->cronAsync();
     }
 
+    public function removeLog($batasHari = 10){
+        $this->general->removeLog($batasHari);
+    }
+
     public function cronCheckVerifCuti(){
         $this->general->cronCheckVerifCuti();
     }

@@ -87,15 +87,19 @@ class C_Login extends CI_Controller
     }
 
     public function loadLiveTpp(){
-        if(!$this->session->userdata('live_tpp')){
-            $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
-            $this->session->set_userdata('live_tpp', $data['tpp']);
+        if($this->general_library->getUserLoggedIn()['flag_penerima_tpp'] == 1){
+            if(!$this->session->userdata('live_tpp')){
+                $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
+                $this->session->set_userdata('live_tpp', $data['tpp']);
+            } else {
+                $data['tpp'] = $this->session->userdata('live_tpp');
+            }
+            $data['tpp']['capaian_tpp'] = formatCurrencyWithoutRp($data['tpp']['capaian_tpp']);
+            $data['tpp']['pagu_tpp']['pagu_tpp'] = formatCurrencyWithoutRp($data['tpp']['pagu_tpp']['pagu_tpp']);
+            echo json_encode($data['tpp']);
         } else {
-            $data['tpp'] = $this->session->userdata('live_tpp');
+            return null;
         }
-        $data['tpp']['capaian_tpp'] = formatCurrencyWithoutRp($data['tpp']['capaian_tpp']);
-        $data['tpp']['pagu_tpp']['pagu_tpp'] = formatCurrencyWithoutRp($data['tpp']['pagu_tpp']['pagu_tpp']);
-        echo json_encode($data['tpp']);
     }
 
     public function switchToAdmin(){
@@ -113,7 +117,7 @@ class C_Login extends CI_Controller
                 'active_role_id' => null,
                 'active_role_name' => null,
                 'landing_page' => null,
-                'pegawai' => null,
+                // 'pegawai' => null,
             ]);
 
             $this->session->set_userdata('programmer_session', null);
@@ -131,7 +135,7 @@ class C_Login extends CI_Controller
                 'active_role_id' => $progSession['active_role_id'],
                 'active_role_name' => $progSession['active_role_name'],
                 'landing_page' => $progSession['landing_page'],
-                'pegawai' => $progSession['pegawai'],
+                // 'pegawai' => $progSession['pegawai'],
             ]);
         } else {
             $this->session->set_flashdata('message', "FORBIDDEN. PROGRAMMERS ONLY.");
@@ -198,8 +202,8 @@ class C_Login extends CI_Controller
         // dd($result);
         if($result != null){
            
-            $params = $this->m_general->getAll('m_parameter');
-            $all_menu = $this->m_general->getAll('m_menu');
+            // $params = $this->m_general->getAll('m_parameter');
+            // $all_menu = $this->m_general->getAll('m_menu');
             $list_menu = null;
             $list_role = $this->user->getListRoleForUser($result[0]['id']);
             // 
@@ -229,11 +233,11 @@ class C_Login extends CI_Controller
                 }
             }
             // dd($all_menu);
-            if($all_menu){
-                foreach($all_menu as $m){
-                    $list_exist_url[$m['url']] = $m['flag_general_menu'];
-                }
-            }
+            // if($all_menu){
+            //     foreach($all_menu as $m){
+            //         $list_exist_url[$m['url']] = $m['flag_general_menu'];
+            //     }
+            // }
 
             // if(!$active_role){
             //     $this->session->set_flashdata('message', 'Akun Anda belum memiliki Role. Silahkan menghubungi Administrator.');
@@ -278,11 +282,11 @@ class C_Login extends CI_Controller
                 // 'list_tpp_kelas_jabatan_new' =>  $list_tpp_kelas_jabatan_new,
                 'live_tpp' => null
             ]);
-            if($params){
-                foreach($params as $p){
-                    $this->session->set_userdata([$p['parameter_name'] => $p]);
-                }
-            }
+            // if($params){
+            //     foreach($params as $p){
+            //         $this->session->set_userdata([$p['parameter_name'] => $p]);
+            //     }
+            // }
         //    dd($this->session->userdata());
 
             redirect(base_url($landing_page));   

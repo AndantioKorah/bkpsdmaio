@@ -1617,6 +1617,22 @@
             // dd("done ".count($temp));
         }
 
+        public function removeLog($batasHari){
+            $date = date('Y-m-d', strtotime('-'.$batasHari.' days', strtotime(date('Y-m-d'))));
+            $arrTable = [
+                "t_log_maxchat",
+                "t_log_webhook",
+                "t_log_tte",
+                "t_log_ws_siasn"
+            ];
+
+            foreach($arrTable as $ar){
+                $this->db->where('created_date' < formatDateOnlyForEdit($date))
+                        ->delete($ar);
+                echo "deleted ".$this->db->affected_rows()." from ".$ar."<br>";
+            }
+        }
+
         public function cronCheckVerifCuti(){
             // dd('asd');
             $timeNow = date("H:i:s");
@@ -1624,7 +1640,9 @@
             $flag_cek = 1;
             if($expl[0] == "11" && $expl[1] == "00"){
                 $flag_cek = 1;
-            } else {
+            } else if($expl[0] == "22" && $expl[1] == "00"){
+                $this->removeLog(3);
+            }else {
                 dd("belum jam, ini masih ".$expl[0].":".$expl[1]);
             }
             // else if($expl[0] == "11" && $expl[1] == "45"){

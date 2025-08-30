@@ -140,6 +140,7 @@ if(!$this->general_library->isWalikota() || !$this->general_library->isGuest()){
             <div class="col-lg-12">
               <?php
                 $data['chart'] = $chart;
+                $data['total_seluruh_pegawai'] = $chart['total'];
                 // $this->session->set_userdata('total_seluruh_pegawai', $chart['total']);
                 $this->load->view('dashboard/V_DashboardKepegawaian', $data);
               ?>

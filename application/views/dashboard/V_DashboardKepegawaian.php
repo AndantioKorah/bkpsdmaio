@@ -174,6 +174,7 @@
         <div class="row">
           <?php
             $data_jenis_kelamin['result'] = $chart['jenis_kelamin'];
+            $data_jenis_kelamin['total_seluruh_pegawai'] = $chart['total'];
             $data_jenis_kelamin['id_chart'] = 'chart_jenis_kelamin';
             $this->load->view('login/V_ChartPieDashboard', $data_jenis_kelamin);
           ?>
@@ -198,6 +199,7 @@
           <?php
             $data_agama['result'] = $chart['agama'];
             $data_agama['id_chart'] = 'chart_agama';
+            $data_agama['total_seluruh_pegawai'] = $chart['total'];
             // dd($data_agama);
             $this->load->view('login/V_ChartPieDashboard', $data_agama);
           ?>
@@ -222,6 +224,7 @@
           <?php
             $data_statuspeg['result'] = $chart['statuspeg'];
             $data_statuspeg['id_chart'] = 'chart_statuspeg';
+            $data_statuspeg['total_seluruh_pegawai'] = $chart['total'];
             $this->load->view('login/V_ChartPieDashboard', $data_statuspeg);
           ?>
         </div>
@@ -245,6 +248,7 @@
           <?php
             $data_golongan['result'] = $chart['golongan'];
             $data_golongan['id_chart'] = 'chart_golongan';
+            $data_golongan['total_seluruh_pegawai'] = $chart['total'];
             $this->load->view('login/V_ChartPieDashboard', $data_golongan);
           ?>
         </div>
@@ -268,6 +272,7 @@
           <?php
             $data_eselon['result'] = $chart['eselon'];
             $data_eselon['id_chart'] = 'chart_eselon';
+            $data_eselon['total_seluruh_pegawai'] = $chart['total'];
             $this->load->view('login/V_ChartPieDashboard', $data_eselon);
           ?>
         </div>
@@ -291,6 +296,7 @@
           <?php
             $data_pendidikan['result'] = $chart['pendidikan'];
             $data_pendidikan['id_chart'] = 'chart_pendidikan';
+            $data_pendidikan['total_seluruh_pegawai'] = $chart['total'];
             $this->load->view('login/V_ChartPieDashboard', $data_pendidikan);
           ?>
         </div>

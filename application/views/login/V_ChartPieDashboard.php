@@ -9,7 +9,7 @@
     
     $i = 0;
     $colors = CHART_COLORS;
-    $total_seluruh_pegawai = $this->session->userdata('total_seluruh_pegawai');
+    // $total_seluruh_pegawai = $this->session->userdata('total_seluruh_pegawai');
     foreach($result as $rs){
       if($rs['jumlah'] > 0){
         $presentase = formatCurrencyWithoutRpWithDecimal((($rs['jumlah'] / $total_seluruh_pegawai) * 100), 2);

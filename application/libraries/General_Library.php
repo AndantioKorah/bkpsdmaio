@@ -30,12 +30,16 @@ class General_library
         if($this->nikita->session->userdata('user_logged_in')){
             $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
             $this->hakAkses = $this->nikita->session->userdata('list_hak_akses');
-            $this->kabanBkpsdm = $this->nikita->kepegawaian->getDataKabanBkd();
+            // $this->kabanBkpsdm = $this->nikita->kepegawaian->getDataKabanBkd();
         }
     }
     
     public function getDataKabanBkpsdm(){
-        return $this->kabanBkpsdm;
+        return $this->nikita->kepegawaian->getDataKabanBkd();
+    }
+
+    public function getUserLoggedIn(){
+        return $this->userLoggedIn;
     }
 
     public function listHakAkses(){
@@ -276,7 +280,7 @@ class General_library
     }
 
     public function getUnitKerjaPegawai(){
-        return $this->nikita->session->userdata('pegawai')['skpd'];
+        return $this->userLoggedIn['skpd'];
     }
 
     public function isPegawaiBkpsdm(){
@@ -312,9 +316,9 @@ class General_library
     }
 
     public function getDataUnitKerjaPegawai(){
-        $result['id_unitkerja'] = $this->nikita->session->userdata('pegawai')['id_unitkerja'];
-        $result['nm_unitkerja'] = $this->nikita->session->userdata('pegawai')['nm_unitkerja'];
-        $result['id_unitkerjamaster'] = $this->nikita->session->userdata('pegawai')['id_unitkerjamaster'];
+        $result['id_unitkerja'] = $this->userLoggedIn['id_unitkerja'];
+        $result['nm_unitkerja'] = $this->userLoggedIn['nm_unitkerja'];
+        $result['id_unitkerjamaster'] = $this->userLoggedIn['id_unitkerjamaster'];
         return $result;
     }
 

@@ -24,7 +24,7 @@
                 <?php if($rs['gambarsk'] != "") {
                   $flagShowButtonArsip = 1;
                   $messageCpns = null;
-                  if($this->general_library->isPPPKnew() && date("Y-m-d") < '2025-09-01' && $rs['id_dokumen'] == 34){ // hilangkan tombol jika CPNS dan belum tanggal 2 Juni 2025 untuk SPMT
+                  if($this->general_library->isPPPKbaru() && date("Y-m-d") < '2025-09-01' && $rs['id_dokumen'] == 34){ // hilangkan tombol jika CPNS dan belum tanggal 2 Juni 2025 untuk SPMT
                     $flagShowButtonArsip = 0;
                     $messageCpns = "File SPMT dapat didownload pada tanggal 1 September 2025";
                   }

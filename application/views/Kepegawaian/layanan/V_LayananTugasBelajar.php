@@ -338,13 +338,13 @@ ol {
               <?php if($id_m_layanan == 25 || $id_m_layanan == 26) { ?>
 							<li>
 								<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1) { ?>
-									onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP TAHUN <?=$tahun_1_lalu;?>* <i
 											class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
 							</li>
                             	<li>
 								<a class="<?php if($skp2){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2) { ?>
-									onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
+									onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP TAHUN <?=$tahun_2_lalu;?>* <i
 											class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>
 							</li>
@@ -360,12 +360,25 @@ ol {
 					<?php } ?>> <i class="fa fa-file-pdf"></i> SURAT REKOMENDASI YANG DITANDATANGANI KEPALA BKPSDM* <i
 					class="fas fa-<?php if($surat_rekom_masuk_pt) echo ''; else echo '';?>"></i></a>
 			  </li>
+        <li>
+			    <a class="<?php if($ijazah){ if($ijazah['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($ijazah) { ?>
+					onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah* <i
+					class="fas fa-<?php if($ijazah) echo ''; else echo '';?>"></i></a>
+			  </li>
+        <li>
+			    <a class="<?php if($transkrip_nilai){ if($transkrip_nilai['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($transkrip_nilai) { ?>
+					onclick="viewBerkasPangkat('<?=$transkrip_nilai['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
+					<?php } ?>> <i class="fa fa-file-pdf"></i> Transkrip Nilai* <i
+					class="fas fa-<?php if($transkrip_nilai) echo ''; else echo '';?>"></i></a>
+			  </li>
                 <li>
 			    <a class="<?php if($akreditasi){ if($akreditasi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($akreditasi) { ?>
 					onclick="viewBerkasPangkat('<?=$akreditasi['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
 					<?php } ?>> <i class="fa fa-file-pdf"></i> SERTIFIKAT AKREDITASI PROGRAM STUDI Min. “BAIK SEKALI” DARI LEMBAGA TERAKREDITASI*
                     <i class="fas fa-<?php if($akreditasi) echo ''; else echo '';?>"></i></a>
 			  </li>
+        
                <li>
 			    <a class="<?php if($surat_ket_lulus_mhs){ if($surat_ket_lulus_mhs['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($surat_ket_lulus_mhs) { ?>
 					onclick="viewBerkasPangkat('<?=$surat_ket_lulus_mhs['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
@@ -460,13 +473,9 @@ ol {
           <?php if($id_m_layanan == 26) { ?>
 
           Untuk Berkas : <br>
-					<i class="fa fa-file-pdf"></i> PAK<br>
-					<i class="fa fa-file-pdf"></i> Ijin Belajar<br>
-					<i class="fa fa-file-pdf"></i> Sertifikat Uji Kompetensi <br>
-					<i class="fa fa-file-pdf"></i> SK Peninjauan Masa Kerja <br>
-					<i class="fa fa-file-pdf"></i> Peta Jabatan <br>
-					<i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti
-					<br>di upload pada pilihan Arsip Lainnya.
+				
+					<i class="fa fa-file-pdf"></i> Transkrip nilai dan SK selain Pangkat, SKP dan Ijazah
+					<br>diupload pada pilihan Arsip Lainnya.
 				</p>
         <?php } ?>
         
@@ -532,7 +541,7 @@ $(function(){
         var suket_beasiswa = $('#suket_beasiswa').val()
 
 
-
+      // alert("tes");
         if(id_m_layanan == 25 || id_m_layanan == 26){
         
           if(skp1 == ""){
@@ -575,11 +584,7 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
-          if(transkrip_nilai == ""){
-            
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-          }
+        
         }
         if(id_m_layanan == 25){
           // if(suket_beasiswa == ""){

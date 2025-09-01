@@ -229,6 +229,12 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='rencana_pengembangan_diri')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Rencana Tahunan Pengembangan Diri</button>
   <li>
+     <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='ijazah')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='transkrip')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Transkrip Nilai</button>
+  <li>
   <?php } ?>
   <?php if($id_m_layanan == 25) { ?>
    <li class="nav-item nav-item-layanan" role="presentation">

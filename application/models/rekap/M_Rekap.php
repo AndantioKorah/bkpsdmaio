@@ -1283,6 +1283,18 @@
                                     ->get()->row_array();
         }
 
+        $listUkerTempKasubKepeg = [
+            5004001,
+            5007001,
+            4014000,
+            3028000,
+            3014000,
+            3010000
+        ];
+        if(in_array($id_unitkerja, $listUkerTempKasubKepeg)){
+            $result['kasubag'] = $result['sek'];
+        }
+
         if($list_pegawai_unor_induk){
             foreach($list_pegawai_unor_induk as $lpd){
                 if($lpd['kepalaskpd'] == 1 && $result['kepalaskpd'] == null){
@@ -3421,7 +3433,7 @@
                             'bulan' => $c['bulan'],
                             'tahun' => $c['tahun']
                         ];
-                        $data['result'] = $this->rekap->readAbsensiAars($params);
+                        $data['result'] = $this->rekap->readAbsensiAars($params,0,0,0);
                         $data['flag_print'] = 1;
                         if($data['result']){
                             $data['skpd'] = $data['result']['skpd'];

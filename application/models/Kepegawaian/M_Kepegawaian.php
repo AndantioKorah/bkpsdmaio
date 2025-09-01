@@ -14417,9 +14417,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $result['done'] = false;
             $result['message'] = substr(trim($result['message']), 0, strlen($result['message'])-2);
             $result['message'] = "Data ".$result['message']." belum diinput.";
-        } else if(date('Y-m-d H:i:s') <= '2025-09-01 10:00:00'){
+        } else if(date('Y-m-d H:i:s') <= '2025-09-01 10:30:00'){
             $result['done'] = false;
-            $result['message'] = "SK dapat didownload pada tanggal 1 September 2025 di atas jam 10 Pagi";
+            $result['message'] = "SK dapat didownload pada tanggal 1 September 2025 di atas jam 10:30 pagi";
         }
 
         return $result;

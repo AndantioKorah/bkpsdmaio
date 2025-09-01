@@ -794,14 +794,17 @@ function formatDateNamaBulanWithTime($data)
     return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];
 }
 
-function getNamaPegawaiFull($pegawai)
+function getNamaPegawaiFull($pegawai, $flag_capital_nama = 0)
 {
     $nama_pegawai = trim($pegawai['nama']);
+    if($flag_capital_nama == 1){
+        $nama_pegawai = strtoupper($nama_pegawai);
+    }
     if(trim(substr($nama_pegawai, strlen($nama_pegawai)-1)) != "," && ($pegawai['gelar2'] != "" && $pegawai['gelar2'] != null && $pegawai['gelar2'] != "-")){
         $nama_pegawai .= ",";
     }
 
-    return trim(trim($pegawai['gelar1']).' '.ucwords(strtolower(trim($nama_pegawai))).' '.trim($pegawai['gelar2']));
+    return trim(trim($pegawai['gelar1']).' '.ucwords(trim($nama_pegawai)).' '.trim($pegawai['gelar2']));
 }
 
 function sortArrayObjectValue($object1, $object2, $value)

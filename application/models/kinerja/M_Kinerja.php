@@ -7,6 +7,7 @@
             $this->db = $this->load->database('main', true);
             $this->load->model('master/M_Master', 'master');
             $this->load->model('rekap/M_Rekap', 'rekap');
+            $this->load->model('general/M_General', 'general');
         }
 
         public function insert($tablename, $data){
@@ -2992,7 +2993,7 @@
 
     public function getPaguTppUnitKerja($id_unitkerja, $unitkerja){
         $result = null;
-        $list_tpp_kelas_jabatan = $this->session->userdata('list_tpp_kelas_jabatan');
+        $list_tpp_kelas_jabatan = $this->general->getListTppKelasJabatan();
         dd($list_tpp_kelas_jabatan);
         $j = 1;
         foreach($list_tpp_kelas_jabatan as $lt){
@@ -3009,7 +3010,7 @@
 
     public function getPaguTppUnitKerjaBu($id_unitkerja, $unitkerja){
         $result = null;
-        $list_tpp_kelas_jabatan = $this->session->userdata('list_tpp_kelas_jabatan');
+        $list_tpp_kelas_jabatan = $this->general->getListTppKelasJabatan();
         $j = 1;
         foreach($list_tpp_kelas_jabatan as $lt){
             $result[$j]['jft'] = $lt;
@@ -3248,7 +3249,7 @@
                             ->where('id_unitkerjamaster_kecamatan', $id_unitkerja)
                             ->get()->row_array();
             }
-            $pagu_tpp = $this->session->userdata('list_tpp_kelas_jabatan');
+            $pagu_tpp = $this->general->getListTppKelasJabatan();
 
             $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
                                 
@@ -3599,7 +3600,7 @@
                             ->where('id_unitkerjamaster_kecamatan', $id_unitkerja)
                             ->get()->row_array();
             }
-            $pagu_tpp = $this->session->userdata('list_tpp_kelas_jabatan_new');
+            $pagu_tpp = $this->general->getListTppKelasJabatanNew();
 
             $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
                                 

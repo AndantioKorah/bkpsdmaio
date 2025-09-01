@@ -30,7 +30,7 @@ class C_User extends CI_Controller
     public function users(){
         // $data['roles'] = $this->general->getAllWithOrder('m_role', 'nama', 'asc');
         $data['list_skpd'] = $this->user->getAllSkpd();
-        $data['pegawai'] = $this->session->userdata('pegawai');
+        $data['pegawai'] = $this->general_library->getUserLoggedIn();
         render('user/V_Users', 'user_management', 'users', $data);
     }
 

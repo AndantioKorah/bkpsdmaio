@@ -1629,7 +1629,7 @@
         return $list_pegawai;
     }
 
-    public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0){
+    public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0, $flag_penerima_tpp = 1){
         // dd($flag_alpha);
         $rs = null;
         $periode = null;
@@ -1676,6 +1676,10 @@
                 }
             } else if($flag_alpha == 1){
                 $this->db->where('c.id_unitkerjamaster', 8010000);
+            }
+
+            if($flag_penerima_tpp == 1){
+                $this->db->where('a.flag_terima_tpp', 1);
             }
 
             if($flag_rekap_personal == 1){
@@ -2416,7 +2420,7 @@
         return $data_rekap;
     }
 
-    public function rekapPenilaianDisiplinSearch($data, $flag_rekap_tpp = 0){
+    public function rekapPenilaianDisiplinSearch($data, $flag_rekap_tpp = 0, $flag_penerima_tpp = 1){
         $result = null;
         $flag_sekolah_kecamatan = 0;
 
@@ -3366,13 +3370,13 @@
         return $result;
     }
 
-    public function readAbsensiAars($param, $flag_alpha = 0, $flag_rekap_tpp = 0){
+    public function readAbsensiAars($param, $flag_alpha = 0, $flag_rekap_tpp = 0, $flag_penerima_tpp = 1){
         $result = null;
         $skpd = explode(";", $param['skpd']);
         // dd($skpd);
         $param['id_unitkerja'] = $skpd[0];
         $param['nm_unitkerja'] = $skpd[1];
-        return $this->buildDataAbsensi($param, 1, $flag_alpha, 0, $flag_rekap_tpp);
+        return $this->buildDataAbsensi($param, 1, $flag_alpha, 0, $flag_rekap_tpp, $flag_penerima_tpp);
         
         // $list_data_absen = $this->db->select('a.*, c.*, b.username as nip')
         //                 ->from('db_sip.absen a')

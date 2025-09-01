@@ -336,7 +336,7 @@ class C_Rekap extends CI_Controller
             'tahun' => $data['param']['tahun']
         ], null, 0, 1, $flag_sekolah_kecamatan);
         
-        $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
+        $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1, 1);
         // if($skpd[0] == 4011000){
         //     dd($data_rekap_kehadiran);
         // }

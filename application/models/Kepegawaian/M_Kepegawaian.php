@@ -14336,12 +14336,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
 
-        $pendidikan = $this->db->select('*')
-                            ->from('db_pegawai.pegpendidikan')
-                            ->where('flag_active', 1)
-                            ->where('id_pegawai', $pegawai['id_peg'])
-                            ->where_in('status', [1,2])
-                            ->where_in('tktpendidikan', [5001, 6001, 7001])
+        $pendidikan = $this->db->select('a.*')
+                            ->from('db_pegawai.pegpendidikan a')
+                            ->join('db_pegawai.tktpendidikanb b', 'a.tktpendidikan = b.id_tktpendidikanb')
+                            ->where('a.flag_active', 1)
+                            ->where('a.id_pegawai', $pegawai['id_peg'])
+                            ->where_in('a.status', [1,2])
+                            // ->where_in('tktpendidikan', [1000, 2000, 2016, 5001, 6001, 7001])
+                            ->where_in('b.id_tktpendidikan', [1000, 2000, 5000, 6000, 7000])
                             ->get()->result_array();
 
         $hubkel = $this->db->select('*')
@@ -14407,17 +14409,17 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $result['message'] .= "Kartu Keluarga, ";
         }
 
-        if(!$suratPernyataanTidakPindah){
-            $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
-        }
+        // if(!$suratPernyataanTidakPindah){
+        //     $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
+        // }
 
         if($result['message'] != ""){
             $result['done'] = false;
             $result['message'] = substr(trim($result['message']), 0, strlen($result['message'])-2);
             $result['message'] = "Data ".$result['message']." belum diinput.";
-        } else if(date('Y-m-d') < '2025-06-02'){
+        } else if(date('Y-m-d H:i:s') <= '2025-09-01 10:00:00'){
             $result['done'] = false;
-            $result['message'] = "SK dapat didownload pada tanggal 2 Juni 2025";
+            $result['message'] = "SK dapat didownload pada tanggal 1 September 2025 di atas jam 10 Pagi";
         }
 
         return $result;

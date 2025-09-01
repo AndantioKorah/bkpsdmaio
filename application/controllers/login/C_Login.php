@@ -87,7 +87,7 @@ class C_Login extends CI_Controller
     }
 
     public function loadLiveTpp(){
-        if($this->general_library->getUserLoggedIn()['flag_penerima_tpp'] == 1){
+        if($this->general_library->getUserLoggedIn()['flag_terima_tpp'] == 1){
             if(!$this->session->userdata('live_tpp')){
                 $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
                 $this->session->set_userdata('live_tpp', $data['tpp']);

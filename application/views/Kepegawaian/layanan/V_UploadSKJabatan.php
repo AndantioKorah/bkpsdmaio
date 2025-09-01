@@ -18,7 +18,7 @@
       <select class="form-control select2"  name="id_unor_siasn" id="id_unor_siasn"   >
                       <option value="" disabled selected>Pilih Unor SIASN</option>
                       <?php if($unor_siasn){ foreach($unor_siasn as $r){ ?>
-                          <option value="<?=$r['id']?>"><?=$r['nama']?></option>
+                          <option value="<?=$r['id']?>"><?=$r['nama_unor']?></option>
                       <?php } } ?>
       </select>
     </div>

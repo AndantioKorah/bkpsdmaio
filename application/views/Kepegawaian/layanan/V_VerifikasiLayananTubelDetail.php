@@ -711,6 +711,8 @@ function openPresensiTab(){
         } else if(file == "suratpengantar" || file == "surathukdis" || file == "suratcltn"){
           if(id_layanan == 25){
             dir = "./dokumen_layanan/tugasbelajar/";
+          } else if(id_layanan == 26){
+            dir = "./dokumen_layanan/tugasbelajarmandiri/";
           } else {
             dir = "./dokumen_layanan/permohonan_salinan_sk/";
           }

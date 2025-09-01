@@ -2997,6 +2997,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['status_jabatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.statusjabatan', 'id_statusjabatan', 'asc');
 		$data['eselon'] = $this->kepegawaian->getAllWithOrder('db_pegawai.eselon', 'id_eselon', 'asc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 8);
+		// dd($data['unor_siasn']);
 		$this->load->view('kepegawaian/layanan/V_UploadSKJabatan', $data);
 
 		}

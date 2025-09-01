@@ -60,7 +60,7 @@ class C_Rekap extends CI_Controller
                 'tahun' => '2023'
             ];
         }
-        $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha);
+        $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha, 0, 0);
         if($flag_alpha == 1){
             dd($data['result']);
         }

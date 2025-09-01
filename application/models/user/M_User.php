@@ -3306,5 +3306,34 @@
             dd('done');
         }
 
+        public function addFileSkPPPK(){
+            $pppk = $this->db->select("a.*")
+                        ->from('db_pegawai.pegawai a')
+                        ->where('a.id_peg LIKE "PEG202509%"')
+                        ->where('statuspeg', 3)
+                        ->group_by('a.nipbaru_ws')
+                        ->get()->result_array();
+                   
+            foreach($pppk as $p){
+                $this->db->where('id_pegawai', $p['id_peg'])
+                        ->update('db_pegawai.pegarsip', [
+                            'gambarsk' => getNamaPegawaiFull($p, 1)."_sign.pdf"
+                        ]);
+            }
+
+            // foreach($cpns as $c){
+            //     $input = [];
+            //     $input['id_pegawai'] = $c['id_peg'];
+            //     $input['jenissk'] = 3;
+            //     $input['status'] = 2;
+            //     $input['gambarsk'] = $c['nama']."_sign.pdf";
+            //     // $input['gambarsk'] = "SK_".$c['nipbaru_ws']."_".$c['nama'].".pdf";
+            //     $input['tanggal_verif'] = date('Y-m-d H:i:s');
+            //     $this->db->insert('db_pegawai.pegberkaspns', $input);
+            // }
+
+            dd('done');
+        }
+
 	}
 ?>

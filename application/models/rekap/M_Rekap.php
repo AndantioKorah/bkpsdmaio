@@ -2476,7 +2476,7 @@
         $param['skpd'] = $skpd[0];
         // dd($data);
         // $temp = $this->readAbsensiFromDb($param);
-        $temp = $this->readAbsensiAars($data, $flag_alpha = 0, $flag_rekap_tpp);
+        $temp = $this->readAbsensiAars($data, $flag_alpha = 0, $flag_rekap_tpp, $flag_penerima_tpp);
         // dd($temp['temp_list_nip']);
         // if($this->general_library->getId() == 16){
         //     dd($temp);

@@ -98,7 +98,12 @@ class C_Login extends CI_Controller
             $data['tpp']['pagu_tpp']['pagu_tpp'] = formatCurrencyWithoutRp($data['tpp']['pagu_tpp']['pagu_tpp']);
             echo json_encode($data['tpp']);
         } else {
-            return null;
+            echo json_encode([
+                'capaian_tpp' => "Rp 0",
+                'pagu_tpp' => [
+                    'pagu_tpp' => "Rp 0"
+                ]
+            ]);
         }
     }
 

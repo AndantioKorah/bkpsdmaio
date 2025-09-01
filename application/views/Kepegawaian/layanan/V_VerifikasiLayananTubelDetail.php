@@ -702,7 +702,7 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "suket_online" || file == "suket_beasiswa" || file == "rencana_pengembangan_diri" || file == "krs" || file == "surat_rencana_kompetensi" || file == "surat_ket_lulus_mhs" || file == "surat_rekom_masuk_pt" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
+        } else if(file == "transkrip" ||file == "suket_online" || file == "suket_beasiswa" || file == "rencana_pengembangan_diri" || file == "krs" || file == "surat_rencana_kompetensi" || file == "surat_ket_lulus_mhs" || file == "surat_rekom_masuk_pt" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";
@@ -714,7 +714,7 @@ function openPresensiTab(){
           } else {
             dir = "./dokumen_layanan/permohonan_salinan_sk/";
           }
-        } else if(file == "ijazah_cpns"){
+        } else if(file == "ijazah"){
           dir = "./arsippendidikan/";
         }  else {
           dir = "uploads/";

@@ -66,10 +66,10 @@
         <input <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "readonly" ?> type="text" id="edit_tgllahir" name="edit_tgllahir" class="form-control datepickeronly" value="<?=$profil_pegawai['tgllahir']?>">
       </div>
 
-      <div class="col-lg-2" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
+      <!-- <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> Jenis Kelamin </label>
       </div>
-      <div class="col-lg-10" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
+      <div class="col-lg-10">
       <div class="form-check form-check-inline">
       <input <?= $profil_pegawai['jk'] == 'Laki-Laki' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_jkelamin" id="inlineRadioL" value="Laki-Laki">
       <label class="form-check-label" for="inlineRadioL">Laki-laki</label>
@@ -78,7 +78,7 @@
         <input <?= $profil_pegawai['jk'] == 'Perempuan' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_jkelamin" id="inlineRadioP" value="Perempuan">
         <label class="form-check-label" for="inlineRadioP">Perempuan</label>
       </div>
-      </div>
+      </div> -->
 
       <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       
       </div>
@@ -123,6 +123,19 @@
     </select>
       </div>
 
+        <div class="col-lg-2">
+        <label for="inputPassword6" class="col-form-label"> Jenis Kelamin </label>
+      </div>
+      <div class="col-lg-10">
+      <div class="form-check form-check-inline">
+      <input <?= $profil_pegawai['jk'] == 'Laki-Laki' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_jkelamin" id="inlineRadioL" value="Laki-Laki">
+      <label class="form-check-label" for="inlineRadioL">Laki-laki</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input <?= $profil_pegawai['jk'] == 'Perempuan' ? 'checked' : ''; ?>  class="form-check-input" type="radio" name="edit_jkelamin" id="inlineRadioP" value="Perempuan">
+        <label class="form-check-label" for="inlineRadioP">Perempuan</label>
+      </div>
+      </div>
       
       <div class="col-lg-2" >
         <label for="inputPassword6" class="col-form-label"> Golongan Darah </label>

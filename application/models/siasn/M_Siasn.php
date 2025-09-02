@@ -344,28 +344,37 @@
         }
 
         public function syncDataUtamaPns(){
+            // $listPegawai = $this->db->select('*')
+            //                     ->from('db_pegawai.pegawai a')
+            //                     // ->where('a.id_pns_siasn IS NULL')
+            //                     ->where('a.id_m_status_pegawai', 1)
+            //                     ->where_in('a.statuspeg', [3])
+            //                     ->where_not_in('a.nipbaru_ws', ['001', '002'])
+            //                     ->like('a.id_peg', 'PEG202509')
+            //                     ->where_not_in('a.skpd', [
+            //                         9000001 // mahasiswa tugas belajar
+            //                     ])
+            //                     ->get()->result_array();
+
             $listPegawai = $this->db->select('*')
-                                ->from('db_pegawai.pegawai a')
-                                ->where('a.id_pns_siasn IS NULL')
-                                ->where('a.id_m_status_pegawai', 1)
-                                ->where_in('a.statuspeg', [1,2])
-                                ->where_not_in('a.nipbaru_ws', ['001', '002'])
-                                ->where_not_in('a.skpd', [
-                                    9000001 // mahasiswa tugas belajar
-                                ])
+                                ->from('t_temp_data_pppk2024')
+                                ->where('flag_sinkron_done', 0)
+                                ->where('nip', '199001092025212031')
                                 ->get()->result_array();
+                                
             if($listPegawai){
                 foreach($listPegawai as $lp){
-                    $ws = $this->siasnlib->getDataUtamaPnsByNip($lp['nipbaru_ws']);
+                    $ws = $this->siasnlib->getDataUtamaPnsByNip($lp['nip']);
                     if($ws['code'] == 0){
                         $res = json_decode($ws['data'], true);
-                        $this->db->where('nipbaru_ws', $lp['nipbaru_ws'])
-                                ->update('db_pegawai.pegawai', [
-                                    'id_pns_siasn' => $res['data']['id'],
-                                ]);
+                        dd($res);
+                        // $this->db->where('nipbaru_ws', $lp['nip'])
+                        //         ->update('db_pegawai.pegawai', [
+                        //             'id_pns_siasn' => $res['data']['id'],
+                        //         ]);
                     } else {
-                        echo $lp['nipbaru_ws']." ";
-                        dd($ws);
+                        echo $lp['nip']." ".$ws['data']."<br>";
+                        // dd($ws);
                     }
                 }
             }

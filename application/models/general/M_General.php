@@ -2057,5 +2057,111 @@
             ];
         }
 
+        public function updateDataPPPK($nip, $flag_save = 0){
+            if($flag_save == 1 && $nip == 0){
+                dd("harus mengisi nip jika ingin melakukan penyimpanan data");
+            }
+
+            $tempMetaData = $this->db->select('*')
+                                    ->from('t_temp_meta_data')
+                                    ->where('nama', 'DATA_PPPK_T1_2024')
+                                    ->get()->row_array();
+            if($tempMetaData){
+                $result = json_decode($tempMetaData['meta_data'], true);
+
+                $tNip = null;
+                $tempNip = null;
+                $selectedPegawai = null;
+
+                $this->db->select('*')
+                        ->from('t_temp_data_pppk2024');
+                if($nip != 0){
+                    $this->db->where('nip', $nip);
+                }
+                $tempNip = $this->db->get()->result_array();
+                
+                if($tempNip){
+                    foreach($tempNip as $tn){
+                        $tNip[$tn['nip']] = $tn;
+                    }
+
+                    $listPegawai = null;
+                    foreach($result as $rs){
+                        if(isset($tNip[$rs['nip']])){
+                            $listPegawai[$rs['nip']] = $rs;
+                            // if($flag_save == 1){
+                                $selectedPegawai = $rs;
+                            // }
+                        }
+                    }
+
+                    if($nip == 0){
+                        dd($listPegawai);
+                    } else {
+                        $dataPegawai = $this->db->select('a.gelar1, a.gelar2, a.nama, a.nipbaru_ws, a.id_peg,
+                                            b.gambarsk as url_jabatan, c.gambarsk as url_berkas,
+                                            d.gambarsk as url_arsip')
+                                            ->from('db_pegawai.pegawai a')
+                                            ->join('db_pegawai.pegjabatan b', 'a.id_peg = b.id_pegawai AND b.flag_active = 1')
+                                            ->join('db_pegawai.pegberkaspns c', 'a.id_peg = c.id_pegawai AND c.flag_active = 1')
+                                            ->join('db_pegawai.pegarsip d', 'a.id_peg = d.id_pegawai AND d.flag_active = 1')
+                                            ->where('nipbaru_ws', $selectedPegawai['nip'])
+                                            ->get()->row_array();
+                        if($dataPegawai){
+                            $agama = 1;
+                            if($selectedPegawai['agama_nama'] == 'Katholik'){
+                                $agama = 2;
+                            } else if($selectedPegawai['agama_nama'] == 'Islam'){
+                                $agama = 3;
+                            } else if($selectedPegawai['agama_nama'] == 'Hindu'){
+                                $agama = 4;
+                            } else if($selectedPegawai['agama_nama'] == 'Buddha'){
+                                $agama = 5;
+                            }
+
+                            if($flag_save == 1){
+                                $this->db->where('id_peg', $dataPegawai['id_peg'])
+                                        ->update('db_pegawai.pegawai', [
+                                            'nama' => $selectedPegawai['nama'],
+                                            'gelar1' => $selectedPegawai['gelar_depan'],
+                                            'gelar2' => $selectedPegawai['gelar_belakang'],
+                                            'jk' => $selectedPegawai['jenis_kelamin'] == "M" ? "Laki-Laki" : "Perempuan",
+                                            'tptlahir ' => $selectedPegawai['tempat_lahir'],
+                                            'tgllahir ' => $selectedPegawai['tanggal_lahir'],
+                                        ]);
+
+                                $this->db->where('id_pegawai', $dataPegawai['id_peg'])
+                                        ->update('db_pegawai.pegjabatan', [
+                                            'gambarsk' => "SK_".$selectedPegawai['nip']."_".$selectedPegawai['nama']."_sign_sign.pdf"
+                                        ]);
+                                
+                                $this->db->where('id_pegawai', $dataPegawai['id_peg'])
+                                        ->update('db_pegawai.pegberkaspns', [
+                                            'gambarsk' => "SK_".$selectedPegawai['nip']."_".$selectedPegawai['nama']."_sign_sign.pdf"
+                                        ]);
+                                
+                                $temp['gelar1'] = $selectedPegawai['gelar_depan'];
+                                $temp['gelar2'] = $selectedPegawai['gelar_belakang'];
+                                $temp['nama'] = $selectedPegawai['nama'];
+
+                                $this->db->where('id_pegawai', $dataPegawai['id_peg'])
+                                        ->where('id_dokumen', 34)
+                                        ->update('db_pegawai.pegarsip', [
+                                            'gambarsk' => getNamaPegawaiFull($temp, 1)."_sign.pdf"
+                                        ]);
+                            }
+                        }
+                        return [
+                            'temp' => $selectedPegawai,
+                            'db' => $dataPegawai 
+                        ];
+                    }
+
+                } else {
+                    dd("nip null ".$nip);
+                }
+            }
+        }
+
 	}
 ?>

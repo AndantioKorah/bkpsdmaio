@@ -196,6 +196,11 @@ class C_Cron extends CI_Controller
         $this->siasn->syncDataUtamaPns();
     }
 
+    public function updateDataPPPK($nip = 0, $flag_save = 0){
+        $data['result'] = $this->general->updateDataPPPK($nip, $flag_save);
+        $this->load->view('master/V_TempUpdateDataPPPK', $data);
+    }
+
     public function funcTest(){
         // dd($this->general_library->getDataKabanBkpsdm());
         $randomString = generateRandomString(30, 1, 't_file_ds'); 

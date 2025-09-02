@@ -229,6 +229,12 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='rencana_pengembangan_diri')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Rencana Tahunan Pengembangan Diri</button>
   <li>
+     <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='ijazah')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='transkrip')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Transkrip Nilai</button>
+  <li>
   <?php } ?>
   <?php if($id_m_layanan == 25) { ?>
    <li class="nav-item nav-item-layanan" role="presentation">
@@ -696,7 +702,7 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "suket_online" || file == "suket_beasiswa" || file == "rencana_pengembangan_diri" || file == "krs" || file == "surat_rencana_kompetensi" || file == "surat_ket_lulus_mhs" || file == "surat_rekom_masuk_pt" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
+        } else if(file == "transkrip" ||file == "suket_online" || file == "suket_beasiswa" || file == "rencana_pengembangan_diri" || file == "krs" || file == "surat_rencana_kompetensi" || file == "surat_ket_lulus_mhs" || file == "surat_rekom_masuk_pt" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";
@@ -705,10 +711,12 @@ function openPresensiTab(){
         } else if(file == "suratpengantar" || file == "surathukdis" || file == "suratcltn"){
           if(id_layanan == 25){
             dir = "./dokumen_layanan/tugasbelajar/";
+          } else if(id_layanan == 26){
+            dir = "./dokumen_layanan/tugasbelajarmandiri/";
           } else {
             dir = "./dokumen_layanan/permohonan_salinan_sk/";
           }
-        } else if(file == "ijazah_cpns"){
+        } else if(file == "ijazah"){
           dir = "./arsippendidikan/";
         }  else {
           dir = "uploads/";

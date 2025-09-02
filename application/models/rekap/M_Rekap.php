@@ -2488,7 +2488,7 @@
         $param['skpd'] = $skpd[0];
         // dd($data);
         // $temp = $this->readAbsensiFromDb($param);
-        $temp = $this->readAbsensiAars($data, $flag_alpha = 0, $flag_rekap_tpp, $flag_penerima_tpp);
+        $temp = $this->readAbsensiAars($data, $flag_alpha = 0, 1, $flag_penerima_tpp);
         // dd($temp['temp_list_nip']);
         // if($this->general_library->getId() == 16){
         //     dd($temp);
@@ -2544,17 +2544,18 @@
                         $valid_date = date('Y-m-t', strtotime($l['tmt'].'+ '.$l['lama_potongan'].' months'));
                         $list_date = getListDateByMonth($temp['bulan'], $temp['tahun']);
                         $last_date = $list_date[count($list_date)-1];
-                        // if($l['id_pegawai'] == 'PEG0000000ei569'){
-                        //     dd($last_date.'  ;  '.$valid_date);
+                        $expl = explode("-", $l['tmt']);
+                        $bulan = $expl[1];
+                        $min_date = $expl[0]."-".$bulan."-01"; // min. tanggal penarikan agar terbaca hukdis
+                        $rekap_date = $temp['tahun']."-".$temp['bulan']."01";
+                        
+                        // if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197401312010012002"){
+                        //     dd($temp['bulan']." ; ".$temp['tahun']." ; ".$min_date." ; ".$valid_date);
+                        // // //     dd($valid_date." ; ".$last_date);
                         // }
-                        if($last_date <= $valid_date && date('Y-m-d') >= $last_date){ // jika tanggal penarikan rekap TPP lebih dari TMT
-                        // if($last_date <= $valid_date){
+                        if($last_date <= $valid_date && $rekap_date >= $min_date){ // jika tanggal penarikan rekap TPP lebih dari min_date untuk terbaca hukdis
                             $hukdis[$l['nipbaru_ws']] = $l;
                         }
-                        // if($temp['id_unitkerja'] == '8020074'){
-                        //     dd($list_date);
-                        //     // dd($last_date.' ; '.$valid_date);
-                        // }
                     }
                 }
             }

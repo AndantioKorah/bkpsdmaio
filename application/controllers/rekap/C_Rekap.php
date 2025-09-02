@@ -51,7 +51,7 @@ class C_Rekap extends CI_Controller
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
 
-    public function readAbsensiAars($flag_alpha = 0){
+    public function readAbsensiAars($flag_alpha = 0, $flag_rekap_tpp = 0){
         $param = $this->input->post();
         if($flag_alpha == 1){
             $param = [
@@ -60,7 +60,7 @@ class C_Rekap extends CI_Controller
                 'tahun' => '2023'
             ];
         }
-        $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha, 0, 0);
+        $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha, $flag_rekap_tpp, 0);
         if($flag_alpha == 1){
             dd($data['result']);
         }
@@ -252,6 +252,7 @@ class C_Rekap extends CI_Controller
     public function rekapPenilaianDisiplin()
     {
         $data['list_skpd'] = $this->user->getAllSkpd();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
         render('rekap/V_RekapPenilaianDisiplin', '', '', $data);
     }
 

@@ -53,11 +53,18 @@
     </div>
 </div>
 
+
+
+
 <div class="card card-default">
     <div class="card-header">
         <h3 class="card-title">REKAP PENILAIAN DISIPLIN</h3>
     </div>
+    
     <div class="card-body">
+        <div id="result_search_aars" class="row mt-3 table-responsive">
+</div>
+<br>
         <div id="div_result" class="row">
         </div>
     </div>
@@ -88,5 +95,18 @@
                 errortoast('Terjadi Kesalahan')
             }
         })
+
+        $.ajax({
+            url: '<?=base_url("rekap/C_Rekap/readAbsensiAars")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                $('#result_search_aars').html('')
+                $('#result_search_aars').html(data)
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+
     })
 </script>

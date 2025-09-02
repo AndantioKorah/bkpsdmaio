@@ -3108,7 +3108,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_pegawai); 
 		$data['sk_kgb'] = $this->kepegawaian->getDokumenGajiBerkala($id_pegawai); 
 		$data['tahun'] = $tahun;
-		// dd($data['sk_kgb']);
+		// dd($data['result']);
 		render('kepegawaian/layanan/V_ProsesGajiBerkala', '', '', $data);
 	}
 
@@ -3158,16 +3158,21 @@ class C_Kepegawaian extends CI_Controller
         if(!file_exists('arsipusulds/'.$tahun.'/'.$bulan)){
                 mkdir('arsipusulds/'.$tahun.'/'.$bulan, 0777);
             }
-
+			
+		if($this->input->post('edit_gb_no_sk') == "" || $this->input->post('edit_gb_no_sk') == null){
 		$dataNomorSurat = getNomorSuratSiladen([
                 'jenis_layanan' => 64,
                 'tahun' => 2025,
                 'perihal' => "usul DS"
             ], 0);
 		$data['nosk'] = $dataNomorSurat['data']['nomor_surat'];
+		} else {
+		$data['nosk'] = $this->input->post('edit_gb_no_sk');
+		}
+	
 		$dataPost = $this->input->post();
 		$id_usul = $this->input->post('id');  
-		$this->kepegawaian->simpanDataDrafKgb();
+		$this->kepegawaian->simpanDataDrafKgb($data['nosk']);
 		
 		
 
@@ -3192,10 +3197,19 @@ class C_Kepegawaian extends CI_Controller
 				$mpdf->showImageErrors = true;
 				$mpdf->Output($url1, 'F');
 				$mpdf->Output($url2, 'F');
-				$mpdf->Output($file_pdf, 'D');
+				// $mpdf->Output($file_pdf, 'D');
 				$dataPost['nomor_surat_siladen'] = $data['nosk'];
+				if($this->input->post('edit_gb_no_sk') == "" || $this->input->post('edit_gb_no_sk') == null){
 				$this->kepegawaian->uploadFileUsulDsBerkala($id_usul,$dataPost,$url1,$url2,$file_pdf);
-        }
+				} 
+
+				$this->load->helper(array('url','download'));
+				force_download($url1,NULL);
+
+				// redirect(base_url().'kepegawaian/C_Kepegawaian/prosesGajiBerkala/'.$nip.'/'.$tahun);
+				
+		
+			}
 
 		public function loadListGajiBerkalaSelesai(){
 			$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');

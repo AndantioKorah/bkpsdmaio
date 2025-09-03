@@ -117,7 +117,8 @@ class C_Cron extends CI_Controller
     }
 
     public function cekKenegaraan(){
-        return $this->user->cekKenegaraan();
+        // return $this->user->cekKenegaraan();
+        return $this->user->cekKenegaraanCustom();
     }
 
     public function cekProgressCuti($nip){

@@ -2753,6 +2753,216 @@
             }
             // dd('done');
         }
+
+        public function cekKenegaraan2Custom(){
+            $tanggal = 17;
+            $bulan = 8;
+            $tahun = 2025;
+            $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
+            $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
+            $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
+
+            $namaKeneg = "UPACARA PENGIBARAN BENDERA DALAM RANGKA MEMPERINGATI HUT RI KE-80";
+            $namaMetaData = "KENEG_PENGIBARAN";
+            $listNipKenegPenaikan = $this->db->select('*')
+                                    ->from('t_temp_meta_data')
+                                    ->where('nama', $namaMetaData)
+                                    ->get()->row_array();
+
+            $listNipKenegPenurunan = $this->db->select('*')
+                                    ->from('t_temp_meta_data')
+                                    ->where('nama', 'KENEG_PENURUNAN')
+                                    ->get()->row_array();
+
+            $tempNipKenegPenaikan = json_decode($listNipKenegPenaikan['meta_data'], true);
+            $tempNipKenegPenurunan = json_decode($listNipKenegPenurunan['meta_data'], true);
+            
+            $listNip = null;
+            foreach($tempNipKenegPenaikan as $tNaik){
+                $listNip[] = $tNaik;
+            }
+
+            foreach($tempNipKenegPenurunan as $tTurun){
+                $listNip[] = $tTurun;
+            }
+
+            // dd($listNip);
+
+            if($listNip){
+                // $listNip = json_decode($listNipKeneg['meta_data'], true);
+                $list_pegawai = $this->db->select('b.id as user_id, a.nipbaru_ws, a.nama, b.id, c.nm_unitkerja, a.handphone, a.nama, a.gelar1, a.gelar2')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('m_user b', 'a.nipbaru_ws = b.username')
+                                ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                                ->where('b.flag_active', 1)
+                                ->where('a.id_m_status_pegawai', 1)
+                                ->where('a.statuspeg !=' , 1)
+                                ->where_in('nipbaru_ws', $listNip)
+                                ->get()->result_array();
+                // dd($list_pegawai);
+                if($list_pegawai){
+                    $excludeNip = [
+                        197707042010011005
+                    ];
+                    
+                    // cek dokpen di tanggal kegiatan
+                    $list_dokpen = $this->db->select('id_m_user, keterangan')
+                                    ->from('t_dokumen_pendukung')
+                                    ->where('tanggal', $tanggal)
+                                    ->where('bulan', $bulan)
+                                    ->where('tahun', $tahun)
+                                    ->where('flag_active', 1)
+                                    ->where('status', 2)
+                                    ->get()->result_array();
+
+                    $dokpen = null;   
+                    foreach($list_dokpen as $ld){
+                        $dokpen[$ld['id_m_user']] = $ld;
+                    }
+
+                    $listFix = null;
+                    foreach($list_pegawai as $lp){
+                        if(!in_array($lp['nipbaru_ws'], $excludeNip)){ // cek jika tidak ada di exclude
+                            if(!isset($dokpen[$lp['user_id']])){ // jika tidak ada dokpen, inputkan
+                                $listFix[$lp['nipbaru_ws']] = $lp;
+                            }
+                        }
+                    }
+
+                    foreach($listFix as $lf){
+                        $dokpenKenegaraan = null;
+                        $dokpenKenegaraan['id_m_jenis_disiplin_kerja'] = 6;
+                        $dokpenKenegaraan['keterangan'] = "Kenegaraan";
+                        $dokpenKenegaraan['pengurangan'] = "5";
+                        $keterangan_sistem = ucwords("TIDAK MENGIKUTI UPACARA PENAIKAN BENDERA");
+
+                        if(in_array($lf['nipbaru_ws'], $tempNipKenegPenaikan) && in_array($lf['nipbaru_ws'], $tempNipKenegPenurunan)){
+                            $dokpenKenegaraan['id_m_jenis_disiplin_kerja'] = 21;
+                            $dokpenKenegaraan['keterangan'] = "Kenegaraan 2";
+                            $dokpenKenegaraan['pengurangan'] = "10";
+                            $keterangan_sistem = ucwords("TIDAK MENGIKUTI UPACARA PENAIKAN & PENURUNAN BENDERA");
+                        } else if(in_array($lf['nipbaru_ws'], $tempNipKenegPenurunan)){
+                            $keterangan_sistem = ucwords("TIDAK MENGIKUTI UPACARA PENURUNAN BENDERA");
+                        }
+                        // $keterangan_sistem = ucwords("TIDAK MENGIKUTI ".$namaKeneg);
+                        $dokpenKenegaraan['id_m_user'] = $lf['user_id'];
+                        $dokpenKenegaraan['tanggal'] = $tanggal;
+                        $dokpenKenegaraan['bulan'] = $bulan;
+                        $dokpenKenegaraan['tahun'] = $tahun;
+                        $dokpenKenegaraan['status'] = "2";
+                        $dokpenKenegaraan['id_m_user_verif'] = "0";
+                        $dokpenKenegaraan['random_string'] = generateRandomString();
+                        $dokpenKenegaraan['flag_fix_tanggal'] = 0;
+                        $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
+                        $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
+                        $dokpenKenegaraan['keterangan_sistem'] = $keterangan_sistem;
+                        $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                        
+                        $sendWa = null;
+                        $sendWa['sendTo'] = convertPhoneNumber($lf['handphone']);
+                        $sendWa['message'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($lf).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran *".$dokpenKenegaraan['keterangan']."* dengan keterangan: *".$keterangan_sistem."*";
+                        $sendWa['flag_prioritas'] = 0;
+                        $sendWa['type'] = "text";
+                        $this->db->insert('t_cron_wa', $sendWa);
+
+                        if(in_array($lf['nipbaru_ws'], $tempNipKenegPenaikan) && in_array($lf['nipbaru_ws'], $tempNipKenegPenurunan)){
+                            echo "insert Keneg 2 ".getNamaPegawaiFull($lf)."<br>";
+                            // dd($dokpenKenegaraan);
+                            // dd($sendWa);
+                        } else {
+                            echo "insert Keneg ".getNamaPegawaiFull($lf)."<br>";
+                        }
+                    }   
+                }
+                echo "done";
+            }
+        }
+
+        public function cekKenegaraanCustom(){
+            $tanggal = 16;
+            $bulan = 8;
+            $tahun = 2025;
+            $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
+            $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
+            $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
+
+            $namaKeneg = "UPACARA ZIARAH NASIONAL TAHUN 2025";
+            $namaMetaData = "KENEG_ZIARAH";
+            $listNipKeneg = $this->db->select('*')
+                                    ->from('t_temp_meta_data')
+                                    ->where('nama', $namaMetaData)
+                                    ->get()->row_array();
+
+            if($listNipKeneg){
+                $listNip = json_decode($listNipKeneg['meta_data'], true);
+                $list_pegawai = $this->db->select('b.id as user_id, a.nipbaru_ws, a.nama, b.id, c.nm_unitkerja, a.handphone, a.nama, a.gelar1, a.gelar2')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('m_user b', 'a.nipbaru_ws = b.username')
+                                ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                                ->where('b.flag_active', 1)
+                                ->where('a.id_m_status_pegawai', 1)
+                                ->where('a.statuspeg !=' , 1)
+                                ->where_in('nipbaru_ws', $listNip)
+                                ->get()->result_array();
+                
+                if($list_pegawai){
+                    $excludeNip = [
+                        197707042010011005
+                    ];
+                    
+                    // cek dokpen di tanggal kegiatan
+                    $list_dokpen = $this->db->select('id_m_user, keterangan')
+                                    ->from('t_dokumen_pendukung')
+                                    ->where('tanggal', $tanggal)
+                                    ->where('bulan', $bulan)
+                                    ->where('tahun', $tahun)
+                                    ->where('flag_active', 1)
+                                    ->where('status', 2)
+                                    ->get()->result_array();
+
+                    $dokpen = null;   
+                    foreach($list_dokpen as $ld){
+                        $dokpen[$ld['id_m_user']] = $ld;
+                    }
+
+                    $listFix = null;
+                    foreach($list_pegawai as $lp){
+                        if(!in_array($lp['nipbaru_ws'], $excludeNip)){ // cek jika tidak ada di exclude
+                            if(!isset($dokpen[$lp['user_id']])){ // jika tidak ada dokpen, inputkan
+                                $listFix[$lp['nipbaru_ws']] = $lp;
+                            }
+                        }
+                    }
+
+                    foreach($listFix as $lf){
+                        $keterangan_sistem = ucwords("TIDAK MENGIKUTI ".$namaKeneg);
+                        $dokpenKenegaraan = null;
+                        $dokpenKenegaraan['id_m_user'] = $lf['user_id'];
+                        $dokpenKenegaraan['tanggal'] = $tanggal;
+                        $dokpenKenegaraan['bulan'] = $bulan;
+                        $dokpenKenegaraan['tahun'] = $tahun;
+                        $dokpenKenegaraan['id_m_jenis_disiplin_kerja'] = 6;
+                        $dokpenKenegaraan['keterangan'] = "Kenegaraan";
+                        $dokpenKenegaraan['pengurangan'] = "5";
+                        $dokpenKenegaraan['status'] = "2";
+                        $dokpenKenegaraan['id_m_user_verif'] = "0";
+                        $dokpenKenegaraan['random_string'] = generateRandomString();
+                        $dokpenKenegaraan['flag_fix_tanggal'] = 0;
+                        $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
+                        $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
+                        $dokpenKenegaraan['keterangan_sistem'] = $keterangan_sistem;
+                        $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                        // dd($dokpenKenegaraan);
+
+                        $sendWa['sendTo'] = convertPhoneNumber($lf['handphone']);
+                        $sendWa['message'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($lf).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran *KENEGARAAN* dengan keterangan: *".$keterangan_sistem."*";
+                        $sendWa['flag_prioritas'] = 0;
+                        $sendWa['type'] = "text";
+                        $this->db->insert('t_cron_wa', $sendWa);
+                    }   
+                }
+            }
+        }
         
         public function cekKenegaraan(){
             $tanggal = 14;

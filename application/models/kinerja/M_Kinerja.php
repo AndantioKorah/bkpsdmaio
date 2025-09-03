@@ -1230,6 +1230,23 @@
             }
         }
         
+        if(!$result['kepala']){
+            $kepala = $this->baseQueryAtasan()
+                            ->select('ab.nama_jabatan as nama_jabatan_plt_plh, aa.jenis as jenis_plt')
+                            ->join('t_plt_plh aa', 'a.id = aa.id_m_user')
+                            ->join('db_pegawai.jabatan ab', 'aa.id_jabatan = ab.id_jabatanpeg')
+                            ->join('db_pegawai.unitkerja ac', 'aa.id_unitkerja = ac.id_unitkerja')
+                            ->where('ab.kepalaskpd', 1)
+                            ->where('aa.tanggal_mulai <= ', date('Y-m-d'))
+                            ->where('aa.tanggal_akhir >= ', date('Y-m-d'))
+                            ->get()->row_array();
+            if($kepala){
+                $kepala['nama_jabatan'] = $kepala['jenis_plt'].". ".$kepala['nama_jabatan_plt_plh'];
+            }
+
+            $result['kepala'] = $kepala;
+        }
+
         // dd($result);
 
         return $result;

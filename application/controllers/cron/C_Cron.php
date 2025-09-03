@@ -121,7 +121,7 @@ class C_Cron extends CI_Controller
         return $this->user->cekKenegaraanCustom();
     }
 
-    public function cekProgressCuti($nip){
+    public function cekProgressCuti($nip, $flagFixProgress = 0){
         $insert_id = 0;
         $peg = $this->general->getOne('m_user', 'username', $nip, 1);
         $pegawai = $this->kinerja->getAtasanPegawai(null, $peg['id'], 1);
@@ -130,6 +130,9 @@ class C_Cron extends CI_Controller
         // if(isset($progressCuti['code']) && $progressCuti['code'] == 1){
         //     dd(($progressCuti));
         // }
+        if($flagFixProgress == 1){
+            $this->kepegawaian->flagFixProgress($progressCuti, $nip);
+        }
         dd(($progressCuti));
     }
 

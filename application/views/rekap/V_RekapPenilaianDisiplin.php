@@ -11,14 +11,33 @@
                         <label class="bmd-label-floating">Pilih SKPD</label>
                         <select class="form-control select2-navy" style="width: 100%"
                             id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
-                            <?php foreach($list_skpd as $s){ ?>
+                            <?php foreach($list_skpd as $s){
+                                if(($this->general_library->isProgrammer()
+                                || $this->general_library->isAdminAplikasi()
+                                || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN // jika admin
+                                ) || (!$this->general_library->isProgrammer() &&
+                        			($this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah') ||
+                                    isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()))
+                                    &&
+                                    $s['id_unitkerja'] == $this->general_library->getUserLoggedIn()['id_unitkerja'] // atau jika bukan admin, dan punya hak akses tpp, tampilkan hanya unitkerjanya saja 
+                                )){
+                            ?>
                                 <option value="<?=$s['id_unitkerja'].';'.$s['nm_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
-                            <?php } ?>
-                            <?php foreach($skpd_diknas as $sd){ ?>
+                            <?php } } ?>
+                            <?php foreach($skpd_diknas as $sd){
+                                if($this->general_library->isProgrammer()
+                                || $this->general_library->isAdminAplikasi()
+                                || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN // jika admin
+                                || (($this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah') || 
+			                        isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+                                ) &&
+                                    $this->general_library->getUserLoggedIn()['id_unitkerja'] == 3010000)
+                                ){ // jika admin TPP atau kasubag dan unitkerja DIKNAS
+                            ?>
                                 <option value="<?='sekolah_'.$sd['id_unitkerja'].';'.$sd['nm_unitkerja']?>">
                                     <?=$sd['nm_unitkerja']?>
                                 </option>
-                            <?php } ?>
+                            <?php } } ?>
                         </select>
                     </div>
                 </div>

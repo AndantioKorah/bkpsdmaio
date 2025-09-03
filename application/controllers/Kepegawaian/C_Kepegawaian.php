@@ -2538,7 +2538,7 @@ class C_Kepegawaian extends CI_Controller
 		// dd($data['skp2']);
 	
 
-		if($id_layanan == 6 || $id_layanan == 7 || $id_layanan == 8 || $id_layanan == 9){
+		if($id_layanan == 6 || $id_layanan == 7 || $id_layanan == 8 || $id_layanan == 9 || $id_layanan == 29){
 			if($id_layanan == 7){
 				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
 				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
@@ -2564,6 +2564,17 @@ class C_Kepegawaian extends CI_Controller
 				$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan(); 
 				$data['akreditasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
 				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	
+			}
+			if($id_layanan == 29){
+				$data['sk_penetapan_prestasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','93','0');
+				$data['bukti_prestasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','94','0');	
+				$data['surat_pelantikan_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','98','0');	
+				$data['spmt'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','34','0');	
+				$data['cv'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','95','0');	
+				$data['pas_foto'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','96','0');	
+				$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun();
+				$data['berita_acara_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','97','0');	
+
 			}
 		$this->load->view('kepegawaian/layanan/V_LayananPangkat', $data);
 		} 

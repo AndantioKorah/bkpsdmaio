@@ -7058,6 +7058,50 @@ public function submitEditJabatan(){
         return $res;
     }
 
+    public function flagFixProgress($progress, $nip){
+        $dataCuti = $this->db->select('c.*, a.gelar1, a.gelar2, a.nama')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_user b', 'a.nipbaru_ws = b.username')
+                            ->join('t_pengajuan_cuti c', 'c.id_m_user = b.id')
+                            ->where('a.nipbaru_ws', $nip)
+                            ->where('c.flag_active', 1)
+                            ->where('c.flag_ds_cuti', 0)
+                            ->where('c.flag_ditolak', 0)
+                            ->order_by('c.created_date', 'desc')
+                            ->limit(1)
+                            ->get()->row_array();
+        if($dataCuti){
+            $this->db->where('id', $dataCuti['id'])
+                    ->update('t_pengajuan_cuti', [
+                        'status_pengajuan_cuti' => "Verifikasi ".$progress[0]['nama_jabatan']
+                    ]);
+
+            $this->db->where('id_t_pengajuan_cuti', $dataCuti['id'])
+                    ->update('t_progress_cuti', [
+                        'flag_active' => 0
+                    ]);
+            
+            $newProgress = null;
+            $i = 0;
+            foreach($progress as $pr){
+                $newProgress[$i]['id_t_pengajuan_cuti'] = $dataCuti['id'];
+                $newProgress[$i]['id_m_user_verifikasi'] = $pr['id_m_user_verifikasi'];
+                $newProgress[$i]['nama_jabatan'] = $pr['nama_jabatan'];
+                $newProgress[$i]['nohp'] = $pr['nohp'];
+                $newProgress[$i]['urutan'] = $pr['urutan'];
+                $i++;
+            }
+
+            if($newProgress){
+                $this->db->insert_batch('t_progress_cuti', $newProgress);
+                echo "done";
+                // dd($newProgress);
+            }
+        } else {
+            echo "data cuti tidak ditemukan";
+        }
+    }
+
     public function buildProgressCuti($pegawai, $insert_id, $id_m_user){
         $result = [];
         $kepalabkpsdm = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
@@ -7118,7 +7162,12 @@ public function submitEditJabatan(){
             }
         }
 
-        if(stringStartWith('II', $thisuser['eselon'])){
+
+        // if($this->general_library->isProgrammer()){
+        //     dd($thisuser);
+        // }
+
+        if($thisuser['eselon'] == "II A" || $thisuser['eselon'] == "II B"){
             unset($pegawai['sek']);
         }
 
@@ -7186,7 +7235,9 @@ public function submitEditJabatan(){
                     'message' => "Kepala Sekolah belum terdata di sistem. Silahkan menghubungi Administrator. Terima Kasih."
                 ];
             }
-                
+            // if($this->general_library->isProgrammer()){
+            //     dd($pegawai);
+            // }
         }
         
         return $this->pelengkapDataProgressCuti($result, $insert_id, $kepalabkpsdm);

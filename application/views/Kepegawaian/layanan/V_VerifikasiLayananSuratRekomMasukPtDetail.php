@@ -438,6 +438,7 @@
           <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
           <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
           <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
+          <input type="hidden" class="form-control" id="id_dokumen" name="id_dokumen" value="84" readonly>
           
           <label for="exampleInputEmail1">Surat Rekomendasi Mengikuti Seleksi Masuk PT</label>
           <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file" required>

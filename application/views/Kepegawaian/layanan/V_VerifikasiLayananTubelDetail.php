@@ -111,9 +111,9 @@
         <?php } ?>
       
         <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
-        <!-- <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
+        <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
         Upload Dokumen
-        </button> -->
+        </button>
         <?php } ?>
         <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
@@ -165,18 +165,12 @@
   <?php } else { ?>
     
     <button id="btn_lihat_file" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-    <i class="fa fa-file-pdf"></i> File Pangkat</button>
+    <i class="fa fa-file-pdf"></i> File Tugas Belajar</button>
     <?php if($result[0]['status_layanan'] <= 2) { ?>
     <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
     <i class="fa fa-file-trash"></i> Hapus File</button>
     <?php } ?>
-    <?php if($result[0]['status_layanan'] == 1) { ?>
-    <button onclick="kirimBkad('<?=$id_usul;?>',3)" id="btn_lihat_file" class="btn btn-sm btn-navy-outline ml-1">
-    Teruskan ke BKAD <i class="fa fa-arrow-right"></i></button>
-    <?php } else if($result[0]['status_layanan'] == 3) { ?>
-    <button onclick="kirimBkad('<?=$id_usul;?>',1)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
-    Batal Teruskan ke BKAD <i class="fa fa-arrow-left"></i></button>
-    <?php } ?>
+  
     <?php } ?>
 
 
@@ -595,8 +589,9 @@
          <div class="form-group">
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="hidden" class="form-control" id="id_dokumen" name="id_dokumen" value="46" readonly>
+          <input type="hidden" class="form-control" id="id_dokumen" name="id_dokumen" value="14" readonly>
           <input type="hidden" class="form-control" id="id_layanan" name="id_layanan" value="<?=$result[0]['id_pengajuan'];?>" readonly>
+          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
 
         
           <div class="form-group">
@@ -878,7 +873,7 @@ $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 1000);
-$link = "<?=base_url();?>arsipperbaikandata/"+filename+"?v="+number;
+$link = "<?=base_url();?>arsiplain/"+filename+"?v="+number;
 
 $('#iframe_view_file').attr('src', $link)
 $('#iframe_view_file').on('load', function(){
@@ -949,7 +944,7 @@ function kirimBkad(id,status){
 
       
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSKLayanan")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSuratLayananRekomSeleksiPT")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  

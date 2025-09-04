@@ -11756,6 +11756,9 @@ function getPengajuanLayanan($id,$id_m_layanan){
     if($id_m_layanan == 24 || $id_m_layanan == 27){
         $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_dok','left');
     }
+    if($id_m_layanan == 25 || $id_m_layanan == 26){
+        $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_dok','left');
+    }
     
     
     return $this->db->get()->result_array();
@@ -12810,6 +12813,8 @@ public function getFileForVerifLayanan()
             $target_dir						= './arsipperbaikandata/';
         } else if($this->input->post('id_dokumen') == 101){
             $target_dir						= './arsippeningkatanpenambahangelar/';
+        } else if($this->input->post('id_dokumen') == 14){
+            $target_dir						= './arsiplain/';
         } else if($this->input->post('jenis_organisasi')){
             $target_dir						= './arsiporganisasi/';
         } else if($this->input->post('pegpenghargaan')){
@@ -13197,7 +13202,7 @@ public function getFileForVerifLayanan()
             }
         // PIDANA HUKDIS
         // SUKET TIDAK TUBEL 
-        if($id_m_layanan == 24 || $id_m_layanan == 27){
+        if($id_m_layanan == 24 || $id_m_layanan == 27 || $id_m_layanan == 25 || $id_m_layanan == 26){
         $data["status"] = 1; 
         $data["reference_id_dok"] = null; 
         $this->db->where('id', $id_usul)
@@ -14226,6 +14231,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         $this->db->trans_begin();
         $id_pegawai = $this->input->post('id_pegawai'); 
         $id_usul = $this->input->post('id_usul'); 
+        $id_dokumen = $this->input->post('id_dokumen'); 
         $dataLayanan = $this->db->select('c.*,a.*')
                 ->from('t_layanan a')
                 ->join('m_user b', 'a.id_m_user = b.id')
@@ -14233,11 +14239,19 @@ public function checkListIjazahCpns($id, $id_pegawai){
                 ->where('a.id', $id_usul)
                 ->get()->row_array();
         
-            $filerekom = null;
+            $filesk = null;
             $nip = $this->input->post('nip');
 
             $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            $filerekom = "rekomendasi_mengikuti_seleksi_masuk_pt_$nip"."_$random_number".".pdf";
+           
+           if($id_dokumen == 84){
+            $filesk = "rekomendasi_mengikuti_seleksi_masuk_pt_$nip"."_$random_number".".pdf";
+            $jenis_layanan = 'Rekomendasi Mengikuti Seleksi Masuk Perguruan Tinggi';
+           } else if($id_dokumen == 14) {
+            $filesk = "tugas_belajar_$nip"."_$random_number".".pdf";
+            $jenis_layanan = 'Tugas Belajar';
+
+           }
             $target_dir	= './arsiplain/';
 
             $this->load->library('upload');
@@ -14248,7 +14262,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $config['encrypt_name']			= FALSE;
             $config['overwrite']			= TRUE;
             $config['detect_mime']			= TRUE;
-            $config['file_name']            = $filerekom;
+            $config['file_name']            = $filesk;
             $this->upload->initialize($config);
 
             if (!$this->upload->do_upload('file')) {
@@ -14260,24 +14274,24 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     $dataFile 			= $this->upload->data();
                     $dataHD['id_pegawai']      = $id_pegawai;
                     $dataHD['created_by']      = $this->general_library->getId();
-                    $dataHD['id_dokumen']      = 84; 
+                    $dataHD['id_dokumen']      = $id_dokumen; 
                     $dataHD['status']          = 2; 
-                    $dataHD['gambarsk']        = $filerekom;
+                    $dataHD['gambarsk']        = $filesk;
                     $this->db->insert('db_pegawai.pegarsip', $dataHD);
                     $id_insert_hd = $this->db->insert_id();
                     $dataUpdateHD["status"] = 3;
                     $dataUpdateHD["reference_id_dok"] = $id_insert_hd;
                     $this->db->where('id', $id_usul)
                     ->update('t_layanan', $dataUpdateHD);
-                    $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas Anda, Dokumen ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda. Apabila terjadi kesalahan pada Dokumen ini,silahkan kirim pesan dinomor WA ini.\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
-                    $url_file = "arsiplain/".$filerekom;
+                    $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan Surat ".$jenis_layanan." Anda, Dokumen ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda. Apabila terjadi kesalahan pada Dokumen ini,silahkan kirim pesan dinomor WA ini.\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+                    $url_file = "arsiplain/".$filesk;
                     $cronWa = [
                     'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                     'message' => $caption,
-                    'filename' => $filerekom,
+                    'filename' => $filesk,
                     'fileurl' => $url_file,
                     'type' => 'document',
-                    'jenis_layanan' => 'Surat Keterangan Tidak Pernah Dijatuhi Hukuman Disiplin dan Hukuman Pidana'
+                    'jenis_layanan' => $jenis_layanan
                 ];
                 $this->db->insert('t_cron_wa', $cronWa);
                 $res = array('msg' => 'Data berhasil disimpan', 'success' => true);

@@ -41,6 +41,7 @@
                     <th style="width: 10%;" class="text-center">TMT Pensiun</th>
                     <th style="width: 20%;" class="text-center">Detail</th>
                     <th style="width: 20%;" class="text-center">Verifikator</th>
+                    <th style="width: 20%;" class="text-center">Selesai</th>
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){ ?>
@@ -68,7 +69,10 @@
                                 </a>
                             </td>
                             <td class="text-center">
-                                <?=isset($list_checklist_pensiun[$rs['nipbaru_ws']]) ? $list_checklist_pensiun[$rs['nipbaru_ws']]['nama'] : ''?>
+                                <span style="font-size: .75rem;"><?=isset($list_checklist_pensiun[$rs['nipbaru_ws']]) ? $list_checklist_pensiun[$rs['nipbaru_ws']]['nama_verifikator'] : ''?></span>
+                            </td>
+                            <td>
+                                <span style="font-size: .75rem;"><?=isset($list_checklist_pensiun[$rs['nipbaru_ws']]) && $list_checklist_pensiun[$rs['nipbaru_ws']]['flag_selesai'] == 1 ? getNamaPegawaiFull($list_checklist_pensiun[$rs['nipbaru_ws']])." pada ".formatDateNamaBulanWT($list_checklist_pensiun[$rs['nipbaru_ws']]['date_flag_selesai']) : ''?></span>
                             </td>
                         </tr>
                         <!-- <?php if(isset($list_checklist_pensiun[$rs['nipbaru_ws']])){ ?>

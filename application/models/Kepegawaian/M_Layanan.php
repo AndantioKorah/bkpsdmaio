@@ -138,7 +138,8 @@ class M_Layanan extends CI_Model
                         ->where_in('b.status', [1,2])
                         ->where_in('flag_active', [1,2])
                         ->where('b.hubkel', '40')
-                        ->order_by('b.tgllahir', 'asc')
+                        ->order_by('b.created_date', 'desc')
+                        // ->order_by('b.tgllahir', 'asc')
                         ->get()->result_array();
         }
 
@@ -149,7 +150,7 @@ class M_Layanan extends CI_Model
                         ->where_in('b.status', [1,2])
                         ->where_in('flag_active', [1,2])
                         ->where_in('b.hubkel', [20,30])
-                        ->order_by('b.tgllahir', 'desc')
+                        ->order_by('b.created_date', 'desc')
                         ->get()->result_array();
         
 
@@ -205,6 +206,98 @@ class M_Layanan extends CI_Model
         return $result;
     }
 
+    public function doneBerkasPensiun($id){
+        $res['code'] = 0;
+        $res['message'] = "";
+
+        $this->db->trans_begin();
+        try {
+            $data = $this->db->select('a.*, b.handphone, b.gelar1, b.gelar2, b.nama')
+                        ->from('t_checklist_pensiun a')
+                        ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                        ->where('a.id', $id)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+            if($data){
+                $this->db->where('id', $id)
+                        ->update('t_checklist_pensiun', [
+                            'flag_selesai' => 1,
+                            'id_m_user_flag_selesai' => $this->general_library->getId(),
+                            'updated_by' => $this->general_library->getId(),
+                        ]);
+
+                $this->db->insert('t_cron_wa', [
+                            'type' => 'text',
+                            'sendTo' => convertPhoneNumber($data['handphone']),
+                            'message' => "*[ADMINISTRASI KEPEGAWAIAN - PENSIUN]*\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($data).", Dokumen Kelengkapan Pensiun Anda telah selesai dibuat dan akan dihubungi oleh operator untuk proses selanjutnya.".FOOTER_MESSAGE_CUTI,
+                            'jenis_layanan' => 'Administrasi Kepegawaian - Pensiun',
+                            'created_by' => $this->general_library->getId()
+                        ]);
+            } else {
+                $res['code'] = 1;
+                $res['message'] = "Terjadi Kesalahan";
+            }
+        } catch (\Throwable $th) {
+            $res['code'] = 1;
+            $res['message'] = "Terjadi Kesalahan ".$th;
+            $this->db->trans_rollback();
+        }
+
+        if($res['code'] == 0){
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
+        }
+
+        return $res;
+    }
+
+    public function batalDoneBerkasPensiun($id){
+        $res['code'] = 0;
+        $res['message'] = "";
+
+        $this->db->trans_begin();
+        try {
+            $data = $this->db->select('a.*, b.handphone, b.gelar1, b.gelar2, b.nama')
+                        ->from('t_checklist_pensiun a')
+                        ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                        ->where('a.id', $id)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+            if($data){
+                $this->db->where('id', $id)
+                        ->update('t_checklist_pensiun', [
+                            'flag_selesai' => 0,
+                            'id_m_user_flag_selesai' => $this->general_library->getId(),
+                            'updated_by' => $this->general_library->getId(),
+                        ]);
+
+                $this->db->insert('t_cron_wa', [
+                            'type' => 'text',
+                            'sendTo' => convertPhoneNumber($data['handphone']),
+                            'message' => "*[ADMINISTRASI KEPEGAWAIAN - PENSIUN]*\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($data).", proses penyelesaian Dokumen Kelengkapan Pensiun Anda dibatalkan oleh operator. Harap menunggu informasi selanjutnya, terima kasih.".FOOTER_MESSAGE_CUTI,
+                            'jenis_layanan' => 'Administrasi Kepegawaian - Pensiun',
+                            'created_by' => $this->general_library->getId()
+                        ]);
+            } else {
+                $res['code'] = 1;
+                $res['message'] = "Terjadi Kesalahan";
+            }
+        } catch (\Throwable $th) {
+            $res['code'] = 1;
+            $res['message'] = "Terjadi Kesalahan ".$th;
+            $this->db->trans_rollback();
+        }
+
+        if($res['code'] == 0){
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
+        }
+
+        return $res;
+    }
+
     public function updateChecklistPensiun($nip, $data, $id_m_jenis_pensiun){
         $this->db->trans_begin();
         $last_id = null;
@@ -215,11 +308,12 @@ class M_Layanan extends CI_Model
                             ->where('nipbaru_ws', $nip)
                             ->get()->row_array();
 
-        $exists = $this->db->select('*')
-                        ->from('t_checklist_pensiun')
-                        ->where('nip', $nip)
-                        ->where('id_m_jenis_pensiun', $id_m_jenis_pensiun)
-                        ->where('flag_active', 1)
+        $exists = $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, a.date_flag_selesai')
+                        ->from('t_checklist_pensiun a')
+                        ->join('m_user b', 'a.id_m_user_flag_selesai = b.id', 'left')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->where('a.nip', $nip)
+                        ->where('a.flag_active', 1)
                         ->get()->row_array();
         if($exists){
             $last_id = $exists['id'];
@@ -234,10 +328,12 @@ class M_Layanan extends CI_Model
             ]);
 
             $last_id = $this->db->insert_id();
-            $result = $this->db->select('*')
-                                ->from('t_checklist_pensiun')
-                                ->where('flag_active', 1)
-                                ->where('id', $last_id)
+            $result = $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, a.date_flag_selesai')
+                                ->from('t_checklist_pensiun a')
+                                ->join('m_user b', 'a.id_m_user_flag_selesai = b.id', 'left')
+                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                ->where('a.flag_active', 1)
+                                ->where('a.id', $last_id)
                                 ->get()->row_array();
         }
 

@@ -668,6 +668,7 @@ $(function(){
     function loadListJabatan(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
       var statusjabatan = "<?= $statusjabatan?>";
+
     $('#list_jabatan').html('')
     $('#list_jabatan').append(divLoaderNavy)
     $('#list_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/1'+'/'+statusjabatan, function(){
@@ -677,7 +678,7 @@ $(function(){
 
   function loadRiwayatUsulJabatan(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
-      var statusjabatan = "<?= $statusjabatan?>";
+      var statusjabatan = "<?= $statusjabatan?>"
     $('#riwayat_usul_jabatan').html('')
     $('#riwayat_usul_jabatan').append(divLoaderNavy)
     $('#riwayat_usul_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/2'+'/'+statusjabatan, function(){

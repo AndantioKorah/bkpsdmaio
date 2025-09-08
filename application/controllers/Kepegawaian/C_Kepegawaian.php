@@ -722,6 +722,7 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function LoadFormJabatan($nip,$statusjab){
+		// dd($statusjab);
 		$data['nip'] = $nip;
 		$data['jenis_jabatan'] = $this->kepegawaian->getJenisJabatan();
 		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
@@ -736,7 +737,6 @@ class C_Kepegawaian extends CI_Controller
 		$data['unor_siasn'] = $this->general->getAllUnorSiasn();
 		if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('akses_profil_pegawai') || isKasubKepegawaian($this->general_library->getNamaJabatan())){
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiByAdmin($nip);
-			
 		} else {
 			$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai();
 		}
@@ -2756,7 +2756,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['id_m_layanan'] = $id_m_layanan;
 		if($id_m_layanan == 1){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
-		} else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
+		} else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPangkatItem', $data);
 		} else if($id_m_layanan == 10 || $id_m_layanan == 11){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPerbaikanDataItem', $data);
@@ -2796,7 +2796,7 @@ class C_Kepegawaian extends CI_Controller
 		
 		if($layanan == 1){
 			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
-		} else if($layanan == 6 || $layanan == 7 || $layanan == 8 || $layanan == 9){
+		} else if($layanan == 6 || $layanan == 7 || $layanan == 8 || $layanan == 9 || $layanan == 29 ){
 		// $data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
 		// $data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','2',$id_peg);        
 		// $data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_peg);
@@ -2835,6 +2835,16 @@ class C_Kepegawaian extends CI_Controller
 			$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayananAdmin($id_peg);
 			$data['akreditasi'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','68','0',$id_peg);	
 			$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','11','0',$id_peg);	
+		}
+		if($layanan == 29){
+			$data['sk_penetapan_prestasi'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','93','0',$id_peg);
+			$data['bukti_prestasi'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','94','0',$id_peg);	
+			$data['surat_pelantikan_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','98','0',$id_peg);	
+			$data['spmt'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','34','0',$id_peg);	
+			$data['cv'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','95','0',$id_peg);	
+			$data['pas_foto'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','96','0',$id_peg);	
+			$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiunAdmin($id_peg);
+			$data['berita_acara_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','97','0',$id_peg);		
 		}
 			render('kepegawaian/layanan/V_VerifikasiLayananPangkatDetail', '', '', $data);
 		} else if($layanan == 10 || $layanan == 11){

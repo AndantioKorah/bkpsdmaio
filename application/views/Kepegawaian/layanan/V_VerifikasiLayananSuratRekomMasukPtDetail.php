@@ -107,7 +107,7 @@
         </button>
         <?php } ?>
         <?php if($result[0]['status_layanan'] == 3) { ?>
-          <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
+        <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
         <i class="fa fa-file-trash"></i> Hapus Dokumen</button>
         <button id="btn_lihat_dok" href="#modal_view_file" onclick="openDokumen('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>

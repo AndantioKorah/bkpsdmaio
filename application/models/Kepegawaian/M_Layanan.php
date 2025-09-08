@@ -311,10 +311,11 @@ class M_Layanan extends CI_Model
         $exists = $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, a.date_flag_selesai')
                         ->from('t_checklist_pensiun a')
                         ->join('m_user b', 'a.id_m_user_flag_selesai = b.id', 'left')
-                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws', 'left')
                         ->where('a.nip', $nip)
                         ->where('a.flag_active', 1)
                         ->get()->row_array();
+                        
         if($exists){
             $last_id = $exists['id'];
             $result = $exists;

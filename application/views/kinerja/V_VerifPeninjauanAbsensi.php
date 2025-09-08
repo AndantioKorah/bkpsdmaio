@@ -42,7 +42,7 @@
                         id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja">
                         <option selected value="0">Semua</option>
                         <?php foreach($unitkerja as $s){ ?>
-                            <option value="<?=$s['id_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
+                            <option value="<?=$s['id_unitkerjamaster']?>"><?=$s['nm_unitkerjamaster']?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -101,7 +101,7 @@
     $(function(){
         $('#bulan').select2()
         $('#id_unitkerja').select2()
-        $('#form_search_verif_dokumen').submit()
+        // $('#form_search_verif_dokumen').submit()
         $('.datepicker3').datepicker({
         format: 'yyyy-mm-dd',
             // viewMode: "years", 

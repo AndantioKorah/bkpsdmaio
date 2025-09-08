@@ -14434,7 +14434,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
     public function updateStatusLayananPangkat($id)
     {
         $data['status'] = $id;
-        $this->db->where_in('id', [6,7,8,9])
+        $this->db->where_in('id', [6,7,8,9,29])
                         ->update('m_layanan', $data);
     }
 

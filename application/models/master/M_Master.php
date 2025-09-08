@@ -43,6 +43,13 @@
                             ->get()->result_array();
         }
 
+        public function getAllUnitKerjaMaster(){
+            return $this->db->select('*')
+                            ->from('db_pegawai.unitkerjamaster')
+                            ->order_by('nm_unitkerjamaster', 'asc')
+                            ->get()->result_array();
+        }
+
         public function loadMasterBidang(){
             return $this->db->select('*')
                             ->from('m_bidang a')

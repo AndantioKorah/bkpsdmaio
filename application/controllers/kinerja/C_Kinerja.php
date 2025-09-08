@@ -537,7 +537,8 @@ class C_Kinerja extends CI_Controller
 
     public function verifikasiTinjauAbsensi()
     {
-        $data['unitkerja'] = $this->master->getAllUnitKerja();
+        // $data['unitkerja'] = $this->master->getAllUnitKerja();
+        $data['unitkerja'] = $this->master->getAllUnitKerjaMaster();
         render('kinerja/V_VerifPeninjauanAbsensi', '', '', $data);
     }
 

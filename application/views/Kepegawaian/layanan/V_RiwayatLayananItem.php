@@ -281,7 +281,7 @@ $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 2000);
-if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
+if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || id_layanan == 29){
   $link = "<?=base_url();?>dokumen_layanan/pangkat/"+filename+"?v="+number;
 } else if(id_layanan == 10){
   $link = "<?=base_url();?>dokumen_layanan/perbaikan_data/"+filename+"?v="+number;
@@ -366,7 +366,7 @@ function ajukanKembali(id){
                            data: null,
                            success: function(){
                                successtoast('Layanan diajukan kembali')
-                               if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9){
+                               if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || id_layanan == 29){
                                loadListRiwayatLayananPangkat()
                                }
                                if(id_layanan == 10){

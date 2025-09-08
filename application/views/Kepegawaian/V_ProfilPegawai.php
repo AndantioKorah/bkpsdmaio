@@ -1328,7 +1328,7 @@
 </script>
 
   <script>
-  var nip = "<?= $nip;?>"; 
+  var nip = "<?= trim($nip);?>"; 
   var page = "<?= $page;?>"
   $(function(){
     window.bLazy = new Blazy({

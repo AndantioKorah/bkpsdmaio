@@ -284,7 +284,51 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='akreditasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Akreditasi Program Studi</button>
   <li>
+ <?php } ?>
 
+ <?php if($id_m_layanan == 29) { ?>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='suratpengantar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pengantar</button>
+  <li>
+  
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='skjabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Akhir</button>
+  <li>
+
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat Akhir</button>
+  <li>
+
+
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='skp1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_1_lalu;?></button>
+  <li>
+  
+
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='sk_penetapan_prestasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Penetapan Prestasi Kerja Luar Biasa</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='bukti_prestasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Bukti Prestasi</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='surat_pelantikan_jabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pelantikan (Dalam Jabatan Terakhir)</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='spmt')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SPMT</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='cv')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">CV</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='pas_foto')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Pas Foto</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='berita_acara_jabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Berita Acara Sumpah/ Janji / Pelantikan Jabatan</button>
+  <li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="loadFormJabatan('plt')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Jabatan PLT</button>
+  <li>
  <?php } ?>
         </li>
 
@@ -511,7 +555,7 @@
       <div class="modal-body">
       <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
         <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
-        <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
+        <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29) { ?>
           <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
           <input type="hidden" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
           <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
@@ -522,7 +566,6 @@
           <?php if($id_m_layanan == 7) { ?>
 					<input type="hidden"  name="pak" value="<?php if($pak) echo $pak['id']; else echo "";?>">
 					<input type="hidden" name="sk_jabatan" value="<?php if($sk_jabatan_fungsional) echo $sk_jabatan_fungsional['id']; else echo "";?>">
-
           <?php } ?>
           <?php if($id_m_layanan == 8) { ?>
 					<input type="hidden" name="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
@@ -535,7 +578,9 @@
 					<input type="hidden" name="uraiantugas" value="<?php if($uraiantugas) echo $uraiantugas['id']; else echo "";?>">
 					<input type="hidden" name="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
 					<input type="hidden" name="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
-          
+          <?php } ?>
+          <?php if($id_m_layanan == 29) { ?>
+					<input type="hidden" name="sk_jabatan" value="<?php if($sk_jabatan) echo $sk_jabatan['id']; else echo "";?>">
           <?php } ?>
 
       <div class="mb-3">
@@ -608,7 +653,8 @@
     </div>
 </div>
     
-
+  <div class="tab-pane fade show " id="pills-plt" role="tabpanel" aria-labelledby="pills-plt-tab">
+          </div>
 
 		
 <script>
@@ -649,18 +695,23 @@ function openProfileTab(){
   $('#view_file_verif').hide()
 }
 
-function openPresensiTab(){
-  $('#view_file_verif').hide()
-  $('#pills-presensi').html('')
-  $('#pills-presensi').append(divLoaderNavy)
-  $('#pills-presensi').load('<?=base_url("kepegawaian/C_Kepegawaian/openPresensiTab/".$result[0]['id_m_user'])?>', function(){
-    $('#loader').hide()
-  })
-}
 
+
+ function loadFormJabatan(val){
+ var status = val;
+  $('#ket').html('');
+  $('#view_file_verif').hide()
+  $('#pills-plt').show()
+  $('#pills-plt').html(' ')
+    $('#pills-plt').append(divLoaderNavy)
+    $('#pills-plt').load('<?=base_url('kepegawaian/C_Kepegawaian/LoadFormJabatan/')?>'+nip+'/'+status, function(){
+    $('#loader').hide()    
+    })
+ }
   
   async function getFile(file){
     $('#view_file_verif').hide()
+    $('#pills-plt').hide()
     $('.iframe_loader').show()  
     $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
     $('#ket').html('');
@@ -671,7 +722,7 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
+        } else if(file == "berita_acara_jabatan" || file == "pas_foto" || file == "cv" || file == "spmt" || file == "surat_pelantikan_jabatan" || file == "bukti_prestasi" || file == "sk_penetapan_prestasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";

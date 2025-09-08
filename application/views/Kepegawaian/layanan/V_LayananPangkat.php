@@ -299,7 +299,7 @@ ol {
 
 				<form id="form_layanan_pangkat" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -35px;">
-          <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
+          <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29) { ?>
           <div class="form-group">
             <label>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit</label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
@@ -645,7 +645,13 @@ ol {
 					<br>di upload pada pilihan Arsip Lainnya.
 				</p>
         <?php } ?>
-				
+				    <?php if($id_m_layanan == 29) { ?>
+          Untuk Berkas : <br>
+					Selain Pangkat, Jabatan dan SKP 
+
+					<br>di upload pada pilihan Arsip Lainnya.
+				</p>
+        <?php } ?>
 			</div>
 		</div>
 	</div>

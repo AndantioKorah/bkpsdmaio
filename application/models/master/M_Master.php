@@ -162,7 +162,7 @@
 
             $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id as id_m_user')
                             ->from('db_pegawai.pegawai a')
-                            ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                            ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat', 'left')
                             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                             ->join('m_user e', 'a.nipbaru_ws = e.username')
                             ->where('e.flag_active', 1)

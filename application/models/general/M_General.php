@@ -469,10 +469,12 @@
         public function getListPegawaiPensiunByYear($data){
             // dd($data);
             $list_checklist_pensiun = null;
-            $checklist_pensiun = $this->db->select('a.*, c.nama')
+            $checklist_pensiun = $this->db->select('a.*, c.nama as nama_verifikator, e.gelar1, e.gelar2, e.nama')
                                         ->from('t_checklist_pensiun a')
                                         // ->join('t_checklist_pensiun_detail b', 'a.id = b.id_t_checklist_pensiun')
                                         ->join('m_user c', 'a.created_by = c.id')
+                                        ->join('m_user d', 'a.id_m_user_flag_selesai = d.id', 'left')
+                                        ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws', 'left')
                                         ->where('a.flag_active', 1)
                                         ->where('c.flag_active', 1)
                                         ->get()->result_array();
@@ -486,12 +488,18 @@
                         $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#82e4e7";
                         // $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white";
                     } else if($cp['created_by'] == 89){ // pak azwar
-                        $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#74fdab";
+                        $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#fc83eaff";
                         // $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white";
                     } else if($cp['created_by'] == 77){ // mawar
                         $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#da7ff7";
                         // $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white";
-                    } 
+                    }
+
+                    if($cp['flag_selesai'] == 1){
+                        // $list_checklist_pensiun[$cp['nip']] = $cp;
+                        $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#004701ff";
+                        $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white"; 
+                    }
                 }
             }
 

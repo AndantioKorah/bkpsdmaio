@@ -747,8 +747,8 @@
 
         if($pegawai['kepalaskpd'] != 1){ //bukan kepala skpd
             if($pegawai['id_unitkerjamaster'] == 4000000 || // 
-            $pegawai['id_unitkerjamaster'] == 3000000 || $pegawai['id_unitkerjamaster'] == 1000000 || 
-            stringStartWith('Bagian', $pegawai['nm_unitkerja'])){ // dinas, badan & bagian
+                $pegawai['id_unitkerjamaster'] == 3000000 || $pegawai['id_unitkerjamaster'] == 1000000 || 
+                stringStartWith('Bagian', $pegawai['nm_unitkerja'])){ // dinas, badan & bagian
                 $kepala = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
@@ -822,7 +822,6 @@
                         ->where('d.nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
                         ->get()->row_array();
                     }
-
                     if(!$atasan){ //cari kepala bidang
                        
                         $atasan = $this->baseQueryAtasan()

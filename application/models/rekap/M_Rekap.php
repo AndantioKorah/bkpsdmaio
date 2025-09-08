@@ -1143,7 +1143,7 @@
                                         ->where('id_m_status_pegawai', 1)
                                         ->get()->row_array();
 
-                $result['setda']['nama_jabatan'] = "Pj. Sekretaris Daerah";
+                $result['setda']['nama_jabatan'] = "Sekretaris Daerah";
 
                 // $result['setda'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                 //     f.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -2084,6 +2084,7 @@
                 $lp[$tr['nip']]['rekap']['TK'] = 0;
                 $lp[$tr['nip']]['rekap']['jhk'] = 0;
                 $lp[$tr['nip']]['rekap']['hadir'] = 0;
+                $lp[$tr['nip']]['rekap']['KENEG 2'] = 0;
                 if($data['disiplin_kerja']){
                     foreach($data['disiplin_kerja'] as $dk){
                         $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
@@ -2161,7 +2162,13 @@
                                     $dokpen[$tr['nip']][$l] != "TLS" && $dokpen[$tr['nip']][$l] != "TLP"){
                                         $flag_check = 0;
                                         $lp[$tr['nip']]['absen'][$l]['ket'] = $dokpen[$tr['nip']][$l];
-                                        $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++; // disini ba tambah dokpen
+                                        // disini ba tambah dokpen
+                                        if($dokpen[$tr['nip']][$l] == "KENEG 2"){
+                                            $dokpen[$tr['nip']][$l] = "KENEG";
+                                            $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]] += 2;
+                                        } else {
+                                            $lp[$tr['nip']]['rekap'][$dokpen[$tr['nip']][$l]]++;
+                                        }
                                         if($dokpen[$tr['nip']][$l] == "MTTI" || $dokpen[$tr['nip']][$l] == "KENEG"){
                                             $flag_check = 1;
                                         } else {

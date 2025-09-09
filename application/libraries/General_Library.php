@@ -293,7 +293,7 @@ class General_library
 
     public function isBisaAmbilCutiTahunan(){
         $diff = countDiffDateLengkap(date('Y-m-d'), $this->userLoggedIn['tmtcpns'], ['tahun', 'bulan']);
-        $expl = explode(" ", $diff);
+        $expl = explode(" ", trim($diff));
         if(trim($expl[1] == "tahun" && trim($expl[0]) >= 1)){
             return true;
         }

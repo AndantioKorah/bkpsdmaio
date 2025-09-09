@@ -2491,13 +2491,14 @@
         ->join('m_user e', 'a.teman_absensi = e.id', 'left')
         ->join('db_pegawai.unitkerja f', 'c.skpd = f.id_unitkerja')
         ->join('db_pegawai.pegawai g', 'e.username = g.nipbaru_ws','left')
+        ->join('db_pegawai.unitkerjamaster h', 'f.id_unitkerjamaster = h.id_unitkerjamaster')
         ->where('a.status', floatval($status))
         ->where('c.id_m_status_pegawai', 1)
         ->where('a.flag_active', 1)
         // ->where('a.id_m_user', 221)
         ->order_by('a.tanggal_absensi', 'asc');
         if($id_unitkerja != 0){
-            $this->db->where('c.skpd', $id_unitkerja);
+            $this->db->where('f.id_unitkerjamaster', $id_unitkerja);
         }
 
         

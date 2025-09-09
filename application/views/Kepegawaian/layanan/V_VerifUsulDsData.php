@@ -28,7 +28,7 @@
           <tr class="data_tr" onclick="setSelectedItem('<?=$rs['id']?>')" data-id="<?=$rs['id']?>" style="cursor: pointer;">
             <td class="text-center">
               <div class="form-check">
-                <input style="cursor: pointer; height: 20px; width: 20px;"
+                <input disabled style="cursor: pointer; height: 20px; width: 20px;"
                 class="form-check-input form-check-input-data" type="checkbox" value="<?=$rs['id']?>" id="checkbox_pilih_<?=$rs['id']?>">
                 <label class="form-check-label" for="checkbox_pilih_<?=$rs['id']?>">
                 </label>

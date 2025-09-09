@@ -40,7 +40,7 @@
              <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Selesai"; else echo "Menunggu Verifikasi BKPSDM" ?>
           <?php } else if($m_layanan == 6 || $m_layanan == 7 || $m_layanan == 8 || $m_layanan == 9) { ?>
              <span class="badge badge-<?php if($rs['status'] == '0' || $rs['status'] == '1' || $rs['status'] == '3' || $rs['status'] == '4' || $rs['status'] == '7' || $rs['status'] == '8') echo "success"; else  echo "danger"; ?>"><?=$rs['status_verif'];?>
-            <?php } else if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 14 || $m_layanan == 15 ||  $m_layanan == 16) { ?>
+            <?php } else if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 14 || $m_layanan == 15 ||  $m_layanan == 16 ||  $m_layanan == 30) { ?>
              <span class="badge badge-<?php if($rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else  echo "success"; ?>"><?=$rs['status_verif'];?>
              <?php } else { ?>
              <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Usul BKAD"; else if($rs['status'] == '4')  echo "Diterima BKAD"; else if($rs['status'] == '5') echo "BTL / Berkas Tidak Lengkap"; else if($rs['status'] == '7') echo "TMS / Tidak Memenuhi Syarat"; else echo "Menunggu Verifikasi BKPSDM" ?>
@@ -90,7 +90,7 @@
               <button title="Hapus" onclick="deleteData('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               <?php } ?>
 
-              <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16) { ?>
+              <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16 || $rs['id_m_layanan'] == 30) { ?>
                 <?php if($rs['status'] == 5) { ?>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -254,7 +254,7 @@
                                if(id_layanan == 21){
                                 loadListRiwayatPeningkatanPenambahanGelar()
                                }
-                               if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
+                               if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16 || id_layanan == 30){
                                 loadListRiwayatLayananJabfung()
                                }
                               if(id_layanan == 23){
@@ -289,7 +289,7 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || i
   $link = "<?=base_url();?>dokumen_layanan/permohonan_salinan_sk/"+filename+"?v="+number;
 } else if(id_layanan == 18 || id_layanan == 19 || id_layanan == 20){
   $link = "<?=base_url();?>dokumen_layanan/ujian_dinas/"+filename+"?v="+number;
-} else if(id_layanan == 12){
+} else if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16 || id_layanan == 30){
   $link = "<?=base_url();?>dokumen_layanan/jabatan_fungsional/"+filename+"?v="+number;
 } else if(id_layanan == 21){
   $link = "<?=base_url();?>dokumen_layanan/peningkatan_penambahan_gelar/"+filename+"?v="+number;
@@ -378,7 +378,7 @@ function ajukanKembali(id){
                                if(id_layanan == 21){
                                 loadListRiwayatPeningkatanPenambahanGelar()
                                }
-                               if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
+                               if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16 || id_layanan == 30){
                                 loadListRiwayatLayananJabfung()
                                }
                                if(id_layanan == 25 || id_layanan == 26){
@@ -479,7 +479,7 @@ function ajukanKembali(id){
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatUjianDinas, 2000);
              }
-             if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
+             if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16 || id_layanan == 30){
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatLayananJabfung, 2000);
              }
@@ -547,7 +547,7 @@ function ajukanKembali(id){
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatUjianDinas, 2000);
              }
-             if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16){
+             if(id_layanan == 12 || id_layanan == 13 || id_layanan == 14 || id_layanan == 15 || id_layanan == 16 || id_layanan == 30){
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 setTimeout(function() {$("#modalUbahSuket").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatLayananJabfung, 2000);

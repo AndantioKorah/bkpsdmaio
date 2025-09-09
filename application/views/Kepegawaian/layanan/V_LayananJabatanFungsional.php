@@ -294,6 +294,14 @@ ol {
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
         </div>
         <?php } ?>
+             <?php if($id_m_layanan == 30) { ?>
+         <div class="form-group mb-2">
+            <label><b>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit menyebutkan nomenklatur jabatan pelaksana yang akan diduduki</b></label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
+            <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
+          </div>
+          <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
+        <?php } ?>
 					<input type="hidden" id="formasi" value="<?php if(isset($formasi)) echo $formasi['id']; else echo "";?>">
 					<input type="hidden" id="sertiukom" value="<?php if(isset($sertiukom)) echo $sertiukom['id']; else echo "";?>">
 					<input type="hidden" id="peta_jabatan" value="<?php if(isset($peta_jabatan)) echo $peta_jabatan['id']; else echo "";?>">
@@ -314,6 +322,7 @@ ol {
 					<input type="hidden" id="rekom_kepala_pd" value="<?php if(isset($rekom_kepala_pd)) echo $rekom_kepala_pd['id']; else echo "";?>">
 					<input type="hidden" id="sk_mutasi_instansi" value="<?php if(isset($sk_mutasi_instansi)) echo $sk_mutasi_instansi['id']; else echo "";?>">
 					<input type="hidden" id="tangkap_layar_myasn" value="<?php if(isset($tangkap_layar_myasn)) echo $tangkap_layar_myasn['id']; else echo "";?>">
+					<input type="hidden" id="sktubel" value="<?php if(isset($sktubel)) echo $sktubel['id']; else echo "";?>">
           
         
 				
@@ -564,6 +573,32 @@ ol {
                 </li>
               <?php } ?>
 
+
+              <?php if($id_m_layanan == 30) { ?>
+                 <li>
+                <a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
+                onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir <i
+                class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
+                </li>
+
+                <li>
+                <a class="<?php if($pak) echo 'select'; else echo 'unselect';?>" <?php if($pak) { ?>
+                onclick="viewBerkasPangkat('<?=$pak['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> PAK Terakhir* <i
+                class="fas fa-<?php if($pak) echo ''; else echo '';?>"></i></a>
+                </li>
+                 <li>
+                <a class="<?php if($sktubel) echo 'select'; else echo 'unselect';?>" <?php if($sktubel) { ?>
+                onclick="viewBerkasPangkat('<?=$sktubel['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Tugas Belajar* <i
+                class="fas fa-<?php if($sktubel) echo ''; else echo '';?>"></i></a>
+                </li>
+                
+              
+               
+              <?php } ?>
+
 						</ol>
 					</div>
 
@@ -689,6 +724,7 @@ $(function(){
         var cltn = $('#cltn').val()
         var sk_mutasi_instansi = $('#sk_mutasi_instansi').val()
         var tangkap_layar_myasn = $('#tangkap_layar_myasn').val()
+        var sktubel = $('#sktubel').val()
 
 
 
@@ -838,6 +874,22 @@ $(function(){
             return false;
         }
         }
+
+        if(id_m_layanan == 30){
+        if(pak == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+        if(sk_jabatan_fungsional == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(sktubel == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        }
+
         // testoast('tes')
 
         Swal.fire({

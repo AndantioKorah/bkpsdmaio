@@ -55,6 +55,7 @@
                             ?>
                         <button 
                         data-id="<?=$r['id'];?>" 
+                        data-id_m_user="<?=$r['id_m_user'];?>" 
                         data-jenis_bukti="<?=$r['jenis_bukti'];?>" 
                         data-jenis_absen="<?=$r['jenis_absensi'];?>" 
                         data-nama="<?=$nama_peg;?>" 
@@ -267,6 +268,10 @@
     </div>  
     </div>
 
+    <center><h4>REKAP PRESENSI </h4></center>
+    <div class="tab-pane fade show " id="pills-presensi" role="tabpanel" aria-labelledby="pills-presensi-tab">
+    </div>
+  </div>
 
 
   <script>
@@ -523,6 +528,9 @@
               var tanggal_absensi = div.data('tglabsen');
               var nip = div.data('nip');
               var jenis_absensi = div.data('jenis_absen');
+              var id_m_user = div.data('id_m_user');
+
+
               // alert(tanggal_absensi)
               // return false
                 $('#foto_wa_siladen').html('')
@@ -530,6 +538,13 @@
                 $('#foto_wa_siladen').load('<?=base_url('kinerja/C_Kinerja/getFotoWAPeninjauanAbsensi')?>'+'/'+tanggal_absensi+'/'+nip+'/'+jenis_absensi+'/'+id, function(){
                     $('#loader').hide()
                 })
+
+                $('#pills-presensi').html('')
+                $('#pills-presensi').append(divLoaderNavy)
+                $('#pills-presensi').load('<?=base_url("kepegawaian/C_Kepegawaian/openPresensiTab/")?>'+id_m_user, function(){
+                  $('#loader').hide()
+                })
+
             
         });
 

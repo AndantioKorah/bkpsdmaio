@@ -1106,7 +1106,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id, $this->input->post('bulan'), $this->input->post('tahun'));
 		$data['result']['param']['bulan'] = $this->input->post('bulan');
 		$data['result']['param']['tahun'] = $this->input->post('tahun');
-        return $this->load->view('kepegawaian/V_DetailAbsensiPegawai', $data);
+        // return $this->load->view('kepegawaian/V_DetailAbsensiPegawai', $data);
+        return $this->load->view('user/V_DetailAbsensiPegawai', $data);
+
 		// $this->load->view('kepegawaian/V_DetailPresensiPegawai', $data);
 	}
 

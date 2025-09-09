@@ -127,7 +127,7 @@
 
 	<?php if($this->general_library->isProgrammer() ||
 	$this->general_library->isAdminAplikasi() ||
-	isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){ ?>
+	isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){  ?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>master/list-tpp">
 			<!-- <a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link"> -->
@@ -423,13 +423,11 @@
 		</a>
 			<ul id="layanan" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 			
-			<?php if(!$this->general_library->isCpns()){ ?>
-				<li class="sidebar-item ">
-					<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
-					</a>
-				</li>
-			<?php } ?>
+			<li class="sidebar-item ">
+				<a title="Permohonan Cuti" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/permohonan-cuti')?>">
+					<i class="align-middle me-2 far fa-circle"></i>Permohonan Cuti
+				</a>
+			</li>
 			
 			<?php 
 			if(

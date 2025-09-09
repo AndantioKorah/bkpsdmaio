@@ -29,6 +29,20 @@
     font-size: .9rem;
   }
 </style>
+<?php
+  $arrCuti = [
+    00,
+    // 10, // cuti besar
+    20,
+    30,
+    40, 
+    // 50, // CLTN
+  ];
+
+  if(!$this->general_library->isBisaAmbilCutiTahunan()){
+    $arrCuti = [20, 30, 40,]; // tanpa cuti tahunan
+  }
+?>
 <div class="row">
   <div class="col-lg-12">
     <div class="card card-default">
@@ -48,8 +62,10 @@
               id="id_cuti" data-dropdown-css-class="select2-navy" name="id_cuti">
                   <?php if($master_jenis_cuti){
                       foreach($master_jenis_cuti as $mc){ 
-                        if($mc['id_cuti'] != 50 && $mc['id_cuti'] != 10){ // cuti besar dan CLTN tahan dulu
-                        // if($mc['id_cuti'] == 00){
+                        if(in_array($mc['id_cuti'], $arrCuti)){ // cuti besar dan CLTN tahan dulu
+                        // if((!$this->general_library->isBisaAmbilCutiTahunan() && !$mc['id_cuti'] == 00) ||
+                        //   $this->general_library->isBisaAmbilCutiTahunan()
+                        // ){
                       ?>
                       <option value="<?=$mc['id_cuti']?>">
                           <?=$mc['nm_cuti']?>

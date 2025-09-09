@@ -291,6 +291,15 @@ class General_library
         return isKasubKepegawaian($this->getNamaJabatan()) && $this->getIdUnitKerjaPegawai() == 3010000;
     }
 
+    public function isBisaAmbilCutiTahunan(){
+        $diff = countDiffDateLengkap(date('Y-m-d'), $this->userLoggedIn['tmtcpns'], ['tahun', 'bulan']);
+        $expl = explode(" ", $diff);
+        if(trim($expl[1] == "tahun" && trim($expl[0]) >= 1)){
+            return true;
+        }
+        return false;
+    }
+
     public function isCpns(){
         return $this->userLoggedIn['statuspeg'] == 1;
     }

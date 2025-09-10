@@ -1106,7 +1106,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id, $this->input->post('bulan'), $this->input->post('tahun'));
 		$data['result']['param']['bulan'] = $this->input->post('bulan');
 		$data['result']['param']['tahun'] = $this->input->post('tahun');
-        return $this->load->view('kepegawaian/V_DetailAbsensiPegawai', $data);
+        // return $this->load->view('kepegawaian/V_DetailAbsensiPegawai', $data);
+        return $this->load->view('user/V_DetailAbsensiPegawai', $data);
+
 		// $this->load->view('kepegawaian/V_DetailPresensiPegawai', $data);
 	}
 
@@ -3272,6 +3274,7 @@ class C_Kepegawaian extends CI_Controller
 		public function updateStatusLayananPangkat($id){
 			$this->kepegawaian->updateStatusLayananPangkat($id);
 		}
+
 		public function hitungMasaKerja(){
 			echo countDiffDateLengkap($this->input->post('tmtberkala'), $this->input->post('tmtcpns'), ['tahun', 'bulan']);
 		}
@@ -3737,6 +3740,10 @@ class C_Kepegawaian extends CI_Controller
 		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
 
     }
+
+	public function updateGajiBerkalaBerikut(){
+			$this->kepegawaian->updateGajiBerkalaBerikut();
+	}
 
 
 

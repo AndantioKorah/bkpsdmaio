@@ -260,7 +260,8 @@ class C_Rekap extends CI_Controller
     {
         $data = $this->rekap->rekapPenilaianDisiplinSearch($this->input->post(), 0, 0);
         $data['flag_print'] = 0;
-        $this->load->view('rekap/V_RekapPenilaianDisiplinResult', $data);
+        $this->load->view('rekap/V_RekapKehadiranResult', $data);
+        // $this->load->view('rekap/V_RekapPenilaianDisiplinResult', $data);
     }
 
     public function rekapPenilaianDisiplinSearchOld()

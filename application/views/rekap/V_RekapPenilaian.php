@@ -6,28 +6,42 @@
         <!-- <form id="form_upload_file" enctype="multipart/form-data" method="post"> -->
         <form id="search_form">
             <div class="row">
-                <div class="col-lg-3 col-md-3">
+                <div class="col-lg-4 col-md-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Pilih SKPD</label>
                         <select class="form-control select2-navy" style="width: 100%"
                             id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
-                            <?php foreach($list_skpd as $s){ ?>
+                            <?php foreach($list_skpd as $s){
+                                if(($this->general_library->isProgrammer()
+                                || $this->general_library->isAdminAplikasi()
+                                || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN // jika admin
+                                ) || (!$this->general_library->isProgrammer() &&
+                        			($this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah') ||
+                                    isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()))
+                                    &&
+                                    $s['id_unitkerja'] == $this->general_library->getUserLoggedIn()['id_unitkerja'] // atau jika bukan admin, dan punya hak akses tpp, tampilkan hanya unitkerjanya saja 
+                                )){
+                            ?>
                                 <option value="<?=$s['id_unitkerja'].';'.$s['nm_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
-                            <?php } ?>
-                            <?php 
-                                foreach($skpd_diknas as $sd){
-                                ?>
-                                    <option value="<?='sekolah_'.$sd['id_unitkerja'].';'.$sd['nm_unitkerja']?>">
-                                        <?=$sd['nm_unitkerja']?>
-                                    </option>
-                                <?php }  ?>
-                                <option value="8000118">
-                                       TK Negeri Pembina
-                                    </option>
+                            <?php } } ?>
+                            <?php foreach($skpd_diknas as $sd){
+                                if($this->general_library->isProgrammer()
+                                || $this->general_library->isAdminAplikasi()
+                                || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN // jika admin
+                                || (($this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah') || 
+			                        isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+                                ) &&
+                                    $this->general_library->getUserLoggedIn()['id_unitkerja'] == 3010000)
+                                ){ // jika admin TPP atau kasubag dan unitkerja DIKNAS
+                            ?>
+                                <option value="<?='sekolah_'.$sd['id_unitkerja'].';'.$sd['nm_unitkerja']?>">
+                                    <?=$sd['nm_unitkerja']?>
+                                </option>
+                            <?php } } ?>
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3">
+                <div class="col-lg-4 col-md-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Pilih Bulan</label>
                         <select class="form-control select2-navy" style="width: 100%"
@@ -47,20 +61,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="form-group">
-                        <label class="bmd-label-floating">Kriteria</label>
-                        <select class="form-control select2-navy" style="width: 100%"
-                            id="kriteria" data-dropdown-css-class="select2-navy" name="kriteria">
-                            <option value="1" selected>Semua</option>
-                            <option value="2">Diatas Ekspektasi</option>
-                            <option value="3">Sesuai Ekspektasi</option>
-                            <option value="4">Dibawah Ekspektasi</option>
-                           
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
+                <div class="col-lg-4 col-md-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Pilih Tahun</label>
                         <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />

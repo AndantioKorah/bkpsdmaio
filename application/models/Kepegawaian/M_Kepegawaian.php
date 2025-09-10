@@ -12047,7 +12047,7 @@ public function getFileForVerifLayanan()
                 ->from('db_pegawai.pegpendidikan as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
-                ->order_by('a.tktpendidikan', 'desc')
+                ->order_by('a.tglijasah', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
         } else if($this->input->post('file') == "karya_tulis"){
@@ -14872,6 +14872,41 @@ public function checkListIjazahCpns($id, $id_pegawai){
         }
 
         return $result;
+    }
+
+       public function updateGajiBerkalaBerikut()
+    {
+        $this->db->select('a.id_peg,a.statuspeg,a.tmtgjberkala,a.pangkat')
+            ->from('db_pegawai.pegawai a')
+            ->where('a.tmtgjberkalaberikut is null')
+            ->where('a.id_m_status_pegawai', 1)
+            // ->where_in('a.statuspeg', [1,2])
+            ->limit(1000);
+            
+        $pegawai = $this->db->get()->result_array();
+        // dd($pegawai);
+        foreach ($pegawai as $peg) {  
+          if($peg['statuspeg'] == "1" || $peg['statuspeg'] == "2"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));
+          }
+           else if($peg['statuspeg'] == "3") {
+            if($peg['pangkat'] == "55"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+1 years', strtotime($peg['tmtgjberkala'])));
+            }
+            if($peg['pangkat'] == "57"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+3 years', strtotime($peg['tmtgjberkala'])));
+            }
+            if($peg['pangkat'] == "59" || $peg['pangkat'] == "60"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));
+            }
+          } 
+
+        // dd($tmtgjberkalaberikut);
+         $this->db->where('id_peg', $peg['id_peg'])
+         ->update('db_pegawai.pegawai', 
+         ['tmtgjberkalaberikut' => $tmtgjberkalaberikut]);
+         
+         }
     }
 
 }

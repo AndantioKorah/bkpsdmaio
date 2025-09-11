@@ -259,7 +259,7 @@
 
     
 $(function(){
-  loadFileSiasn()
+  // loadFileSiasn()
   // loadJabatanSiasn('<?=$jabatan[0]['id_jabatan']?>')
 
   $(".select2").select2({   

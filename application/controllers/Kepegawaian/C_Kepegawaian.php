@@ -1425,7 +1425,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function syncSiasnJabatan($id){
-		echo json_encode($this->kepegawaian->syncSiasnJabatan($id));
+		echo json_encode($this->kepegawaian->syncSiasnJabatan($id, 1));
 	}
 
 	public function loadListJabatanSiasn($id){

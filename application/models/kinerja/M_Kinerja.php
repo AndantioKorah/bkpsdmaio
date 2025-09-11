@@ -15,6 +15,17 @@
             return $this->db->affected_rows();
         }
 
+        public function getVerifikatorPeninjauan(){
+            return $this->db->select('b.nama,a.id_m_user')
+                            ->from('t_hak_akses as a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->where('a.id_m_hak_akses', 11)
+                            ->where('a.flag_active', 1)
+                            ->where_not_in('a.id_m_user', [283])
+                            ->get()->result_array();
+        }
+
+
         public function deleteRencanaKerja($id, $id_m_user){
             $this->db->where('id', $id)
                     ->update('t_rencana_kinerja', ['flag_active' => 0, 'updated_by' => $id_m_user]);
@@ -2481,6 +2492,26 @@
     }
 
     public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja = 0){
+        if($id_unitkerja == 78){
+            $skpd = array(4000000,5007000,5008000);
+        }
+        if($id_unitkerja == 87){
+            $skpd = array(7005000,5009000,5002000);
+        }
+        if($id_unitkerja == 284){
+            $skpd = array(3000000);
+        }
+        if($id_unitkerja == 16){
+            $skpd = array(5001000,1000000,2000000,5001000,8000000,5004000,5005000,5006000,5010001,5011001);
+        }
+        if($id_unitkerja == 282){
+            $skpd = array(6000000);
+        }
+         if($id_unitkerja == 281){
+            $skpd = array(8010000,8020000);
+        }
+        
+
         $this->db->select('c.fotopeg,g.nama as teman_nama, g.nipbaru_ws as teman_nip, g.gelar1 as teman_gelar1, g.gelar2 as teman_gelar2, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru,
         (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 1 and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_diverif,
         (select path_masuk from db_sip.gambar as i where i.user_id = a.teman_absensi and a.flag_active = 1 and a.tanggal_absensi = i.tgl limit 1) as foto_absen_masuk,
@@ -2498,7 +2529,8 @@
         // ->where('a.id_m_user', 221)
         ->order_by('a.tanggal_absensi', 'asc');
         if($id_unitkerja != 0){
-            $this->db->where('f.id_unitkerjamaster', $id_unitkerja);
+            // $this->db->where('f.id_unitkerjamaster', $id_unitkerja);
+              $this->db->where_in('f.id_unitkerjamaster', $skpd);
         }
 
         

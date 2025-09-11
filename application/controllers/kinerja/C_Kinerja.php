@@ -539,12 +539,14 @@ class C_Kinerja extends CI_Controller
     {
         // $data['unitkerja'] = $this->master->getAllUnitKerja();
         $data['unitkerja'] = $this->master->getAllMasterSkpd();
+        $data['verifikator'] = $this->kinerja->getVerifikatorPeninjauan();
+        // dd($data['verifikator']);
         render('kinerja/V_VerifPeninjauanAbsensi', '', '', $data);
     }
 
     public function searchVerifTinjauAbsensi()
     {
-        // $data['result'] = $this->kinerja->searchVerifTinjauAbsensi($this->input->post());
+        $data['result'] = $this->kinerja->searchVerifTinjauAbsensi($this->input->post());
         // dd($data['result']);
         $this->load->view('kinerja/V_VerifPeninjauanAbsensiItem', null);
     }

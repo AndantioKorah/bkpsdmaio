@@ -35,7 +35,7 @@
         </form>
         <?php } ?>
         <form id="form_search_verif_dokumen" class="mt-4">
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-lg col-md-12">
                     <label>Pilih Unit Kerja</label>
                     <select class="form-control select2-navy" style="width: 100%"
@@ -45,7 +45,19 @@
                             <option value="<?=$s['id_unitkerjamaster']?>"><?=$s['nm_unitkerjamaster']?></option>
                         <?php } ?>
                     </select>
+                </div> -->
+                <div class="row">
+                <div class="col-lg col-md-12">
+                    <label>Verifikator</label>
+                    <select class="form-control select2-navy" style="width: 100%"
+                        id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja">
+                        <option selected disabled value="0">Pilih</option>
+                        <?php foreach($verifikator as $s){ ?>
+                            <option value="<?=$s['id_m_user']?>"><?= strtoupper($s['nama'])?></option>
+                        <?php } ?>
+                    </select>
                 </div>
+
                 <div class="col-lg col-md-12">
                     <label>Pilih Bulan</label>  
                     <select class="form-control select2-navy" style="width: 100%"

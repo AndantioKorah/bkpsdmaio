@@ -826,6 +826,8 @@
 			<?php if($this->general_library->isProgrammer()
 				|| $this->general_library->isAdminAplikasi()
 				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+				|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah') 
+				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 				){ ?>		
 				<li class="sidebar-item ">
 				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/realisasi-kinerja')?>">

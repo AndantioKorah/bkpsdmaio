@@ -937,7 +937,6 @@
                                         ->get()->row_array(); //kapus
                 $kepala = $atasan;
             } else if(stringStartWith('Kecamatan', $pegawai['nm_unitkerja'])){ // kecamatan
-              
                 $kepala = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
@@ -1247,6 +1246,7 @@
                             ->join('db_pegawai.jabatan ab', 'aa.id_jabatan = ab.id_jabatanpeg')
                             ->join('db_pegawai.unitkerja ac', 'aa.id_unitkerja = ac.id_unitkerja')
                             ->where('ab.kepalaskpd', 1)
+                            ->where('aa.id_unitkerja', $pegawai['id_unitkerja'])
                             ->where('aa.tanggal_mulai <= ', date('Y-m-d'))
                             ->where('aa.tanggal_akhir >= ', date('Y-m-d'))
                             ->get()->row_array();

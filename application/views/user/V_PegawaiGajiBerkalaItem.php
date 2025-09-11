@@ -79,7 +79,9 @@
                                 if($rs['tmtgjberkala'] == '0000-00-00') {
                                     echo "-";
                                 } else {
-                                    echo formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));
+                                    // echo formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));
+                                    echo formatDateNamaBulan($rs['tmtgjberkalaberikut']);
+                               
                                 }
                                 //  echo formatDateNamaBulan(date('Y-m-d H:i:s', strtotime('+2 years', strtotime($rs['tmtgjberkala']))));?>
                                 <!-- <?=formatDateNamaBulan($rs['tmtgjberkala'])?> -->

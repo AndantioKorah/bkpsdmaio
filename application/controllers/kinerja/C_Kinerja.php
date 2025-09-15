@@ -546,7 +546,7 @@ class C_Kinerja extends CI_Controller
 
     public function searchVerifTinjauAbsensi()
     {
-        $data['result'] = $this->kinerja->searchVerifTinjauAbsensi($this->input->post());
+        // $data['result'] = $this->kinerja->searchVerifTinjauAbsensi($this->input->post());
         // dd($data['result']);
         $this->load->view('kinerja/V_VerifPeninjauanAbsensiItem', null);
     }

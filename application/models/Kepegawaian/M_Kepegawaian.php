@@ -6792,7 +6792,7 @@ public function submitEditJabatan(){
                             ->where('b.flag_active', 1)
                             ->get()->row_array();
 
-            if($dataPegawai['statuspeg'] == 3 || $dataPegawai['statuspeg'] == 1){
+            if(($dataPegawai['statuspeg'] == 3 || $dataPegawai['statuspeg'] == 1) && $data['id_cuti'] == "00"){ // jika cpns atau pppk ambil cuti tahunan
                 $diff = countDiffDateLengkap(date('Y-m-d'), $dataPegawai['tmtcpns'], ['tahun']);
                 $expl = explode(" ", trim($diff));
                 if($expl[0] < 1){
@@ -8038,6 +8038,21 @@ public function submitEditJabatan(){
         return $res;
     }
 
+    public function sendZipSkCuti($zipName, $paramName){
+        $exists = $this->db->select('*')
+                        ->from('m_parameter')
+                        ->where('parameter_name', $paramName)
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+        if($exists){
+            $this->db->where('id', $exists['id'])
+                    ->update('m_parameter', [
+                        'flag_sent' => 0,
+                        'parameter_value' => $zipName
+                    ]);
+        }
+    }
+
     public function dsBulk($params){
         $res['code'] = 0;
         $res['message'] = 'ok';
@@ -8048,224 +8063,134 @@ public function submitEditJabatan(){
         $list_checked_data = null;
         $this->db->trans_begin();
 
-        // if($params['jenis_layanan'] == 4){ // permohonan cuti
-        //     $batchId = generateRandomString(10, 1, 't_cron_tte_bulk_ds'); 
-        //     // $hash_tte = $this->ttelib->hash();
-            
-        //     $list_data = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat, f.nama_jabatan, g.nm_unitkerja,
-        //             g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, a.id as id_t_pengajuan_cuti')
-        //             ->from('t_pengajuan_cuti a')
-        //             ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
-        //             ->join('m_user c', 'c.id = a.id_m_user')
-        //             ->join('db_pegawai.pegawai d', 'd.nipbaru_ws = c.username')
-        //             ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
-        //             ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg', 'left')
-        //             ->join('db_pegawai.unitkerja g', 'd.skpd = g.id_unitkerja')
-        //             ->where_in('a.id', $params['list_checked'])
-        //             ->where('a.flag_active', 1)
-        //             ->order_by('a.id')
-        //             ->get()->result_array(); 
+        $batchId = generateRandomString(10, 1, 't_request_ds'); 
+        $list_data = $this->db->select('*')
+                            ->from('t_request_ds')
+                            ->where_in('id', $params['list_checked'])
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+        if(!$list_data){
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan. Data tidak ditemukan.';
+            return $res;
+        } else {
+            $selected = $list_data[0];
+            $selectedId = $list_data[0]['id'];
 
-        //     if(!$list_data){
-        //         $res['code'] = 1;
-        //         $res['message'] = 'Terjadi Kesalahan';
-        //         return $res;
-        //     } else {
-        //         $fileBase64 = null;
+            $request = json_decode($selected['request'], true);
+            $request['signatureProperties']['imageBase64'] = $selected['url_image_ds'];
 
-        //         // $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
-        //         //                         ->from('db_pegawai.pegawai a')
-        //         //                         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-        //         //                         ->join('m_user d', 'a.nipbaru_ws = d.username')
-        //         //                         ->where('c.kepalaskpd', 1)
-        //         //                         ->where('a.skpd', ID_UNITKERJA_BKPSDM)
-        //         //                         ->get()->row_array();
+            $base64File = null;
+            $base64File = base64_encode(file_get_contents(base_url().$selected['url_file']));
+            $jsonRequest['file'] = null;
+            $jsonRequest['file'][] = $base64File;
+            // dd($base64File);
 
-        //         //langkah ini untuk tes jika nik dan passphrase benar
-        //         $one_file = $this->dsCuti($list_data[0]['id_t_pengajuan_cuti']);
-        //         if($one_file['code'] == 1){
-        //             $res = $one_file;   
-        //             return $res;
-        //         } else {
-        //             // unset($list_data[0]);
-        //         }
-        //         // dd($one_file);
+            $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
+            $jsonRequest['nik'] = $params['nik'];
+            $jsonRequest['passphrase'] = $params['passphrase'];
+            // dd(json_encode($jsonRequest));
 
-        //         $this->db->trans_begin();
-        //         $i = 0;
-        //         $cron_tte = null;
-        //         foreach($list_data as $ld){
-        //             $this->db->where('id', $ld['id_t_pengajuan_cuti'])
-        //                     ->update('t_pengajuan_cuti', [
-        //                         'batchId' => $batchId
-        //                     ]);
-                    
-        //             // if($list_data[0]['id_t_pengajuan_cuti'] != $ld['id_t_pengajuan_cuti']){
-        //                 $credential['nik'] = $params['nik'];
-        //                 $credential['passphrase'] = $params['passphrase'];
+            $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
+            $response = json_decode($oneData, true);
+            // dd(json_encode($response));
 
-        //                 $cron_tte[$i]['id_t_pengajuan_cuti'] = $ld['id_t_pengajuan_cuti'];
-        //                 $cron_tte[$i]['random_string'] = $batchId;
-        //                 $cron_tte[$i]['credential'] = json_encode($credential);
-        //                 $cron_tte[$i]['created_by'] = $this->general_library->getId();
-        //             // }
 
-        //             $i++;
-        //         }
-                
-        //         if($cron_tte){
-        //             //insert ke dalam cron tte ds bulk
-        //             $this->db->insert_batch('t_cron_tte_bulk_ds', $cron_tte);
-        //         }
-        //     }
-        // } else {
-            $batchId = generateRandomString(10, 1, 't_request_ds'); 
-            $list_data = $this->db->select('*')
-                                ->from('t_request_ds')
-                                ->where_in('id', $params['list_checked'])
-                                ->where('flag_active', 1)
-                                ->get()->result_array();
-            if(!$list_data){
+            if($response == null || !isset($response['file'])){ // jika gagal
                 $res['code'] = 1;
-                $res['message'] = 'Terjadi Kesalahan. Data tidak ditemukan.';
-                return $res;
-            } else {
-                $selected = $list_data[0];
-                $selectedId = $list_data[0]['id'];
+                $res['message'] = $oneData;
+                $res['data'] = null;
+            } else { // jika berhasil                    
+                $this->db->where('id', $selected['ref_id'])
+                        ->update($selected['table_ref'], [
+                            $selected['nama_kolom_flag'] => 1
+                        ]);
 
-                $request = json_decode($selected['request'], true);
-                $request['signatureProperties']['imageBase64'] = $selected['url_image_ds'];
+                $this->db->where_in('id', $params['list_checked'])
+                        ->update('t_request_ds', [
+                            'batchId' => $batchId,
+                            'flag_selected' => 1,
+                            'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                        ]);
 
-                $base64File = null;
-                $base64File = base64_encode(file_get_contents(base_url().$selected['url_file']));
-                $jsonRequest['file'] = null;
-                $jsonRequest['file'][] = $base64File;
-                // dd($base64File);
+                $this->db->insert('t_file_ds', [
+                    'random_string' => $selected['random_string'],
+                    'url' => $selected['url_file'],
+                    'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                ]);
 
-                $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
-                $jsonRequest['nik'] = $params['nik'];
-                $jsonRequest['passphrase'] = $params['passphrase'];
-                // dd(json_encode($jsonRequest));
-
-                $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
-                $response = json_decode($oneData, true);
-                // dd(json_encode($response));
-
-
-                if($response == null || !isset($response['file'])){ // jika gagal
-                    $res['code'] = 1;
-                    $res['message'] = $oneData;
-                    $res['data'] = null;
-                } else { // jika berhasil                    
-                    $this->db->where('id', $selected['ref_id'])
-                            ->update($selected['table_ref'], [
-                                $selected['nama_kolom_flag'] => 1
-                            ]);
-
-                    $this->db->where_in('id', $params['list_checked'])
-                            ->update('t_request_ds', [
-                                'batchId' => $batchId,
-                                'flag_selected' => 1,
-                                'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
-                            ]);
-
-                    $this->db->insert('t_file_ds', [
-                        'random_string' => $selected['random_string'],
-                        'url' => $selected['url_file'],
-                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                if($selected['table_ref'] == 't_usul_ds_detail'){
+                    // $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
+                    $this->db->insert('t_cron_async', [
+                        'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                        'ref_id' => $selected['ref_id'],
+                        'table_ref' => 't_usul_ds_detail',
+                        'param' => json_encode([
+                                        'id' => $selected['ref_id'],
+                                        'flag_progress' => 0,
+                                        'selectedData' => $selected
+                                    ]),
+                        'created_by' => $this->general_library->getId()
                     ]);
+                }
 
-                    if($selected['table_ref'] == 't_usul_ds_detail'){
-                        // $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
-                        $this->db->insert('t_cron_async', [
-                            'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
-                            'ref_id' => $selected['ref_id'],
-                            'table_ref' => 't_usul_ds_detail',
-                            'param' => json_encode([
-                                            'id' => $selected['ref_id'],
-                                            'flag_progress' => 0,
-                                            'selectedData' => $selected
-                                        ]),
-                            'created_by' => $this->general_library->getId()
+                $cronRequest[$selectedId] = [];
+
+                $this->db->insert('t_cron_request_ds', [
+                    'credential' => json_encode([
+                        'nik' => $params['nik'],
+                        'passphrase' => $params['passphrase'],
+                    ]),
+                    'batchId' => $batchId,
+                    'request' => $selected['request'],
+                    'response' => $oneData,
+                    'flag_send' => 1,
+                    'date_send' => date('Y-m-d H:i:s'),
+                    'flag_sent' => 1,
+                    'date_sent' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                    'id_t_request_ds' => $selectedId
+                ]);
+
+                foreach($list_data as $ld){
+                    if($ld['id'] != $selectedId){
+                        $this->db->insert('t_cron_request_ds', [
+                            'credential' => json_encode([
+                                'nik' => $params['nik'],
+                                'passphrase' => $params['passphrase'],
+                            ]),
+                            'batchId' => $batchId,
+                            'request' => $ld['request'],
+                            'flag_send' => 0,
+                            'date_send' => null,
+                            'flag_sent' => 0,
+                            'date_sent' => null,
+                            'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                            'id_t_request_ds' => $ld['id']
+                        ]);
+
+                        $this->db->insert('t_file_ds', [
+                            'random_string' => $ld['random_string'],
+                            'url' => $ld['url_file'],
+                            'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
                         ]);
                     }
-
-                    $cronRequest[$selectedId] = [];
-
-                    $this->db->insert('t_cron_request_ds', [
-                        'credential' => json_encode([
-                            'nik' => $params['nik'],
-                            'passphrase' => $params['passphrase'],
-                        ]),
-                        'batchId' => $batchId,
-                        'request' => $selected['request'],
-                        'response' => $oneData,
-                        'flag_send' => 1,
-                        'date_send' => date('Y-m-d H:i:s'),
-                        'flag_sent' => 1,
-                        'date_sent' => date('Y-m-d H:i:s'),
-                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
-                        'id_t_request_ds' => $selectedId
-                    ]);
-
-                    foreach($list_data as $ld){
-                        if($ld['id'] != $selectedId){
-                            // $cronRequest[$ld['id']] = [
-                            //     'credential' => json_encode([
-                            //         'nik' => $params['nik'],
-                            //         'passphrase' => $params['passphrase'],
-                            //     ]),
-                            //     'batchId' => $batchId,
-                            //     'request' => $ld['request'],
-                            //     'flag_send' => 0,
-                            //     'date_send' => null,
-                            //     'flag_sent' => 0,
-                            //     'date_sent' => null,
-                            //     'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
-                            //     'id_t_request_ds' => $ld['id']
-                            // ];
-                            $this->db->insert('t_cron_request_ds', [
-                                'credential' => json_encode([
-                                    'nik' => $params['nik'],
-                                    'passphrase' => $params['passphrase'],
-                                ]),
-                                'batchId' => $batchId,
-                                'request' => $ld['request'],
-                                'flag_send' => 0,
-                                'date_send' => null,
-                                'flag_sent' => 0,
-                                'date_sent' => null,
-                                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
-                                'id_t_request_ds' => $ld['id']
-                            ]);
-
-                            $this->db->insert('t_file_ds', [
-                                'random_string' => $ld['random_string'],
-                                'url' => $ld['url_file'],
-                                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
-                            ]);
-                        }
-                    }
-                    // dd(json_encode($cronRequest));
-                    // $this->db->insert_batch('t_cron_request_dssadasd', $cronRequest);
-
-                    base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
-                    
-                    if($selected['id_m_jenis_ds'] == 4){ // jika cuti, kirim SK cuti ke pegawai ybs
-                        $this->tteCuti($selected['id']);
-                    }
-                    // dd(json_encode($cronRequest));
-                    // $this->db->insert_batch('t_cron_request_dssadasd', $cronRequest);
-
-                    base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
-
-                    $res['code'] = 0;
-                    $res['message'] = "Berhasil";
-                    $res['data'] = null;
                 }
-            }    
-        // }
-        
+
+                base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
+                
+                if($selected['id_m_jenis_ds'] == 4){ // jika cuti, kirim SK cuti ke pegawai ybs
+                    $this->tteCuti($selected['id']);
+                }
+
+                base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
+
+                $res['code'] = 0;
+                $res['message'] = "Berhasil";
+                $res['data'] = null;
+            }
+        }    
+
         if($this->db->trans_status() == FALSE || $res['code'] != 0){
             $this->db->trans_rollback();
             $res['code'] = 4;

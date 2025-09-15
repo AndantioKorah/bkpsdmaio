@@ -1816,17 +1816,20 @@
                 }
             }
 
-            $paramZipSkCuti = $this->db->select('*')
-                                    ->from('m_parameter')
+            $paramZipSkCuti = $this->db->select('a.*, c.handphone')
+                                    ->from('m_parameter a')
+                                    ->join('m_user b', 'a.updated_by = b.id')
+                                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                                     ->where('parameter_name', "PARAM_ZIP_NAME_SK_CUTI")
-                                    ->where('flag_active', 1)
+                                    ->where('a.flag_active', 1)
+                                    ->where('b.flag_active', 1)
                                     // ->where('flag_sent', 0)
                                     ->get()->row_array();
 
             if($paramZipSkCuti){
                 if($paramZipSkCuti['flag_sent'] == 0){
                     $this->db->insert('t_cron_wa', [
-                        'sendTo' => convertPhoneNumber("082115407812"),
+                        'sendTo' => convertPhoneNumber($paramZipSkCuti['handphone']),
                         'message' => "REKAP SK CUTI per ".formatDateNamaBulanWithTime(date('Y-m-d H:i:s')),
                         'filename' => $paramZipSkCuti['parameter_value'],
                         'fileurl' => ($paramZipSkCuti['parameter_value']),

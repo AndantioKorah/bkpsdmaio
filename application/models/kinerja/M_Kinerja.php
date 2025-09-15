@@ -1123,22 +1123,6 @@
                             ->where('d.eselon', 'II B')
                             ->get()->row_array(); // kadis
                 
-                if(!$kadis){
-                    $kadis = $this->baseQueryAtasan()
-                                ->select('ab.nama_jabatan as nama_jabatan_plt_plh, aa.jenis as jenis_plt')
-                                ->join('t_plt_plh aa', 'a.id = aa.id_m_user')
-                                ->join('db_pegawai.jabatan ab', 'aa.id_jabatan = ab.id_jabatanpeg')
-                                ->join('db_pegawai.unitkerja ac', 'aa.id_unitkerja = ac.id_unitkerja')
-                                ->where('ab.kepalaskpd', 1)
-                                ->where('aa.id_unitkerja', 3012000)
-                                ->where('aa.tanggal_mulai <= ', date('Y-m-d'))
-                                ->where('aa.tanggal_akhir >= ', date('Y-m-d'))
-                                ->get()->row_array();
-                    if($kadis){
-                        $kadis['nama_jabatan'] = $kadis['jenis_plt'].". ".$kadis['nama_jabatan_plt_plh'];
-                    }
-                }
-
                 $sek = $this->baseQueryAtasan()
                             ->where('b.skpd', 3012000)
                             ->where('d.eselon', 'III A')

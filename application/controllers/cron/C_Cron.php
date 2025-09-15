@@ -60,7 +60,7 @@ class C_Cron extends CI_Controller
         // $this->siasn->cronRiwayatJabatanSiasn();
         $this->siasn->cronSyncJabatanSiasn();
 
-        // $this->cronAsync();
+        $this->cronAsync();
     }
 
     public function removeLog($batasHari = 10){

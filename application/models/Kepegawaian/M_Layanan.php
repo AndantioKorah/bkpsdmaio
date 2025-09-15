@@ -1783,6 +1783,29 @@ class M_Layanan extends CI_Model
         return $result;
     }
 
+    public function insertRequestDs($requestDs){
+        $rs['code'] = 0;
+        $rs['message'] = null;
+        $rs['data'] = null;
+
+        $exists = $this->db->select('*')
+                        ->from('t_request_ds')
+                        ->where('table_ref', $requestDs['table_ref'])
+                        ->where('ref_id', $requestDs['ref_id'])
+                        ->where('flag_active', 1)
+                        ->where('batchId IS NULL')
+                        ->get()->row_array();
+        if(!$exists){
+            $this->db->insert('t_request_ds', $requestDs);
+            $rs['data'] = $this->db->insert_id();
+        } else {
+            $rs['code'] = 1;
+            $rs['message'] = "Data sudah terinput sebelumnya";   
+        }
+
+        return $rs;
+    }
+
     public function proceedNextVerifikatorUsulDs($params = null){
         $res['code'] = 0;
         $res['message'] = "";
@@ -1938,7 +1961,6 @@ class M_Layanan extends CI_Model
                     'id_m_jenis_layanan' => $dataUsul['id_m_jenis_layanan'],
                     'nama_jenis_ds' => $dataUsul['keterangan_ds']
                 ];
-                $this->db->insert('t_request_ds', $requestDs);
             } else { // jika sudah ada, berarti kaban sudah DS
                 $bulan = getNamaBulan(date('m'));
                 $tahun = date('Y');
@@ -2222,8 +2244,8 @@ class M_Layanan extends CI_Model
                             'tampilan' => 'INVISIBLE',
                             'reason' => 'Dokumen ini telah ditandatangani secara elektronik oleh '.$ld['nama_jabatan']." melalui apikasi Siladen."
                         ];
-
-                        $this->db->insert('t_request_ds', [
+                        
+                        $insertReqDs = [
                             'created_by' => $this->general_library->getId(),
                             'id_t_nomor_surat' => 0,
                             'ref_id' => $ld['id'],
@@ -2236,24 +2258,27 @@ class M_Layanan extends CI_Model
                             'flag_selected' => 1,
                             'id_m_jenis_layanan' => $ld['id_m_jenis_layanan'],
                             'nama_jenis_ds' => $ld['keterangan_ds'],
-                        ]);
-                        $id_t_request_ds = $this->db->insert_id();
+                        ];
 
+                        $insReq = $this->db->insertRequestDs($insertReqDs);
+                        $id_t_request_ds = $insReq['data'];
 
-                        $this->db->insert('t_cron_request_ds', [
-                            'credential' => json_encode([
-                                'nik' => $params['nik'],
-                                'passphrase' => $params['passphrase'],
-                            ]),
-                            'batchId' => $batchId,
-                            'request' => json_encode($requestLd),
-                            'flag_send' => 0,
-                            'date_send' => null,
-                            'flag_sent' => 0,
-                            'date_sent' => null,
-                            'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
-                            'id_t_request_ds' => $id_t_request_ds
-                        ]);
+                        if($insReq['code'] == 0){
+                            $this->db->insert('t_cron_request_ds', [
+                                'credential' => json_encode([
+                                    'nik' => $params['nik'],
+                                    'passphrase' => $params['passphrase'],
+                                ]),
+                                'batchId' => $batchId,
+                                'request' => json_encode($requestLd),
+                                'flag_send' => 0,
+                                'date_send' => null,
+                                'flag_sent' => 0,
+                                'date_sent' => null,
+                                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                                'id_t_request_ds' => $id_t_request_ds
+                            ]);   
+                        }
                     }
                 }
             }

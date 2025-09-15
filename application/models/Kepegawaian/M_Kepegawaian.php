@@ -4048,12 +4048,9 @@ public function getAllPelanggaranByNip($nip){
             $idSubJabatan = $flagCronSync == 1 ? $dataSync['subJabatanId'] : $data['id_m_ref_sub_jabatan_siasn'];
             if($idSubJabatan == null){
                 if(in_array($data['kel_jabatan_id'], LIST_ID_NEED_SUB_JABATAN)){
-                    $idSubJabatan = getDefaultSubJabatan($data['kel_jabatan_id']);
+                    $update['subJabatanId'] = getDefaultSubJabatan($data['kel_jabatan_id']);
                 }
-                $update['subJabatanId'] = $idSubJabatan;
             }
-            $update['subJabatanId'] = $flagCronSync == 1 ? $dataSync['subJabatanId'] : $data['id_m_ref_sub_jabatan_siasn'];
-
             $ws = $this->siasnlib->saveJabatan($update);
             // dd($ws);
             $rs = json_decode($ws['data'], true);

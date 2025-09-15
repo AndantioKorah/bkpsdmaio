@@ -2492,23 +2492,28 @@
     }
 
     public function loadSearchVerifPeninjauanAbsensi($status, $bulan, $tahun, $id_unitkerja = 0){
+        $skpdin = 0;
+        $skpdnotin = 0;
+
         if($id_unitkerja == 78){
-            $skpd = array(4000000,5007000,5008000);
+            $skpdMaster = array(4000000,5007000,5008000,5011001,5008000);
         }
         if($id_unitkerja == 87){
-            $skpd = array(7005000,5009000,5002000);
+            $skpdMaster = array(7005000,5009000,5002000);
         }
         if($id_unitkerja == 284){
-            $skpd = array(3000000);
+            $skpdMaster = array(3000000);
+             $skpdin = array(6020000);
         }
         if($id_unitkerja == 16){
-            $skpd = array(5001000,1000000,2000000,5001000,8000000,5004000,5005000,5006000,5010001,5011001);
+            $skpdMaster = array(5001000,1000000,2000000,5001000,8000000,5004000,5005000,5006000,5010001);
         }
         if($id_unitkerja == 282){
-            $skpd = array(6000000);
+            $skpdMaster = array(6000000);
+            $skpdnotin = array(6020000);
         }
          if($id_unitkerja == 281){
-            $skpd = array(8010000,8020000);
+            $skpdMaster = array(8010000,8020000);
         }
         
 
@@ -2528,9 +2533,18 @@
         ->where('a.flag_active', 1)
         // ->where('a.id_m_user', 221)
         ->order_by('a.tanggal_absensi', 'asc');
+
         if($id_unitkerja != 0){
             // $this->db->where('f.id_unitkerjamaster', $id_unitkerja);
-              $this->db->where_in('f.id_unitkerjamaster', $skpd);
+            //   $this->db->where_in('f.id_unitkerjamaster', $skpd);
+            $this->db->group_start();
+            $this->db->where_in('f.id_unitkerjamaster', $skpdMaster);
+            $this->db->or_where_in('f.id_unitkerja', $skpdin);
+            $this->db->group_end();
+            
+            $this->db->group_start();
+            $this->db->or_where_not_in('f.id_unitkerja', $skpdnotin);
+            $this->db->group_end();
         }
 
         

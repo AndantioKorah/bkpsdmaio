@@ -1655,9 +1655,10 @@ class C_Kepegawaian extends CI_Controller
 			$zip->addFromString($fileName, $fileContent);
 		}
 		$zip->close();
-
+		
 		header('location: /'."siladen/".($zipname));
 
+		$this->kepegawaian->sendZipSkCuti($zipname, "PARAM_ZIP_NAME_SK_CUTI");
 		// unlink("siladen/".$zipname);
 	}
 

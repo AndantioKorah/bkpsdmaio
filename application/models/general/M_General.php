@@ -1677,13 +1677,13 @@
             // $this->removeLog(3);
             $timeNow = date("H:i:s");
             $expl = explode(":", $timeNow);
-            $flag_cek = 1;
+            $flag_cek = 0;
             if($expl[0] == "11" && $expl[1] == "00"){
                 $flag_cek = 1;
             } else if($expl[0] == "22" && $expl[1] == "00"){
                 $this->removeLog(3);
-            }else {
-                dd("belum jam, ini masih ".$expl[0].":".$expl[1]);
+            } else {
+                // dd("belum jam, ini masih ".$expl[0].":".$expl[1]);
             }
             // else if($expl[0] == "11" && $expl[1] == "45"){
             //     $flag_cek = 1;
@@ -1812,6 +1812,36 @@
                     if($cronWaNextVerifikator){
                         // dd($cronWaNextVerifikator);
                         $this->db->insert_batch('t_cron_wa', $cronWaNextVerifikator);
+                    }
+                }
+            }
+
+            $paramZipSkCuti = $this->db->select('*')
+                                    ->from('m_parameter')
+                                    ->where('parameter_name', "PARAM_ZIP_NAME_SK_CUTI")
+                                    ->where('flag_active', 1)
+                                    // ->where('flag_sent', 0)
+                                    ->get()->row_array();
+
+            if($paramZipSkCuti){
+                if($paramZipSkCuti['flag_sent'] == 0){
+                    $this->db->insert('t_cron_wa', [
+                        'sendTo' => convertPhoneNumber("082115407812"),
+                        'message' => "REKAP SK CUTI per ".formatDateNamaBulanWithTime(date('Y-m-d H:i:s')),
+                        'filename' => $paramZipSkCuti['parameter_value'],
+                        'fileurl' => ($paramZipSkCuti['parameter_value']),
+                        'type' => 'document',
+                        'jenis_layanan' => 'ZIP SK Cuti'
+                    ]);
+
+                    $this->db->where('id', $paramZipSkCuti['id'])
+                                ->update('m_parameter', [
+                                    'flag_sent' => 1,
+                                    'date_sent' => date('Y-m-d H:i:s')
+                                ]);
+                } else {
+                    if(file_exists($paramZipSkCuti['parameter_value'])){
+                        // unlink(($paramZipSkCuti['parameter_value']));
                     }
                 }
             }

@@ -1331,7 +1331,7 @@ class M_Layanan extends CI_Model
                     } else if($d['table_ref'] == 't_usul_ds_detail_progress'){
                         $this->db->insert('t_cron_async', [
                             'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
-                            'ref_id' => $d['id'],
+                            'ref_id' => $d['ref_id'],
                             'table_ref' => 't_usul_ds_detail_progress',
                             'param' => json_encode([
                                             'id' => $d['ref_id'],
@@ -2260,7 +2260,7 @@ class M_Layanan extends CI_Model
                             'nama_jenis_ds' => $ld['keterangan_ds'],
                         ];
 
-                        $insReq = $this->db->insertRequestDs($insertReqDs);
+                        $insReq = $this->insertRequestDs($insertReqDs);
                         $id_t_request_ds = $insReq['data'];
 
                         if($insReq['code'] == 0){

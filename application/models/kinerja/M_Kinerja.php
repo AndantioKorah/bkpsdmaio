@@ -1053,7 +1053,11 @@
                         }
                     }
                 }
-            } 
+            } else {
+                $atasan = $this->baseQueryAtasan()
+                                ->where('f.id_eselon', 4)
+                                ->get()->row_array(); // cari setda
+            }
             if(stringStartWith('Bagian', $pegawai['nm_unitkerja'])){
                 $atasan = $this->baseQueryAtasan()
                 ->where('b.skpd', $pegawai['id_unitkerja'])
@@ -1097,17 +1101,11 @@
                 $atasan = $this->baseQueryAtasan()
                                 ->where('f.id_eselon', 4)
                                 ->get()->row_array(); // cari setda
-                if(!$atasan){
-                    $atasan = $this->baseQueryAtasan()
-                                ->where('b.nipbaru_ws', '197409262002121007') // hardocde setda, pak steaven
-                                ->get()->row_array();
-
-                    $atasan['nama_jabatan'] = "Pj. Sekretaris Daerah";
-                }
+                                
                 $kepala = $atasan;
             }
         }
-
+        
         $kadis = null;
         $sek = null;
         $fl = 0;
@@ -1207,6 +1205,11 @@
         $result['kepala'] = $kepala;
         $result['kadis'] = $kadis;
         // dd($result);
+        
+        if($pegawai['id_unitkerja'] == 2000100){ //staf ahli
+            $result['kepala'] = $atasan;
+        }
+
         if(isset($pegawai['nip_kepalaskpd_hardcode']) && $pegawai['nip_kepalaskpd_hardcode']){
             $hardcodeKepalaskpd = $this->db->select('a.nipbaru, a.nama, d.id_unitkerja, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat,
                                         a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id, a.handphone,

@@ -1688,7 +1688,9 @@
             // else if($expl[0] == "11" && $expl[1] == "45"){
             //     $flag_cek = 1;
             // }
-
+            // if($this->general_library->isProgrammer()){
+            //     $flag_cek = 1;
+            // }
             if($flag_cek == 1){
                 $this->logCron('cronCheckVerifCuti');
                 
@@ -1696,7 +1698,8 @@
                                     ->from('t_progress_cuti a')
                                     ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
                                     ->join('t_cron_wa c', 'a.chatId = c.chatId')
-                                    ->where('id_m_user_verifikasi !=', 527)
+                                    // ->where('a.id_m_user_verifikasi !=', 527)
+                                    ->where('a.nohp !=', NOMOR_HP_KABAN)
                                     ->where('a.flag_verif', 0)
                                     ->where('a.chatId IS NOT NULL')
                                     ->where('b.flag_active', 1)
@@ -1758,9 +1761,9 @@
                                     ->join('db_pegawai.cuti c', 'b.id_cuti = c.id_cuti')
                                     ->join('m_user d', 'd.id = b.id_m_user')
                                     ->join('db_pegawai.pegawai e', 'e.nipbaru_ws = d.username')
-                                    ->where('id_m_user_verifikasi !=', 193)
                                     ->where('a.flag_verif', 0)
                                     ->where('a.chatId IS NULL')
+                                    ->where('a.nohp !=', NOMOR_HP_KABAN)
                                     ->where('b.flag_active', 1)
                                     ->where('b.flag_ditolak', 0)
                                     ->group_by('a.id')

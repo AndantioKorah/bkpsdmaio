@@ -1961,6 +1961,7 @@ class M_Layanan extends CI_Model
                     'id_m_jenis_layanan' => $dataUsul['id_m_jenis_layanan'],
                     'nama_jenis_ds' => $dataUsul['keterangan_ds']
                 ];
+                $this->db->insert('t_request_ds', $requestDs);
             } else { // jika sudah ada, berarti kaban sudah DS
                 $bulan = getNamaBulan(date('m'));
                 $tahun = date('Y');

@@ -8045,10 +8045,15 @@ public function submitEditJabatan(){
                         ->where('flag_active', 1)
                         ->get()->row_array();
         if($exists){
+            if(file_exists($exists['parameter_value'])){
+                unlink($exists['parameter_value']);
+            }
+
             $this->db->where('id', $exists['id'])
                     ->update('m_parameter', [
                         'flag_sent' => 0,
-                        'parameter_value' => $zipName
+                        'parameter_value' => $zipName,
+                        'updated_by' => $this->general_library->getId()
                     ]);
         }
     }

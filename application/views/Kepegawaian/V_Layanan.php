@@ -269,6 +269,10 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
       $('#loader').hide()
     })
+    } else if(val == 31) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
+      $('#loader').hide()
+    })
     }else {
       $('#form_layanan').html('')
     }

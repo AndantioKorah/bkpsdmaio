@@ -2661,6 +2661,14 @@ class C_Kepegawaian extends CI_Controller
 				$data['sktubel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','14','0');	
 			}
 
+			if($id_layanan == 31){
+				$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+				$data['ijazah_s1_div'] = $this->kepegawaian->getIjazahS1D4(); 
+				$data['str_serdik'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','22','0');
+	
+
+			}
+
 		$this->load->view('kepegawaian/layanan/V_LayananJabatanFungsional', $data);
 		// else if($id_layanan == 7){
 		// $data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');

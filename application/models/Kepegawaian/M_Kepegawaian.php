@@ -11853,6 +11853,14 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_pernyataan_bersedia_tidak_diangkat_jabfung_lagi"){
+            $this->db->select('a.surat_pernyataan_tidak_hd')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         }  else if($this->input->post('file') == "surat_pernyataan_pidana"){
             $this->db->select('a.surat_pernyataan_tidak_pidana')
                 ->from('t_layanan as a')
@@ -13503,6 +13511,8 @@ public function getFileForVerifLayanan()
                 // $file2 = str_replace(' ', '', $_FILES['file2']['name']);
                 if($id_m_layanan == 31){
                 $filehd =  "surat_keterangan_guru_$nip"."_$random_number".".pdf";
+                } else if($id_m_layanan == 15){
+                $filehd =  "surat_pernyataan_bersedia_tidak_diangkat_jf_lagi_$nip"."_$random_number".".pdf";
                 } else {
                 $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
                 }

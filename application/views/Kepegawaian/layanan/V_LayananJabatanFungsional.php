@@ -294,6 +294,12 @@ ol {
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
         </div>
         <?php } ?>
+        <?php if($id_m_layanan == 15) { ?>
+        <div class="form-group mb-3">
+            <label><b>Surat Pernyataan bersedia tidak dapat diangkat kembali dalam Jabatan Fungsional</b></label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
+        </div>
+        <?php } ?>
         <?php if($id_m_layanan == 30) { ?>
          <div class="form-group mb-2">
             <label><b>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit menyebutkan nomenklatur jabatan pelaksana yang akan diduduki</b></label>
@@ -486,13 +492,19 @@ ol {
              
               <?php } ?>
               <?php if($id_m_layanan == 15) { ?>
-                <li>
+                <!-- <li>
                 <a class="<?php if($surat_usul_pyb) echo 'select'; else echo 'unselect';?>" <?php if($surat_usul_pyb) { ?>
                 onclick="viewBerkasPangkat('<?=$surat_usul_pyb['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> Surat usul Pyb ke PPK*  <i
                 class="fas fa-<?php if($surat_usul_pyb) echo ''; else echo '';?>"></i></a>
                 </li>
-                <li>
+                <li> -->
+                    <li>
+				<a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
+				onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir* <i
+				class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
+                </li>
                 <li>
                 <a class="<?php if($pengunduran_diri) echo 'select'; else echo 'unselect';?>" <?php if($pengunduran_diri) { ?>
                 onclick="viewBerkasPangkat('<?=$pengunduran_diri['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
@@ -869,15 +881,17 @@ $(function(){
         }
 
         if(id_m_layanan == 15){
-          if(surat_usul_pyb == ""){
+          if(sk_jabatan_fungsional == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
+        
         if(pengunduran_diri == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-         if(rekom_kepala_pd == ""){
+
+        if(rekom_kepala_pd == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }

@@ -1627,6 +1627,7 @@
         }
 
         public function removeLog($batasHari){
+            $this->logCron('cronRemoveLog');
             $date = date('Y-m-d', strtotime('-'.$batasHari.' days', strtotime(date('Y-m-d'))));
             $arrTable = [
                 "t_log_maxchat",

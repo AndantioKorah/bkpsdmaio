@@ -280,7 +280,7 @@ ol {
 
 				<form id="form_layanan_jabfung" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -35px;">
-          <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16) { ?>
+          <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 31) { ?>
           <div class="form-group mb-2">
             <label><b>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit</b></label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
@@ -294,7 +294,13 @@ ol {
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
         </div>
         <?php } ?>
-             <?php if($id_m_layanan == 30) { ?>
+        <?php if($id_m_layanan == 15) { ?>
+        <div class="form-group mb-3">
+            <label><b>Surat Pernyataan bersedia tidak dapat diangkat kembali dalam Jabatan Fungsional</b></label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
+        </div>
+        <?php } ?>
+        <?php if($id_m_layanan == 30) { ?>
          <div class="form-group mb-2">
             <label><b>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit menyebutkan nomenklatur jabatan pelaksana yang akan diduduki</b></label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
@@ -302,6 +308,13 @@ ol {
           </div>
           <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
         <?php } ?>
+        <?php if($id_m_layanan == 31) { ?>
+         <div class="form-group mb-3">
+            <label><b>Surat keterangan memiliki pengalaman dalam pelaksanaan tugas guru paling singkat 2 tahun </b></label>
+            <input  class="form-control my-image-field" type="file" id="pdf_surat_ket_guru" name="file2" required />
+         </div>
+        <?php } ?>
+
 					<input type="hidden" id="formasi" value="<?php if(isset($formasi)) echo $formasi['id']; else echo "";?>">
 					<input type="hidden" id="sertiukom" value="<?php if(isset($sertiukom)) echo $sertiukom['id']; else echo "";?>">
 					<input type="hidden" id="peta_jabatan" value="<?php if(isset($peta_jabatan)) echo $peta_jabatan['id']; else echo "";?>">
@@ -323,6 +336,8 @@ ol {
 					<input type="hidden" id="sk_mutasi_instansi" value="<?php if(isset($sk_mutasi_instansi)) echo $sk_mutasi_instansi['id']; else echo "";?>">
 					<input type="hidden" id="tangkap_layar_myasn" value="<?php if(isset($tangkap_layar_myasn)) echo $tangkap_layar_myasn['id']; else echo "";?>">
 					<input type="hidden" id="sktubel" value="<?php if(isset($sktubel)) echo $sktubel['id']; else echo "";?>">
+					<input type="hidden" id="ijazah_s1_div" value="<?php if(isset($ijazah_s1_div)) echo $ijazah_s1_div['id']; else echo "";?>">
+					<input type="hidden" id="sk_pangkat" value="<?php if(isset($sk_pangkat)) echo $sk_pangkat['id']; else echo "";?>">
           
         
 				
@@ -477,13 +492,19 @@ ol {
              
               <?php } ?>
               <?php if($id_m_layanan == 15) { ?>
-                <li>
+                <!-- <li>
                 <a class="<?php if($surat_usul_pyb) echo 'select'; else echo 'unselect';?>" <?php if($surat_usul_pyb) { ?>
                 onclick="viewBerkasPangkat('<?=$surat_usul_pyb['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> Surat usul Pyb ke PPK*  <i
                 class="fas fa-<?php if($surat_usul_pyb) echo ''; else echo '';?>"></i></a>
                 </li>
-                <li>
+                <li> -->
+                    <li>
+				<a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
+				onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir* <i
+				class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
+                </li>
                 <li>
                 <a class="<?php if($pengunduran_diri) echo 'select'; else echo 'unselect';?>" <?php if($pengunduran_diri) { ?>
                 onclick="viewBerkasPangkat('<?=$pengunduran_diri['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
@@ -573,7 +594,6 @@ ol {
                 </li>
               <?php } ?>
 
-
               <?php if($id_m_layanan == 30) { ?>
                  <li>
                 <a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
@@ -594,9 +614,36 @@ ol {
                 <?php } ?>> <i class="fa fa-file-pdf"></i> SK Tugas Belajar* <i
                 class="fas fa-<?php if($sktubel) echo ''; else echo '';?>"></i></a>
                 </li>
-                
-              
-               
+              <?php } ?>
+
+              <?php if($id_m_layanan == 31) { ?>
+                 <li>
+                <a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
+                onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_1_lalu;?>* <i
+                class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+                </li>
+
+                  <li>
+                <a class="<?php if($skp2 && $skp2['gambarsk'] != null){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp2 && $skp2['gambarsk'] != null) { ?>
+                onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SKP tahun <?=$tahun_2_lalu;?>* <i
+                class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>
+                </li>
+
+                 <li>
+                <a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
+                onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir <i
+                class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
+                </li>
+
+               <li>
+                <a class="<?php if($str_serdik) echo 'select'; else echo 'unselect';?>" <?php if($str_serdik) { ?>
+                onclick="viewBerkasPangkat('<?=$str_serdik['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Pendidik <i
+                class="fas fa-<?php if($str_serdik) echo ''; else echo '';?>"></i></a>
+                </li>
               <?php } ?>
 
 						</ol>
@@ -725,6 +772,9 @@ $(function(){
         var sk_mutasi_instansi = $('#sk_mutasi_instansi').val()
         var tangkap_layar_myasn = $('#tangkap_layar_myasn').val()
         var sktubel = $('#sktubel').val()
+        var ijazah_s1_div = $('#ijazah_s1_div').val()
+
+        
 
 
 
@@ -831,15 +881,17 @@ $(function(){
         }
 
         if(id_m_layanan == 15){
-          if(surat_usul_pyb == ""){
+          if(sk_jabatan_fungsional == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
+        
         if(pengunduran_diri == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-         if(rekom_kepala_pd == ""){
+
+        if(rekom_kepala_pd == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
@@ -885,6 +937,29 @@ $(function(){
             return false;
         }
         if(sktubel == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        }
+
+         if(id_m_layanan == 31){
+         if(sk_pangkat == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+          }
+         if(str_serdik == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+         }
+         if(skp1 == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+         }
+         if(skp2 == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+         }
+         if(ijazah_s1_div == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }

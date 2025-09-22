@@ -10800,6 +10800,18 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getIjazahS1D4()
+    {
+        $this->db->select('*')
+        ->where('a.id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where_in('b.id_tktpendidikan', [6000,7000])
+        ->where('flag_active', 1)
+        ->join('db_pegawai.tktpendidikanb as b ', 'a.tktpendidikan = b.id_tktpendidikanb')
+        ->from('db_pegawai.pegpendidikan as a');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
     public function getCutiCltn()
     {
         $this->db->select('*')
@@ -11834,6 +11846,14 @@ public function getFileForVerifLayanan()
                 ->limit(1);
                 return $this->db->get()->result_array();
         } else if($this->input->post('file') == "surat_pernyataan_hd"){
+            $this->db->select('a.surat_pernyataan_tidak_hd')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_pernyataan_bersedia_tidak_diangkat_jabfung_lagi"){
             $this->db->select('a.surat_pernyataan_tidak_hd')
                 ->from('t_layanan as a')
                 ->where('a.id', $id_usul)
@@ -13400,7 +13420,7 @@ public function getFileForVerifLayanan()
        
         $this->db->trans_begin();
     
-        if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30){
+        if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
         $cek =  $this->db->select('*')
         ->from('t_layanan a')
         ->where('a.id_m_user', $this->general_library->getId())
@@ -13457,7 +13477,7 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 20){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/ujian_dinas';
-            } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30){
+            } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/jabatan_fungsional';
             } else if($id_m_layanan == 21){
@@ -13489,12 +13509,21 @@ public function getFileForVerifLayanan()
             $this->load->library('upload');
             if(isset($_FILES['file2']['name'])){
                 // $file2 = str_replace(' ', '', $_FILES['file2']['name']);
+                if($id_m_layanan == 31){
+                $filehd =  "surat_keterangan_guru_$nip"."_$random_number".".pdf";
+                } else if($id_m_layanan == 15){
+                $filehd =  "surat_pernyataan_bersedia_tidak_diangkat_jf_lagi_$nip"."_$random_number".".pdf";
+                } else {
                 $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
+                }
+
                 if($id_m_layanan == 23){
                 $target_dir_hd	= './dokumen_layanan/suratpidanahukdis';
                 } else if($id_m_layanan == 28){
                 $target_dir_hd	= './dokumen_layanan/mutasi_pindah_masuk';
-                }  else {
+                } else if($id_m_layanan == 31){
+                $target_dir_hd	= './dokumen_layanan/jabatan_fungsional';
+                } else {
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
                 } 
             }

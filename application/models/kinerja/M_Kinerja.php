@@ -2499,7 +2499,7 @@
         $skpdnotin = 0;
 
         if($id_unitkerja == 78){
-            $skpdMaster = array(4000000,5007000,5008000,5011001,5008000);
+            $skpdMaster = array(4000000,5007000,5008000,5011001,5008000,8000000);
         }
         if($id_unitkerja == 87){
             $skpdMaster = array(7005000,5009000,5002000);
@@ -2509,7 +2509,7 @@
              $skpdin = array(6020000);
         }
         if($id_unitkerja == 16){
-            $skpdMaster = array(5001000,1000000,2000000,5001000,8000000,5004000,5005000,5006000,5010001);
+            $skpdMaster = array(5001000,1000000,2000000,5001000,5004000,5005000,5006000,5010001);
         }
         if($id_unitkerja == 282){
             $skpdMaster = array(6000000);
@@ -2827,7 +2827,7 @@
         } else {
 
         
-        if($result[0]['total_verif'] >= 2 && $id_unitkerja != '6170000') {
+        if($result[0]['total_verif'] >= 5 && $id_unitkerja != '6170000') {
             $rs['code'] = 1;        
             $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
         } else {     

@@ -634,12 +634,23 @@ class C_Master extends CI_Controller
     }
 
     public function hardcodeNominatif(){
-        render('master/V_MasterHardcodeNominatif', '', '', null);
+		$data['unit_kerja'] = $this->kepegawaian->getUnitKerja();
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+        $data['list_pegawai'] = $this->master->getAllPegawai();
+        render('master/V_MasterHardcodeNominatif', '', '', $data);
     }
 
     public function loadListHardcodeNominatif(){
         $data['result'] = $this->master->loadListHardcodeNominatif();
         $this->load->view('master/V_MasterHardcodeNominatifList', $data);
+    }
+
+    public function inputHardcodeNominatif(){
+        echo json_encode($this->master->inputHardcodeNominatif($this->input->post()));
+    }
+
+    public function deleteHardcodeNominatif($id){
+        echo json_encode($this->master->deleteHardcodeNominatif($id));
     }
 
 }

@@ -256,6 +256,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>Event
 					</a>
 				</li>
+
+				<li class="sidebar-item ">
+					<a title="Hardcode Nominatif" class="sidebar-link sidebar-link-child" href="<?=base_url('master/hardcode-nominatif')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hardcode Nominatif
+					</a>
+				</li>
 			</ul>
 		</li>
 		<?php } ?>

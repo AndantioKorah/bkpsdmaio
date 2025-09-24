@@ -37,7 +37,22 @@
 
     function hapusData(id){
         if(confirm('Apakah Anda yakin ingin menghapus data?')){
-            
+            $.ajax({
+                url: '<?=base_url("master/C_Master/deleteHardcodeNominatif/")?>'+id,
+                method: 'post',
+                data: null,
+                success: function(data){
+                    let resp = JSON.parse(data)
+                    if(resp['code'] == 1){
+                        errortoast(resp['message'])
+                    } else {
+                        loadListHardcode()
+                        successtoast("Data berhasil dihapus")
+                    }
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
         }
     }
 </script>

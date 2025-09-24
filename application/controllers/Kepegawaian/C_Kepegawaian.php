@@ -2482,7 +2482,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['list_pegawai'] = $this->session->userdata('list_pegawai');
         if(!$data['list_pegawai']){
             $this->session->set_userdata('list_pegawai', $this->master->getAllPegawai());
-            $data['list_pegawai'] = $this->session->userdata('list_pegawai');
+            // $data['list_pegawai'] = $this->session->userdata('list_pegawai');
         }
         render('kepegawaian/V_MasterPltPlh', '', '', $data);
     }

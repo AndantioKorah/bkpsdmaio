@@ -1415,6 +1415,17 @@
         return $data;
     }
 
+    public function loadListHardcodeNominatif(){
+        return $this->db->select('a.id, d.gelar1, d.gelar2, d.nama, b.nm_unitkerja, a.nama_jabatan, a.bulan, a.tahun, a.flag_add')
+                    ->from('t_hardcode_nominatif a')
+                    ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg', 'left')
+                    ->join('db_pegawai.pegawai d', 'a.nip = d.nipbaru_ws')
+                    ->where('a.flag_active', 1)
+                    ->order_by('a.created_date', 'desc')
+                    ->get()->result_array();
+    }
+
 
 	}
 ?>

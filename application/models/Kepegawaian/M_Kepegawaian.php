@@ -11858,7 +11858,7 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "surat_pernyataan_hd"){
+        } else if($this->input->post('file') == "surat_pernyataan_hd" || $this->input->post('file') == "surat_keterangan_guru"){
             $this->db->select('a.surat_pernyataan_tidak_hd')
                 ->from('t_layanan as a')
                 ->where('a.id', $id_usul)

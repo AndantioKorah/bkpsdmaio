@@ -2016,17 +2016,27 @@ class M_Layanan extends CI_Model
                         }
                         
                         // insert di pegcuti
-                        $this->db->insert('db_pegawai.pegcuti', [
-                            'id_pegawai' => $pegawaiYbs['id_peg'],
-                            'jeniscuti' => $pegawaiYbs['id_cuti'],
-                            'lamacuti' => $pegawaiYbs['lama_cuti'],
-                            'tglmulai' => $pegawaiYbs['tanggal_mulai'],
-                            'tglselesai' => $pegawaiYbs['tanggal_akhir'],
-                            'nosttpp' => $existsReqDs['nomor_surat'],
-                            'tglsttpp' => date('Y-m-d'),
-                            'gambarsk' => $newFileName,
-                            'status' => 2
-                        ]);
+                        $existsPegCuti = $this->db->select('*')
+                                                ->from('db_pegawai.pegcuti')
+                                                ->where('id_pegawai', $pegawaiYbs['id_peg'])
+                                                ->where('jeniscuti', $pegawaiYbs['id_cuti'])
+                                                ->where('nosttpp', $existsReqDs['nomor_surat'])
+                                                ->where('status', 2)
+                                                ->where('flag_active', 1)
+                                                ->get()->row_array();
+                        if(!$existsPegCuti){ // jika sudah ada di pegcuti, tidak usah input
+                            $this->db->insert('db_pegawai.pegcuti', [
+                                'id_pegawai' => $pegawaiYbs['id_peg'],
+                                'jeniscuti' => $pegawaiYbs['id_cuti'],
+                                'lamacuti' => $pegawaiYbs['lama_cuti'],
+                                'tglmulai' => $pegawaiYbs['tanggal_mulai'],
+                                'tglselesai' => $pegawaiYbs['tanggal_akhir'],
+                                'nosttpp' => $existsReqDs['nomor_surat'],
+                                'tglsttpp' => date('Y-m-d'),
+                                'gambarsk' => $newFileName,
+                                'status' => 2
+                            ]);
+                        }
 
                         //simpan di dokumen pendukung agar tersinkron dengan rekap absen
                         $dokumen_pendukung = null;
@@ -2057,7 +2067,18 @@ class M_Layanan extends CI_Model
                             }
                         }
                         if($dokumen_pendukung){
-                            $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+                            $existsDokpen = $this->db->select('*')
+                                                    ->from('t_dokumen_pendukung')
+                                                    ->where('id_m_jenis_disiplin_kerja', 17)
+                                                    ->where('status', 2)
+                                                    ->where('flag_outside', 1)
+                                                    ->where('tanggal', $dokumen_pendukung[0]['tanggal'])
+                                                    ->where('url_outside', $filePathCuti)
+                                                    ->where('flag_active', 1)
+                                                    ->get()->row_array();
+                            if(!$existsDokpen){ // jika sudah ada di dokpen tidak usah input
+                                $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+                            }
                         }
                     }
                 }

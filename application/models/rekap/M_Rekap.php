@@ -1368,7 +1368,7 @@
             4014000,
             3028000,
             3014000,
-            3010000
+            // 3010000
         ];
         if(in_array($id_unitkerja, $listUkerTempKasubKepeg)){
             $result['kasubag'] = $result['sek'];

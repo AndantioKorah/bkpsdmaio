@@ -314,6 +314,18 @@
   </li>
  <?php } ?>
 
+  <?php if($id_m_layanan == 31) { ?>
+<li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat Terakhir</button>
+</li>
+<li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='ijazahd4s1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah DI-V atau S-1 </button>
+  </li>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='str_serdik')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Pendidik </button>
+  </li>
+ <?php } ?>
+
 <?php if($id_m_layanan != 30) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='dok_lain')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Dokumen lain apabila diperlukan</button>
@@ -738,7 +750,7 @@ function openPresensiTab(){
           dir = "arsipjabatan/";
         } else if(file == "suratpengantar"){
             dir = "./dokumen_layanan/jabatan_fungsional/";
-        } else if(file == "ijazah"){
+        } else if(file == "ijazah" || file == "ijazahd4s1"){
           dir = "./arsippendidikan/";
         } else if(file == "surat_pernyataan_hd" || file == 'surat_pernyataan_bersedia_tidak_diangkat_jabfung_lagi') {
           dir = "./dokumen_layanan/jabatan_fungsional/surat_ket_hd/";

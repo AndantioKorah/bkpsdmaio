@@ -198,7 +198,11 @@
     <button onclick="getFile('surat_pernyataan_hd')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan tidak sedang hukuman disiplin dari atasan langsung</button>
   </li>
   <?php } ?>
-   
+    <?php if($id_m_layanan == 31) { ?>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile('surat_keterangan_guru')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat keterangan memiliki pengalaman dalam pelaksanaan tugas guru paling singkat 2 tahun</button>
+  </li>
+  <?php } ?>
   <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 ) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='formasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan Tersedia Formasi</button>
@@ -748,7 +752,7 @@ function openPresensiTab(){
           dir = "arsipdiklat/";
         } else if(file == "skjabatan" || file == "sk_jabatan_fungsional" || file == "sk_jabatan_fungsional_pertama"){
           dir = "arsipjabatan/";
-        } else if(file == "suratpengantar"){
+        } else if(file == "suratpengantar" || file == "surat_keterangan_guru"){
             dir = "./dokumen_layanan/jabatan_fungsional/";
         } else if(file == "ijazah" || file == "ijazahd4s1"){
           dir = "./arsippendidikan/";
@@ -773,6 +777,8 @@ function openPresensiTab(){
             var number = Math.floor(Math.random() * 1000);
             if(file == "suratpengantar"){
             var link = "<?=base_url();?>/"+dir+"/"+data[0].file_pengantar+"?v="+number;
+            } else if(file == "surat_keterangan_guru"){
+            var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_hd+"?v="+number;
             } else if(file == "surat_pernyataan_hd" || file == "surat_pernyataan_bersedia_tidak_diangkat_jabfung_lagi"){
               var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_hd+"?v="+number;
             }  else {

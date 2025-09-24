@@ -11613,7 +11613,7 @@ public function searchPengajuanLayananFungsional($id_m_layanan){
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
              ->join('m_status_layanan_fungsional g', 'a.status = g.id')
-            ->where_in('a.id_m_layanan', [12,13,14,15,16,30])
+            ->where_in('a.id_m_layanan', [12,13,14,15,16,30,31])
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
                 if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
@@ -11687,7 +11687,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
         $this->db->join('db_pegawai.pegpangkat l', 'l.id = c.reference_id_dok','left');
     }
-    if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30){
+    if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
         $this->db->join('db_pegawai.pegjabatan l', 'l.id = c.reference_id_dok','left');
     }
     if($id_m_layanan == 23){

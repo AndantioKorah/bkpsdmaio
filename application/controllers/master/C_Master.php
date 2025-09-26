@@ -635,7 +635,7 @@ class C_Master extends CI_Controller
 
     public function hardcodeNominatif(){
 		$data['unit_kerja'] = $this->kepegawaian->getUnitKerja();
-        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
         $data['list_pegawai'] = $this->master->getAllPegawai();
         render('master/V_MasterHardcodeNominatif', '', '', $data);
     }

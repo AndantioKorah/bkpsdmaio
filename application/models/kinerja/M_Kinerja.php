@@ -697,7 +697,7 @@
     public function baseQueryAtasan(){
         return $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, b.handphone,
             a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, g.nama_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon, 
-            h.nama_jabatan as nama_jabatan_tambahan, h.kepalaskpd as kepalaskpd_tambahan, c.id_asisten_grouping, b.id_jabatan_tambahan')
+            h.nama_jabatan as nama_jabatan_tambahan, h.kepalaskpd as kepalaskpd_tambahan, c.id_asisten_grouping, b.id_jabatan_tambahan, d.id_jabatanpeg')
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws', 'left')
             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja', 'left')

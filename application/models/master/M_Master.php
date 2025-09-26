@@ -1430,9 +1430,13 @@
 
             $this->db->trans_begin();
 
-            $explodeJabatan = explode(";", $data['id_jabatan']);
-            $data['id_jabatan'] = $explodeJabatan[0];
-            $data['nama_jabatan'] = $explodeJabatan[1];
+            $explodeJabatan = null;
+            if($data['id_jabatan']){
+                $explodeJabatan = explode(";", $data['id_jabatan']);
+            }
+
+            $data['id_jabatan'] = isset($explodeJabatan[0]) ? $explodeJabatan[0] : null;
+            $data['nama_jabatan'] = isset($explodeJabatan[1]) ? $explodeJabatan[1] : null;
             if($data['keterangan_jabatan'] != "def"){
                 $data['nama_jabatan'] = $data['keterangan_jabatan']." ".$explodeJabatan[1];
             }

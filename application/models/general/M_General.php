@@ -1673,9 +1673,108 @@
             }
         }
 
+        public function notifVerifikatorPeninjauanAbsensi(){
+            $this->logCron('notifVerifikatorPeninjauanAbsensi');
+
+            $data = $this->db->select('a.id, d.nm_unitkerja, c.nama, c.nipbaru_ws, d.id_unitkerja, d.id_unitkerjamaster')
+                            ->from('t_peninjauan_absensi a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
+                            ->where('MONTH(a.created_date)', date('m'))
+                            ->where('a.status', 0)
+                            ->group_by('a.id')
+                            ->get()->result_array();
+
+            $listVerifikator = $this->db->select('*')
+                                ->from('db_pegawai.pegawai')
+                                ->where_in('nipbaru_ws', [
+                                    199502182020121013, // tio
+                                    198504202010011009, // kasub erik
+                                    199611292022031012, // bob
+                                    198910272022031003, // onal
+                                    199401042020121011, // youri
+                                    199110212022031006, // harun
+                                ])
+                                ->get()->result_array();
+            
+            $verifikator = null;
+            foreach($listVerifikator as $lv){
+                $verifikator[$lv['nipbaru_ws']] = $lv;                
+                $verifikator[$lv['nipbaru_ws']]['data_count'] = 0;                
+                $verifikator[$lv['nipbaru_ws']]['data'] = null;                
+                $verifikator[$lv['nipbaru_ws']]['data_count_not_mapping'] = 0;                
+            }
+            $nipAdmin = "199401042020121011";
+
+            if($data){
+                foreach($data as $d){
+                    $nipVerifikator = null;
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_HARUN)){ //harun
+                        if(!in_array($d['id_unitkerja'], VERIF_PA_SKPDNOTIN_HARUN) && in_array($d['id_unitkerja'], VERIF_PA_SKPDIN_HARUN)){
+                            $nipVerifikator = "199110212022031006";
+                        }
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_ONAL)){ //ONAL
+                        if(!in_array($d['id_unitkerja'], VERIF_PA_SKPDNOTIN_ONAL) && in_array($d['id_unitkerja'], VERIF_PA_SKPDIN_ONAL)){
+                            $nipVerifikator = "198910272022031003";
+                        }
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_TIO)){ //TIO
+                        $nipVerifikator = "199502182020121013";
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_YOURI)){ //YOURI
+                        $nipVerifikator = "199401042020121011";
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_ERICK)){ //ERICK
+                        $nipVerifikator = "198504202010011009";
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_BOB)){ //BOB
+                        $nipVerifikator = "199611292022031012";
+                    }
+
+                    if(!$nipVerifikator){ // jika null, tambahkan ke not mapping youri
+                        $nipVerifikator = $nipAdmin;
+                        $verifikator[$nipVerifikator]['data_count_not_mapping']++;
+                    } else {
+                        $verifikator[$nipVerifikator]['data_count']++;
+                        $verifikator[$nipVerifikator]['data'][] = $d;
+                    }
+                }
+
+                $cronWa = null;
+                foreach($verifikator as $verif){
+                    $message = "*[VERIFIKATOR PENINJAUAN ABSENSI]*\n\nTotal belum verif: *".$verif['data_count']."* data";
+                    if($verif['nipbaru_ws'] == $nipAdmin && $verifikator[$nipAdmin]['data_count_not_mapping'] > 0){ // youri
+                        $message .= "\n\nTotal belum mapping: *".$verifikator[$nipAdmin]['data_count_not_mapping']."* data";
+                    }
+                    $message .= "\n\nLast Rekap: ".formatDateNamaBulanWithTime(date('Y-m-d H:i:s'));
+
+                    $cronWa[$verif['nipbaru_ws']] = [
+                        'type' => 'text',
+                        'sendTo' => convertPhoneNumber($verif['handphone']),
+                        'message' => $message,
+                        'jenis_layanan' => "Verifikator Peninjauan Absensi",
+                    ];
+                }
+                if($cronWa){
+                    $this->db->insert_batch('t_cron_wa', $cronWa);
+                }
+            }
+        }
+
         public function cronCheckVerifCuti(){
             // dd('asd');
             // $this->removeLog(3);
+            // $this->notifVerifikatorPeninjauanAbsensi();
+
             $timeNow = date("H:i:s");
             $expl = explode(":", $timeNow);
             $flag_cek = 0;
@@ -1683,6 +1782,8 @@
                 $flag_cek = 1;
             } else if($expl[0] == "22" && $expl[1] == "00"){
                 $this->removeLog(3);
+            } else if($expl[0] == "08" && $expl[1] == "00"){
+                $this->notifVerifikatorPeninjauanAbsensi();
             } else {
                 // dd("belum jam, ini masih ".$expl[0].":".$expl[1]);
             }

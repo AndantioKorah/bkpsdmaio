@@ -7103,7 +7103,7 @@ public function submitEditJabatan(){
 
     public function buildProgressCuti($pegawai, $insert_id, $id_m_user){
         $result = [];
-        $kepalabkpsdm = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
+        $kepalabkpsdm = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan, c.id_jabatanpeg')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_Ws = b.username')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
@@ -7199,6 +7199,7 @@ public function submitEditJabatan(){
                     $result[$i]['id_m_user_verifikasi'] = $np['id'];
                     $result[$i]['nama_jabatan'] = isset($np['nama_jabatan_tambahan']) && $np['nama_jabatan_tambahan'] ? $np['nama_jabatan_tambahan'] : $np['nama_jabatan'];
                     $result[$i]['nohp'] = $np['handphone'];
+                    $result[$i]['id_jabatan'] = $np['id_jabatanpeg'];
                     $i++;
                 }
             }
@@ -7247,9 +7248,11 @@ public function submitEditJabatan(){
         $urutan = 1;
         $i = 0;
         foreach($list as $l){
+            // dd($l);
             $result[$i] = $l;
             $result[$i]['created_by'] = $this->general_library->getId();
             $result[$i]['id_t_pengajuan_cuti'] = $insert_id;
+            $result[$i]['id_jabatan'] = $l['id_jabatan'];
             $result[$i]['urutan'] = $urutan++;
             $i++;
         }
@@ -7259,6 +7262,7 @@ public function submitEditJabatan(){
         $result[$last]['nama_jabatan'] = $kepalabkpsdm['nama_jabatan'];
         $result[$last]['id_t_pengajuan_cuti'] = $insert_id;
         $result[$last]['nohp'] = $kepalabkpsdm['handphone'];
+        $result[$last]['id_jabatan'] = $kepalabkpsdm['id_jabatanpeg'];
         $result[$last]['created_by'] = $this->general_library->getId();
         $result[$last]['urutan'] = $urutan++;
 

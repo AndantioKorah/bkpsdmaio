@@ -697,7 +697,7 @@
     public function baseQueryAtasan(){
         return $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, b.handphone,
             a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, g.nama_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon, 
-            h.nama_jabatan as nama_jabatan_tambahan, h.kepalaskpd as kepalaskpd_tambahan, c.id_asisten_grouping, b.id_jabatan_tambahan, d.id_jabatanpeg')
+            h.nama_jabatan as nama_jabatan_tambahan, h.kepalaskpd as kepalaskpd_tambahan, c.id_asisten_grouping, b.id_jabatan_tambahan')
             ->from('m_user a')
             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws', 'left')
             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja', 'left')
@@ -2499,31 +2499,31 @@
         $skpdnotin = 0;
         // Youri
         if($id_unitkerja == 78){
-            $skpdMaster = VERIF_PA_SKPDMASTER_YOURI;
+            $skpdMaster = array(4000000,5007000,5008000,5011001,5008000,8000000);
         }
         // Kasub Erick 
         if($id_unitkerja == 87){
-            $skpdMaster = VERIF_PA_SKPDMASTER_ERICK;
+            $skpdMaster = array(7005000,5009000,5002000);
         }
         // Harun 
         if($id_unitkerja == 284){
-            $skpdMaster = VERIF_PA_SKPDMASTER_HARUN;
-            $skpdin = VERIF_PA_SKPDIN_HARUN;
-            $skpdnotin = VERIF_PA_SKPDNOTIN_HARUN;
+            $skpdMaster = array(3000000);
+            $skpdin = array(6020000,6140000,6040000);
+            $skpdnotin = array(3030000,3023000);
         }
         // Tio 
         if($id_unitkerja == 16){
-            $skpdMaster = VERIF_PA_SKPDMASTER_TIO;
+            $skpdMaster = array(5001000,1000000,2000000,5001000,5004000,5005000,5006000,5010001);
         }
         // Ronald 
         if($id_unitkerja == 282){
-            $skpdMaster = VERIF_PA_SKPDMASTER_ONAL;
-            $skpdnotin = VERIF_PA_SKPDNOTIN_ONAL;
-            $skpdin = VERIF_PA_SKPDIN_ONAL;
+            $skpdMaster = array(6000000);
+            $skpdnotin = array(6020000,6140000,6040000);
+            $skpdin = array(3030000,3023000);
         }
         // Bob 
          if($id_unitkerja == 281){
-            $skpdMaster = VERIF_PA_SKPDMASTER_BOB;
+            $skpdMaster = array(8010000,8020000);
         }
         
 
@@ -5232,23 +5232,21 @@
             if($result){
             return $result;
             } else {
-
-            if($jenis_absensi == 1){
+            if($jenis_absensi == "1"){
             $this->db->select('*')
             ->from('t_image_message a')
             ->where('date(a.date_received)', $tanggal_absensi)
-            // ->where('hour(a.date_received) < 12');
+            ->where('hour(a.date_received) < 12');
             $result = $this->db->get()->result_array();
-            return $result;
             } else {
             $this->db->select('*')
             ->from('t_image_message a')
             ->where('date(a.date_received)', $tanggal_absensi)
             ->where('hour(a.date_received) >= 12');
             $result = $this->db->get()->result_array();
-            return $result;
             }
-           
+            return $result;
+
             }
 
             

@@ -223,4 +223,8 @@ class C_Cron extends CI_Controller
         $data['perihal'] = isset($data['perihal']) ? $data['perihal'] : "";
         dd(getNomorSuratSiladen($data, 0));
     }
+
+    public function hapusKenegaraan(){
+        $this->user->hapusKenegaraan();
+    }
 }

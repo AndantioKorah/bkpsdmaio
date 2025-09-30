@@ -2102,57 +2102,57 @@
 
                 // batas here
 
-                // $list = json_decode($res['data'], true);
-                // $insertMUnorPerencanaan = null;
-                // $insertMRefUnor = null;
+                $list = json_decode($res['data'], true);
+                $insertMUnorPerencanaan = null;
+                $insertMRefUnor = null;
 
-                // foreach($list['data'] as $l){
-                //     // dd($list['data']);
-                //     if(isset($listUnorPerencanaan[$l['Id']])){
-                //         $this->db->where('id', $l['Id'])
-                //                 ->update('db_siasn.m_unor_perencanaan', [
-                //                     'nama_unor' => $l['NamaUnor'],
-                //                     'diatasan_id' => $l['DiatasanId'],
-                //                     'induk_unor_id' => $l['IndukUnorId'],
-                //                     'jenis_unor_id' => $l['JenisUnorId'],
-                //                 ]);
-                //         echo "update unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
-                //     } else {
-                //         echo "put in insert unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
-                //         $insertMUnorPerencanaan[$l['Id']] = [
-                //             'id' => $l['Id'],
-                //             'nama_unor' => $l['NamaUnor'],
-                //             'diatasan_id' => $l['DiatasanId'],
-                //             'induk_unor_id' => $l['IndukUnorId'],
-                //             'jenis_unor_id' => $l['JenisUnorId'],
-                //         ];
-                //     }
+                foreach($list['data'] as $l){
+                    // dd($list['data']);
+                    if(isset($listUnorPerencanaan[$l['Id']])){
+                        $this->db->where('id', $l['Id'])
+                                ->update('db_siasn.m_unor_perencanaan', [
+                                    'nama_unor' => $l['NamaUnor'],
+                                    'diatasan_id' => $l['DiatasanId'],
+                                    'induk_unor_id' => $l['IndukUnorId'],
+                                    'jenis_unor_id' => $l['JenisUnorId'],
+                                ]);
+                        echo "update unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
+                    } else {
+                        echo "put in insert unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
+                        $insertMUnorPerencanaan[$l['Id']] = [
+                            'id' => $l['Id'],
+                            'nama_unor' => $l['NamaUnor'],
+                            'diatasan_id' => $l['DiatasanId'],
+                            'induk_unor_id' => $l['IndukUnorId'],
+                            'jenis_unor_id' => $l['JenisUnorId'],
+                        ];
+                    }
 
-                //     if(isset($listRefUnor[$l['Id']])){
-                //         $this->db->where('id', $l['Id'])
-                //                 ->update('db_siasn.m_ref_unor', [
-                //                     'nama_unor' => $l['NamaUnor'],
-                //                     'id' => $l['Id']
-                //                 ]);
-                //         echo "update unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
-                //     } else {
-                //         echo "put in insert unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
-                //         $insertMRefUnor[$l['Id']] = [
-                //             'id' => $l['Id'],
-                //             'nama_unor' => $l['NamaUnor'],
-                //         ];
-                //     }
-                // }
+                    if(isset($listRefUnor[$l['Id']])){
+                        $this->db->where('id', $l['Id'])
+                                ->update('db_siasn.m_ref_unor', [
+                                    'nama_unor' => $l['NamaUnor'],
+                                    'id' => $l['Id']
+                                ]);
+                        echo "update unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
+                    } else {
+                        echo "put in insert unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
+                        $insertMRefUnor[$l['Id']] = [
+                            'id' => $l['Id'],
+                            'nama_unor' => $l['NamaUnor'],
+                        ];
+                    }
+                }
 
-                // if($insertMUnorPerencanaan){
-                //     $this->db->insert_batch('db_siasn.m_unor_perencanaan', $insertMUnorPerencanaan);
-                //     echo "insert unor perencanaan ".count($insertMUnorPerencanaan)."<br>";
-                // }
+                if($insertMUnorPerencanaan){
+                    $this->db->insert_batch('db_siasn.m_unor_perencanaan', $insertMUnorPerencanaan);
+                    echo "insert unor perencanaan ".count($insertMUnorPerencanaan)."<br>";
+                }
 
-                // if($insertMRefUnor){
-                //     $this->db->insert_batch('db_siasn.m_ref_unor', $insertMRefUnor);
-                //     echo "insert unor perencanaan ".count($insertMRefUnor)."<br>";
-                // }
+                if($insertMRefUnor){
+                    $this->db->insert_batch('db_siasn.m_ref_unor', $insertMRefUnor);
+                    echo "insert unor perencanaan ".count($insertMRefUnor)."<br>";
+                }
             }
         }
 

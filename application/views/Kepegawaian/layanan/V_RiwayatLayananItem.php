@@ -305,6 +305,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || i
   $link = "<?=base_url();?>dokumen_layanan/tugasbelajarmandiri/"+filename+"?v="+number;
 } else if(id_layanan == 28){
   $link = "<?=base_url();?>dokumen_layanan/mutasi_pindah_masuk/"+filename+"?v="+number;
+} else if(id_layanan == 32){
+  $link = "<?=base_url();?>dokumen_layanan/peninjauan_masa_kerja/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)

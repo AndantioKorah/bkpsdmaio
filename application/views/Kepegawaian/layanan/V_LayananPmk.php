@@ -296,10 +296,18 @@ ol {
 
 			<div class="card-body">
 
-				<form id="form_perbaikan_data" method="post" enctype="multipart/form-data" id="form_cuti"
+				<form id="form_peninjauan_masa_kerja" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
             <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
             <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
+            <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
+			<input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
+			<input type="hidden" id="kontrak_kerja" value="<?php if($kontrak_kerja) echo $kontrak_kerja['id']; else echo "";?>">
+			<input type="hidden" id="dok_pemberhentian_kerja" value="<?php if($dok_pemberhentian_kerja) echo $dok_pemberhentian_kerja['id']; else echo "";?>">
+			<input type="hidden" id="surat_keterangan_kerja" value="<?php if($surat_keterangan_kerja) echo $surat_keterangan_kerja['id']; else echo "";?>">
+			<input type="hidden" id="slip_gaji_pmk" value="<?php if($slip_gaji_pmk) echo $slip_gaji_pmk['id']; else echo "";?>">
+			<input type="hidden" id="sk_pangkat" value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+			<input type="hidden" id="ijazah_cpns" value="<?php if($ijazah_cpns) echo $ijazah_cpns['id']; else echo "";?>">
 		
     
           <span><b>Berkas Persyaratan :</b></span>
@@ -309,20 +317,54 @@ ol {
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
-          <div class="form-group mt-2">
+          <!-- <div class="form-group mt-2">
             <label><b>Surat Pernyataan Tidak Pernah Dijatuhi Hukuman Disiplin dari Perangkat Daerah</b></label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
-         </div>
-         <div class="form-group mt-2">
-            <label><b>Surat Pernyataan tidak sedang menjalani proses pidana penjara berdasarkan putusan pengadilan yang berkekuatan hukum tetap (bermaterai Rp. 10.000)</b></label>
-            <input  class="form-control my-image-field" type="file" id="pdf_surat_pidana" name="file3" required />
-         </div>
+         </div> -->
+       
 			<ol class="rectangle-list">
+            <li>
+            	<a class="<?php if($sk_pangkat){ if($sk_pangkat['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($sk_pangkat) { ?> onclick="viewBerkasPangkat('<?=$sk_pangkat['gambarsk'];?>',2)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pangkat Terakhir* <i class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
+            </li>
             <li>
             	<a class="<?php if($sk_pns){ if($sk_pns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($sk_pns) { ?> onclick="viewBerkasPangkat('<?=$sk_pns['gambarsk'];?>',1)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SK
             		PNS* <i class="fas fa-<?php if($sk_pns) echo ''; else echo '';?>"></i></a>
+            </li>
+             <li>
+				<a class="<?php if($skp1) echo 'select'; else echo 'unselect';?>" <?php if($skp1) { ?>
+				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?> <i
+				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+			</li>
+            <li>
+            	<a class="<?php if($kontrak_kerja){ if($kontrak_kerja['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($kontrak_kerja) { ?> onclick="viewBerkasPangkat('<?=$kontrak_kerja['gambarsk'];?>',5)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> Surat Kontrak Kerja / SK Pengangkatan* <i class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
+            </li>
+            <li>
+            	<a class="<?php if($dok_pemberhentian_kerja){ if($dok_pemberhentian_kerja['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($dok_pemberhentian_kerja) { ?> onclick="viewBerkasPangkat('<?=$dok_pemberhentian_kerja['gambarsk'];?>',5)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> Dokumen Pemutusan Hubungan Kerja/Dok Pemberhentian* <i class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
+            </li>
+             <li>
+				<a class="<?php if($ijazah_cpns){ if($ijazah_cpns['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($ijazah_cpns) { ?>
+					onclick="viewBerkasPangkat('<?=$ijazah_cpns['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+				    <?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah waktu saat melamar CPNS* <i
+					class="fas fa-<?php if($ijazah_cpns) echo ''; else echo '';?>"></i></a>
+			</li>
+            <li>
+            	<a class="<?php if($surat_keterangan_kerja){ if($surat_keterangan_kerja['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($surat_keterangan_kerja) { ?> onclick="viewBerkasPangkat('<?=$surat_keterangan_kerja['gambarsk'];?>',5)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> Surat Keterangan Kerja / Paklaring* <i class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
+            </li>
+             <li>
+            	<a class="<?php if($slip_gaji_pmk){ if($slip_gaji_pmk['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($slip_gaji_pmk) { ?> onclick="viewBerkasPangkat('<?=$slip_gaji_pmk['gambarsk'];?>',5)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> Slip Gaji Pengalaman Kerja /  Sebelum CPNS* <i class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
             </li>
 			</ol>
 			</div>
@@ -391,18 +433,47 @@ $(function(){
 	});
   loadListRiwayatSuratPidana()
     })
-    $('#form_perbaikan_data').on('submit', function(e){  
+    $('#form_peninjauan_masa_kerja').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#form_perbaikan_data');
+        var formvalue = $('#form_peninjauan_masa_kerja');
         var form_data = new FormData(formvalue[0]);
-        var sk_pns = $('#sk_pns').val()
-        
+      
         var id_m_layanan = "<?=$id_m_layanan;?>"
-
-       
+        var sk_pns = $('#sk_pns').val()
+        var skp1 = $('#skp1').val()
+        var kontrak_kerja = $('#kontrak_kerja').val()
+        var dok_pemberhentian_kerja = $('#dok_pemberhentian_kerja').val()
+        var surat_keterangan_kerja = $('#surat_keterangan_kerja').val()
+        var slip_gaji_pmk = $('#slip_gaji_pmk').val()
+        var sk_pangkat = $('#sk_pangkat').val()
+			
         if(sk_pns == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(skp1 == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(kontrak_kerja == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(dok_pemberhentian_kerja == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(surat_keterangan_kerja == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(slip_gaji_pmk == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(sk_pangkat == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
@@ -446,7 +517,9 @@ function viewBerkasPangkat(filename,id){
         $link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
     } else if(id == 3){
         $link = "<?=base_url();?>/arsippendidikan/"+filename+"?v="+number;
-    } else {
+    } else if(id == 4){
+        $link = "<?=base_url();?>/arsipskp/"+filename+"?v="+number;
+    }  else {
         $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
     }  
    

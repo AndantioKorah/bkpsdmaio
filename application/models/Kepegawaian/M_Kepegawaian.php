@@ -13525,9 +13525,14 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 28){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/mutasi_pindah_masuk';
+            } else if($id_m_layanan == 32){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/peninjauan_masa_kerja';
             }  else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
+
+            
 
             // $file2 = null;
             $filehd = null;

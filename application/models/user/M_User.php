@@ -3548,48 +3548,19 @@
         public function addFileSpmtCpns(){
             $cpns = $this->db->select("a.*")
                         ->from('db_pegawai.pegawai a')
-                        ->where('a.id_peg LIKE "%PEG202510%"')
+                        ->where('a.id_peg LIKE "PEG202510%"')
                         ->group_by('a.nipbaru_ws')
                         ->get()->result_array();
                         
-            // foreach($cpns as $c){
-            //     $input = [];
-            //     $input['id_pegawai'] = $c['id_peg'];
-            //     $input['nama_sk'] = "SPMT";
-            //     $input['gambarsk'] = $c['nama']."_sign.pdf";
-            //     $input['status'] = 2;
-            //     $input['tanggal_verif'] = date('Y-m-d H:i:s');
-            //     $input['id_dokumen'] = 34;
-            //     $this->db->insert('db_pegawai.pegarsip', $input);
-            // }
-
             foreach($cpns as $c){
                 $input = [];
                 $input['id_pegawai'] = $c['id_peg'];
-                $input['jenissk'] = 3;
-                $input['status'] = 2;
+                $input['nama_sk'] = "SPMT";
                 $input['gambarsk'] = "SPMT_".$c['nipbaru_ws']."_sign.pdf";
-                // $input['gambarsk'] = "SK_".$c['nipbaru_ws']."_".$c['nama'].".pdf";
+                $input['status'] = 2;
                 $input['tanggal_verif'] = date('Y-m-d H:i:s');
-                $this->db->insert('db_pegawai.pegberkaspns', $input);
-            }
-
-            dd('done');
-        }
-
-        public function addFileSkPPPK(){
-            $pppk = $this->db->select("a.*")
-                        ->from('db_pegawai.pegawai a')
-                        ->where('a.id_peg LIKE "PEG202509%"')
-                        ->where('statuspeg', 3)
-                        ->group_by('a.nipbaru_ws')
-                        ->get()->result_array();
-                   
-            foreach($pppk as $p){
-                $this->db->where('id_pegawai', $p['id_peg'])
-                        ->update('db_pegawai.pegarsip', [
-                            'gambarsk' => getNamaPegawaiFull($p, 1)."_sign.pdf"
-                        ]);
+                $input['id_dokumen'] = 34;
+                // $this->db->insert('db_pegawai.pegarsip', $input);
             }
 
             // foreach($cpns as $c){
@@ -3597,13 +3568,107 @@
             //     $input['id_pegawai'] = $c['id_peg'];
             //     $input['jenissk'] = 3;
             //     $input['status'] = 2;
-            //     $input['gambarsk'] = $c['nama']."_sign.pdf";
+            //     // $input['gambarsk'] = "SPMT_".$c['nipbaru_ws']."_sign.pdf";
             //     // $input['gambarsk'] = "SK_".$c['nipbaru_ws']."_".$c['nama'].".pdf";
             //     $input['tanggal_verif'] = date('Y-m-d H:i:s');
             //     $this->db->insert('db_pegawai.pegberkaspns', $input);
             // }
 
             dd('done');
+        }
+
+        public function addFileSkPPPK(){
+            $pppk = $this->db->select("a.*, b.no_peserta")
+                        ->from('db_pegawai.pegawai a')
+                        ->join('t_temp_data_pppk2024 b', 'a.nipbaru_ws = b.nip')
+                        ->where('a.id_peg LIKE "PEG202510%"')
+                        ->where('statuspeg', 3)
+                        ->where('b.no_peserta IS NOT NULL')
+                        ->group_by('a.nipbaru_ws')
+                        ->get()->result_array();
+
+            $listExists = $this->db->select('*')
+                            ->from('db_pegawai.pegberkaspns')
+                            ->where('id_pegawai LIKE "PEG202510%"')
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+            $exists = null;
+            if($listExists){
+                foreach($listExists as $le){
+                    $exists[$le['id_pegawai']] = $le;
+                }
+            }
+            foreach($pppk as $p){
+                // cek jika tidak exists, input
+                if(!isset($exists[$p['id_peg']])){
+                    $input = [];
+                    $input['id_pegawai'] = $p['id_peg'];
+                    $input['jenissk'] = 3;
+                    $input['status'] = 2;
+                    $input['gambarsk'] = "SK_".$p['no_peserta']."_sign.pdf";
+                    $input['tanggal_verif'] = date('Y-m-d H:i:s');
+                    $this->db->insert('db_pegawai.pegberkaspns', $input);
+
+                    // $this->db->where('id_pegawai', $p['id_peg'])
+                    //     ->update('db_pegawai.pegarsip', [
+                    //         'gambarsk' => "SK_".$p['no_peserta']."_sign.pdf"
+                    //     ]);
+                }
+            }
+
+            dd('done');
+        }
+
+        public function updateJabatanPegBaru(){
+            $tNip = null;
+            // $tempNip = $this->db->select('a.*, b.id_peg')
+            //                     ->from('t_temp_data_pppk2024 a')
+            //                     ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+            //                     ->where('a.flag_sinkron_done', 0) // comment ini untuk ambil semua, ini dipakai untuk kebutuhan khusus
+            //                     ->get()->result_array();
+
+            // custom, untuk inputan awal pake yg di atas
+            // $tempNip = $this->db->select('c.*, c.id as id_pegjabatan, a.nip')
+            //                     ->from('t_temp_data_pppk2024 a')
+            //                     ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+            //                     ->join('db_pegawai.pegjabatan c', 'b.id_peg = c.id_pegawai')
+            //                     ->where('a.flag_sinkron_done', 0) // comment ini untuk ambil semua, ini dipakai untuk kebutuhan khusus
+            //                     // ->where('c.id_unitkerja', null)
+            //                     ->group_by('c.id')
+            //                     ->get()->result_array();
+
+            $tempNip = $this->db->select('b.id as id_pegjabatan, a.*')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.pegjabatan b', 'a.id_peg = b.id_pegawai')
+                            ->where('a.statuspeg', 3)
+                            ->like('a.id_peg', 'PEG202510')
+                            ->like('b.nm_jabatan', 'Pelaksana')
+                            ->where('b.flag_active', 1)
+                            ->get()->result_array();
+
+            foreach($tempNip as $tn){
+                $tNip[$tn['nipbaru_ws']] = $tn;
+            }
+
+            $jabatan = null;
+            $listJabatan = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->where('id_jabatan_siasn IS NOT NULL')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            if($listJabatan){
+                foreach($listJabatan as $lj){
+                    $jabatan[$lj['id_jabatan_siasn']] = $lj;
+                }
+            }
+
+            if($tNip){
+                foreach($tNip as $tn){
+                    dd($tn);
+                }
+            } else {
+                dd("tidak ada");
+            }
         }
 
 	}

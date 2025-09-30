@@ -105,8 +105,9 @@ class C_Cron extends CI_Controller
     }
 
     public function testWsSiasn($nip){
-        $data = $this->siasnlib->getRiwayatSkp22($nip);
+        // $data = $this->siasnlib->getRiwayatSkp22($nip);
         // $data = $this->siasnlib->getJabatanByNip($nip);
+        $data = $this->siasnlib->getDataUtamaPnsByNip($nip);
         dd($data);
     }
 
@@ -115,8 +116,8 @@ class C_Cron extends CI_Controller
     }
 
     public function cekKenegaraan(){
-        // return $this->user->cekKenegaraan();
-        return $this->user->cekKenegaraanCustom();
+        return $this->user->cekKenegaraan();
+        // return $this->user->cekKenegaraanCustom();
     }
 
     public function cekProgressCuti($nip, $flagFixProgress = 0){

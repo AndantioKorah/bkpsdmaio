@@ -1782,7 +1782,7 @@
                 $flag_cek = 1;
             } else if($expl[0] == "22" && $expl[1] == "00"){
                 $this->removeLog(3);
-            } else if($expl[0] == "08" && $expl[1] == "00"){
+            } else if($expl[0] == "08" && $expl[1] == "30"){
                 $this->notifVerifikatorPeninjauanAbsensi();
             } else {
                 // dd("belum jam, ini masih ".$expl[0].":".$expl[1]);

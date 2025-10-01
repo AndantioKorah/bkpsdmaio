@@ -14949,18 +14949,21 @@ public function checkListIjazahCpns($id, $id_pegawai){
                 $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
                 $result['pendidikan'][$pend['id_tktpendidikan']]['laki'] = 0;
                 $result['pendidikan'][$pend['id_tktpendidikan']]['perempuan'] = 0;
+                $result['pendidikan']['belum_terdata']['laki'] = 0;
+                $result['pendidikan']['belum_terdata']['perempuan'] = 0;
     }
-        
+    
             
 
         $this->db->select('a.pendidikan,a.jk')
             ->from('db_pegawai.pegawai a')
-            ->join('db_pegawai.tktpendidikan i', 'a.pendidikan = i.id_tktpendidikan')
-            ->where_not_in('a.skpd',[5, 9050030])
-            // ->where('a.pendidikan', 1000)
-            ->where('a.id_m_status_pegawai', 1);
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
         $pegawai1 = $this->db->get()->result_array();
-        // dd($pegawai1);
+
         foreach($pegawai1 as $peg){
         if($peg['pendidikan'] == "0"){
             $peg['pendidikan'] = "0000"; 
@@ -14972,9 +14975,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['pendidikan'][$peg['pendidikan']]['perempuan']++;
         } 
+        } else {
+        //  $result['pendidikan'][]['nama'] = "Belum Terdata";
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+         $result['pendidikan']['belum_terdata']['laki']++; 
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+         $result['pendidikan']['belum_terdata']['perempuan']++; 
         }
-
-           
+        }
         }
         return $result;
     }

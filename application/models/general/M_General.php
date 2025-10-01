@@ -831,6 +831,9 @@
                         $result['eselon']['Non Eselon']['jumlah']++;
                     }
                 }
+                if($peg['pendidikan'] == "0"){
+                    $peg['pendidikan'] = "0000"; 
+                }
                 if($peg['pendidikan']){
                     $result['pendidikan'][$peg['pendidikan']]['jumlah']++;
                 }

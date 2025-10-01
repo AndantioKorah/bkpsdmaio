@@ -11606,6 +11606,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 26);
             } else if($id_m_layanan == 28){ 
                 $this->db->where('a.id_m_layanan', 28);
+            } else if($id_m_layanan == 32){ 
+                $this->db->where('a.id_m_layanan', 32);
             }  else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
@@ -14895,6 +14897,86 @@ public function checkListIjazahCpns($id, $id_pegawai){
          ['tmtgjberkalaberikut' => $tmtgjberkalaberikut]);
          
          }
+    }
+
+       public function laporanJumlahPegawaiPerKecamatan(){
+
+          $unitkerjamaster = $this->db->select('*')
+                                ->from('db_pegawai.unitkerjamaster')
+                                 ->where_in('id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001'])
+                                ->get()->result_array();
+            
+            foreach($unitkerjamaster as $um){
+                $result['unitkerjamaster'][$um['id_unitkerjamaster']]['nama'] = $um['nm_unitkerjamaster'];
+                $result['unitkerjamaster'][$um['id_unitkerjamaster']]['laki'] = 0;
+                $result['unitkerjamaster'][$um['id_unitkerjamaster']]['perempuan'] = 0;
+            }
+            
+
+        $this->db->select('j.id_unitkerjamaster,j.nm_unitkerjamaster, a.jk')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg','left')
+            ->join('db_pegawai.agama d', 'a.agama = d.id_agama')
+            ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
+            ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+            ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon','left')
+            ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
+            ->join('db_pegawai.tktpendidikan i', 'a.pendidikan = i.id_tktpendidikan')
+            ->join('db_pegawai.unitkerjamaster j', 'b.id_unitkerjamaster = j.id_unitkerjamaster')
+            ->where('a.id_m_status_pegawai', 1)
+            ->where_in('j.id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001']);
+        $pegawai1 = $this->db->get()->result_array();
+        foreach($pegawai1 as $peg){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['unitkerjamaster'][$peg['id_unitkerjamaster']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan') {
+        $result['unitkerjamaster'][$peg['id_unitkerjamaster']]['perempuan']++;
+        } 
+           
+        }
+        return $result;
+    }
+
+
+    public function laporanJumlahPegawaiMenurutPendidikan(){
+
+    $temp_pendidikan = $this->db->select('*')
+                                ->from('db_pegawai.tktpendidikan')
+                                ->get()->result_array();
+    foreach($temp_pendidikan as $pend){
+                $result['pendidikan'][$pend['id_tktpendidikan']] = $pend;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
+                $result['pendidikan'][$pend['id_tktpendidikan']]['laki'] = 0;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['perempuan'] = 0;
+    }
+        
+            
+
+        $this->db->select('a.pendidikan,a.jk')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.tktpendidikan i', 'a.pendidikan = i.id_tktpendidikan')
+            ->where_not_in('a.skpd',[5, 9050030])
+            // ->where('a.pendidikan', 1000)
+            ->where('a.id_m_status_pegawai', 1);
+        $pegawai1 = $this->db->get()->result_array();
+        // dd($pegawai1);
+        foreach($pegawai1 as $peg){
+        if($peg['pendidikan'] == "0"){
+            $peg['pendidikan'] = "0000"; 
+        }
+
+        if($peg['pendidikan']){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['pendidikan'][$peg['pendidikan']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['pendidikan'][$peg['pendidikan']]['perempuan']++;
+        } 
+        }
+
+           
+        }
+        return $result;
     }
 
 }

@@ -2792,6 +2792,8 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		} else if($id_m_layanan == 28){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
+		} else if($id_m_layanan == 32){
+			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPerbaikanDataItem', $data);
 		}
 	}
 
@@ -2984,7 +2986,11 @@ class C_Kepegawaian extends CI_Controller
 			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 			$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','66','0',$id_peg);	
 			render('kepegawaian/layanan/V_VerifikasiLayananMutasiPindahMasukDetail.php', '', '', $data);
-		} 
+		} else if($layanan == 32){
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+			$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','66','0',$id_peg);	
+			render('kepegawaian/layanan/V_VerifikasiLayananPmkDetail.php', '', '', $data);
+		}  
 		
 
 		
@@ -3784,7 +3790,14 @@ class C_Kepegawaian extends CI_Controller
 			$this->kepegawaian->updateGajiBerkalaBerikut();
 	}
 
-
+	
+	public function laporanBps(){
+		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		// dd($data['pendidikan']);
+		// $this->load->view('kepegawaian/laporan/V_laporanDetail', $data);
+		render('kepegawaian/laporan/V_laporanDetail', null, null, $data);
+	}
 
 
 }

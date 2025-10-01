@@ -105,8 +105,9 @@ class C_Cron extends CI_Controller
     }
 
     public function testWsSiasn($nip){
-        $data = $this->siasnlib->getRiwayatSkp22($nip);
+        // $data = $this->siasnlib->getRiwayatSkp22($nip);
         // $data = $this->siasnlib->getJabatanByNip($nip);
+        $data = $this->siasnlib->getDataUtamaPnsByNip($nip);
         dd($data);
     }
 
@@ -115,8 +116,8 @@ class C_Cron extends CI_Controller
     }
 
     public function cekKenegaraan(){
-        // return $this->user->cekKenegaraan();
-        return $this->user->cekKenegaraanCustom();
+        return $this->user->cekKenegaraan();
+        // return $this->user->cekKenegaraanCustom();
     }
 
     public function cekProgressCuti($nip, $flagFixProgress = 0){
@@ -162,6 +163,14 @@ class C_Cron extends CI_Controller
 
     public function addFileSkPPPK(){
         return $this->user->addFileSkPPPK();
+    }
+
+    public function updateJabatanPegBaru(){
+        return $this->user->updateJabatanPegBaru();
+    }
+
+    public function cekUnor(){
+        return $this->user->cekUnor();
     }
 
     public function cekHariKerja($tanggal_awal, $tanggal_akhir){
@@ -217,5 +226,9 @@ class C_Cron extends CI_Controller
         $data['tahun'] = isset($data['tahun']) ? $data['tahun'] : date('Y');
         $data['perihal'] = isset($data['perihal']) ? $data['perihal'] : "";
         dd(getNomorSuratSiladen($data, 0));
+    }
+
+    public function hapusKenegaraan(){
+        $this->user->hapusKenegaraan();
     }
 }

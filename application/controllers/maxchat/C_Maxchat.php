@@ -288,7 +288,7 @@ class C_Maxchat extends CI_Controller
             }
         }
 
-         if($result->type == "image"){
+        if($result->type == "image"){
             $this->general->retrieveImageMessage($result);
         }
 

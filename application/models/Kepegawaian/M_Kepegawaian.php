@@ -7199,7 +7199,7 @@ public function submitEditJabatan(){
                     $result[$i]['id_m_user_verifikasi'] = $np['id'];
                     $result[$i]['nama_jabatan'] = isset($np['nama_jabatan_tambahan']) && $np['nama_jabatan_tambahan'] ? $np['nama_jabatan_tambahan'] : $np['nama_jabatan'];
                     $result[$i]['nohp'] = $np['handphone'];
-                    $result[$i]['id_jabatan'] = $np['id_jabatan'];
+                    $result[$i]['id_jabatan'] = isset($np['id_jabatanpeg']) ? $np['id_jabatanpeg'] : null;
                     $i++;
                 }
             }
@@ -14550,14 +14550,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
         // if(!$suratPernyataanTidakPindah){
         //     $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
         // }
-
+        
         if($result['message'] != ""){
             $result['done'] = false;
             $result['message'] = substr(trim($result['message']), 0, strlen($result['message'])-2);
             $result['message'] = "Data ".$result['message']." belum diinput.";
-        } else if(date('Y-m-d H:i:s') <= '2025-09-01 10:30:00'){
+        } else if(date('Y-m-d H:i:s') <= '2025-10-01 09:00'){
             $result['done'] = false;
-            $result['message'] = "SK dapat didownload pada tanggal 1 September 2025 di atas jam 10:30 pagi";
+            $result['message'] = "SK dapat didownload pada tanggal".formatDateNamaBulan(date('Y-m-d'))." di atas jam 09:00 pagi";
         }
 
         return $result;

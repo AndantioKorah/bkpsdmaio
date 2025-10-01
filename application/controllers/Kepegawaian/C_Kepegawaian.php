@@ -3791,7 +3791,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	
-	public function laporanBps(){
+	public function laporanJumlahASN(){
 		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
 		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
 		// dd($data['pendidikan']);

@@ -169,6 +169,10 @@ class C_Cron extends CI_Controller
         return $this->user->updateJabatanPegBaru();
     }
 
+    public function cekUnor(){
+        return $this->user->cekUnor();
+    }
+
     public function cekHariKerja($tanggal_awal, $tanggal_akhir){
         $hariKerja = countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir);
         dd($hariKerja);

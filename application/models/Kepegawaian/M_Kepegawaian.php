@@ -5810,6 +5810,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 8;
             $id_layanan[] = 9;
             $id_layanan[] = 29;
+            $id_layanan[] = 32;
         }
 
         if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){
@@ -11606,6 +11607,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 26);
             } else if($id_m_layanan == 28){ 
                 $this->db->where('a.id_m_layanan', 28);
+            } else if($id_m_layanan == 32){ 
+                $this->db->where('a.id_m_layanan', 32);
             }  else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
@@ -12391,7 +12394,47 @@ public function getFileForVerifLayanan()
                 ->order_by('a.tahunlulus', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }  else {
+        } else if($this->input->post('file') == "kontrak_kerja"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 99)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "dok_pemberhentian_kerja"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 100)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_keterangan_kerja"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 101)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "slip_gaji_pmk"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 102)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }   else {
          return [''];
         }
         
@@ -12492,7 +12535,7 @@ public function getFileForVerifLayanan()
         } else if($dataPengajuan[0]['id_m_layanan'] == 20){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN UJIAN PENYESUAIAN KENAIKAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Ujian Penyesuaian Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
-        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16 || $dataPengajuan[0]['id_m_layanan'] == 30){
+        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16 || $dataPengajuan[0]['id_m_layanan'] == 30 || $dataPengajuan[0]['id_m_layanan'] == 31){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN JABATAN FUNGSIONAL]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Jabatan Fungsional anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Layanan Jabatan Fungsional";
         } else if($dataPengajuan[0]['id_m_layanan'] == 21){
@@ -12515,6 +12558,9 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         } else if($dataPengajuan[0]['id_m_layanan'] == 28){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN MUTASI PINDAH MASUK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Mutasi Pindah Masuk anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 32){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENINJAUAN MASA KERJA]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Peninjauan Masa Kerja anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        
@@ -14895,6 +14941,94 @@ public function checkListIjazahCpns($id, $id_pegawai){
          ['tmtgjberkalaberikut' => $tmtgjberkalaberikut]);
          
          }
+    }
+
+       public function laporanJumlahPegawaiPerKecamatan(){
+
+          $unitkerjamaster = $this->db->select('*')
+                                ->from('db_pegawai.unitkerjamaster')
+                                 ->where_in('id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001'])
+                                ->get()->result_array();
+            
+            foreach($unitkerjamaster as $um){
+                $result['unitkerjamaster'][$um['id_unitkerjamaster']]['nama'] = $um['nm_unitkerjamaster'];
+                $result['unitkerjamaster'][$um['id_unitkerjamaster']]['laki'] = 0;
+                $result['unitkerjamaster'][$um['id_unitkerjamaster']]['perempuan'] = 0;
+            }
+            
+
+        $this->db->select('j.id_unitkerjamaster,j.nm_unitkerjamaster, a.jk')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg','left')
+            ->join('db_pegawai.agama d', 'a.agama = d.id_agama')
+            ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
+            ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+            ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon','left')
+            ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
+            ->join('db_pegawai.tktpendidikan i', 'a.pendidikan = i.id_tktpendidikan')
+            ->join('db_pegawai.unitkerjamaster j', 'b.id_unitkerjamaster = j.id_unitkerjamaster')
+            ->where('a.id_m_status_pegawai', 1)
+            ->where_in('j.id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001']);
+        $pegawai1 = $this->db->get()->result_array();
+        foreach($pegawai1 as $peg){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['unitkerjamaster'][$peg['id_unitkerjamaster']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan') {
+        $result['unitkerjamaster'][$peg['id_unitkerjamaster']]['perempuan']++;
+        } 
+           
+        }
+        return $result;
+    }
+
+
+    public function laporanJumlahPegawaiMenurutPendidikan(){
+
+    $temp_pendidikan = $this->db->select('*')
+                                ->from('db_pegawai.tktpendidikan')
+                                ->get()->result_array();
+    foreach($temp_pendidikan as $pend){
+                $result['pendidikan'][$pend['id_tktpendidikan']] = $pend;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
+                $result['pendidikan'][$pend['id_tktpendidikan']]['laki'] = 0;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['perempuan'] = 0;
+                $result['pendidikan']['belum_terdata']['laki'] = 0;
+                $result['pendidikan']['belum_terdata']['perempuan'] = 0;
+    }
+    
+            
+
+        $this->db->select('a.pendidikan,a.jk')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+
+        foreach($pegawai1 as $peg){
+        if($peg['pendidikan'] == "0"){
+            $peg['pendidikan'] = "0000"; 
+        }
+
+        if($peg['pendidikan']){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['pendidikan'][$peg['pendidikan']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['pendidikan'][$peg['pendidikan']]['perempuan']++;
+        } 
+        } else {
+        //  $result['pendidikan'][]['nama'] = "Belum Terdata";
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+         $result['pendidikan']['belum_terdata']['laki']++; 
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+         $result['pendidikan']['belum_terdata']['perempuan']++; 
+        }
+        }
+        }
+        return $result;
     }
 
 }

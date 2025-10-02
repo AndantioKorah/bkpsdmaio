@@ -2792,6 +2792,8 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		} else if($id_m_layanan == 28){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
+		} else if($id_m_layanan == 32){
+			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPerbaikanDataItem', $data);
 		}
 	}
 
@@ -2984,7 +2986,17 @@ class C_Kepegawaian extends CI_Controller
 			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 			$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','66','0',$id_peg);	
 			render('kepegawaian/layanan/V_VerifikasiLayananMutasiPindahMasukDetail.php', '', '', $data);
-		} 
+		} else if($layanan == 32){
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkatAdmin('db_pegawai.pegskp',$previous1Year,$id_peg);
+			$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
+			$data['kontrak_kerja'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','99','0');	
+			$data['dok_pemberhentian_kerja'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','100','0');	
+			$data['surat_keterangan_kerja'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','101','0');	
+			$data['slip_gaji_pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','102','0');	
+			$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpns(); 	
+			render('kepegawaian/layanan/V_VerifikasiLayananPmkDetail.php', '', '', $data);
+		}  
 		
 
 		
@@ -3784,7 +3796,14 @@ class C_Kepegawaian extends CI_Controller
 			$this->kepegawaian->updateGajiBerkalaBerikut();
 	}
 
-
+	
+	public function laporanJumlahASN(){
+		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		// dd($data['pendidikan']);
+		// $this->load->view('kepegawaian/laporan/V_laporanDetail', $data);
+		render('kepegawaian/laporan/V_laporanDetail', null, null, $data);
+	}
 
 
 }

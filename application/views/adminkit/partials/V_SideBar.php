@@ -681,6 +681,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Kenaikan Pangkat
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/32')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Peninjauan Masa Kerja 
+					</a>
+				</li>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')){ ?>
 				<li class="sidebar-item ">

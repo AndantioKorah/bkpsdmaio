@@ -3800,9 +3800,23 @@ class C_Kepegawaian extends CI_Controller
 	public function laporanJumlahASN(){
 		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
 		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
+		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
+
 		// dd($data['pendidikan']);
 		// $this->load->view('kepegawaian/laporan/V_laporanDetail', $data);
 		render('kepegawaian/laporan/V_laporanDetail', null, null, $data);
+	}
+
+		public function laporanJumlahASNExcel(){
+		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
+		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
+
+		// dd($data['pendidikan']);
+		$this->load->view('kepegawaian/laporan/V_laporanDetailExcel', $data);
+		// render('kepegawaian/laporan/V_laporanDetail', null, null, $data);
 	}
 
 

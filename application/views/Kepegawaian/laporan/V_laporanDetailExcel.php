@@ -1,28 +1,19 @@
+<?php
 
- <style>
-   table {
-      /* font-size: 14px;  */
-    }
- </style>
-
-<div class="row">
- 	<div class="col-lg-12">
-		 <a class="float-right" href="<?=base_url('kepegawaian/C_Kepegawaian/laporanJumlahASNExcel')?>" target="_blank">
-                <button type="submit" class="btn btn-info"><i class="fa fa-file-pdf"></i> Download as Excel</button>
-		 </a>
-	</div>
-</div>
-
-
+    $filename = 'DATA Jumlah ASN Kota Manado '.formatDateNamaBulan(date('Y-m-d')).'.xls';
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=$filename");
+?>
+ 
  <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
- 					<h3>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan</h3>
+ 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan</b></span>
  					<div class="row">
  						<div class="col-lg-12 table-responsive">
- 						 	<table class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
  									<th class="text-left">Pendidikan</th>
@@ -75,16 +66,16 @@
  	</div>
  </div>
 
-
+<br>
   <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
-<h3 class="mt-4">Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Tingkat Pendidikan</h3>
+<span><b>Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Tingkat Pendidikan</b></span>
  <div class="row">
  	<div class="col-lg-12 table-responsive">
- 	  <table class="table table-hover table-striped thead-dark datatable" id="pendidikanpns">
+ 	  <table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanpns">
  			<thead>
  				<th class="text-left">No</th>
  				<th class="text-left">Pendidikan</th>
@@ -136,17 +127,17 @@
  	</div>
  </div>
 
-
+<br>
    <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
-<h3 class="mt-4">Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Tingkat
- 	Pendidikan</h3>
+<span><b>Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Tingkat
+ 	Pendidikan</b></span>
  <div class="row">
  	<div class="col-lg-12 table-responsive">
- 		<table class="table table-hover table-striped thead-dark datatable">
+ 		<table border="1" class="table table-hover table-striped thead-dark datatable">
  			<thead>
  				<th class="text-left">No</th>
  				<th class="text-left">Pendidikan</th>
@@ -182,7 +173,7 @@
  					<td><?=$belum_terdata_laki_pppk+$belum_terdata_perempuan_pppk;?></td>
  				</tr>
  				<tr>
- 					<td style="color:#fff;">12</td>
+ 					<td></td>
  					<td>Total</td>
  					<td><?=$total_laki_pppk+$belum_terdata_laki_pppk;?></td>
  					<td><?=$total_perempuan_pppk+$belum_terdata_perempuan_pppk;?></td>
@@ -198,16 +189,16 @@
  	</div>
  </div>
 
-
+<br>
     <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
-<h3>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado per Kecamatan</h3>
+<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado per Kecamatan</b></span>
  <div class="row">
  	<div class="col-lg-12 table-responsive">
- 		<table class="table table-hover table-striped thead-dark datatable">
+ 		<table border="1" class="table table-hover table-striped thead-dark datatable">
  			<thead>
  				<th class="text-left">No</th>
  				<th class="text-left">Kecamatan</th>
@@ -228,7 +219,7 @@
          $total_laki += $rs['laki']; 
          $total_perempuan += $rs['perempuan']; } ?>
  				<tr>
- 					<td style="color:#fff;">12</td>
+ 					<td></td>
  					<td>Total</td>
  					<td><?=$total_laki;?></td>
  					<td><?=$total_perempuan;?></td>
@@ -245,31 +236,3 @@
  	</div>
  </div>
  
-<script>
-	    $(document).ready( function() {
-			// $('.datatable').dataTable()
-
-          var table = $('.datatable').DataTable({
-           "pageLength": 25,
-        //    dom: 'Bfrtip',
-           buttons: [
-                {
-                    extend: 'excel',
-                    orientation: 'landscape',
-                    title: 'Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan',
-                    // messageTop:
-                    //     'Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan'
-                },
-                {
-                    extend: 'pdf',
-                    orientation: 'landscape',
-                    title: 'Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan'
-                }
-           ],
-        });
-
-		} )
-
-
-
-</script>

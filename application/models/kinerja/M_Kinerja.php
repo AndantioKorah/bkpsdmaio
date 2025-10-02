@@ -342,6 +342,7 @@
                       'id_t_rencana_kinerja' => $dataPost['tugas_jabatan'],
                       'bukti_kegiatan' => $image,
                       'id_m_user' => $this->general_library->getId(),
+                      'created_by' => $this->general_library->getId(),
                       'status_verif' => 1,
                       'tanggal_verif' => date('Y-m-d H:i:s')
         );
@@ -2834,7 +2835,7 @@
         } else {
 
         
-        if($result[0]['total_verif'] >= 5 && $id_unitkerja != '6170000') {
+        if($result[0]['total_verif'] >= 2 && $id_unitkerja != '6170000') {
             $rs['code'] = 1;        
             $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
         } else {     

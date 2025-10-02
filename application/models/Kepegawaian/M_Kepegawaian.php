@@ -5810,6 +5810,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 8;
             $id_layanan[] = 9;
             $id_layanan[] = 29;
+            $id_layanan[] = 32;
         }
 
         if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){
@@ -12393,7 +12394,47 @@ public function getFileForVerifLayanan()
                 ->order_by('a.tahunlulus', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }  else {
+        } else if($this->input->post('file') == "kontrak_kerja"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 99)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "dok_pemberhentian_kerja"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 100)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_keterangan_kerja"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 101)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "slip_gaji_pmk"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 102)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }   else {
          return [''];
         }
         
@@ -12494,7 +12535,7 @@ public function getFileForVerifLayanan()
         } else if($dataPengajuan[0]['id_m_layanan'] == 20){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN UJIAN PENYESUAIAN KENAIKAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Ujian Penyesuaian Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
-        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16 || $dataPengajuan[0]['id_m_layanan'] == 30){
+        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16 || $dataPengajuan[0]['id_m_layanan'] == 30 || $dataPengajuan[0]['id_m_layanan'] == 31){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN JABATAN FUNGSIONAL]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Jabatan Fungsional anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Layanan Jabatan Fungsional";
         } else if($dataPengajuan[0]['id_m_layanan'] == 21){
@@ -12517,6 +12558,9 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         } else if($dataPengajuan[0]['id_m_layanan'] == 28){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN MUTASI PINDAH MASUK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Mutasi Pindah Masuk anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 32){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENINJAUAN MASA KERJA]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Peninjauan Masa Kerja anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        

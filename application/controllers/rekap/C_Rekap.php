@@ -289,6 +289,8 @@ class C_Rekap extends CI_Controller
         $data['data_search'] = $this->input->post();
         $data['tpp_tambahan'] = $this->rekap->getTppTambahan($this->input->post());
         $data['data_format_excel'] = $this->rekap->getDataLockTpp($this->input->post());
+        $param_lock_tpp = ($this->general->getOne('m_parameter', 'parameter_name', 'PARAM_LOCK_TPP'));
+        $data['param_lock_tpp'] = json_decode($param_lock_tpp['parameter_value'], true);
         $this->load->view('rekap/V_RekapTppResult', $data);
     }
 

@@ -2450,7 +2450,7 @@
             $this->db->select('m.nama_kelurahan,n.nama_kecamatan,o.nama_kabupaten_kota,a.tptlahir,nm_sk,k.nm_tktpendidikan,a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai, k.jenis as jenis_plt_plh, k.id_jabatan as id_jabatan_plt_plh, a.jabatan,
                     h.nama_status_pegawai, f.nm_statuspeg')
-                    ->from('db_pegawai.pegawaix a')
+                    ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.agama d', 'a.agama = d.id_agama')

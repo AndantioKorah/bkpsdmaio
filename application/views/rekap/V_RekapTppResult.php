@@ -21,11 +21,12 @@
                             <?php // if($this->general_library->isProgrammer()){ ?>
                             <?php
                                 if(!$this->general_library->isProgrammer() &&
-                                ($data_search['tahun'] == 2025 &&
-                                $data_search['bulan'] == "08") &&
+                                ($data_search['tahun'] == $param_lock_tpp['tahun'] &&
+                                $data_search['bulan'] == floatval($param_lock_tpp['bulan'])) &&
+                                $param_lock_tpp['flag_lock'] == 1 &&
                                 $data_search['skpd'] != 1000001){
                                 ?>
-                                <h5 style="font-weight: bold; color: red;">Rekap TPP belum dapat dilakukan karena masih menunggu Rekap Sidak Online</h5>
+                                <h5 style="font-weight: bold; color: red;"><?=$param_lock_tpp['keterangan']?></h5>
                             <?php
                                 } else {
                             ?>

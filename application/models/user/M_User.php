@@ -3142,8 +3142,8 @@
             foreach($kenegaraan as $k){
                 if(!isset($dokpen[$k['user_id']])
                 && !isset($peninjauanAbsensi[$k['user_id']])
-                && $k['user_id'] != 122
-                && $k['user_id'] != 87
+                // && $k['user_id'] != 122
+                // && $k['user_id'] != 87
                 && $k['user_id'] != 915
                 && !isset($excludeNipPegawai[$k['user_id']])
                 ){
@@ -3161,6 +3161,7 @@
                     $dokpenKenegaraan['id_m_user_verif'] = "0";
                     $dokpenKenegaraan['random_string'] = generateRandomString();
                     $dokpenKenegaraan['flag_fix_tanggal'] = 0;
+                    $dokpenKenegaraan['tanggal_verif'] = date('Y-m-d H:i:s');
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
@@ -3397,13 +3398,14 @@
                 }
 
                 $unorJab = null;
+                // dd($dpk);
                 if(isset($listBidang[$dpk['unor_id']])){
                     $unorJab = $listBidang[$unorJab[$dpk['unor_id']]];
                 }
                 if(!$unorJab && isset($listSubBidang[$dpk['unor_id']])){
                     $unorJab = $listSubBidang[$dpk['unor_id']];
                 }
-                // dd($uker);
+                // dd($uker);  
                 if($uker){
                     $this->db->where('id', $dpk['id_pegjabatan'])
                         ->update('db_pegawai.pegjabatan', [

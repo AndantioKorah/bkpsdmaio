@@ -2312,5 +2312,133 @@
             }
         }
 
+        public function cekSidak(){
+            $this->db->trans_begin();
+
+            $agenda = $this->db->select('a.id, a.judul, a.buka_masuk, a.tgl, d.id_unitkerja')
+                            ->from('db_sip.agenda a')
+                            ->join('db_sip.peserta_agenda b', 'a.id = b.agenda_id')
+                            ->join('db_sip.skpd c', 'b.skpd_id = c.id')
+                            ->join('db_pegawai.unitkerja d', 'c.unit_id = d.id_unitkerja')
+                            ->where('a.flag_sidak', 1)
+                            ->where('a.flag_rekap_sidak', 0)
+                            // ->where('a.id', 160) // ini untuk testing, comment untuk sidak semua
+                            ->get()->result_array();
+
+            $listAgendaTanggal = null;
+            $listAgendaUker = null;
+            $listAgenda = null;
+            if($agenda){
+                foreach($agenda as $a){
+                    $listAgenda[$a['id']] = [
+                        'id_agenda' => $a['id'],
+                        'id_unitkerja' => $a['id_unitkerja'],
+                        'tanggal' => $a['tgl'],
+                        'jam_absen' => $a['buka_masuk'],
+                        'judul' => $a['judul']
+                    ];
+                }
+                
+                if($listAgenda){
+                    $dataSidak = null;
+                    foreach($listAgenda as $la){
+                        $this->db->where('id', $la['id_agenda'])
+                                ->update('db_sip.agenda', [
+                                    'flag_rekap_sidak' => 1
+                                ]);
+
+                        $dataAbsenAgenda = $this->db->select('b.id as id_m_user')
+                                                ->from('db_sip.absen_event a')
+                                                ->join('m_user b', 'a.user_id = b.id')
+                                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                                ->where('b.flag_active', 1)
+                                                ->where('c.skpd', $la['id_unitkerja'])
+                                                ->where('a.tgl', $la['tanggal'])
+                                                ->get()->result_array();
+                        $listAbsenAgenda = null;
+                        if($dataAbsenAgenda){
+                            foreach($dataAbsenAgenda as $daa){
+                                $listAbsenAgenda[$daa['id_m_user']] = $daa; // buat list data absen
+                            }
+                        }
+                        
+                        $dataAbsenReguler = $this->db->select('b.id as id_m_user, c.gelar1, c.gelar2, c.nama, c.handphone')
+                                                ->from('db_sip.absen a')
+                                                ->join('m_user b', 'a.user_id = b.id')
+                                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                                ->where('b.flag_active', 1)
+                                                ->where('c.skpd', $la['id_unitkerja'])
+                                                ->where('a.tgl', $la['tanggal'])
+                                                ->get()->result_array();
+                        $listAbsenReguler = null;
+                        if($dataAbsenReguler){
+                            foreach($dataAbsenReguler as $dar){
+                                if(!isset($listAbsenAgenda[$dar['id_m_user']])){ // cek jika ada absen biasa dan tidak ada di absen agenda maka kena sidak
+                                    $dataSidak[] = [
+                                        'id_m_user' => $dar['id_m_user'],
+                                        'keterangan' => "Tidak melakukan presensi Sidak pada ".$la['judul']." tanggal ".formatDateNamaBulan($la['tanggal'])." ".$la['jam_absen'],
+                                        'nama_pegawai' => getNamaPegawaiFull($dar),
+                                        'handphone' => $dar['handphone'],
+                                        'tanggal' => $la['tanggal']
+                                    ];
+                                }
+                            }
+                        }
+                    }
+
+                    if($dataSidak){
+                        $dokpenSidak = null;
+                        $cronWa = null;
+                        $mSidak = $this->db->select('*')
+                                        ->from('m_jenis_disiplin_kerja')
+                                        ->where('keterangan', 'SIDAK')
+                                        ->where('flag_active', 1)
+                                        ->get()->row_array();
+                        
+                        foreach($dataSidak as $ds){
+                            $explTgl = explode("-", $ds['tanggal']);
+                            $dokpenSidak[] = [
+                                'id_m_user' => $ds['id_m_user'],
+                                'tanggal' => $explTgl[2],
+                                'bulan' => $explTgl[1],
+                                'tahun' => $explTgl[0],
+                                'id_m_jenis_disiplin_kerja' => $mSidak['id'],
+                                'keterangan' => $mSidak['keterangan'],
+                                'pengurangan' => $mSidak['pengurangan'],
+                                'status' => 2,
+                                'tanggal_verif' => date('Y-m-d H:i:s'),
+                                'id_m_user_verif' => 1,
+                                'random_string' => generateRandomString(),
+                                'flag_fix_tanggal' => 0,
+                                'flag_fix_jenis_disiplin' => 0,
+                                'flag_fix_dokumen_upload' => 0,
+                                'keterangan_sistem' => $ds['keterangan']
+                            ];
+
+                            $cronWa[] = [
+                                'sendTo' => convertPhoneNumber($ds['handphone']),
+                                'message' => "*[SIDAK]*\n\nSelamat ".greeting()." ".$ds['nama_pegawai'].", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($ds['tanggal']).", Anda dikenakan pelanggaran *SIDAK* dengan keterangan: *".$ds['keterangan']."*",
+                                'flag_prioritas' => 0,
+                                'type' => 'text'
+                            ];
+                        }
+                        if($dokpenSidak){
+                            $this->db->insert_batch('t_dokumen_pendukung', $dokpenSidak);
+                            echo "done insert: ".count($dokpenSidak)."\n";
+                        }
+
+                        if($cronWa){
+                            $this->db->insert_batch('t_cron_wa', $cronWa);
+                            echo "done insert: ".count($cronWa);
+                        }
+                    }
+                }
+            }
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+            }
+        }
 	}
 ?>

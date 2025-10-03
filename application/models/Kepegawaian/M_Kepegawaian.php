@@ -14582,7 +14582,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         if(!$hubkel){
             $result['message'] .= "Keluarga, ";
         }
-
+        
         if(!$ktp){
             $result['message'] .= "KTP, ";
         }

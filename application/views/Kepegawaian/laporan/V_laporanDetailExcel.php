@@ -4,7 +4,64 @@
     header("Content-type: application/vnd-ms-excel");
     header("Content-Disposition: attachment; filename=$filename");
 ?>
- 
+
+
+<?php if(isset($pangkat)) { ?>
+ <div class="row">
+ 	<div class="col-lg-12">
+ 		<div class="card card-default">
+ 			<div class="row p-3">
+ 				<div class="col-md-12 col-sm-12">
+ 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Pangkat/Golongan</b><span>
+ 					<div class="row">
+ 						<div class="col-lg-12 table-responsive">
+ 						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 								<thead>
+ 									<th class="text-left">No</th>
+ 									<th class="text-left">Pendidikan</th>
+ 									<th class="text-left">Laki-laki</th>
+ 									<th class="text-left">Perempuan</th>
+ 									<th class="text-left">Total</th>
+ 								</thead>
+ 								<tbody>
+ 									<?php $no = 1;  
+            $gol_total_perempuan = 0; 
+            $gol_total_laki = 0; 
+             $gol_belum_terdata_laki =0;
+            foreach($pangkat['pangkat'] as $rs){ ?>
+ 									<?php if(isset($rs['nama'])){ ?>
+ 									<tr>
+ 										<td class="text-left"><?=$no++;?></td>
+ 										<td class="text-left"><?=$rs['nama']?></td>
+ 										<td class="text-left"><?=$rs['laki']?></td>
+ 										<td class="text-left"><?=$rs['perempuan']?></td>
+ 										<td class="text-left"><?=$rs['laki']+$rs['perempuan']?></td>
+ 									</tr>
+ 									<?php 
+         $gol_total_laki += $rs['laki']; 
+         $gol_total_perempuan += $rs['perempuan'];
+         } } ?>
+		 <tr>
+ 										<td style="color:#fff;">23</td>
+ 										<td>Total</td>
+ 										<td><?=$gol_total_laki;?></td>
+ 										<td><?=$gol_total_perempuan;?></td>
+ 										<td><?=$gol_total_laki+$gol_total_perempuan;?></td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
+
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+ <?php } ?>
+
+ <br>
+<?php if(isset($pendidikan)) { ?>
  <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
@@ -65,8 +122,10 @@
  		</div>
  	</div>
  </div>
+ <?php } ?>
 
 <br>
+<?php if(isset($pendidikan_pns)) { ?>
   <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
@@ -103,6 +162,7 @@
          $belum_terdata_laki_pns = $pendidikan_pns['pendidikan']['belum_terdata']['laki'];
          $belum_terdata_perempuan_pns = $pendidikan_pns['pendidikan']['belum_terdata']['perempuan'];
          } } ?>
+ 		<?php if($belum_terdata_laki_pns+$belum_terdata_perempuan_pns != 0) { ?>
  				<tr>
  					<td>11</td>
  					<td>Belum terdata</td>
@@ -110,6 +170,7 @@
  					<td><?=$belum_terdata_perempuan_pns;?></td>
  					<td><?=$belum_terdata_laki_pns+$belum_terdata_perempuan_pns;?></td>
  				</tr>
+		<?php } ?>
  				<tr>
  					<td style="color:#fff;">12</td>
  					<td>Total</td>
@@ -126,8 +187,10 @@
  		</div>
  	</div>
  </div>
+<?php } ?>
 
 <br>
+<?php if(isset($pendidikan_pppk)) { ?>
    <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
@@ -188,8 +251,10 @@
  		</div>
  	</div>
  </div>
+<?php } ?>
 
 <br>
+<?php if(isset($kecamatan)) { ?>
     <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
@@ -235,4 +300,5 @@
  		</div>
  	</div>
  </div>
+<?php } ?>
  

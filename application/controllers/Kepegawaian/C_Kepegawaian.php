@@ -3796,27 +3796,65 @@ class C_Kepegawaian extends CI_Controller
 			$this->kepegawaian->updateGajiBerkalaBerikut();
 	}
 
-	
-	public function laporanJumlahASN(){
+
+	public function laporan(){
 		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
 		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
 		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
 		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
+		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
 
-		// dd($data['pendidikan']);
+
+		// dd($data['golongan']);
 		// $this->load->view('kepegawaian/laporan/V_laporanDetail', $data);
-		render('kepegawaian/laporan/V_laporanDetail', null, null, $data);
+		render('kepegawaian/laporan/V_laporan', null, null, $data);
+	}
+
+	
+	
+	public function laporanJumlahASN(){
+		$data = null;
+		if($this->input->post('jenis_laporan') == "0"){
+		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
+		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
+		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
+		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		} else if($this->input->post('jenis_laporan') == "1") {
+		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
+		} else if($this->input->post('jenis_laporan') == "2") {
+		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		} else if($this->input->post('jenis_laporan') == "3") {
+		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
+		} else if($this->input->post('jenis_laporan') == "4") {
+		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
+		} else if($this->input->post('jenis_laporan') == "5") {
+		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		}
+		$data['jenis_laporan'] = $this->input->post('jenis_laporan');
+		$this->load->view('kepegawaian/laporan/V_laporanDetail', $data);
+		// render('kepegawaian/laporan/V_laporanDetail', null, null, $data);
 	}
 
 		public function laporanJumlahASNExcel(){
-		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		if($this->input->post('jenis_laporan') == "0"){
+		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
 		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
 		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
 		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
-
-		// dd($data['pendidikan']);
+		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		} else if($this->input->post('jenis_laporan') == "1") {
+		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
+		} else if($this->input->post('jenis_laporan') == "2") {
+		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		} else if($this->input->post('jenis_laporan') == "3") {
+		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
+		} else if($this->input->post('jenis_laporan') == "4") {
+		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
+		} else if($this->input->post('jenis_laporan') == "5") {
+		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		}
 		$this->load->view('kepegawaian/laporan/V_laporanDetailExcel', $data);
-		// render('kepegawaian/laporan/V_laporanDetail', null, null, $data);
 	}
 
 

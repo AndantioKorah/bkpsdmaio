@@ -1189,7 +1189,7 @@
                                         ->where('a.skpd', $unitkerja['id_unitkerja'])
                                         // ->where('e.nama_jabatan', 'Sekretaris Daerah')
                                         ->where('id_m_status_pegawai', 1)
-                                        ->where('g.tanggal_akhir >=', $tahun.'-'.$bulan.'-31')
+                                        ->where('g.tanggal_akhir >=', $tahun.'-'.$bulan.'-30')
                                         // ->where('g.tanggal_mulai <=', date('Y-m-d'))
                                         ->get()->result_array();
                 // dd($list_plt);

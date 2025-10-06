@@ -1679,15 +1679,16 @@
         public function notifVerifikatorPeninjauanAbsensi(){
             $this->logCron('notifVerifikatorPeninjauanAbsensi');
 
-            $data = $this->db->select('a.id, d.nm_unitkerja, c.nama, c.nipbaru_ws, d.id_unitkerja, d.id_unitkerjamaster')
+            $data = $this->db->select('a.id, d.nm_unitkerja, c.nama, c.nipbaru_ws, d.id_unitkerja, d.id_unitkerjamaster, a.tanggal_absensi')
                             ->from('t_peninjauan_absensi a')
                             ->join('m_user b', 'a.id_m_user = b.id')
                             ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                             ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
                             ->where('a.flag_active', 1)
                             ->where('b.flag_active', 1)
-                            ->where('MONTH(a.created_date)', date('m'))
+                            // ->where('MONTH(a.created_date)', date('m'))
                             ->where('a.status', 0)
+                            ->order_by('a.tanggal_absensi', 'ASC')
                             ->group_by('a.id')
                             ->get()->result_array();
 
@@ -1746,19 +1747,34 @@
                     if(!$nipVerifikator){ // jika null, tambahkan ke not mapping youri
                         $nipVerifikator = $nipAdmin;
                         $verifikator[$nipVerifikator]['data_count_not_mapping']++;
+                        $verifikator[$nipVerifikator]['not_mapping_data'][] = $d;
                     } else {
-                        $verifikator[$nipVerifikator]['data_count']++;
-                        $verifikator[$nipVerifikator]['data'][] = $d;
+                        $expl = explode("-", trim($d['tanggal_absensi']));
+                        // $verifikator[$nipVerifikator]['data'][getNamaBulan($expl[1]).$expl[0]]['list'][] = $d;
+                        if(isset($verifikator[$nipVerifikator]['data'][getNamaBulan($expl[1])." ".$expl[0]])){
+                            $verifikator[$nipVerifikator]['data'][getNamaBulan($expl[1])." ".$expl[0]]['count']++;
+                        } else {
+                            $verifikator[$nipVerifikator]['data'][getNamaBulan($expl[1])." ".$expl[0]]['count'] = 1;
+                        }
                     }
                 }
-
+                // dd($verifikator);
                 $cronWa = null;
                 foreach($verifikator as $verif){
-                    $message = "*[VERIFIKATOR PENINJAUAN ABSENSI]*\n\nTotal belum verif: *".$verif['data_count']."* data";
-                    if($verif['nipbaru_ws'] == $nipAdmin && $verifikator[$nipAdmin]['data_count_not_mapping'] > 0){ // youri
-                        $message .= "\n\nTotal belum mapping: *".$verifikator[$nipAdmin]['data_count_not_mapping']."* data";
+                    $message = "*[VERIFIKATOR PENINJAUAN ABSENSI]*\n\nTotal belum verif: \n";
+
+                    if($verif['data']){
+                        foreach($verif['data'] as $k => $v){
+                            if($k != "0000"){
+                                $message .= $k.": *".$v['count']."* data\n";
+                            }
+                        }
                     }
-                    $message .= "\n\nLast Rekap: ".formatDateNamaBulanWithTime(date('Y-m-d H:i:s'));
+
+                    if($verif['nipbaru_ws'] == $nipAdmin && $verifikator[$nipAdmin]['data_count_not_mapping'] > 0){ // youri
+                        $message .= "\nTotal belum mapping: *".$verifikator[$nipAdmin]['data_count_not_mapping']."* data";
+                    }
+                    $message .= "\nLast Rekap: ".formatDateNamaBulanWithTime(date('Y-m-d H:i:s'));
 
                     $cronWa[$verif['nipbaru_ws']] = [
                         'type' => 'text',

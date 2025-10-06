@@ -385,6 +385,13 @@
 				<i class="fa fa-database"></i> <span class="align-middle">Database</span>
 			</a>
 		</li>
+		<?php if($this->general_library->isHakAkses('laporan_jumlah_asn')) { ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>kepegawaian/C_Kepegawaian/laporan">
+				<i class="fa fa-database"></i> <span class="align-middle">Laporan</span>
+			</a>
+		</li>
+		<?php } ?>
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">Perangkat Daerah</span>

@@ -4,23 +4,7 @@
             <td style="width: 50%; text-align: center;">
                 <span style="font-size: 12px;">Mengetahui,</span>
                 <table style="width: 100%;">
-                <?php if($kepalaskpd['nm_unitkerja'] == "Dinas Komunikasi dan Informatika"){ ?>
-                    <tr>
-                            <td style="text-align: center;">Plt. Kepala Dinas Komunikasi dan Informatika</td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: center; padding: 30px;"></td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: center;">Erwin Simson Kontu, SH</td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: center;">Pembina Utama Muda, IV/c</td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: center;">NIP. 197410152002121009</td>
-                        </tr>
-                    <?php } else if($kepalaskpd){ ?>
+                    <?php if($kepalaskpd){ ?>
                         <tr>
                             <td style="text-align: center;"><?=$kepalaskpd['nama_jabatan'].','?></td>
                         </tr>

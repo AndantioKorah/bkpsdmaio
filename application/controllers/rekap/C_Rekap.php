@@ -402,7 +402,6 @@ class C_Rekap extends CI_Controller
             } else {
                 $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
             }
-            // dd($html);
             if($this->general_library->isProgrammer()){
                 // dd($html);
             }

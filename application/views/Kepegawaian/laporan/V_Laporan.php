@@ -15,12 +15,13 @@
                                     id="jenis_laporan" data-dropdown-css-class="select2-navy" name="jenis_laporan" required>
 									<option value="" selected disabled>Pilih Jenis Laporan</option>
                                     <option value="0">Semua Jenis Laporan</option>
+									<option value="7">Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja</option>
+									<option value="6">Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan</option>
                                     <option value="1">Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Pangkat/Golongan</option>
 									<option value="2">Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan</option>
 									<option value="3">Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Tingkat Pendidikan</option>
 									<option value="4">Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Tingkat Pendidikan</option>
 									<option value="5">Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado per Kecamatan</option>
-
                 </select>
 			    </div>
 				<div class="col-md-12 col-sm-12 mt-2 ">

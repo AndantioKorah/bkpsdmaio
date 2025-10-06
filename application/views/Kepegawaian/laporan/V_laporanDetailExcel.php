@@ -4,8 +4,116 @@
     header("Content-type: application/vnd-ms-excel");
     header("Content-Disposition: attachment; filename=$filename");
 ?>
+<?php if(isset($skpd)) { ?>
+ <div class="row">
+ 	<div class="col-lg-12">
+ 		<div class="card card-default">
+ 			<div class="row p-3">
+ 				<div class="col-md-12 col-sm-12">
+ 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja</b></span>
+ 					<div class="row">
+ 						<div class="col-lg-12 table-responsive">
+ 						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 								<thead>
+ 									<th class="text-left">No</th>
+ 									<th class="text-left">Unit Kerja</th>
+ 									<th class="text-left">Laki-laki</th>
+ 									<th class="text-left">Perempuan</th>
+ 									<th class="text-left">Total</th>
+ 								</thead>
+ 								<tbody>
+ 									<?php $no = 1;  
+            $skpd_total_perempuan = 0; 
+            $skpd_total_laki = 0; 
+             $skpd_belum_terdata_laki =0;
+            foreach($skpd['skpd'] as $rs){ ?>
+ 									<?php if(isset($rs['nama'])){ ?>
+ 									<tr>
+ 										<td class="text-left"><?=$no++;?></td>
+ 										<td class="text-left"><?=$rs['nama']?></td>
+ 										<td class="text-left"><?=$rs['laki']?></td>
+ 										<td class="text-left"><?=$rs['perempuan']?></td>
+ 										<td class="text-left"><?=$rs['laki']+$rs['perempuan']?></td>
+ 									</tr>
+ 									<?php 
+         $skpd_total_laki += $rs['laki']; 
+         $skpd_total_perempuan += $rs['perempuan'];
+         } } ?>
+		 <tr>
+ 										<td style="color:#fff;">600</td>
+ 										<td>Total</td>
+ 										<td><?=$skpd_total_laki;?></td>
+ 										<td><?=$skpd_total_perempuan;?></td>
+ 										<td><?=$skpd_total_laki+$skpd_total_perempuan;?></td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
 
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+ <?php } ?>
 
+<br>
+<?php if(isset($jabatan)) { ?>
+ <div class="row">
+ 	<div class="col-lg-12">
+ 		<div class="card card-default">
+ 			<div class="row p-3">
+ 				<div class="col-md-12 col-sm-12">
+ 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan</b></span>
+ 					<div class="row">
+ 						<div class="col-lg-12 table-responsive">
+ 						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 								<thead>
+ 									<th class="text-left">No</th>
+ 									<th class="text-left">Jabatan</th>
+ 									<th class="text-left">Laki-laki</th>
+ 									<th class="text-left">Perempuan</th>
+ 									<th class="text-left">Total</th>
+ 								</thead>
+ 								<tbody>
+ 									<?php $no = 1;  
+            $jab_total_perempuan = 0; 
+            $jab_total_laki = 0; 
+             $jab_belum_terdata_laki =0;
+            foreach($jabatan['jabatan'] as $rs){ ?>
+ 									<?php if(isset($rs['nama'])){ ?>
+ 									<tr>
+ 										<td class="text-left"><?=$no++;?></td>
+ 										<td class="text-left"><?=$rs['nama']?></td>
+ 										<td class="text-left"><?=$rs['laki']?></td>
+ 										<td class="text-left"><?=$rs['perempuan']?></td>
+ 										<td class="text-left"><?=$rs['laki']+$rs['perempuan']?></td>
+ 									</tr>
+ 									<?php 
+         $jab_total_laki += $rs['laki']; 
+         $jab_total_perempuan += $rs['perempuan'];
+         } } ?>
+		 <tr>
+ 										<td style="color:#fff;">23</td>
+ 										<td>Total</td>
+ 										<td><?=$jab_total_laki;?></td>
+ 										<td><?=$jab_total_perempuan;?></td>
+ 										<td><?=$jab_total_laki+$jab_total_perempuan;?></td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
+
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+ <?php } ?>
+
+ <br>
 <?php if(isset($pangkat)) { ?>
  <div class="row">
  	<div class="col-lg-12">
@@ -18,7 +126,7 @@
  						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
- 									<th class="text-left">Pendidikan</th>
+ 									<th class="text-left">Pangkat/Golongan</th>
  									<th class="text-left">Laki-laki</th>
  									<th class="text-left">Perempuan</th>
  									<th class="text-left">Total</th>

@@ -4470,25 +4470,26 @@ public function submitEditJabatan(){
                         "tmtPelantikan" => formatDateOnlyForEdit2($input_post['edit_jabatan_tmt']),
                         "unorId" => $input_post['id_unor_siasn']
                     ];
-
-                    // $reqWs = $this->siasnlib->saveJabatan($update);
-                    // if($reqWs['code'] == 1){
-                    //     $res = array('msg' => 'Gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
-                    //     $this->db->trans_rollback();
-                    //     return $res;    
-                    // } else {
-                    //     if($_FILES['file']['name'] != ""){
-                    //         $url = ('arsipjabatan/'.$filename);
-                    //         $request = [
-                    //             'id_riwayat' => $pegjabatan['id_siasn'],
-                    //             'id_ref_dokumen' => 872,
-                    //             'file' => new CURLFile ($url)
-                    //         ];
-                    //         $reqWsDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
-                    //     }
-                    // }
+                    
+                    $reqWs = $this->siasnlib->saveJabatan($update);
+                    if($reqWs['code'] == 1){
+                        $res = array('msg' => 'Gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
+                        $this->db->trans_rollback();
+                        return $res;    
+                    } else {
+                        if($_FILES['file']['name'] != ""){
+                            $url = ('arsipjabatan/'.$filename);
+                            $request = [
+                                'id_riwayat' => $pegjabatan['id_siasn'],
+                                'id_ref_dokumen' => 872,
+                                'file' => new CURLFile ($url)
+                            ];
+                            $reqWsDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
+                        }
+                    }
                     
                     $updatedJabatan = $this->siasnlib->getJabatanByIdRiwayat($pegjabatan['id_siasn']);
+
                     if($updatedJabatan['code'] == 0){
                         $newMeta = json_decode($updatedJabatan['data'], true);
                         $this->db->where('id', $pegjabatan['id'])

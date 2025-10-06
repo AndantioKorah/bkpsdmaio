@@ -1189,7 +1189,7 @@
                                         ->where('a.skpd', $unitkerja['id_unitkerja'])
                                         // ->where('e.nama_jabatan', 'Sekretaris Daerah')
                                         ->where('id_m_status_pegawai', 1)
-                                        ->where('g.tanggal_akhir >=', $tahun.'-'.$bulan.'-31')
+                                        ->where('g.tanggal_akhir >=', $tahun.'-'.$bulan.'-30')
                                         // ->where('g.tanggal_mulai <=', date('Y-m-d'))
                                         ->get()->result_array();
                 // dd($list_plt);
@@ -1269,7 +1269,7 @@
         $id_unitkerja == 3020000){ //diskop, kasub sudah pensiun
             $result['kasubag'] = $result['sek'];
         } else if($id_unitkerja == 4014000){
-            $result['kasubag'] = $result['sek']; // ksebang, kasub ubah jadi sek karena kasubnya ba jadi
+            $result['kasubag'] = $result['sek']; // kesbang, kasub ubah jadi sek karena kasubnya ba jadi
         } else if($id_unitkerja == 3028000){ // dinas pangan, kasub dan sek sudah pensiun ganti jadi kabid
             $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                     e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')

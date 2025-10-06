@@ -1824,6 +1824,7 @@
                                     ->where('a.flag_verif', 0)
                                     ->where('a.chatId IS NOT NULL')
                                     ->where('b.flag_active', 1)
+                                    ->where('a.flag_active', 1)
                                     // ->where('flag_resend !=', 1)
                                     ->group_by('a.id')
                                     ->get()->result_array();

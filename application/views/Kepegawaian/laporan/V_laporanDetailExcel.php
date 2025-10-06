@@ -16,7 +16,7 @@
  						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
- 									<th class="text-left">Pendidikan</th>
+ 									<th class="text-left">Unit Kerja</th>
  									<th class="text-left">Laki-laki</th>
  									<th class="text-left">Perempuan</th>
  									<th class="text-left">Total</th>
@@ -71,7 +71,7 @@
  						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
- 									<th class="text-left">Pendidikan</th>
+ 									<th class="text-left">Jabatan</th>
  									<th class="text-left">Laki-laki</th>
  									<th class="text-left">Perempuan</th>
  									<th class="text-left">Total</th>
@@ -126,7 +126,7 @@
  						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
- 									<th class="text-left">Pendidikan</th>
+ 									<th class="text-left">Pangkat/Golongan</th>
  									<th class="text-left">Laki-laki</th>
  									<th class="text-left">Perempuan</th>
  									<th class="text-left">Total</th>

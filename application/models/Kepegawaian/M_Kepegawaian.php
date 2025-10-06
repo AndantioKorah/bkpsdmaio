@@ -15282,9 +15282,13 @@ public function checkListIjazahCpns($id, $id_pegawai){
          $temp_skpd = $this->db->select('*')
                                 ->from('db_pegawai.unitkerja a')
                                 ->join('db_pegawai.unitkerja b', 'a.id_unitkerjamaster = b.id_unitkerjamaster')
-                                ->where_not_in('b.id_unitkerjamaster', ['6000000','8010000','8020000','8000000','5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001'])
+                                ->where_not_in('b.id_unitkerjamaster', ['9050000','','0000000','6000000','8010000','8020000','8000000','5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001'])
                                 // ->where_not_in('b.id_unitkerjamaster', ['6000000','8010000','8020000','8000000','5001000'])
                                 // ->where_not_in('b.id_unitkerjamaster', ['5001000'])
+                                // ->where_not_in('b.id_unitkerja', [5, 9050030])
+                                ->order_by('b.id_unitkerjamaster', 'ASC')
+                                ->order_by('b.id_unitkerja', 'ASC')
+
                                 ->get()->result_array();
                                 // dd($temp_skpd);
         foreach($temp_skpd as $skpd){
@@ -15360,13 +15364,8 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                    // ->where_in('a.statuspeg', [3])
                     ->where('a.id_m_status_pegawai', 1)
-                    // ->where_in('b.id_unitkerjamaster', [5001000]);
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
-                    // ->where_not_in('b.id_unitkerjamaster', ['8000000']);
-                    
-                  
         $pegawai1 = $this->db->get()->result_array();
         // dd($pegawai1);
         foreach($pegawai1 as $peg){

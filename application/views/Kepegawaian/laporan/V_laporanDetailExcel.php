@@ -336,6 +336,7 @@
          $belum_terdata_laki_pppk = $pendidikan_pppk['pendidikan']['belum_terdata']['laki'];
          $belum_terdata_perempuan_pppk = $pendidikan_pppk['pendidikan']['belum_terdata']['perempuan'];
          } } ?>
+		  <?php if($belum_terdata_laki_pppk+$belum_terdata_perempuan_pppk != 0) { ?>
  				<tr>
  					<td>11</td>
  					<td>Belum terdata</td>
@@ -343,6 +344,7 @@
  					<td><?=$belum_terdata_perempuan_pppk;?></td>
  					<td><?=$belum_terdata_laki_pppk+$belum_terdata_perempuan_pppk;?></td>
  				</tr>
+		<?php } ?>
  				<tr>
  					<td></td>
  					<td>Total</td>
@@ -380,7 +382,11 @@
  				<th class="text-left">Total</th>
  			</thead>
  			<tbody>
- 				<?php $no = 1; $total_perempuan = 0; $total_laki = 0; foreach($kecamatan['unitkerjamaster']   as $rs){ ?>
+ 				<?php 
+				$no = 1; 
+				$total_perempuan = 0; 
+				$total_laki = 0; 
+				foreach($kecamatan['unitkerjamaster']   as $rs){ ?>
  				<tr>
  					<td class="text-left"><?=$no++;?></td>
  					<td class="text-left"><?=$rs['nama']?></td>

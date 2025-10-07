@@ -3876,6 +3876,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function laporanJumlahASNPdf(){
+
 		if($this->input->post('jenis_laporan') == "0"){
 		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
 		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
@@ -3884,27 +3885,37 @@ class C_Kepegawaian extends CI_Controller
 		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
 		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
-
+		$nama_file = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado";
 		} else if($this->input->post('jenis_laporan') == "1") {
+		$nama_file = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Pangkat/Golongan";
 		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
 		} else if($this->input->post('jenis_laporan') == "2") {
+		$nama_file = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan";
 		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
 		} else if($this->input->post('jenis_laporan') == "3") {
+		$nama_file = "Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Tingkat Pendidikan";
 		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
 		} else if($this->input->post('jenis_laporan') == "4") {
+		$nama_file = "Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Tingkat Pendidikan";
 		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
 		} else if($this->input->post('jenis_laporan') == "5") {
+		$nama_file = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado per Kecamatan";
 		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
 		} else if($this->input->post('jenis_laporan') == "6") {
+		$nama_file = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan";
 		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
 		} else if($this->input->post('jenis_laporan') == "7") {
+		$nama_file = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja";
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
 		}
-		$this->load->view('kepegawaian/laporan/V_laporanDetailExcel', $data);
-
+		$this->load->view('kepegawaian/laporan/V_laporanDetailPdf', $data);
 		$mpdf = new \Mpdf\Mpdf([
-			'format' => 'A4',
-			'debug' => true
+			'debug' => true,
+			// 'default_font_size' => 14,
+			'mode' => 'utf-8', 
+			'format' => [210, 330],
+			'default_font_size' => 10,
+			'orientation' => 'P'
 		]);
 		$mpdf->AddPage(
             'P', // L - landscape, P - portrait
@@ -3915,15 +3926,17 @@ class C_Kepegawaian extends CI_Controller
             10, // margin_left
             10, // margin right
             5, // margin top
-            10, // margin bottom
+            20, // margin bottom
             18, // margin header
             12
         );
+		
+		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
 		$html = $this->load->view('kepegawaian/laporan/V_laporanDetailPdf', $data, true); 
-		$file_pdf = "Laporan_jumlah_ASN";  	
+		$file_pdf = $nama_file." per tanggal ".formatDateNamaBulan(date('Y-m-d')).'.pdf';   	
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
-		$mpdf->Output($file_pdf.'.pdf', 'D');
+		$mpdf->Output($file_pdf, 'D');
 
 	}
 

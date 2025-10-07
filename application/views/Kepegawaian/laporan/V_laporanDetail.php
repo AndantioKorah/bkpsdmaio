@@ -29,7 +29,7 @@
  					<h3>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja</h3>
  					<div class="row">
  						<div class="col-lg-12 table-responsive">
- 						 	<table class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 						 	<table id="tabel_skpd" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
  									<th class="text-left">Unit Kerja</th>
@@ -56,7 +56,7 @@
          $skpd_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">600</td>
+ 										<td style="color:#fff;">64</td>
  										<td>Total</td>
  										<td><?=$skpd_total_laki;?></td>
  										<td><?=$skpd_total_perempuan;?></td>
@@ -427,26 +427,28 @@
  
 <script>
 	    $(document).ready( function() {
-			// $('.datatable').dataTable()
-  $('.select2-navy').select2()
-          var table = $('.datatable').DataTable({
-           "pageLength": 25,
-        //    dom: 'Bfrtip',
-           buttons: [
-                {
-                    extend: 'excel',
-                    orientation: 'landscape',
-                    title: 'Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan',
-                    // messageTop:
-                    //     'Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan'
-                },
-                {
-                    extend: 'pdf',
-                    orientation: 'landscape',
-                    title: 'Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan'
-                }
-           ],
-        });
+		$('.datatable').dataTable({
+			"pageLength": 25
+		}) 
+  		$('.select2-navy').select2()
+        //   var table = $('.datatable').DataTable({
+        //    "pageLength": 25,
+        //    dom: 'Bfrtip', 
+        //    buttons: [
+        //         {
+        //             extend: 'excel',
+        //             orientation: 'landscape',
+        //             title: 'Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan',
+        //             // messageTop:
+        //             //     'Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan'
+        //         },
+        //         {
+        //             extend: 'pdf',
+        //             orientation: 'landscape',
+        //             title: 'Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan'
+        //         }
+        //    ],
+        // });
 
 		} )
 

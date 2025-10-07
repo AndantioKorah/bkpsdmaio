@@ -13054,6 +13054,22 @@ public function getFileForVerifLayanan()
             $datainsKgb["gambarsk"] = $data['file_name'];
             $url_file = "arsipgjberkala/".$data['nama_file'];
 
+
+            if($dataKgb[0]['statuspeg'] == "1" || $dataKgb[0]['statuspeg'] == "2"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+            } else if($dataKgb[0]['statuspeg'] == "3") {
+            if($dataKgb[0]['pangkat'] == "55"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+1 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+            }
+            if($dataKgb[0]['pangkat'] == "57"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+3 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+            }
+            if($dataKgb[0]['pangkat'] == "59" || $dataKgb[0]['pangkat'] == "60"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+            }
+            } 
+
+                        
             $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
             $id_peggajiberkala = $this->db->insert_id();
             $datainsKgb["id_peggajiberkala"] = $id_peggajiberkala;
@@ -13061,11 +13077,14 @@ public function getFileForVerifLayanan()
             ->update('t_gajiberkala', $datainsKgb);
 
             $dataUpdatePeg["catatan_berkala"] = "";
+            $dataUpdatePeg["tmtgjberkalaberikut"] = $tmtgjberkalaberikut;
             $this->db->where('id_peg', $dataKgb[0]['id_pegawai'])
             ->update('db_pegawai.pegawai', $dataUpdatePeg);
             
             $this->updateBerkala($dataKgb[0]['id_pegawai']);
             $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+
 
             // $dataLayanan = $this->db->select('c.*,a.*')
             //     ->from('t_layanan a')
@@ -14913,7 +14932,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
     {
         $this->db->select('a.id_peg,a.statuspeg,a.tmtgjberkala,a.pangkat')
             ->from('db_pegawai.pegawai a')
-            ->where('a.tmtgjberkalaberikut is null')
+            // ->where('a.tmtgjberkalaberikut is null')
             ->where('a.id_m_status_pegawai', 1)
             // ->where_in('a.statuspeg', [1,2])
             ->limit(1000);
@@ -14940,7 +14959,6 @@ public function checkListIjazahCpns($id, $id_pegawai){
          $this->db->where('id_peg', $peg['id_peg'])
          ->update('db_pegawai.pegawai', 
          ['tmtgjberkalaberikut' => $tmtgjberkalaberikut]);
-         
          }
     }
 

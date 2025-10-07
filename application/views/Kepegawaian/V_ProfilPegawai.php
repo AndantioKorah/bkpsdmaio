@@ -852,9 +852,9 @@
                 <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
               </li>
               <?php } ?>
-              <!-- <li class="nav-item nav-item-profile" role="presentation">
+              <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormKp4()" class="nav-link nav-link-profile" id="pills-kp4-tab" data-bs-toggle="pill" data-bs-target="#pills-kp4" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">KP4</button>
-              </li> -->
+              </li>
               <?php 
               // if(
                 // $this->general_library->getIdEselon() < 8 && 

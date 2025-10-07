@@ -4,19 +4,20 @@
     header("Content-type: application/vnd-ms-excel");
     header("Content-Disposition: attachment; filename=$filename");
 ?>
+
 <?php if(isset($skpd)) { ?>
  <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
- 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja</b></span>
+ 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
  					<div class="row">
  						<div class="col-lg-12 table-responsive">
  						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
- 									<th class="text-left">Unit Kerja</th>
+ 									<th style="width:70%" class="text-left" >Unit Kerja</th>
  									<th class="text-left">Laki-laki</th>
  									<th class="text-left">Perempuan</th>
  									<th class="text-left">Total</th>
@@ -65,13 +66,13 @@
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
- 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan</b></span>
+ 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
  					<div class="row">
  						<div class="col-lg-12 table-responsive">
  						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
- 									<th class="text-left">Jabatan</th>
+ 									<th style="width:70%" class="text-left">Jabatan</th>
  									<th class="text-left">Laki-laki</th>
  									<th class="text-left">Perempuan</th>
  									<th class="text-left">Total</th>
@@ -120,13 +121,13 @@
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
- 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Pangkat/Golongan</b><span>
+ 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Pangkat/Golongan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b><span>
  					<div class="row">
  						<div class="col-lg-12 table-responsive">
  						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
- 									<th class="text-left">Pangkat/Golongan</th>
+ 									<th style="width:70%" class="text-left">Pangkat/Golongan</th>
  									<th class="text-left">Laki-laki</th>
  									<th class="text-left">Perempuan</th>
  									<th class="text-left">Total</th>
@@ -175,13 +176,13 @@
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
- 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan</b></span>
+ 					<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
  					<div class="row">
  						<div class="col-lg-12 table-responsive">
  						 	<table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
  								<thead>
  									<th class="text-left">No</th>
- 									<th class="text-left">Pendidikan</th>
+ 									<th style="width:70%" class="text-left">Pendidikan</th>
  									<th class="text-left">Laki-laki</th>
  									<th class="text-left">Perempuan</th>
  									<th class="text-left">Total</th>
@@ -239,13 +240,13 @@
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
-<span><b>Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Tingkat Pendidikan</b></span>
+<span><b>Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Tingkat Pendidikan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
  <div class="row">
  	<div class="col-lg-12 table-responsive">
  	  <table border="1" class="table table-hover table-striped thead-dark datatable" id="pendidikanpns">
  			<thead>
  				<th class="text-left">No</th>
- 				<th class="text-left">Pendidikan</th>
+ 				<th style="width:70%" class="text-left">Pendidikan</th>
  				<th class="text-left">Laki-laki</th>
  				<th class="text-left">Perempuan</th>
  				<th class="text-left">Total</th>
@@ -304,14 +305,13 @@
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
-<span><b>Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Tingkat
- 	Pendidikan</b></span>
+<span><b>Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Tingkat Pendidikan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
  <div class="row">
  	<div class="col-lg-12 table-responsive">
  		<table border="1" class="table table-hover table-striped thead-dark datatable">
  			<thead>
  				<th class="text-left">No</th>
- 				<th class="text-left">Pendidikan</th>
+ 				<th style="width:70%" class="text-left">Pendidikan</th>
  				<th class="text-left">Laki-laki</th>
  				<th class="text-left">Perempuan</th>
  				<th class="text-left">Total</th>
@@ -368,13 +368,13 @@
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
-<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado per Kecamatan</b></span>
+<span><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado per Kecamatan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
  <div class="row">
  	<div class="col-lg-12 table-responsive">
  		<table border="1" class="table table-hover table-striped thead-dark datatable">
  			<thead>
  				<th class="text-left">No</th>
- 				<th class="text-left">Kecamatan</th>
+ 				<th style="width:70%" class="text-left">Kecamatan</th>
  				<th class="text-left">Laki-laki</th>
  				<th class="text-left">Perempuan</th>
  				<th class="text-left">Total</th>

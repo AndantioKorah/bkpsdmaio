@@ -3348,6 +3348,8 @@ class C_Kepegawaian extends CI_Controller
 			$data['transkrip'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','77','0');	
 			$data['akreditasi_prodi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','68','0');	
 			$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
+			$data['sertifikat_profesi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','103','0');	
+			
 			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir2(); 
 			$data['id_m_layanan'] = $id_layanan;
 			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
@@ -3871,6 +3873,58 @@ class C_Kepegawaian extends CI_Controller
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
 		}
 		$this->load->view('kepegawaian/laporan/V_laporanDetailExcel', $data);
+	}
+
+	public function laporanJumlahASNPdf(){
+		if($this->input->post('jenis_laporan') == "0"){
+		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
+		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
+		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
+		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
+		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
+
+		} else if($this->input->post('jenis_laporan') == "1") {
+		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
+		} else if($this->input->post('jenis_laporan') == "2") {
+		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		} else if($this->input->post('jenis_laporan') == "3") {
+		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
+		} else if($this->input->post('jenis_laporan') == "4") {
+		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
+		} else if($this->input->post('jenis_laporan') == "5") {
+		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		} else if($this->input->post('jenis_laporan') == "6") {
+		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
+		} else if($this->input->post('jenis_laporan') == "7") {
+		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
+		}
+		$this->load->view('kepegawaian/laporan/V_laporanDetailExcel', $data);
+
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'A4',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
+		$html = $this->load->view('kepegawaian/laporan/V_laporanDetailPdf', $data, true); 
+		$file_pdf = "Laporan_jumlah_ASN";  	
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($file_pdf.'.pdf', 'D');
+
 	}
 
 

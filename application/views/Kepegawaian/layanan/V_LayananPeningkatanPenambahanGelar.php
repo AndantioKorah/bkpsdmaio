@@ -356,6 +356,12 @@ ol {
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
                     Tampilan Layar Pangkalan Data Forlap Dikti* <i class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
             </li>
+             <li>
+            	<a class="<?php if($sertifikat_profesi){ if($sertifikat_profesi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($sertifikat_profesi) { ?> onclick="viewBerkasPangkat('<?=$sertifikat_profesi['gambarsk'];?>',4)"
+            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
+                    Sertifikat Profesi <i class="fas fa-<?php if($sertifikat_profesi) echo ''; else echo '';?>"></i></a>
+            </li>
 						</ol>
 					</div>
 

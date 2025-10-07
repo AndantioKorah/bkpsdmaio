@@ -3937,7 +3937,6 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
 		$mpdf->Output($file_pdf, 'D');
-
 	}
 
 

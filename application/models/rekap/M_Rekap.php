@@ -1265,7 +1265,7 @@
         //coding ini untuk mengubah penandatangan menjadi hardcode
         if($id_unitkerja == 3016000 || // dishub, kasub sudah pensiun
         $id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
-        $id_unitkerja == 3017000 || // kominfo, kasub cuti
+        // $id_unitkerja == 3017000 || // kominfo, kasub cuti
         $id_unitkerja == 3020000){ //diskop, kasub sudah pensiun
             $result['kasubag'] = $result['sek'];
         } else if($id_unitkerja == 4014000){
@@ -1419,7 +1419,7 @@
                 $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
             }
         }
-        
+
         if($this->general_library->isProgrammer()){
             // dd($result);
         }

@@ -330,10 +330,12 @@
     <button onclick="loadFormJabatan('plt')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Jabatan PLT</button>
   <li>
  <?php } ?>
-        </li>
+  </li>
+ <?php if($id_m_layanan == 8) { ?>
  <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="loadFormJabatan('def')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Riwayat Jabatan Siladen</button>
   <li>
+ <?php } ?>
 
 </ul>
 <hr style="margin-top: 10px;">

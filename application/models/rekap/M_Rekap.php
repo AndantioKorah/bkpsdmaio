@@ -1554,6 +1554,11 @@
     }
 
     public function getNominatifPegawaiHardCode($id_unitkerja, $bulan, $tahun, $list_pegawai){
+        $firstSixCharacters = substr($id_unitkerja, 0, 6);
+         if($firstSixCharacters == 'sekola'){
+           $id_unitkerja = substr($id_unitkerja, 8);
+         }
+         
         $flag_sekolah_kecamatan = 0;
         $data['bulan'] = $bulan;
         $data['tahun'] = $tahun;

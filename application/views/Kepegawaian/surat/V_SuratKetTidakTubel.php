@@ -188,7 +188,7 @@
 		<tr>
 			<td style="width:62%;"></td>
 			<td class="center" style="width:38%;text-align: left;"> ${nama_pengirim}<br>
-Pembina Utama Muda<br>
+Pembina<br>
 NIP. ${nip_pengirim}</td>
 		</tr>
 	</table>

@@ -344,7 +344,13 @@
 
 
 <?php if(isset($pendidikan_pns)) { ?>
+<?php if($jenis_laporan == 0){ ?>
 <br>
+<br>
+<br>
+<?php } ?>
+<br>
+
 <span style='font-family:"Arial",sans-serif;'><b>Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Tingkat Pendidikan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
 <table style="border-collapse: collapse; border: none; width: 100%;border: 1pt solid black;" class="fr-table-selection-hover">
     <tbody>

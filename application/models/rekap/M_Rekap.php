@@ -1554,6 +1554,7 @@
     }
 
     public function getNominatifPegawaiHardCode($id_unitkerja, $bulan, $tahun, $list_pegawai){
+    // dd($id_unitkerja);
         $firstSixCharacters = substr($id_unitkerja, 0, 6);
          if($firstSixCharacters == 'sekola'){
            $id_unitkerja = substr($id_unitkerja, 8);
@@ -1618,14 +1619,21 @@
             $this->db->where('a.id_unitkerja', $id_unitkerja);
         }
         $pegawai = $this->db->get()->result_array();
+        
+
         // if($id_unitkerja == '4011000'){
         //     dd($pegawai);
         // }
         if($pegawai){
             foreach($pegawai as $peg){
+                if($peg['nipbaru_ws'] == "198302282003121005"){
+                var_dump($peg);
+                }
+                
                 if(floatval($bulan) == $peg['bulan'] && floatval($tahun) == $peg['tahun']){
                     if($peg['flag_add'] == 1){
                         $temp_list_pegawai[$peg['nipbaru_ws']] = $peg;
+                       
                     }
 
                     if($peg['flag_add'] == 0){

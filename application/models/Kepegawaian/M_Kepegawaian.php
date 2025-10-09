@@ -12435,7 +12435,17 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }   else {
+        } else if($this->input->post('file') == "sertifikat_profesi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 103)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }    else {
          return [''];
         }
         
@@ -14562,7 +14572,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             ->where_in('status', [1,2])
                             ->where('id_dokumen', 37)
                             ->get()->result_array();
-
+        
         $kartukeluarga = $this->db->select('*')
                             ->from('db_pegawai.pegarsip')
                             ->where('flag_active', 1)

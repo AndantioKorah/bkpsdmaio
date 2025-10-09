@@ -2947,6 +2947,8 @@ class C_Kepegawaian extends CI_Controller
 			render('kepegawaian/layanan/V_VerifikasiLayananJabFungDetail', '', '', $data);
 		} else if($layanan == 21){
 			$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir2Admin($id_peg);
+			$data['sertifikat_profesi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','103','0',$id_peg);	
+
 			// dd($data['ijazah']);
 			render('kepegawaian/layanan/V_VerifikasiLayananPeningkatanPenambahanGelarDetail', '', '', $data);
 		} else if($layanan == 23){

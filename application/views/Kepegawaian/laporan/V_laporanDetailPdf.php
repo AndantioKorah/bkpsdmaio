@@ -23,7 +23,15 @@
     table {
     font-size: 13px; /* Sets the default font size for all text within the table */
     }
+
+  .info_card:hover{
+    cursor: pointer;
+    transition: .2s;
+    background-color: #ececed;
+  }
 </style>
+  
+
 <body style="font-family: Tahoma; font-size: 13px;">
 <table style="width: 100%; height: 300px;">
 	<tr>
@@ -46,6 +54,37 @@
 </table>
 
 <?php if(isset($skpd)) { ?>
+<div class="row">
+    <div class="col-sm">
+       <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col mt-0 ml-0">
+            <h5 class="card-title">Jumlah Pegawai </h5>
+          </div>
+          <div class="col-auto">
+            <div class="stat text-primary">
+              <i class="align-middle fa fa-users" ></i>
+            </div>
+          </div>
+        </div>
+        <h1 class="mt-1" id="h1_total_pegawai"><?=$total?></h1>
+        <div class="mb-0">
+           <?php
+            $data_statuspeg['result'] = $statuspeg['statuspeg'];
+            $data_statuspeg['id_chart'] = 'chart_statuspeg';
+            $data_statuspeg['total_seluruh_pegawai'] = $total;
+            $this->load->view('login/V_ChartPieDashboard', $data_statuspeg);
+          ?>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+   
+
+
 <br>
 <span style='font-family:"Arial",sans-serif;'><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
 <table style="border-collapse: collapse; border: none; width: 100%;border: 1pt solid black;" class="fr-table-selection-hover">
@@ -599,3 +638,51 @@
     </tbody>
 </table>
 <?php } ?>
+
+
+<script>
+    $(function(){
+      renderChart('<?=json_encode($data_statuspeg)?>')
+    })
+
+    function renderChart(rs){
+      let dt = JSON.parse(rs)
+      console.log("yor")
+      // document.addEventListener("DOMContentLoaded", function() {
+        let labels = [];
+        let values = [];
+        let temp = Object.keys(dt.result)
+        temp.forEach(function(i) {
+          if(dt.result[i].jumlah > 0){
+            labels.push(dt.result[i].nama)
+            values.push(dt.result[i].jumlah)
+          }
+        })
+
+        console.log(values)
+       
+
+        let colors = JSON.parse('<?=json_encode(CHART_COLORS)?>')                
+        // let data_labels = 
+        new Chart(document.getElementById(dt.id_chart), {
+          type: "doughnut",
+          data: {
+            labels: labels,
+            datasets: [{
+              data: values,
+              backgroundColor: colors,
+              borderColor: "transparent"
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            legend: {
+              display: false
+            }
+          }
+        });
+      // });
+    }
+
+   
+</script>

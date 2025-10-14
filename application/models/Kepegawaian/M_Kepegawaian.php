@@ -15182,6 +15182,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                   
         $pegawai1 = $this->db->get()->result_array();
         // dd($pegawai1);
+         $result['total'] = count($pegawai1);
         foreach($pegawai1 as $peg){
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['pangkat'][$peg['pangkat']]['laki']++;
@@ -15501,6 +15502,38 @@ public function checkListIjazahCpns($id, $id_pegawai){
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['skpd'][$peg['id_unitkerja']]['perempuan']++;
         } 
+
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutStatusPegawai(){
+
+            $temp_statuspeg = $this->db->select('*')
+                                ->from('db_pegawai.statuspeg')
+                                ->get()->result_array();
+            foreach($temp_statuspeg as $sp){
+                $result['statuspeg'][$sp['id_statuspeg']] = $sp;
+                $result['statuspeg'][$sp['id_statuspeg']]['nama'] = $sp['nm_statuspeg'];
+                $result['statuspeg'][$sp['id_statuspeg']]['jumlah'] = 0;
+            }
+
+
+        $this->db->select('a.pendidikan,a.jk,a.pangkat,a.statuspeg')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    // ->where_in('a.statuspeg', [3])
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+        // dd($pegawai1);
+         $result['total'] = count($pegawai1);
+        foreach($pegawai1 as $peg){
+        if($peg['statuspeg'] != null){
+                    $result['statuspeg'][$peg['statuspeg']]['jumlah']++;
+        }
 
         }
         return $result;

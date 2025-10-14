@@ -3880,11 +3880,11 @@ class C_Kepegawaian extends CI_Controller
 	public function laporanJumlahASNPdf(){
 
 		$data['jenis_laporan'] = $this->input->post('jenis_laporan');
-		if($this->input->post('jenis_laporan') == "0"){
 		$data['statuspeg'] = $this->kepegawaian->laporanJumlahPegawaiMenurutStatusPegawai();
-		// dd($data['statuspeg']);
+		$data['total'] = $data['statuspeg']['total'];
+
+		if($this->input->post('jenis_laporan') == "0"){
 		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
-		$data['total'] = $data['pangkat']['total'];
 		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
 		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
 		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();

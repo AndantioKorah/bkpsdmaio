@@ -15182,7 +15182,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                   
         $pegawai1 = $this->db->get()->result_array();
         // dd($pegawai1);
-         $result['total'] = count($pegawai1);
+        
         foreach($pegawai1 as $peg){
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['pangkat'][$peg['pangkat']]['laki']++;
@@ -15528,7 +15528,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
         $pegawai1 = $this->db->get()->result_array();
-        // dd($pegawai1);
+         $result['total'] = count($pegawai1);
          $result['total'] = count($pegawai1);
         foreach($pegawai1 as $peg){
         if($peg['statuspeg'] != null){

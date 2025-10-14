@@ -52,8 +52,7 @@
 		<td colspan=3 style="border-bottom: 3px solid black;"></td>
 	</tr>
 </table>
-
-<?php if(isset($skpd)) { ?>
+<?php if($jenis_laporan != 5) { ?>
 <div class="row">
     <div class="col-sm">
        <div class="col-lg-12">
@@ -81,10 +80,10 @@
       </div>
     </div>
   </div>
-    </div>
-   
+</div>
+<?php } ?>
 
-
+<?php if(isset($skpd)) { ?>
 <br>
 <span style='font-family:"Arial",sans-serif;'><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
 <table style="border-collapse: collapse; border: none; width: 100%;border: 1pt solid black;" class="fr-table-selection-hover">

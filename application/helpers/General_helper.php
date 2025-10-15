@@ -1953,3 +1953,50 @@ function qounterNomorSurat($tahun){
     $counter = $helper->general->getlastNomorSurat($tahun);
     return $counter;
 }
+
+function validateToken($token, $publicKey){
+    $helper = &get_instance();
+    $token = str_replace(" ", "+", $token);
+
+    $decrypted = AESDecrypt($token, $publicKey);
+    if(!$decrypted){
+        $helper->response([
+            'code' => 401,
+            'status' => false, 
+            'message' => "Unauthorized Request",
+            "data" => null
+        ], 401);
+    }
+}
+
+function AESEncrypt($string, $publicKey = ""){
+    $publicKey = trim($publicKey);
+    $iv = str_pad(($publicKey), 16, "0", STR_PAD_LEFT);
+    if(strlen($publicKey) > 16){
+        $iv = substr($publicKey, 0, 16);
+    }
+
+    return openssl_encrypt(
+        trim($string),
+        'AES-256-CBC',
+        $publicKey,
+        0,
+        str_pad($iv, 16, "0", STR_PAD_LEFT)
+    );
+}
+
+function AESDecrypt($encrypted_data, $publicKey = ""){
+    $publicKey = trim($publicKey);
+    $iv = str_pad(($publicKey), 16, "0", STR_PAD_LEFT);
+    if(strlen($publicKey) > 16){
+        $iv = substr($publicKey, 0, 16);
+    }
+
+    return openssl_decrypt(
+        trim($encrypted_data),
+        'AES-256-CBC',
+        $publicKey,
+        0,
+        str_pad($iv, 16, "0", STR_PAD_LEFT)
+    );
+}

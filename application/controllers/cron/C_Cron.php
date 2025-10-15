@@ -217,13 +217,22 @@ class C_Cron extends CI_Controller
         $this->load->view('master/V_TempUpdateDataPPPK', $data);
     }
 
-    public function funcTest(){
+    public function funcTest($str = ""){
         // dd($this->general_library->getDataKabanBkpsdm());
-        $randomString = generateRandomString(30, 1, 't_file_ds'); 
-        $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
-        // dd($contentQr);
-        $res['qr'] = generateQr($contentQr);
-        $this->load->view('adminkit/partials/V_TemplateTte', $res);
+        // $randomString = generateRandomString(30, 1, 't_file_ds'); 
+        // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+        // // dd($contentQr);
+        // $res['qr'] = generateQr($contentQr);
+        // $this->load->view('adminkit/partials/V_TemplateTte', $res);
+
+        $date = date("Y-m-d H:i:s");
+        $nip = "199502182020121013";
+        $secretKey = "BKPSDM_AARS_9903412";
+        $string = $date.";".$nip.";".$secretKey;
+
+        $encrypted = AESEncrypt($string, $secretKey);
+        dd($encrypted);
+        dd(AESDecrypt($encrypted, $secretKey));
     }
 
     public function testNomorSurat($data = null){

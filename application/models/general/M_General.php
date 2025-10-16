@@ -2359,6 +2359,7 @@
                 if($listAgenda){
                     $dataSidak = null;
                     foreach($listAgenda as $la){
+                        // update flag_rekap_sidak jadi 1
                         $this->db->where('id', $la['id_agenda'])
                                 ->update('db_sip.agenda', [
                                     'flag_rekap_sidak' => 1

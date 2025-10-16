@@ -1953,3 +1953,120 @@ function qounterNomorSurat($tahun){
     $counter = $helper->general->getlastNomorSurat($tahun);
     return $counter;
 }
+
+function validateToken($token, $publicKey){
+    $helper = &get_instance();
+    $token = str_replace(" ", "+", $token);
+
+    // cek jika dekripsinya sesuai
+    $decrypted = AESDecrypt($token, $publicKey);
+    if(!$decrypted){
+        $helper->response([
+            'code' => RC_INVALID_TOKEN['rc_code'],
+            'status' => false, 
+            'message' => RC_INVALID_TOKEN['message'],
+            "data" => null
+        ], RC_INVALID_TOKEN['code']);
+    }
+
+    $expl = explode(";", $decrypted);
+
+    // cek jika token belum kadaluarsa
+    $tokenDate = new DateTime($expl[0]);
+    $expireDate = (new DateTime())->modify('-5 minutes');
+    if($tokenDate < $expireDate){
+        $helper->response([
+            'code' => RC_EXPIRED_TOKEN['rc_code'],
+            'status' => false, 
+            'message' => RC_EXPIRED_TOKEN['message'],
+            "data" => null
+        ], RC_EXPIRED_TOKEN['code']);
+    }
+
+    // cek jika secret key sesuai
+    $secretKey = $expl[1];    
+    $client = $helper->m_general->getOne('t_api_client', 'secret_key', $secretKey, 1);
+    if(!$client || ($client && ($secretKey != $client['secret_key']))){
+        $helper->response([
+            'code' => RC_INVALID_TOKEN['rc_code'],
+            'status' => false, 
+            'message' => RC_INVALID_TOKEN['message'],
+            "data" => null
+        ], RC_INVALID_TOKEN['code']);
+    }
+
+    return $decrypted;
+}
+
+function validateParameter($requestedParameter){
+    $helper = &get_instance();
+    $param = $helper->input->post();        
+    if($param){
+        $requestedParameter[] = "token";
+        $requestedParameter[] = "publicKey";
+        foreach($requestedParameter as $rp){
+            if(!isset($param[$rp])){
+                $helper->response([
+                    'code' => RC_PARAMETER_KEY_NOT_FOUND['rc_code'],
+                    'status' => false, 
+                    'message' => "Parameter '".$rp."' Not Found",
+                    "data" => null
+                ], RC_PARAMETER_KEY_NOT_FOUND['code']);
+            }
+        }
+    } else {
+        $helper->response([
+            'code' => RC_PARAMETER_NOT_FOUND['rc_code'],
+            'status' => false, 
+            'message' => RC_PARAMETER_NOT_FOUND['message'],
+            "data" => null
+        ], RC_PARAMETER_NOT_FOUND['code']);
+    }
+
+    return $param;
+}
+
+function AESEncrypt($string, $publicKey = "", $secretKey = ""){
+    $helper = &get_instance();
+    $client = $helper->m_general->getOne('t_api_client', 'public_key', $publicKey, 1);
+
+    // jika data tidak ditemukan atau secret key tidak sama dengan yang ada di database
+    if(!$client || ($client && ($secretKey != $client['secret_key']))){
+        $helper->response([
+            'code' => RC_INVALID_PUBLIC_KEY['rc_code'],
+            'status' => false, 
+            'message' => RC_INVALID_PUBLIC_KEY['message'],
+            "data" => null
+        ], RC_INVALID_PUBLIC_KEY['code']);
+    }
+
+    return openssl_encrypt(
+        trim($string),
+        'AES-256-CBC',
+        $publicKey,
+        0,
+        $secretKey
+    );
+}
+
+function AESDecrypt($encrypted_data, $publicKey = ""){
+    $helper = &get_instance();
+    $client = $helper->m_general->getOne('t_api_client', 'public_key', $publicKey, 1);
+    
+    if(!$client){
+        $helper->response([
+            'code' => RC_INVALID_PUBLIC_KEY['rc_code'],
+            'status' => false, 
+            'message' => RC_INVALID_PUBLIC_KEY['message'],
+            "data" => null
+        ], RC_INVALID_PUBLIC_KEY['code']);
+    }
+
+    return openssl_decrypt(
+        trim($encrypted_data),
+        'AES-256-CBC',
+        $publicKey,
+        0,
+        $client['secret_key']
+    );
+}

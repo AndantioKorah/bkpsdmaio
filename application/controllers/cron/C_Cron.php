@@ -217,13 +217,26 @@ class C_Cron extends CI_Controller
         $this->load->view('master/V_TempUpdateDataPPPK', $data);
     }
 
-    public function funcTest(){
+    public function funcTest($str = ""){
         // dd($this->general_library->getDataKabanBkpsdm());
-        $randomString = generateRandomString(30, 1, 't_file_ds'); 
-        $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
-        // dd($contentQr);
-        $res['qr'] = generateQr($contentQr);
-        $this->load->view('adminkit/partials/V_TemplateTte', $res);
+        // $randomString = generateRandomString(30, 1, 't_file_ds'); 
+        // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+        // $contentQr = "https://docs.google.com/forms/d/e/1FAIpQLSc_mjHcvCXFncMCC63SBzLro5Rek-At-tssl7-bHDAAYwqj7Q/viewform?usp=header";
+        // $res['qr'] = generateQr($contentQr);
+        // echo "<img style='width: 300px; height: 300px;' src='".$res['qr']."'></img>";
+        // $this->load->view('adminkit/partials/V_TemplateTte', $res);
+
+        // dd(generateRandomString(16));
+
+        $date = date("Y-m-d H:i:s");
+        $nip = "199502182020121013";
+        $publickKey = "AARS_251016378";
+        $secretKey = "mb8V34s8xtxqEFVP";
+        $string = $date.";".$secretKey;
+
+        $encrypted = AESEncrypt($string, $publickKey, $secretKey);
+        dd("token: ".$encrypted);
+        // dd(AESDecrypt($encrypted, $secretKey));
     }
 
     public function testNomorSurat($data = null){

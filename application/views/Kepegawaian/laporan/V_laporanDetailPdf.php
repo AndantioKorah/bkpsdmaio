@@ -59,23 +59,37 @@
     <div class="card">
       <div class="card-body">
         <div class="row">
-          <div class="col mt-0 ml-0">
             <h5 class="card-title">Jumlah Pegawai </h5>
-          </div>
-          <div class="col-auto">
-            <div class="stat text-primary">
-              <i class="align-middle fa fa-users" ></i>
-            </div>
-          </div>
         </div>
-        <h1 class="mt-1" id="h1_total_pegawai"><?=$total?></h1>
+        <h1 style="margin-top:-10px;" id="h1_total_pegawai"><?=$total?></h1>
         <div class="mb-0">
            <?php
             $data_statuspeg['result'] = $statuspeg['statuspeg'];
             $data_statuspeg['id_chart'] = 'chart_statuspeg';
             $data_statuspeg['total_seluruh_pegawai'] = $total;
-            $this->load->view('login/V_ChartPieDashboard', $data_statuspeg);
+          
           ?>
+          <div class="col-lg-7">
+    </div>
+    <div class="col-lg-5">
+  <table style="margin-top:-10px;">
+    <?php 
+    $i = 0;
+    $colors = CHART_COLORS;
+    // $total_seluruh_pegawai = $this->session->userdata('total_seluruh_pegawai');
+    foreach($data_statuspeg['result'] as $rs){
+      if($rs['jumlah'] > 0){
+        $presentase = formatCurrencyWithoutRpWithDecimal((($rs['jumlah'] / $total) * 100), 2);
+    ?>
+      <tr>
+          <td colspan="2"><span style="background-color: <?=$colors[$i]?>">&nbsp;&nbsp;</span></td>
+          <td colspan="2"><span style="font-size: .7rem;"><?=isset($rs['nama']) ? $rs['nama'] : ''?></span></td>
+          <td colspan="2"><span style="font-size: .7rem;">:&nbsp;&nbsp;</span></td>
+          <td colspan="1" class="text-right"><span style="font-size: .7rem; font-weight: bold;"><?="".formatCurrencyWithoutRp($rs['jumlah'],0).""?></span></td>
+      </tr>
+    <?php $i++; } } ?>
+  </table>
+</div>
         </div>
       </div>
     </div>
@@ -383,9 +397,7 @@
 
 <?php if(isset($pendidikan_pns)) { ?>
 <?php if($jenis_laporan == 0){ ?>
-<br>
-<br>
-<br>
+
 <?php } ?>
 <br>
 

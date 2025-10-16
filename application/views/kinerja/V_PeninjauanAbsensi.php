@@ -313,6 +313,10 @@ function loadListPeninjauan(){
 
    function cekPengajuan(){
     var tanggal = $('#tanggal_absensi').val()
+    if(tanggal == null || tanggal == ""){
+      tanggal = "<?= date('Y-m-d');?>";
+    }
+  
    
     $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataPengajuanAbsensiPegawai",

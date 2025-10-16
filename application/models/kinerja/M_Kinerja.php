@@ -4985,7 +4985,7 @@
     $bulan = date("m",strtotime($this->input->post('tanggal')));
     $tahun = date("Y",strtotime($this->input->post('tanggal')));
     $this->db->select('
-    (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_pengajuan,
+    (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_pengajuan,
     (select count(*) from t_peninjauan_absensi as h where h.id_m_user = a.id_m_user and h.flag_active = 1 and h.status = 2  and month(h.tanggal_absensi) = '.$bulan.' and year(h.tanggal_absensi) = '.$tahun.'  limit 1) as total_tolak')
     ->from('t_peninjauan_absensi a')
     ->where('a.flag_active', 1)

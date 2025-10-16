@@ -13,8 +13,41 @@ class C_ApiLayanan extends RestController
         $this->load->model('user/M_User', 'user');
     }
 
-    public function getDataTpp_get(){
-        validateToken($this->get('token'), $this->get('publicKey'));
+    public function getDataTpp_post(){
+        // validasi parameter
+        $parameter = validateParameter(['nip']);
+
+        // validasi token
+        validateToken($parameter['token'], $parameter['publicKey']);
+        
+        $bulan = date('m');
+        if(isset($parameter['bulan'])){
+            $bulan = $parameter['bulan'];
+        }
+
+        $tahun = date('Y');
+        if(isset($parameter['tahun'])){
+            $tahun = $parameter['tahun'];
+        }
+
+        $pegawai = $this->m_general->getOne('m_user', 'username', $parameter['nip'], 1);
+        if(!$pegawai){
+            $this->response([
+                'code' => RC_NIP_NOT_FOUND['rc_code'],
+                'status' => false, 
+                'message' => RC_NIP_NOT_FOUND['message'],
+                "data" => null
+            ], RC_NIP_NOT_FOUND['code']);
+        }
+
+        $data = $this->general_library->getPaguTppPegawaiByIdPegawai($pegawai['id'], $bulan, $tahun, 0);
+
+        $this->response([
+            'code' => RC_PROCESS_SUCCESS['rc_code'],
+            'status' => true,
+            'message' => RC_PROCESS_SUCCESS['message'],
+            "data" => $data
+        ], RC_PROCESS_SUCCESS['code']);
     }
 
     public function users_get()

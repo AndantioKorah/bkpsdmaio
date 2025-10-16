@@ -221,18 +221,22 @@ class C_Cron extends CI_Controller
         // dd($this->general_library->getDataKabanBkpsdm());
         // $randomString = generateRandomString(30, 1, 't_file_ds'); 
         // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
-        // // dd($contentQr);
+        // $contentQr = "https://docs.google.com/forms/d/e/1FAIpQLSc_mjHcvCXFncMCC63SBzLro5Rek-At-tssl7-bHDAAYwqj7Q/viewform?usp=header";
         // $res['qr'] = generateQr($contentQr);
+        // echo "<img style='width: 300px; height: 300px;' src='".$res['qr']."'></img>";
         // $this->load->view('adminkit/partials/V_TemplateTte', $res);
+
+        // dd(generateRandomString(16));
 
         $date = date("Y-m-d H:i:s");
         $nip = "199502182020121013";
-        $secretKey = "BKPSDM_AARS_9903412";
-        $string = $date.";".$nip.";".$secretKey;
+        $publickKey = "AARS_251016378";
+        $secretKey = "mb8V34s8xtxqEFVP";
+        $string = $date.";".$secretKey;
 
-        $encrypted = AESEncrypt($string, $secretKey);
-        dd($encrypted);
-        dd(AESDecrypt($encrypted, $secretKey));
+        $encrypted = AESEncrypt($string, $publickKey, $secretKey);
+        dd("token: ".$encrypted);
+        // dd(AESDecrypt($encrypted, $secretKey));
     }
 
     public function testNomorSurat($data = null){

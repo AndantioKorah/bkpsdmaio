@@ -7279,7 +7279,7 @@ public function submitEditJabatan(){
                 ]);
     }
 
-    public function deletePermohonanCuti($id, $flag_delete_record = 1){
+    public function deletePermohonanCuti($id, $flag_delete_record = 1, $flag_sk_terbit = 0){
         $res['code'] = 0;
         $res['message'] = 'OK';
         $res['data'] = null; 
@@ -7324,6 +7324,47 @@ public function submitEditJabatan(){
 
         // $this->db->where('id_t_pengajuan_cuti', $id)
         //         ->update('t_meta_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+
+        // jika SK sudah terbit, hapus data cuti di profil, di dokumen pendukung
+        if($flag_sk_terbit == 1){
+            $expl = explode("-", $data['tanggal_mulai']);
+            $dokpen = $this->db->select('*')
+                            ->from('t_dokumen_pendukung')
+                            ->where('id_m_user', $data['id_m_user'])
+                            ->where('tanggal', floatval($expl[2]))
+                            ->where('bulan', floatval($expl[1]))
+                            ->where('tahun', floatval($expl[0]))
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($dokpen){
+                $this->db->where('random_string', $dokpen['random_string'])
+                        ->where('flag_active', 1)
+                        ->where('id_m_user', $data['id_m_user'])
+                        ->update('t_dokumen_pendukung', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId(),
+                            'updated_date' => date('Y-m-d H:i:s')
+                        ]);
+            }
+
+            $pegCuti = $this->db->select('a.*')
+                            ->from('db_pegawai.pegcuti a')
+                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                            ->join('m_user c', 'b.nipbaru_ws = c.username')
+                            ->where('c.flag_active', 1)
+                            ->where('c.id', $data['id_m_user'])
+                            ->where('a.tglmulai', $data['tanggal_mulai'])
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+            if($pegCuti){
+                $this->db->where('id', $pegCuti['id'])
+                        ->update('db_pegawai.pegcuti', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId(),
+                            'updated_date' => date('Y-m-d H:i:s')
+                        ]);
+            }
+        }
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();

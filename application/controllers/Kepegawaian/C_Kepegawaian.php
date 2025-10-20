@@ -1676,8 +1676,12 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function deletePermohonanCuti($id){
-		$this->kepegawaian->deletePermohonanCuti($id);
+		$this->kepegawaian->deletePermohonanCuti($id, 1, 0);
 		// $this->general->delete('id', $id, 't_pengajuan_cuti');
+	}
+
+	public function deletePermohonanCutiTerbitSk($id){
+		echo json_encode($this->kepegawaian->deletePermohonanCuti($id, 1, 1)); // jika sk sudah terbit, flag_terbit_sk set 1
 	}
 
 	public function deleteOperatorPermohonanCuti($id){

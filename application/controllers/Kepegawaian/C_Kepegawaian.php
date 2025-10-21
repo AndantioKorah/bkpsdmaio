@@ -2481,7 +2481,7 @@ class C_Kepegawaian extends CI_Controller
 	public function pltPlh(){
         $data['layanan'] = $this->master->getAllMasterLayanan();
 		$data['unit_kerja'] = $this->kepegawaian->getUnitKerja();
-        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanAll();
 		// dd($data['nama_jabatan']);
 		$data['list_pegawai'] = $this->session->userdata('list_pegawai');
         if(!$data['list_pegawai']){
@@ -2498,7 +2498,7 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function loadEditPltPlh($id){
-        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanAll();
 		$data['result'] = $this->kepegawaian->loadDataPltPlhById($id);
         $this->load->view('kepegawaian/V_MasterPltPlhEdit', $data);
 	}

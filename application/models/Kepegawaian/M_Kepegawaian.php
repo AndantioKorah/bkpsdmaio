@@ -11394,6 +11394,18 @@ public function getFileForKarisKarsu()
         return $this->db->get()->result_array(); 
     }
 
+    function getNamaJabatanAll(){
+        $this->db->select('*, CONCAT(a.nama_jabatan," | ",b.nm_unitkerja) as jabatan')
+        ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+        ->where_not_in('id_jabatanpeg', ['0000005J001','0000005J002'])
+        ->where('flag_active', 1)
+        // ->where('jenis_jabatan', 'Struktural')
+        ->group_by('a.id_jabatanpeg')
+        ->order_by('a.eselon')
+        ->from('db_pegawai.jabatan a');
+        return $this->db->get()->result_array(); 
+    }
+
     function getUnitKerja(){
         $this->db->select('*')
         ->where_not_in('id_unitkerja', [5])

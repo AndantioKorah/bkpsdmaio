@@ -2442,7 +2442,7 @@
 
     public function loadSearchVerifDokumen($status, $bulan, $tahun, $id_unitkerja = 0){
         $this->db->select('g.nama_jenis_disiplin_kerja,a.id_m_jenis_disiplin_kerja, c.nama, c.gelar1, c.gelar2, a.*, b.username as nip, b.id as id_m_user,
-        d.status as status_dokumen, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru')
+        d.status as status_dokumen, e.nama as nama_verif, f.nm_unitkerja, c.nipbaru, a.random_string')
         ->from('t_dokumen_pendukung a')
         ->join('m_user b', 'a.id_m_user = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -2471,22 +2471,22 @@
             $temp = $result;
             $result = null;
             foreach($temp as $t){
-                if(isset($result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']])){
+                if(isset($result[$t['random_string']])){
                     //jika tanggal kurang dari tanggal "dari_tanggal", maka tanggal di data $t yang baru akan menjadi data "dari_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['dari_tanggal'])){
-                        $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) < formatDateOnly($result[$t['random_string']]['dari_tanggal'])){
+                        $result[$t['random_string']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                     }
 
                     //jika tanggal lebih dari tanggal "sampai_tanggal", maka tanggal di data $t yang baru akan menjadi data "sampai_tanggal" yang baru
-                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['sampai_tanggal'])){
-                        $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    if(formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']) > formatDateOnly($result[$t['random_string']]['sampai_tanggal'])){
+                        $result[$t['random_string']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                     }
-                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['list_id'][] = $t['id'];
+                    $result[$t['random_string']]['list_id'][] = $t['id'];
                 } else {
-                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']] = $t;
-                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['list_id'][] = $t['id'];
-                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
-                    $result[$t['nip'].$t['dokumen_pendukung'].$t['id_m_jenis_disiplin_kerja']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['random_string']] = $t;
+                    $result[$t['random_string']]['list_id'][] = $t['id'];
+                    $result[$t['random_string']]['dari_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
+                    $result[$t['random_string']]['sampai_tanggal'] = formatDateOnly($t['tahun'].'-'.$t['bulan'].'-'.$t['tanggal']);
                 }
             }
         }

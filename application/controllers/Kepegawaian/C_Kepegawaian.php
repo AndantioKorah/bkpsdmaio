@@ -1561,12 +1561,28 @@ class C_Kepegawaian extends CI_Controller
 		$data = $this->input->post();
 		$res['code'] = 0;
 		$res['message'] = 'OK';
-
+		
 		$explTanggalMulai = explode("-", $data['tanggal_mulai']);
 		$explTanggalAkhir = explode("-", $data['tanggal_akhir']);
 
 		$tanggalMulai = $explTanggalMulai[2].'-'.$explTanggalMulai[1].'-'.$explTanggalMulai[0];
 		$tanggalAkhir = $explTanggalAkhir[2].'-'.$explTanggalAkhir[1].'-'.$explTanggalAkhir[0];
+
+		if($data['id_cuti'] == "10"){
+			$sisaCuti = $this->kepegawaian->getSisaCuti($this->general_library->getId());	
+			$sisaCutiTahunIni = $sisaCuti[date('Y')];
+
+			// cuti besar adalah 3 bulan dari tanggal mulai
+			$tanggalAkhir = date('Y-m-d', strtotime($tanggalMulai. '+3 months'));
+			
+			$terpakai = $sisaCutiTahunIni['jatah'] - $sisaCutiTahunIni['sisa'];
+			// jika jatah cuti di tahun berjalan sudah terpakai, tanggal akhir cuti besar dikurangi jumlah hari yang terpakai
+			if($terpakai > 0){
+				$tanggalAkhir = date('Y-m-d', strtotime($tanggalAkhir. '-'.floatval($terpakai).' days'));
+			}
+
+			dd($tanggalAkhir);
+		}
 
 		// $res['data'] = countHariKerjaDateToDate($tanggalMulai, $tanggalAkhir);
 		$res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);

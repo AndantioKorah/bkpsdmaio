@@ -1085,14 +1085,14 @@
             }
 
             if(isKasubKepegawaian($lp['nama_jabatan'], $lp['eselon']) && $lp['flag_uptd'] == 0){
-                if($id_unitkerja == 3014000){
-                    if($lp['nipbaru_ws'] == '198304212010012005'){
-                        $result['kasubag'] = $lp;
-                        // dd($result['kasubag']);
-                    }
-                } else {
+                // if($id_unitkerja == 3014000){
+                //     if($lp['nipbaru_ws'] == '198304212010012005'){
+                //         $result['kasubag'] = $lp;
+                //         // dd($result['kasubag']);
+                //     }
+                // } else {
                     $result['kasubag'] = $lp;
-                }
+                // }
             }
 
             if(stringStartWith('Sekretaris', $lp['nama_jabatan'])){

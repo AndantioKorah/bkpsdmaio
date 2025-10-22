@@ -6806,33 +6806,37 @@ public function submitEditJabatan(){
             }   
 
             $filename = null;
-            if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
+            // if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
                 if($flagVerifOperator == 1){
                     if($_FILES['surat_pendukung']['type'] != "application/pdf"){
                         $res['code'] = 0;
                         $res['message'] = "Surat Pendukung yang diupload harus dalam format Pdf";
                     } else {
-                        $config['upload_path'] = './assets/dokumen_pendukung_cuti';
-                        $config['allowed_types'] = '*';
-                        $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
-                        $this->load->library('upload',$config);
-                        if($this->upload->do_upload('surat_pendukung')){
-                            $upload = $this->upload->data();
-                            $filename = $upload['file_name'];
-                        } else {
-                            $res['code'] = 1;
-                            $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                        if($_FILES['surat_pendukung']){
+                            $config['upload_path'] = './assets/dokumen_pendukung_cuti';
+                            $config['allowed_types'] = '*';
+                            $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
+                            $this->load->library('upload',$config);
+                            if($this->upload->do_upload('surat_pendukung')){
+                                $upload = $this->upload->data();
+                                $filename = $upload['file_name'];
+                            } else {
+                                $res['code'] = 1;
+                                $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                            }
                         }
                     }
                 } else {
-                    if(!file_exists('assets/dokumen_pendukung_cuti/'.$dataInput['surat_pendukung'])){
-                        $res['code'] = 1;
-                        $res['message'] = "Data tidak dapat disimpan karena tidak ada Dokumen Pendukung";
+                    if(isset($dataInput['surat_pendukung']) &&
+                        $dataInput['surat_pendukung'] && 
+                        !file_exists('assets/dokumen_pendukung_cuti/'.$dataInput['surat_pendukung'])){
+                            $res['code'] = 1;
+                            $res['message'] = "Data tidak dapat disimpan karena tidak ada Dokumen Pendukung";
                     } else {
                         $filename = $dataInput['surat_pendukung'];
                     }
                 }
-            }
+            // }
             if($res['code'] == 0){
                 $randomString = generateRandomString(10, 1, 't_pengajuan_cuti');
                 $data['surat_pendukung'] = $filename;
@@ -7450,7 +7454,8 @@ public function submitEditJabatan(){
 		$res['code'] = 0;
 		$res['message'] = 'Permohonan Cuti Berhasil';
 		$res['data'] = null;
-        if($data['id_cuti'] == "00"){
+        // cek jika cuti tahunan atau cuti besar
+        if($data['id_cuti'] == "00" || $data['id_cuti'] == "10"){
             $hari_libur = $this->db->select('*')
                                 ->from('t_hari_libur')
                                 ->where('flag_active', 1)

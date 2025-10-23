@@ -123,6 +123,30 @@
         })
     }
 
+    $('#id_unitkerja').on('change', function(){
+        $.ajax({
+            url: '<?=base_url("master/C_Master/getAllJabatanAndJabatanEselonByUnitKerja/")?>'+$('#id_unitkerja').val(),
+            method: 'post',
+            data: null,
+            success: function(data){
+                let resp = JSON.parse(data)
+                $('#id_jabatan option').remove();                
+                $('#id_jabatan').append($('<option>', {
+                    value: 0,
+                    text: "Pilih Jabatan"
+                }));
+                resp.forEach(function(val){
+                    $('#id_jabatan').append($('<option>', {
+                        value: val.id_jabatanpeg + ";" + val.nama_jabatan,
+                        text: val.nama_jabatan
+                    }));
+                })
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })
+
     $('#form_hardcode_nominatif').on('submit', function(e){
         $('#btn-save').hide()
         $('#btn-save-loading').show()

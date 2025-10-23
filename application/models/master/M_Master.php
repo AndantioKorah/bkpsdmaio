@@ -463,6 +463,27 @@
                             ->get()->result_array();
         }
 
+        public function getAllJabatanAndJabatanEselonByUnitKerja($id){
+            $eselon = $this->db->select('*')
+                            ->from('db_pegawai.jabatan')
+                            ->where('id_unitkerja', $id)
+                            ->order_by('eselon')
+                            ->get()->result_array();
+
+            $jft = $this->db->select("*")
+                            ->from('db_pegawai.jabatan')
+                            ->where('jenis_jabatan', "JFT")
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+            $data = $eselon;
+            foreach($jft as $j){
+                $data[] = $j;
+            }
+
+            return $data;
+        }
+
         public function savePresentaseTpp($id_unitkerja){
             $res = [
                 'code' => 0,

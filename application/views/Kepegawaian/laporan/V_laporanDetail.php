@@ -222,6 +222,7 @@
          $belum_terdata_laki = $pendidikan['pendidikan']['belum_terdata']['laki'];
          $belum_terdata_perempuan = $pendidikan['pendidikan']['belum_terdata']['perempuan'];
          } } ?>
+		   <?php if($belum_terdata_laki+$belum_terdata_perempuan != 0) { ?>
  									<tr>
  										<td>11</td>
  										<td>Belum terdata</td>
@@ -229,6 +230,7 @@
  										<td><?=$belum_terdata_perempuan;?></td>
  										<td><?=$belum_terdata_laki+$belum_terdata_perempuan;?></td>
  									</tr>
+				<?php } ?>
  									<tr>
  										<td style="color:#fff;">12</td>
  										<td>Total</td>
@@ -351,6 +353,7 @@
          $belum_terdata_laki_pppk = $pendidikan_pppk['pendidikan']['belum_terdata']['laki'];
          $belum_terdata_perempuan_pppk = $pendidikan_pppk['pendidikan']['belum_terdata']['perempuan'];
          } } ?>
+		 <?php if($belum_terdata_laki_pppk+$belum_terdata_perempuan_pppk != 0) { ?>
  				<tr>
  					<td>11</td>
  					<td>Belum terdata</td>
@@ -358,6 +361,7 @@
  					<td><?=$belum_terdata_perempuan_pppk;?></td>
  					<td><?=$belum_terdata_laki_pppk+$belum_terdata_perempuan_pppk;?></td>
  				</tr>
+				<?php } ?>
  				<tr>
  					<td style="color:#fff;">12</td>
  					<td>Total</td>

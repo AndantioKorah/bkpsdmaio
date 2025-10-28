@@ -14506,11 +14506,18 @@ public function checkListIjazahCpns($id, $id_pegawai){
             return $rs;
             }
 
-    public function updateStatusLayananPangkat($id)
+    public function updateStatusLayananPangkat()
     {
-        $data['status'] = $id;
+        $data['status'] =$this->input->post('status');
+        if($this->input->post('id_layanan') == 6){
         $this->db->where_in('id', [6,7,8,9,29])
-                        ->update('m_layanan', $data);
+        ->update('m_layanan', $data);
+        } else {
+        $this->db->where_in('id', [21])
+        ->update('m_layanan', $data);
+        }
+        
+       
     }
 
     public function catatanGajiBerkala()

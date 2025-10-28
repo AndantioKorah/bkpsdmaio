@@ -357,6 +357,7 @@
          $belum_terdata_perempuan = $pendidikan['pendidikan']['belum_terdata']['perempuan'];
          } } ?>
      <tr>
+        <?php if($belum_terdata_laki+$belum_terdata_perempuan != 0) { ?>
              <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
                 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'>11</span></p>
             </td>
@@ -373,6 +374,7 @@
                 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$belum_terdata_laki+$belum_terdata_perempuan;?></span></p>
             </td>
         </tr>
+          <?php } ?>
         <tr>
              <td style="color:#fff;width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
                 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'>12</span></p>
@@ -390,6 +392,7 @@
                 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$total_laki+$total_perempuan+$belum_terdata_laki+$belum_terdata_perempuan;?></span></p>
             </td>
         </tr>
+      
     </tbody>
 </table>
 <?php } ?>

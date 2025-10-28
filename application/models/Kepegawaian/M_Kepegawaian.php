@@ -6806,33 +6806,37 @@ public function submitEditJabatan(){
             }   
 
             $filename = null;
-            if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
+            // if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
                 if($flagVerifOperator == 1){
                     if($_FILES['surat_pendukung']['type'] != "application/pdf"){
                         $res['code'] = 0;
                         $res['message'] = "Surat Pendukung yang diupload harus dalam format Pdf";
                     } else {
-                        $config['upload_path'] = './assets/dokumen_pendukung_cuti';
-                        $config['allowed_types'] = '*';
-                        $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
-                        $this->load->library('upload',$config);
-                        if($this->upload->do_upload('surat_pendukung')){
-                            $upload = $this->upload->data();
-                            $filename = $upload['file_name'];
-                        } else {
-                            $res['code'] = 1;
-                            $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                        if($_FILES['surat_pendukung']){
+                            $config['upload_path'] = './assets/dokumen_pendukung_cuti';
+                            $config['allowed_types'] = '*';
+                            $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
+                            $this->load->library('upload',$config);
+                            if($this->upload->do_upload('surat_pendukung')){
+                                $upload = $this->upload->data();
+                                $filename = $upload['file_name'];
+                            } else {
+                                $res['code'] = 1;
+                                $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                            }
                         }
                     }
                 } else {
-                    if(!file_exists('assets/dokumen_pendukung_cuti/'.$dataInput['surat_pendukung'])){
-                        $res['code'] = 1;
-                        $res['message'] = "Data tidak dapat disimpan karena tidak ada Dokumen Pendukung";
+                    if(isset($dataInput['surat_pendukung']) &&
+                        $dataInput['surat_pendukung'] && 
+                        !file_exists('assets/dokumen_pendukung_cuti/'.$dataInput['surat_pendukung'])){
+                            $res['code'] = 1;
+                            $res['message'] = "Data tidak dapat disimpan karena tidak ada Dokumen Pendukung";
                     } else {
                         $filename = $dataInput['surat_pendukung'];
                     }
                 }
-            }
+            // }
             if($res['code'] == 0){
                 $randomString = generateRandomString(10, 1, 't_pengajuan_cuti');
                 $data['surat_pendukung'] = $filename;
@@ -7279,7 +7283,7 @@ public function submitEditJabatan(){
                 ]);
     }
 
-    public function deletePermohonanCuti($id, $flag_delete_record = 1){
+    public function deletePermohonanCuti($id, $flag_delete_record = 1, $flag_sk_terbit = 0){
         $res['code'] = 0;
         $res['message'] = 'OK';
         $res['data'] = null; 
@@ -7324,6 +7328,47 @@ public function submitEditJabatan(){
 
         // $this->db->where('id_t_pengajuan_cuti', $id)
         //         ->update('t_meta_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+
+        // jika SK sudah terbit, hapus data cuti di profil, di dokumen pendukung
+        if($flag_sk_terbit == 1){
+            $expl = explode("-", $data['tanggal_mulai']);
+            $dokpen = $this->db->select('*')
+                            ->from('t_dokumen_pendukung')
+                            ->where('id_m_user', $data['id_m_user'])
+                            ->where('tanggal', floatval($expl[2]))
+                            ->where('bulan', floatval($expl[1]))
+                            ->where('tahun', floatval($expl[0]))
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($dokpen){
+                $this->db->where('random_string', $dokpen['random_string'])
+                        ->where('flag_active', 1)
+                        ->where('id_m_user', $data['id_m_user'])
+                        ->update('t_dokumen_pendukung', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId(),
+                            'updated_date' => date('Y-m-d H:i:s')
+                        ]);
+            }
+
+            $pegCuti = $this->db->select('a.*')
+                            ->from('db_pegawai.pegcuti a')
+                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                            ->join('m_user c', 'b.nipbaru_ws = c.username')
+                            ->where('c.flag_active', 1)
+                            ->where('c.id', $data['id_m_user'])
+                            ->where('a.tglmulai', $data['tanggal_mulai'])
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+            if($pegCuti){
+                $this->db->where('id', $pegCuti['id'])
+                        ->update('db_pegawai.pegcuti', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId(),
+                            'updated_date' => date('Y-m-d H:i:s')
+                        ]);
+            }
+        }
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -7409,7 +7454,8 @@ public function submitEditJabatan(){
 		$res['code'] = 0;
 		$res['message'] = 'Permohonan Cuti Berhasil';
 		$res['data'] = null;
-        if($data['id_cuti'] == "00"){
+        // cek jika cuti tahunan atau cuti besar
+        if($data['id_cuti'] == "00" || $data['id_cuti'] == "10"){
             $hari_libur = $this->db->select('*')
                                 ->from('t_hari_libur')
                                 ->where('flag_active', 1)
@@ -11347,6 +11393,18 @@ public function getFileForKarisKarsu()
         ->where_not_in('id_jabatanpeg', ['0000005J001','0000005J002'])
         ->where('flag_active', 1)
         ->where('jenis_jabatan', 'Struktural')
+        ->group_by('a.id_jabatanpeg')
+        ->order_by('a.eselon')
+        ->from('db_pegawai.jabatan a');
+        return $this->db->get()->result_array(); 
+    }
+
+    function getNamaJabatanAll(){
+        $this->db->select('*, CONCAT(a.nama_jabatan," | ",b.nm_unitkerja) as jabatan')
+        ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+        ->where_not_in('id_jabatanpeg', ['0000005J001','0000005J002'])
+        ->where('flag_active', 1)
+        // ->where('jenis_jabatan', 'Struktural')
         ->group_by('a.id_jabatanpeg')
         ->order_by('a.eselon')
         ->from('db_pegawai.jabatan a');

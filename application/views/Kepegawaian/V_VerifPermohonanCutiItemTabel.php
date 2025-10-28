@@ -49,7 +49,10 @@
         <td style="border: 1px solid grey;" class="text-center">
           <!-- <button type="button" href="#modal_detail_cuti" onclick="loadDetailCutiVerif('<?=$rs['id']?>')"
           data-toggle="modal" class="btn btn-navy">Detail</button> -->
-          <button type="button"onclick="loadDetailCutiVerif('<?=$rs['id']?>')" class="btn btn-navy">Detail</button>
+          <button type="button" onclick="loadDetailCutiVerif('<?=$rs['id']?>')" class="btn btn-sm btn-navy">Detail</button>
+          <?php if($rs['flag_ds_cuti'] == 1){ if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('admin_pengajuan_cuti')){ ?>
+            <button type="button" class="btn btn-danger btn-sm" onclick="adminDeleteCuti('<?=$rs['id']?>')">Hapus</button>
+          <?php }} ?>
         </td>
       </tr>
     <?php } } ?>
@@ -60,4 +63,25 @@
   $(function(){
     $('.table_riwayat_verif_cuti').dataTable()
   })
+
+  function adminDeleteCuti(id){
+    if(confirm('Apakah Anda yakin ingin menghapus data cuti ini?')){
+      $.ajax({
+        url: '<?=base_url("kepegawaian/C_Kepegawaian/deletePermohonanCutiTerbitSk/")?>'+id,
+        method:"POST",  
+        data: [],
+        success: function(res){
+          let rs = JSON.parse(res)
+          if(rs.code == 0){
+            successtoast('Data berhasil dihapus')
+            window.location=""
+          } else {
+            errortoast(rs.message)
+          }
+        }, error: function(err){
+          errortoast('Terjadi Kesalahan')
+        }
+      })
+    }
+  }
 </script>

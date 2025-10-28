@@ -238,6 +238,10 @@ class C_Master extends CI_Controller
         echo json_encode($this->master->getJabatanByUnitKerja($id));
     }
 
+    public function getAllJabatanAndJabatanEselonByUnitKerja($id){
+        echo json_encode($this->master->getAllJabatanAndJabatanEselonByUnitKerja($id));
+    }
+
     public function loadTpp(){
         $data['result'] = $this->master->loadMasterTpp();
         $this->load->view('master/V_TppData', $data);

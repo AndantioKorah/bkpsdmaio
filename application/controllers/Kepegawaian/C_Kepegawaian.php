@@ -1561,12 +1561,28 @@ class C_Kepegawaian extends CI_Controller
 		$data = $this->input->post();
 		$res['code'] = 0;
 		$res['message'] = 'OK';
-
+		
 		$explTanggalMulai = explode("-", $data['tanggal_mulai']);
 		$explTanggalAkhir = explode("-", $data['tanggal_akhir']);
 
 		$tanggalMulai = $explTanggalMulai[2].'-'.$explTanggalMulai[1].'-'.$explTanggalMulai[0];
 		$tanggalAkhir = $explTanggalAkhir[2].'-'.$explTanggalAkhir[1].'-'.$explTanggalAkhir[0];
+
+		if($data['id_cuti'] == "10"){
+			$sisaCuti = $this->kepegawaian->getSisaCuti($this->general_library->getId());	
+			$sisaCutiTahunIni = $sisaCuti[date('Y')];
+
+			// cuti besar adalah 3 bulan dari tanggal mulai
+			$tanggalAkhir = date('Y-m-d', strtotime($tanggalMulai. '+3 months'));
+			
+			$terpakai = $sisaCutiTahunIni['jatah'] - $sisaCutiTahunIni['sisa'];
+			// jika jatah cuti di tahun berjalan sudah terpakai, tanggal akhir cuti besar dikurangi jumlah hari yang terpakai
+			if($terpakai > 0){
+				$tanggalAkhir = date('Y-m-d', strtotime($tanggalAkhir. '-'.floatval($terpakai).' days'));
+			}
+
+			dd($tanggalAkhir);
+		}
 
 		// $res['data'] = countHariKerjaDateToDate($tanggalMulai, $tanggalAkhir);
 		$res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
@@ -1676,8 +1692,12 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function deletePermohonanCuti($id){
-		$this->kepegawaian->deletePermohonanCuti($id);
+		$this->kepegawaian->deletePermohonanCuti($id, 1, 0);
 		// $this->general->delete('id', $id, 't_pengajuan_cuti');
+	}
+
+	public function deletePermohonanCutiTerbitSk($id){
+		echo json_encode($this->kepegawaian->deletePermohonanCuti($id, 1, 1)); // jika sk sudah terbit, flag_terbit_sk set 1
 	}
 
 	public function deleteOperatorPermohonanCuti($id){
@@ -2477,7 +2497,7 @@ class C_Kepegawaian extends CI_Controller
 	public function pltPlh(){
         $data['layanan'] = $this->master->getAllMasterLayanan();
 		$data['unit_kerja'] = $this->kepegawaian->getUnitKerja();
-        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanAll();
 		// dd($data['nama_jabatan']);
 		$data['list_pegawai'] = $this->session->userdata('list_pegawai');
         if(!$data['list_pegawai']){
@@ -2494,7 +2514,7 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	public function loadEditPltPlh($id){
-        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanStruktural();
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanAll();
 		$data['result'] = $this->kepegawaian->loadDataPltPlhById($id);
         $this->load->view('kepegawaian/V_MasterPltPlhEdit', $data);
 	}

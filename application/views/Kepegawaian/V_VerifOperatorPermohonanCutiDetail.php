@@ -36,7 +36,7 @@
             <span class="sp_value_opc"><?=$dt['alasan']?></span><br>
             <span class="sp_label_opc">Alamat</span><br>
             <span class="sp_value_opc"><?=($dt['alamat'])?></span><br>
-            <?php if($result['id_cuti'] != 00){ ?>
+            <?php if($dt['surat_pendukung']){ ?>
               <span class="sp_label_opc">Dokumen Pendukung</span><br>
               <?php if(file_exists('assets/dokumen_pendukung_cuti/'.$dt['surat_pendukung'])){ ?>
                 <a href="<?=base_url('assets/dokumen_pendukung_cuti/'.$dt['surat_pendukung'])?>" target="_blank"

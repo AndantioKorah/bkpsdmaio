@@ -1626,9 +1626,9 @@
         // }
         if($pegawai){
             foreach($pegawai as $peg){
-                if($peg['nipbaru_ws'] == "198302282003121005"){
-                var_dump($peg);
-                }
+                // if($peg['nipbaru_ws'] == "198302282003121005"){
+                // var_dump($peg);
+                // }
                 
                 if(floatval($bulan) == $peg['bulan'] && floatval($tahun) == $peg['tahun']){
                     if($peg['flag_add'] == 1){
@@ -1794,7 +1794,6 @@
 
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
-
         $list_tanggal_exclude = null;
         $temp_list_nip = null;
         if($flag_absen_aars == 1){

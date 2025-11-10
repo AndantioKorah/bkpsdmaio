@@ -299,7 +299,7 @@ ol {
 
 				<form id="form_layanan_pangkat" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -35px;">
-          <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
+          <?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29) { ?>
           <div class="form-group">
             <label>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit</label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
@@ -326,11 +326,18 @@ ol {
 					<input type="hidden" id="ibel" value="<?php if($ibel) echo $ibel['id']; else echo "";?>">
 					<input type="hidden" id="pangkalandata" value="<?php if($pangkalandata) echo $pangkalandata['id']; else echo "";?>">
 					<input type="hidden" id="ijazah" value="<?php if($ijazah) echo $ijazah['id']; else echo "";?>">
-					
           <input type="hidden" id="uraiantugas" value="<?php if($uraiantugas) echo $uraiantugas['id']; else echo "";?>">
 					<input type="hidden" id="akreditasi" value="<?php if($akreditasi) echo $akreditasi['id']; else echo "";?>">
-          
-          <?php } ?>
+          <?php } else if($id_m_layanan == 29) { ?>
+          <input type="hidden" id="sk_penetapan_prestasi" value="<?php if($sk_penetapan_prestasi) echo $sk_penetapan_prestasi['id']; else echo "";?>">
+          <input type="hidden" id="bukti_prestasi" value="<?php if($bukti_prestasi) echo $bukti_prestasi['id']; else echo "";?>">
+          <input type="hidden" id="surat_pelantikan_jabatan" value="<?php if($surat_pelantikan_jabatan) echo $surat_pelantikan_jabatan['id']; else echo "";?>">
+          <input type="hidden" id="spmt" value="<?php if($spmt) echo $spmt['id']; else echo "";?>">
+          <input type="hidden" id="cv" value="<?php if($cv) echo $cv['id']; else echo "";?>">
+          <input type="hidden" id="pas_foto" value="<?php if($pas_foto) echo $pas_foto['id']; else echo "";?>">
+          <input type="hidden" id="sk_jabatan" value="<?php if($sk_jabatan) echo $sk_jabatan['id']; else echo "";?>">
+          <input type="hidden" id="berita_acara_jabatan" value="<?php if($berita_acara_jabatan) echo $berita_acara_jabatan['id']; else echo "";?>">
+            <?php } ?>
 				
 					<div class="list-type1x">
 						<ol class="rectangle-list">
@@ -508,6 +515,71 @@ ol {
 											class="fas fa-<?php if($pak) echo ''; else echo '';?>"></i></a>
 							</li>
               <?php } ?>
+
+
+              <?php if($id_m_layanan == 29) { ?>
+              <li>
+								<a class="<?php if($sk_pangkat){ if($sk_pangkat['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_pangkat) { ?>
+									onclick="viewBerkasPangkat('<?=$sk_pangkat['gambarsk'];?>',2)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Pangkat Terakhir* <i
+											class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
+							</li>
+               <li>
+								<a class="<?php if($sk_jabatan){ if($sk_jabatan['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_jabatan) { ?>
+									onclick="viewBerkasPangkat('<?=$sk_jabatan['gambarsk'];?>',2)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Terakhir* <i
+											class="fas fa-<?php if($sk_jabatan) echo ''; else echo '';?>"></i></a>
+							</li>
+              <li>
+								<a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP 1 thn terakhir bernilai sangat baik dgn masing2 unsur penilaian sangat baik atau diatas ekspektasi* <i
+											class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+							</li>
+              <li>
+								<a class="<?php if($sk_penetapan_prestasi && $sk_penetapan_prestasi['gambarsk'] != null){ if($sk_penetapan_prestasi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sk_penetapan_prestasi && $sk_penetapan_prestasi['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$sk_penetapan_prestasi['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Penetapan Prestasi Kerja Luar Biasa ditandatangani* <i
+											class="fas fa-<?php if($sk_penetapan_prestasi) echo ''; else echo '';?>"></i></a>
+							</li> 
+              <li>
+								<a class="<?php if($bukti_prestasi && $bukti_prestasi['gambarsk'] != null){ if($bukti_prestasi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($bukti_prestasi && $bukti_prestasi['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$bukti_prestasi['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Bukti Prestasi* <i
+											class="fas fa-<?php if($bukti_prestasi) echo ''; else echo '';?>"></i></a>
+							</li> 
+              <li>
+								<a class="<?php if($surat_pelantikan_jabatan && $surat_pelantikan_jabatan['gambarsk'] != null){ if($surat_pelantikan_jabatan['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($surat_pelantikan_jabatan && $surat_pelantikan_jabatan['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$surat_pelantikan_jabatan['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Surat Pelantikan (Dalam Jabatan Terakhir)* <i
+											class="fas fa-<?php if($surat_pelantikan_jabatan) echo ''; else echo '';?>"></i></a>
+							</li> 
+              <li>
+								<a class="<?php if($cv && $spmt['gambarsk'] != null){ if($spmt['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($spmt && $spmt['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$spmt['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SPMT (Surat Perintah Melaksanakan Tugas)* <i
+											class="fas fa-<?php if($spmt) echo ''; else echo '';?>"></i></a>
+							</li> 
+               <li>
+								<a class="<?php if($cv && $cv['gambarsk'] != null){ if($cv['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($cv && $cv['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$cv['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> CV Terbaru* <i
+											class="fas fa-<?php if($cv) echo ''; else echo '';?>"></i></a>
+							</li> 
+               <li>
+								<a class="<?php if($pas_foto && $pas_foto['gambarsk'] != null){ if($pas_foto['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($pas_foto && $pas_foto['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$pas_foto['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Pas Foto Terbaru* <i
+											class="fas fa-<?php if($pas_foto) echo ''; else echo '';?>"></i></a>
+							</li>
+                <li>
+								<a class="<?php if($berita_acara_jabatan && $berita_acara_jabatan['gambarsk'] != null){ if($berita_acara_jabatan['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($berita_acara_jabatan && $berita_acara_jabatan['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$berita_acara_jabatan['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Berita Acara Sumpah/ Janji / Pelantikan Jabatan* <i
+											class="fas fa-<?php if($berita_acara_jabatan) echo ''; else echo '';?>"></i></a>
+							</li>
+              <?php } ?>
+
 						</ol>
 					</div>
 
@@ -519,7 +591,7 @@ ol {
               <h4>
             <b style="color:red;">
               Layanan kenaikan pangkat sudah ditutup dan akan dibuka kembali pada periode kenaikan pangkat berikutnya.<br>
-              periode kenaikan pangkat oktober 2025 (dibuka pada tanggal 22 juli - 19 agustus 2025)
+              <!-- periode kenaikan pangkat Desember 2025 (dibuka pada tanggal 23 september - 21 oktober 2025) -->
             </b>
           </h4>
           </p>
@@ -573,7 +645,13 @@ ol {
 					<br>di upload pada pilihan Arsip Lainnya.
 				</p>
         <?php } ?>
-				
+				    <?php if($id_m_layanan == 29) { ?>
+          Untuk Berkas : <br>
+					Selain Pangkat, Jabatan dan SKP 
+
+					<br>di upload pada pilihan Arsip Lainnya.
+				</p>
+        <?php } ?>
 			</div>
 		</div>
 	</div>
@@ -651,8 +729,20 @@ $(function(){
         var uraiantugas = $('#uraiantugas').val()
         var pangkalandata = $('#pangkalandata').val()
         var ijazah = $('#ijazah').val()
-
         var akreditasi = $('#akreditasi').val()
+
+        var sk_penetapan_prestasi = $('#sk_penetapan_prestasi').val()
+        var bukti_prestasi = $('#bukti_prestasi').val()
+        var surat_pelantikan_jabatan = $('#surat_pelantikan_jabatan').val()
+        var spmt = $('#spmt').val()
+        var cv = $('#cv').val()
+        var pas_foto = $('#pas_foto').val()
+        var sk_jabatan = $('#sk_jabatan').val()
+        var berita_acara_jabatan = $('#berita_acara_jabatan').val()
+       
+
+
+
         var id_m_layanan = "<?=$id_m_layanan;?>"
        
         if(id_m_layanan == 6 || id_m_layanan == 7 || id_m_layanan == 8 || id_m_layanan == 9){
@@ -713,6 +803,51 @@ $(function(){
             return false;
         }
         if(akreditasi == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        }
+
+
+        if(id_m_layanan == 29){
+        if(skp1 == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(sk_pangkat == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+     
+        if(sk_penetapan_prestasi == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(bukti_prestasi == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(surat_pelantikan_jabatan == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(spmt == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(cv == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(pas_foto == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(sk_jabatan == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
+        if(berita_acara_jabatan == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }

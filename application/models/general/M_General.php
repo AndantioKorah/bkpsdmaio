@@ -67,11 +67,22 @@
             return $this->db->get()->result_array(); 
         }
 
+        public function getAllUnorSiasn(){
+            return $this->db->select('a.nama_unor, a.id, c.nama_unor as nama_unor_atasan')
+                        ->from('db_siasn.m_ref_unor a')
+                        ->join('db_siasn.m_unor_perencanaan b', 'a.id = b.id', 'left')
+                        ->join('db_siasn.m_ref_unor c', 'b.diatasan_id = c.id')
+                        ->group_by('a.id')
+                        ->order_by('a.nama_unor', 'asc')
+                        ->get()->result_array();
+        }
+
         public function authenticate($username, $password, $flagSwitchAcc = 0)
         {
             $exclude_username = ['prog', '001'];
 
-            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd, d.eselon, f.nama_jabatan as nama_jabatan_tambahan, b.id_m_status_pegawai')
+            $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd, d.eselon,
+                f.nama_jabatan as nama_jabatan_tambahan, b.id_m_status_pegawai')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -97,8 +108,8 @@
                         return $result;
                     } else {
                         if($this->validateApps() == 1){
-                            $this->db->where('parameter_name', 'PARAM_LAST_LOGIN')
-                                    ->update('m_parameter', ['parameter_value' => date('Y-m-d H:i:s')]);
+                            // $this->db->where('parameter_name', 'PARAM_LAST_LOGIN')
+                            //         ->update('m_parameter', ['parameter_value' => date('Y-m-d H:i:s')]);
 
                             $hardcodeKepalaSkpd = $this->db->select('*')
                                                         ->from('db_pegawai.unitkerja')
@@ -212,6 +223,26 @@
             return ['code' => 0];
         }
 
+        public function getListTppKelasJabatan(){
+            $tpp_kelas_jabatan = $this->m_general->getAll('m_tpp_kelas_jabatan');
+            if($tpp_kelas_jabatan){
+                foreach($tpp_kelas_jabatan as $tpp){
+                    $list_tpp_kelas_jabatan[$tpp['kelas_jabatan']] = $tpp['nominal'];
+                }
+            }
+            return $list_tpp_kelas_jabatan;
+        }
+
+        public function getListTppKelasJabatanNew(){
+            $tpp_kelas_jabatan_new = $this->m_general->getAll('m_tpp_kelas_jabatan_new');
+            if($tpp_kelas_jabatan_new){
+                foreach($tpp_kelas_jabatan_new as $tpp){
+                    $list_tpp_kelas_jabatan_new[$tpp['kelas_jabatan']] = $tpp['nominal'];
+                }
+            }
+            return $list_tpp_kelas_jabatan_new;
+        }
+
         public function getDataPegawai($nip){
             return $this->db->select('*')
                             ->from('db_pegawai.pegawai')
@@ -293,12 +324,12 @@
         }
 
         public function getListPegawaiGajiBerkalaByYear($data){
-            $tahun = $data['tahun'] - 2;
+            $tahun = $data['tahun'];
             if(isset($data['bulan'])){
                 $bulan = $data['bulan'];
             }
             $result = null;
-            $this->db->select('a.catatan_berkala,e.nm_statuspeg,a.statuspeg,a.id_peg,a.tmtpangkat,a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            $this->db->select('a.tmtgjberkalaberikut,a.catatan_berkala,e.nm_statuspeg,a.statuspeg,a.id_peg,a.tmtpangkat,a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.tmtgjberkala,
             (select CONCAT(aa.nm_m_user_verif,"|",aa.status,"|",aa.keterangan) from t_gajiberkala as aa where a.id_peg = aa.id_pegawai and tahun = '.$data['tahun'].' and aa.flag_active = 1 limit 1) as tberkala')
             ->from('db_pegawai.pegawai a')
@@ -310,7 +341,7 @@
             ->where('id_m_status_pegawai', 1)
             ->where('flag_terima_berkala', 1)
             // ->where('c.jenis_jabatan !=', 'JFT')
-            ->where('year(a.tmtgjberkala) <=', $tahun) 
+            ->where('year(a.tmtgjberkalaberikut) <=', $tahun) 
             // ->where('year(a.tmtgjberkala) ', $tahun)
 
             // ->where('a.tmtgjberkala !=', '0000-00-00')
@@ -438,10 +469,12 @@
         public function getListPegawaiPensiunByYear($data){
             // dd($data);
             $list_checklist_pensiun = null;
-            $checklist_pensiun = $this->db->select('a.*, c.nama')
+            $checklist_pensiun = $this->db->select('a.*, c.nama as nama_verifikator, e.gelar1, e.gelar2, e.nama')
                                         ->from('t_checklist_pensiun a')
                                         // ->join('t_checklist_pensiun_detail b', 'a.id = b.id_t_checklist_pensiun')
                                         ->join('m_user c', 'a.created_by = c.id')
+                                        ->join('m_user d', 'a.id_m_user_flag_selesai = d.id', 'left')
+                                        ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws', 'left')
                                         ->where('a.flag_active', 1)
                                         ->where('c.flag_active', 1)
                                         ->get()->result_array();
@@ -455,12 +488,18 @@
                         $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#82e4e7";
                         // $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white";
                     } else if($cp['created_by'] == 89){ // pak azwar
-                        $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#74fdab";
+                        $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#fc83eaff";
                         // $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white";
                     } else if($cp['created_by'] == 77){ // mawar
                         $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#da7ff7";
                         // $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white";
-                    } 
+                    }
+
+                    if($cp['flag_selesai'] == 1){
+                        // $list_checklist_pensiun[$cp['nip']] = $cp;
+                        $list_checklist_pensiun[$cp['nip']]['bg-color'] = "#004701ff";
+                        $list_checklist_pensiun[$cp['nip']]['txt-color'] = "white"; 
+                    }
                 }
             }
 
@@ -792,6 +831,9 @@
                         $result['eselon']['Non Eselon']['jumlah']++;
                     }
                 }
+                if($peg['pendidikan'] == "0"){
+                    $peg['pendidikan'] = "0000"; 
+                }
                 if($peg['pendidikan']){
                     $result['pendidikan'][$peg['pendidikan']]['jumlah']++;
                 }
@@ -916,6 +958,7 @@
                             ->where('temp_count <=', 2)
                             ->where('sendTo IS NOT NULL')
                             ->where('sendTo != 62')
+                            ->where('sendTo NOT LIKE "%@%"')
                             // ->where_not_in('status', ['pending', 'sent', 'read'])
                             ->order_by('flag_prioritas', 'desc')
                             ->order_by('created_date', 'asc')
@@ -938,7 +981,8 @@
                         $req = $this->maxchatlibrary->sendDocument($l['sendTo'], $l['fileurl'], $l['filename'], $l['message']);
                     }
                     $req = json_decode($req, true);
-                    $temp_count = $l['temp_count'] == null ? 0 : $l['temp_count']+1;
+                    $temp_count = $l['temp_count'] == null ? 0 : $l['temp_count'];
+                    $temp_count++;
                     if(!isset($req['error'])){
                         if($l['sendTo'] == GROUP_CHAT_HELPDESK || $l['sendTo'] == GROUP_CHAT_PRAKOM){
                             $this->db->where('id', $l['id'])
@@ -1100,7 +1144,7 @@
                             ->get()->result_array();
 
             $unorSiasn = $this->db->select('*')
-                            ->from('db_siasn.m_unor_perencanaan')
+                            ->from('db_siasn.m_ref_unor')
                             ->where('row_level', '2')
                             ->get()->result_array();
 
@@ -1127,7 +1171,7 @@
         public function revertMappingUnor($percent){
             $uker = $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
                             ->from('db_pegawai.unitkerja a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id')
                             ->where('a.id_unor_siasn IS NOT NULL')
                             ->get()->result_array();
 
@@ -1149,7 +1193,7 @@
         public function getDataMappingUnor(){
             $data = $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
                             ->from('db_pegawai.unitkerja a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                             ->group_by('a.id_unitkerja')
                             ->get()->result_array();
             return $data;
@@ -1158,7 +1202,7 @@
         public function editMappingUnor($id){
             return $this->db->select('a.id_unitkerja, a.id_unor_siasn, a.nm_unitkerja, b.nama_unor')
                             ->from('db_pegawai.unitkerja a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                             ->where('a.id_unitkerja', $id)
                             ->get()->row_array();
         }
@@ -1171,7 +1215,7 @@
                     ]);
 
             $rs = $this->db->select('*')
-                            ->from('db_siasn.m_unor_perencanaan')
+                            ->from('db_siasn.m_ref_unor')
                             ->where('id', $data['id_unor_siasn'])
                             ->get()->row_array();
             return $rs;
@@ -1201,7 +1245,7 @@
         public function loadMasterBidangByUnitKerjaForMappingUnor($id_unitkerja){
             return $this->db->select('a.*, b.nama_unor')
                             ->from('m_bidang a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                             ->where('a.id_unitkerja', $id_unitkerja)
                             ->where('a.flag_active', 1)
                             ->order_by('a.nama_bidang', 'asc')
@@ -1211,31 +1255,34 @@
         public function getDataForEditUnorBidang($id){
             return $this->db->select('a.*, a.id as id_m_bidang, b.nama_unor, b.id')
                             ->from('m_bidang a')
-                            ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                            ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                             ->where('a.id', $id)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
         }
         
         public function getUnorSiasnByUnitKerja($id_unitkerja){
-            return $this->db->select('*')
+            return $this->db->select('a.*, c.*')
                         ->from('db_pegawai.unitkerja a')
                         ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.diatasan_id')
+                        ->join('db_siasn.m_ref_unor c', 'b.id = c.id')
                         ->where('a.id_unitkerja', $id_unitkerja)
                         ->get()->result_array();
         }
 
         public function getUnorSiasnByBidang($id_m_bidang){
-            $data = $this->db->select('*')
+            $data = $this->db->select('a.*, c.*, d.*')
                         ->from('m_bidang a')
                         ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
-                        ->join('db_siasn.m_unor_perencanaan b', 'c.id_unor_siasn = b.diatasan_id')
+                        ->join('db_siasn.m_unor_perencanaan b', 'c.id_unor_siasn = b.diatasan_id', 'left')
+                        ->join('db_siasn.m_ref_unor d', 'b.id = d.id')
                         ->where('a.id', $id_m_bidang)
                         ->get()->result_array();
 
-            $tambahan = $this->db->select('*')
+            $tambahan = $this->db->select('a.*, c.*')
                                 ->from('m_bidang a')
                                 ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.diatasan_id')
+                                ->join('db_siasn.m_ref_unor c', 'b.id = c.id', 'left')
                                 ->where('a.id', $id_m_bidang)
                                 ->get()->result_array();
             if($data && (stringStartWith('Kecamatan', $data[0]['nm_unitkerja']) || stringStartWith('Kelurahan', $data[0]['nm_unitkerja']))){
@@ -1263,7 +1310,7 @@
                     ]);
 
             $rs = $this->db->select('*')
-                            ->from('db_siasn.m_unor_perencanaan')
+                            ->from('db_siasn.m_ref_unor')
                             ->where('id', $data['id_unor_siasn'])
                             ->get()->row_array();
             return $rs;
@@ -1277,7 +1324,7 @@
                     ]);
 
             $rs = $this->db->select('*')
-                            ->from('db_siasn.m_unor_perencanaan')
+                            ->from('db_siasn.m_ref_unor')
                             ->where('id', $data['id_unor_siasn'])
                             ->get()->row_array();
             return $rs;
@@ -1286,7 +1333,7 @@
         public function getListSubBidangByIdBidang($id_m_bidang){
             return $this->db->select('a.*, b.nama_unor')
                         ->from('m_sub_bidang a')
-                        ->join('db_siasn.m_unor_perencanaan b', 'a.id_unor_siasn = b.id', 'left')
+                        ->join('db_siasn.m_ref_unor b', 'a.id_unor_siasn = b.id', 'left')
                         ->where('a.id_m_bidang', $id_m_bidang)
                         ->where('a.flag_active', 1)
                         ->group_by('a.id')
@@ -1583,18 +1630,189 @@
             // dd("done ".count($temp));
         }
 
+        public function removeLog($batasHari){
+            $this->logCron('cronRemoveLog');
+            $date = date('Y-m-d', strtotime('-'.$batasHari.' days', strtotime(date('Y-m-d'))));
+            $arrTable = [
+                "t_log_maxchat",
+                "t_log_webhook",
+                "t_log_tte",
+                "t_log_ws_siasn",
+                "t_image_message"
+            ];
+
+            foreach($arrTable as $ar){
+                $this->db->where('created_date' < formatDateOnlyForEdit($date))
+                        ->delete($ar);
+                echo "deleted ".$this->db->affected_rows()." from ".$ar."<br>";
+            }
+
+            $arrTableCron = [
+                [
+                    'name' => "t_cron_async",
+                    'col_done' => "flag_done",
+                    'col_done_state' => 1
+                ],
+                [
+                    'name' => "t_cron_rekap_absen",
+                    'col_done' => "flag_sent",
+                    'col_done_state' => 1
+                ],
+                [
+                    'name' => "t_cron_wa",
+                    'col_done' => "flag_sent",
+                    'col_done_state' => 1
+                ],[
+                    'name' => "t_cron_tte_bulk_ds",
+                    'col_done' => "flag_done",
+                    'col_done_state' => 1
+                ]
+            ];
+
+            foreach($arrTableCron as $atc){
+                $this->db->where('created_dates' < formatDateOnlyForEdit($date))
+                        ->where($atc['col_done'] == $atc['col_done_state'])
+                        ->delete($atc['name']);
+                echo "deleted ".$this->db->affected_rows()." from ".$atc['name']."<br>";
+            }
+        }
+
+        public function notifVerifikatorPeninjauanAbsensi(){
+            $this->logCron('notifVerifikatorPeninjauanAbsensi');
+
+            $data = $this->db->select('a.id, d.nm_unitkerja, c.nama, c.nipbaru_ws, d.id_unitkerja, d.id_unitkerjamaster, a.tanggal_absensi')
+                            ->from('t_peninjauan_absensi a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
+                            // ->where('MONTH(a.created_date)', date('m'))
+                            ->where('a.status', 0)
+                            ->order_by('a.tanggal_absensi', 'ASC')
+                            ->group_by('a.id')
+                            ->get()->result_array();
+
+            $listVerifikator = $this->db->select('*')
+                                ->from('db_pegawai.pegawai')
+                                ->where_in('nipbaru_ws', [
+                                    199502182020121013, // tio
+                                    198504202010011009, // kasub erik
+                                    199611292022031012, // bob
+                                    198910272022031003, // onal
+                                    199401042020121011, // youri
+                                    199110212022031006, // harun
+                                ])
+                                ->get()->result_array();
+            
+            $verifikator = null;
+            foreach($listVerifikator as $lv){
+                $verifikator[$lv['nipbaru_ws']] = $lv;                
+                $verifikator[$lv['nipbaru_ws']]['data_count'] = 0;                
+                $verifikator[$lv['nipbaru_ws']]['data'] = null;                
+                $verifikator[$lv['nipbaru_ws']]['data_count_not_mapping'] = 0;                
+            }
+            $nipAdmin = "199401042020121011";
+
+            if($data){
+                foreach($data as $d){
+                    $nipVerifikator = null;
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_HARUN)){ //harun
+                        if(!in_array($d['id_unitkerja'], VERIF_PA_SKPDNOTIN_HARUN) && in_array($d['id_unitkerja'], VERIF_PA_SKPDIN_HARUN)){
+                            $nipVerifikator = "199110212022031006";
+                        }
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_ONAL)){ //ONAL
+                        if(!in_array($d['id_unitkerja'], VERIF_PA_SKPDNOTIN_ONAL) && in_array($d['id_unitkerja'], VERIF_PA_SKPDIN_ONAL)){
+                            $nipVerifikator = "198910272022031003";
+                        }
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_TIO)){ //TIO
+                        $nipVerifikator = "199502182020121013";
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_YOURI)){ //YOURI
+                        $nipVerifikator = "199401042020121011";
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_ERICK)){ //ERICK
+                        $nipVerifikator = "198504202010011009";
+                    }
+
+                    if(in_array($d['id_unitkerjamaster'], VERIF_PA_SKPDMASTER_BOB)){ //BOB
+                        $nipVerifikator = "199611292022031012";
+                    }
+
+                    if(!$nipVerifikator){ // jika null, tambahkan ke not mapping youri
+                        $nipVerifikator = $nipAdmin;
+                        $verifikator[$nipVerifikator]['data_count_not_mapping']++;
+                        $verifikator[$nipVerifikator]['not_mapping_data'][] = $d;
+                    } else {
+                        $expl = explode("-", trim($d['tanggal_absensi']));
+                        // $verifikator[$nipVerifikator]['data'][getNamaBulan($expl[1]).$expl[0]]['list'][] = $d;
+                        if(isset($verifikator[$nipVerifikator]['data'][getNamaBulan($expl[1])." ".$expl[0]])){
+                            $verifikator[$nipVerifikator]['data'][getNamaBulan($expl[1])." ".$expl[0]]['count']++;
+                        } else {
+                            $verifikator[$nipVerifikator]['data'][getNamaBulan($expl[1])." ".$expl[0]]['count'] = 1;
+                        }
+                    }
+                }
+                // dd($verifikator);
+                $cronWa = null;
+                foreach($verifikator as $verif){
+                    $message = "*[VERIFIKATOR PENINJAUAN ABSENSI]*\n\nTotal belum verif: \n";
+
+                    if($verif['data']){
+                        foreach($verif['data'] as $k => $v){
+                            if($k != "0000"){
+                                $message .= $k.": *".$v['count']."* data\n";
+                            }
+                        }
+                    }
+
+                    if($verif['nipbaru_ws'] == $nipAdmin && $verifikator[$nipAdmin]['data_count_not_mapping'] > 0){ // youri
+                        $message .= "\nTotal belum mapping: *".$verifikator[$nipAdmin]['data_count_not_mapping']."* data";
+                    }
+                    $message .= "\nLast Rekap: ".formatDateNamaBulanWithTime(date('Y-m-d H:i:s'));
+
+                    $cronWa[$verif['nipbaru_ws']] = [
+                        'type' => 'text',
+                        'sendTo' => convertPhoneNumber($verif['handphone']),
+                        'message' => $message,
+                        'jenis_layanan' => "Verifikator Peninjauan Absensi",
+                    ];
+                }
+                if($cronWa){
+                    $this->db->insert_batch('t_cron_wa', $cronWa);
+                }
+            }
+        }
+
         public function cronCheckVerifCuti(){
             // dd('asd');
+            // $this->removeLog(3);
+            // $this->notifVerifikatorPeninjauanAbsensi();
+
             $timeNow = date("H:i:s");
             $expl = explode(":", $timeNow);
             $flag_cek = 0;
             if($expl[0] == "11" && $expl[1] == "00"){
                 $flag_cek = 1;
+            } else if($expl[0] == "22" && $expl[1] == "00"){
+                $this->removeLog(3);
+            } else if($expl[0] == "08" && $expl[1] == "30"){
+                $this->notifVerifikatorPeninjauanAbsensi();
+            } else {
+                // dd("belum jam, ini masih ".$expl[0].":".$expl[1]);
             }
             // else if($expl[0] == "11" && $expl[1] == "45"){
             //     $flag_cek = 1;
             // }
-
+            // if($this->general_library->isProgrammer()){
+            //     $flag_cek = 1;
+            // }
             if($flag_cek == 1){
                 $this->logCron('cronCheckVerifCuti');
                 
@@ -1602,10 +1820,12 @@
                                     ->from('t_progress_cuti a')
                                     ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
                                     ->join('t_cron_wa c', 'a.chatId = c.chatId')
-                                    ->where('id_m_user_verifikasi !=', 193)
+                                    // ->where('a.id_m_user_verifikasi !=', 527)
+                                    ->where('a.nohp !=', NOMOR_HP_KABAN)
                                     ->where('a.flag_verif', 0)
                                     ->where('a.chatId IS NOT NULL')
                                     ->where('b.flag_active', 1)
+                                    ->where('a.flag_active', 1)
                                     // ->where('flag_resend !=', 1)
                                     ->group_by('a.id')
                                     ->get()->result_array();
@@ -1630,15 +1850,15 @@
                         }
                     }
                 }
-                
+                // dd($listChatIdResend);
                 if($listChatIdResend){
-                    // $this->db->where_in('chatId', $listChatIdResend)
-                    //         ->update('t_cron_wa', [
-                    //             'temp_count' => 0,
-                    //             'flag_sent' => 0,
-                    //             'flag_resend' => 1,
-                    //             'date_resend' => date('Y-m-d H:i:s')
-                    //         ]);
+                    $this->db->where_in('chatId', $listChatIdResend)
+                            ->update('t_cron_wa', [
+                                'temp_count' => 0,
+                                'flag_sent' => 0,
+                                'flag_resend' => 1,
+                                'date_resend' => date('Y-m-d H:i:s')
+                            ]);
                     // dd("Resend ".count($listChatIdResend)." pesan");
                 } else {
                     // dd("no resend message");
@@ -1660,25 +1880,26 @@
                                     ) as nm_jabatan_verifikator_sebelum
                                     ')
                                     ->from('t_progress_cuti a')
-                                    ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                                    ->join('t_pengajuan_cuti b', 'a.id = b.id_t_progress_cuti')
                                     ->join('db_pegawai.cuti c', 'b.id_cuti = c.id_cuti')
                                     ->join('m_user d', 'd.id = b.id_m_user')
                                     ->join('db_pegawai.pegawai e', 'e.nipbaru_ws = d.username')
-                                    ->where('id_m_user_verifikasi !=', 193)
                                     ->where('a.flag_verif', 0)
                                     ->where('a.chatId IS NULL')
+                                    ->where('a.nohp !=', NOMOR_HP_KABAN)
                                     ->where('b.flag_active', 1)
                                     ->where('b.flag_ditolak', 0)
                                     ->group_by('a.id')
                                     ->where('b.flag_ds_cuti', 0)
                                     // ->where_in('e.nipbaru_ws', $listNip)
                                     // ->where('flag_resend !=', 1)
-                                    ->order_by('a.urutan', 'asc')
+                                    // ->order_by('a.urutan', 'asc')
                                     // ->group_by('b.id')
                                     ->get()->result_array();
-                
+
                 $tempExists = null;
                 if($progressCutiWithoutChatId){
+                    // dd($progressCutiWithoutChatId);
                     $cronWaNextVerifikator = null;
                     foreach($progressCutiWithoutChatId as $pcw){
                         if(!isset($tempExists[$pcw['id_t_pengajuan_cuti']])){
@@ -1715,12 +1936,41 @@
                     }
 
                     if($cronWaNextVerifikator){
-                        dd($cronWaNextVerifikator);
-                        // $this->db->insert_batch('t_cron_wa', $cronWaNextVerifikator);
+                        // dd($cronWaNextVerifikator);
+                        $this->db->insert_batch('t_cron_wa', $cronWaNextVerifikator);
                     }
+                }
+            }
 
-                    if($cronWaNextVerifikator){
-                        dd($cronWaNextVerifikator);
+            $paramZipSkCuti = $this->db->select('a.*, c.handphone')
+                                    ->from('m_parameter a')
+                                    ->join('m_user b', 'a.updated_by = b.id')
+                                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                    ->where('parameter_name', "PARAM_ZIP_NAME_SK_CUTI")
+                                    ->where('a.flag_active', 1)
+                                    ->where('b.flag_active', 1)
+                                    // ->where('flag_sent', 0)
+                                    ->get()->row_array();
+
+            if($paramZipSkCuti){
+                if($paramZipSkCuti['flag_sent'] == 0){
+                    $this->db->insert('t_cron_wa', [
+                        'sendTo' => convertPhoneNumber($paramZipSkCuti['handphone']),
+                        'message' => "REKAP SK CUTI per ".formatDateNamaBulanWithTime(date('Y-m-d H:i:s')),
+                        'filename' => $paramZipSkCuti['parameter_value'],
+                        'fileurl' => ($paramZipSkCuti['parameter_value']),
+                        'type' => 'document',
+                        'jenis_layanan' => 'ZIP SK Cuti'
+                    ]);
+
+                    $this->db->where('id', $paramZipSkCuti['id'])
+                                ->update('m_parameter', [
+                                    'flag_sent' => 1,
+                                    'date_sent' => date('Y-m-d H:i:s')
+                                ]);
+                } else {
+                    if(file_exists($paramZipSkCuti['parameter_value'])){
+                        // unlink(($paramZipSkCuti['parameter_value']));
                     }
                 }
             }
@@ -1728,126 +1978,61 @@
 
         public function getListPengadaan($tahun){
             // $result = $this->siasnlib->getListPengadaan($tahun);
+            // dd($result);
             // $res = json_decode($result['data'], true)['data'];
+            // dd($res);
             // $pns = null;
+            // $pppk = null;
             // foreach($res as $r){
             //     if($r['jenis_formasi_id'] == "0101"){
             //         $pns[] = $r;
+            //     } else if($r['jenis_formasi_id'] == "0101"){
+            //         $pppk[] = $r;
             //     }
             // }
-            // dd(json_encode($pns));
-            // dd(($pns));
 
-            $exists = [
-                "199208292025052001",
-                "199909092025052001",
-                "199704272025052001",
-                "199906212025052002",
-                "199511232025051001",
-                "199812242025052001",
-                "199612292025052001",
-                "199803032025052003",
-                "200008072025052002",
-                "200101012025052002",
-                "199608172025052002",
-                "199810262025051001",
-                "200002042025052003",
-                "199206292025052001",
-                "199310072025052001",
-                "199911162025051001",
-                "199911202025051002",
-                "199512122025052001",
-                "200101012025052001",
-                "199802022025051001",
-                "200006022025052001",
-                "200006162025052001",
-                "199703132025051001",
-                "200002042025052001",
-                "199608172025052001",
-                "199607112025052001",
-                "200109082025052001",
-                "200010022025052002",
-                "200007312025051001",
-                "200106102025051001",
-                "199401292025052001",
-                "199904172025052001",
-                "200102032025051001",
-                "199902012025052001",
-                "199902102025052001",
-                "199402022025052001",
-                "200005292025052001",
-                "199306092025051001",
-                "199907282025052001",
-                "200002272025052001",
-                "200201192025052001",
-                "200006092025052001",
-                "199408302025052002",
-                "200102192025052001",
-                "200010292025051001",
-                "199508302025051001",
-                "200208242025051001",
-                "200206212025052001",
-                "200106252025052001",
-                "200003212025051001",
-                "199802092025051001",
-                "199507282025052001",
-                "199612102025051001",
-                "199710142025051001",
-                "200111222025051001",
-                "200011252025052001",
-                "200106272025051001",
-                "199803302025052001",
-                "199905092025051001",
-                "200205142025052001",
-                "199105242025052001",
-                "199305212025052001",
-                "199908052025052001",
-                "199905072025051001",
-                "200004292025052001",
-                "199502132025051001",
-                "200209062025052001",
-                "199406012025052001",
-                "199709032025051001",
-                "199905212025051001",
-                "200106222025051001",
-                "199608202025051001",
-                "199506042025051001",
-                "199612232025052001",
-                "200002042025052002",
-                "199905142025052002",
-                "199804252025052002",
-                "200011122025052001",
-                "199411132025052001",
-                "199902152025051001",
-                "199605252025051001",
-                "199305242025052001",
-                "200206082025052001",
-                "199511302025052001",
-                "199105062025052001",
-                "199506142025052002",
-                "199909292025051001",
-                "199612212025052001",
-                "199505122025051002",
-                "199509252025052002",
-                "199309192025051001",
-                "200110052025051001"
-            ];
-
-            $listExists = null;
-            $i = 0;
+            // $listExists = null;
+            // $i = 0;
             // foreach($exists as $e){
             //     $listExists['nip'] = $e;
             //     $i++;
             // }
 
+            //0208 pppk teknis
+
+            $tNip = null;
+            $tempNip = $this->db->select('*')
+                                ->from('t_temp_data_pppk2024')
+                                ->get()->result_array();
+            foreach($tempNip as $tn){
+                $tNip[$tn['nip']] = $tn;
+            }
+
+            $dataPppk = null;
             $resultJson = $this->db->select('*')
                             ->from('m_parameter')
-                            ->where('parameter_name', 'TEMP_CPNS_2024')
+                            ->where('parameter_name', 'TEMP_PENGADAAN_2024')
                             ->get()->row_array();
-
             $result = json_decode($resultJson['parameter_value'], true);
-            
-            dd($result);
+            $exists = null;
+            $double = null;
+
+            foreach($result as $rs){
+                if(isset($tNip[$rs['nip']]) && !isset($dataPppk[$rs['nip']])){
+                    $dataPppk[$rs['nip']] = $rs;
+                }
+
+                if(!isset($exists[$rs['nip']])){
+                    $exists[$rs['nip']] = $rs;
+                    $double[$rs['nip']] = 1;
+                } else {
+                    $double[$rs['nip']]++;
+                }
+            }
+            // dd($double);
+            // dd(($exists));
+            // echo "total_data_m_parameter: ".count($result);
+            dd($dataPppk);
 
         }
 
@@ -1897,5 +2082,382 @@
             ]);
         }
 
+        public function syncUnor(){
+            $res = $this->siasnlib->getAllDataUnor();
+            if($res['code'] == 0){
+                $listUnorPerencanaan = null; 
+                $mUnorPerencanaan = $this->db->select('*')
+                                        ->from('db_siasn.m_unor_perencanaan')
+                                        ->get()->result_array();
+                if($mUnorPerencanaan){
+                    foreach($mUnorPerencanaan as $mup){
+                        $listUnorPerencanaan[$mup['id']] = $mup;
+                    }
+                }
+
+                $listRefUnor = null; 
+                $mRefUnor = $this->db->select('*')
+                                        ->from('db_siasn.m_ref_unor')
+                                        ->get()->result_array();
+                if($mRefUnor){
+                    foreach($mRefUnor as $mru){
+                        $listRefUnor[$mru['id']] = $mru;
+                        $listRefUnor[strtoupper($mru['nama_unor'])] = $mru;
+                    }
+                }
+
+                // $unitKerjaNotMapping = $this->db->select('*')
+                //                             ->from('db_pegawai.unitkerja')
+                //                             ->where('id_unor_siasn', null)
+                //                             ->get()->result_array();
+
+                // foreach($unitKerjaNotMapping as $uknm){
+                //     if(isset($listRefUnor[strtoupper($uknm['nm_unitkerja'].' MANADO')])){
+                //         $this->db->where('id_unitkerja', $uknm['id_unitkerja'])
+                //                 ->update('db_pegawai.unitkerja', [
+                //                     'id_unor_siasn' => $listRefUnor[strtoupper($uknm['nm_unitkerja'].' MANADO')]['id']
+                //                 ]);
+                //         echo "update unor siasn ".$uknm['nm_unitkerja']." => ".$listRefUnor[strtoupper($uknm['nm_unitkerja'].' MANADO')]['id']."<br>";
+                //     }
+                // }
+
+                // batas here
+
+                $list = json_decode($res['data'], true);
+                $insertMUnorPerencanaan = null;
+                $insertMRefUnor = null;
+
+                foreach($list['data'] as $l){
+                    // dd($list['data']);
+                    if(isset($listUnorPerencanaan[$l['Id']])){
+                        $this->db->where('id', $l['Id'])
+                                ->update('db_siasn.m_unor_perencanaan', [
+                                    'nama_unor' => $l['NamaUnor'],
+                                    'diatasan_id' => $l['DiatasanId'],
+                                    'induk_unor_id' => $l['IndukUnorId'],
+                                    'jenis_unor_id' => $l['JenisUnorId'],
+                                ]);
+                        echo "update unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
+                    } else {
+                        echo "put in insert unor perencanaan ".$l['NamaUnor']." id: ".$l['Id']."<br>";
+                        $insertMUnorPerencanaan[$l['Id']] = [
+                            'id' => $l['Id'],
+                            'nama_unor' => $l['NamaUnor'],
+                            'diatasan_id' => $l['DiatasanId'],
+                            'induk_unor_id' => $l['IndukUnorId'],
+                            'jenis_unor_id' => $l['JenisUnorId'],
+                        ];
+                    }
+
+                    if(isset($listRefUnor[$l['Id']])){
+                        $this->db->where('id', $l['Id'])
+                                ->update('db_siasn.m_ref_unor', [
+                                    'nama_unor' => $l['NamaUnor'],
+                                    'id' => $l['Id']
+                                ]);
+                        echo "update unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
+                    } else {
+                        echo "put in insert unor ".$l['NamaUnor']."id: ".$l['Id']."<br>";
+                        $insertMRefUnor[$l['Id']] = [
+                            'id' => $l['Id'],
+                            'nama_unor' => $l['NamaUnor'],
+                        ];
+                    }
+                }
+
+                if($insertMUnorPerencanaan){
+                    $this->db->insert_batch('db_siasn.m_unor_perencanaan', $insertMUnorPerencanaan);
+                    echo "insert unor perencanaan ".count($insertMUnorPerencanaan)."<br>";
+                }
+
+                if($insertMRefUnor){
+                    $this->db->insert_batch('db_siasn.m_ref_unor', $insertMRefUnor);
+                    echo "insert unor perencanaan ".count($insertMRefUnor)."<br>";
+                }
+            }
+        }
+
+        public function getLastFormatNomorSurat($nomorSuratLayanan = "800", $tahun = 0){
+            if($tahun == 0){
+                $tahun = date('Y');
+            }
+
+            $counter = 1;
+            $this->db->select('*')
+                ->from('t_nomor_surat')            
+                ->order_by('counter', 'desc')
+                ->where('flag_active', 1)
+                ->limit(1);
+
+            if(FLAG_CONTINUE_NOMOR_SURAT == 0){ // jika tetap lanjut walaupun ada perubahan format baru format baru
+                $this->db->where('nomor_surat LIKE "'.FORMAT_NOMOR_SURAT.$tahun.'"');
+            }
+            $data = $this->db->get()->row_array();
+
+            if($data){
+                $counter = $data['counter']+1;
+            }
+
+            // format [0] harus dicek agar pas dengan parameter yang akan dimasukkan pada format nomor surat
+            $format[0] = $nomorSuratLayanan;
+            $format[4] = $counter;
+
+            $expl = explode("/", FORMAT_NOMOR_SURAT);
+            $i = 0;
+            $generatedNomorSurat = "";
+            foreach($expl as $e){
+                if(isset($format[$i])){
+                    $generatedNomorSurat .= $format[$i];
+                } else {
+                    $generatedNomorSurat .= $e;
+                }
+                if($i < count($expl)-1){
+                    $generatedNomorSurat .= "/";
+                }
+                $i++;
+            }
+            $generatedNomorSurat .= $tahun;
+
+            return [
+                'nomor_surat' => $generatedNomorSurat,
+                'counter' => $counter
+            ];
+        }
+
+        public function updateDataPPPK($nip, $flag_save = 0){
+            if($flag_save == 1 && $nip == 0){
+                dd("harus mengisi nip jika ingin melakukan penyimpanan data");
+            }
+
+            $tempMetaData = $this->db->select('*')
+                                    ->from('t_temp_meta_data')
+                                    ->where('nama', 'DATA_PPPK_T1_2024')
+                                    ->get()->row_array();
+            if($tempMetaData){
+                $result = json_decode($tempMetaData['meta_data'], true);
+
+                $tNip = null;
+                $tempNip = null;
+                $selectedPegawai = null;
+
+                $this->db->select('*')
+                        ->from('t_temp_data_pppk2024');
+                if($nip != 0){
+                    $this->db->where('nip', $nip);
+                }
+                $tempNip = $this->db->get()->result_array();
+                
+                if($tempNip){
+                    foreach($tempNip as $tn){
+                        $tNip[$tn['nip']] = $tn;
+                    }
+
+                    $listPegawai = null;
+                    foreach($result as $rs){
+                        if(isset($tNip[$rs['nip']])){
+                            $listPegawai[$rs['nip']] = $rs;
+                            // if($flag_save == 1){
+                                $selectedPegawai = $rs;
+                            // }
+                        }
+                    }
+
+                    if($nip == 0){
+                        dd($listPegawai);
+                    } else {
+                        $dataPegawai = $this->db->select('a.gelar1, a.gelar2, a.nama, a.nipbaru_ws, a.id_peg,
+                                            b.gambarsk as url_jabatan, c.gambarsk as url_berkas,
+                                            d.gambarsk as url_arsip')
+                                            ->from('db_pegawai.pegawai a')
+                                            ->join('db_pegawai.pegjabatan b', 'a.id_peg = b.id_pegawai AND b.flag_active = 1')
+                                            ->join('db_pegawai.pegberkaspns c', 'a.id_peg = c.id_pegawai AND c.flag_active = 1')
+                                            ->join('db_pegawai.pegarsip d', 'a.id_peg = d.id_pegawai AND d.flag_active = 1')
+                                            ->where('nipbaru_ws', $selectedPegawai['nip'])
+                                            ->get()->row_array();
+                        if($dataPegawai){
+                            $agama = 1;
+                            if($selectedPegawai['agama_nama'] == 'Katholik'){
+                                $agama = 2;
+                            } else if($selectedPegawai['agama_nama'] == 'Islam'){
+                                $agama = 3;
+                            } else if($selectedPegawai['agama_nama'] == 'Hindu'){
+                                $agama = 4;
+                            } else if($selectedPegawai['agama_nama'] == 'Buddha'){
+                                $agama = 5;
+                            }
+
+                            if($flag_save == 1){
+                                $this->db->where('id_peg', $dataPegawai['id_peg'])
+                                        ->update('db_pegawai.pegawai', [
+                                            'nama' => $selectedPegawai['nama'],
+                                            'gelar1' => $selectedPegawai['gelar_depan'],
+                                            'gelar2' => $selectedPegawai['gelar_belakang'],
+                                            'jk' => $selectedPegawai['jenis_kelamin'] == "M" ? "Laki-Laki" : "Perempuan",
+                                            'tptlahir ' => $selectedPegawai['tempat_lahir'],
+                                            'tgllahir ' => $selectedPegawai['tanggal_lahir'],
+                                        ]);
+
+                                $this->db->where('id_pegawai', $dataPegawai['id_peg'])
+                                        ->update('db_pegawai.pegjabatan', [
+                                            'gambarsk' => "SK_".$selectedPegawai['nip']."_".$selectedPegawai['nama']."_sign_sign.pdf"
+                                        ]);
+                                
+                                $this->db->where('id_pegawai', $dataPegawai['id_peg'])
+                                        ->update('db_pegawai.pegberkaspns', [
+                                            'gambarsk' => "SK_".$selectedPegawai['nip']."_".$selectedPegawai['nama']."_sign_sign.pdf"
+                                        ]);
+                                
+                                $temp['gelar1'] = $selectedPegawai['gelar_depan'];
+                                $temp['gelar2'] = $selectedPegawai['gelar_belakang'];
+                                $temp['nama'] = $selectedPegawai['nama'];
+
+                                $this->db->where('id_pegawai', $dataPegawai['id_peg'])
+                                        ->where('id_dokumen', 34)
+                                        ->update('db_pegawai.pegarsip', [
+                                            'gambarsk' => getNamaPegawaiFull($temp, 1)."_sign.pdf"
+                                        ]);
+                            }
+                        }
+                        return [
+                            'temp' => $selectedPegawai,
+                            'db' => $dataPegawai 
+                        ];
+                    }
+
+                } else {
+                    dd("nip null ".$nip);
+                }
+            }
+        }
+
+        public function cekSidak(){
+            $this->db->trans_begin();
+
+            $agenda = $this->db->select('a.id, a.judul, a.buka_masuk, a.tgl, d.id_unitkerja')
+                            ->from('db_sip.agenda a')
+                            ->join('db_sip.peserta_agenda b', 'a.id = b.agenda_id')
+                            ->join('db_sip.skpd c', 'b.skpd_id = c.id')
+                            ->join('db_pegawai.unitkerja d', 'c.unit_id = d.id_unitkerja')
+                            ->where('a.flag_sidak', 1)
+                            ->where('a.flag_rekap_sidak', 0)
+                            // ->where('a.id', 160) // ini untuk testing, comment untuk sidak semua
+                            ->get()->result_array();
+
+            $listAgendaTanggal = null;
+            $listAgendaUker = null;
+            $listAgenda = null;
+            if($agenda){
+                foreach($agenda as $a){
+                    $listAgenda[$a['id']] = [
+                        'id_agenda' => $a['id'],
+                        'id_unitkerja' => $a['id_unitkerja'],
+                        'tanggal' => $a['tgl'],
+                        'jam_absen' => $a['buka_masuk'],
+                        'judul' => $a['judul']
+                    ];
+                }
+                
+                if($listAgenda){
+                    $dataSidak = null;
+                    foreach($listAgenda as $la){
+                        // update flag_rekap_sidak jadi 1
+                        $this->db->where('id', $la['id_agenda'])
+                                ->update('db_sip.agenda', [
+                                    'flag_rekap_sidak' => 1
+                                ]);
+
+                        $dataAbsenAgenda = $this->db->select('b.id as id_m_user')
+                                                ->from('db_sip.absen_event a')
+                                                ->join('m_user b', 'a.user_id = b.id')
+                                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                                ->where('b.flag_active', 1)
+                                                ->where('c.skpd', $la['id_unitkerja'])
+                                                ->where('a.tgl', $la['tanggal'])
+                                                ->get()->result_array();
+                        $listAbsenAgenda = null;
+                        if($dataAbsenAgenda){
+                            foreach($dataAbsenAgenda as $daa){
+                                $listAbsenAgenda[$daa['id_m_user']] = $daa; // buat list data absen
+                            }
+                        }
+                        
+                        $dataAbsenReguler = $this->db->select('b.id as id_m_user, c.gelar1, c.gelar2, c.nama, c.handphone')
+                                                ->from('db_sip.absen a')
+                                                ->join('m_user b', 'a.user_id = b.id')
+                                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                                ->where('b.flag_active', 1)
+                                                ->where('c.skpd', $la['id_unitkerja'])
+                                                ->where('a.tgl', $la['tanggal'])
+                                                ->get()->result_array();
+                        $listAbsenReguler = null;
+                        if($dataAbsenReguler){
+                            foreach($dataAbsenReguler as $dar){
+                                if(!isset($listAbsenAgenda[$dar['id_m_user']])){ // cek jika ada absen biasa dan tidak ada di absen agenda maka kena sidak
+                                    $dataSidak[] = [
+                                        'id_m_user' => $dar['id_m_user'],
+                                        'keterangan' => "Tidak melakukan presensi Sidak pada ".$la['judul']." tanggal ".formatDateNamaBulan($la['tanggal'])." ".$la['jam_absen'],
+                                        'nama_pegawai' => getNamaPegawaiFull($dar),
+                                        'handphone' => $dar['handphone'],
+                                        'tanggal' => $la['tanggal']
+                                    ];
+                                }
+                            }
+                        }
+                    }
+
+                    if($dataSidak){
+                        $dokpenSidak = null;
+                        $cronWa = null;
+                        $mSidak = $this->db->select('*')
+                                        ->from('m_jenis_disiplin_kerja')
+                                        ->where('keterangan', 'SIDAK')
+                                        ->where('flag_active', 1)
+                                        ->get()->row_array();
+                        
+                        foreach($dataSidak as $ds){
+                            $explTgl = explode("-", $ds['tanggal']);
+                            $dokpenSidak[] = [
+                                'id_m_user' => $ds['id_m_user'],
+                                'tanggal' => $explTgl[2],
+                                'bulan' => $explTgl[1],
+                                'tahun' => $explTgl[0],
+                                'id_m_jenis_disiplin_kerja' => $mSidak['id'],
+                                'keterangan' => $mSidak['keterangan'],
+                                'pengurangan' => $mSidak['pengurangan'],
+                                'status' => 2,
+                                'tanggal_verif' => date('Y-m-d H:i:s'),
+                                'id_m_user_verif' => 1,
+                                'random_string' => generateRandomString(),
+                                'flag_fix_tanggal' => 0,
+                                'flag_fix_jenis_disiplin' => 0,
+                                'flag_fix_dokumen_upload' => 0,
+                                'keterangan_sistem' => $ds['keterangan']
+                            ];
+
+                            $cronWa[] = [
+                                'sendTo' => convertPhoneNumber($ds['handphone']),
+                                'message' => "*[SIDAK]*\n\nSelamat ".greeting()." ".$ds['nama_pegawai'].", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($ds['tanggal']).", Anda dikenakan pelanggaran *SIDAK* dengan keterangan: *".$ds['keterangan']."*",
+                                'flag_prioritas' => 0,
+                                'type' => 'text'
+                            ];
+                        }
+                        if($dokpenSidak){
+                            $this->db->insert_batch('t_dokumen_pendukung', $dokpenSidak);
+                            echo "done insert: ".count($dokpenSidak)."\n";
+                        }
+
+                        if($cronWa){
+                            $this->db->insert_batch('t_cron_wa', $cronWa);
+                            echo "done insert: ".count($cronWa);
+                        }
+                    }
+                }
+            }
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+            }
+        }
 	}
 ?>

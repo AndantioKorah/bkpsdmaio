@@ -101,7 +101,7 @@
 			}
 		?>
 		<?php if(isset($nomor_surat)){ ?>
-		<p class="judul" style="margin-top:-18px;"> Nomor :  800.1.6.2/B.04/BKPSDM/<?= $ns ?>/2025  </p>
+		<p class="judul" style="margin-top:-18px;"> Nomor :  <?= $ns ?></p>
 		<?php } else { ?>
 		<p class="judul" style="margin-top:-18px;"> Nomor :  <?= $ns ?></p>
 		<?php }  ?>
@@ -204,7 +204,7 @@
 			Tembusan Yth. :<br>
 			1. Wali Kota Manado (sebagai laporan);<br>
 			2. Wakil Wali Kota Manado;<br>
-			3. Pj. Sekretaris Daerah Kota Manado;<br>
+			3. Sekretaris Daerah Kota Manado;<br>
 			<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
 				4. Kepala Dinas Pendidikan dan Kebudayaan<br>
 			<?php } else { ?>

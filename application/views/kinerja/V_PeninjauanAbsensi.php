@@ -27,7 +27,7 @@
     <br>
     Keterangan : <br> 
     - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
-    - Jika menggunakan foto, kirim foto tersebut ke nomor Whatsapp Siladen setelah itu discreenshot dan diupload sebagai bukti.<br>
+    - Jika menggunakan foto, kirim foto tersebut ke nomor Whatsapp Siladen <b>(0895355011333)</b> setelah itu discreenshot dan diupload sebagai bukti.<br>
     - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
     </span>
     <div class="row ml-2">
@@ -46,7 +46,7 @@
     <input type="hidden" id="temp">
     <div class="form-group" >
     <label for="exampleFormControlInput1">Tanggal Absensi</label>
-    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" value="<?= date('Y-m-d');?>"  readonly required>
+    <input  class="form-control customInput datepicker2" id="tanggal_absensi" name="tanggal_absensi" value="" placeholder="Pilih Tanggal" readonly required>
     </div>
 
     <div class="form-group mt-2">
@@ -271,22 +271,25 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-
+ $("#jenis_absensi").prop('disabled',true);
         loadListPeninjauan()
         cekPengajuan()
     })
 
     var maxDate = "<?= $maxDate['max_date'];?>";
+    // var maxDate = "2025-07-09";
 
-    var datearray = ["2025-07-04"];
+
+    var datearray = ["2025-07-04","2025-07-14"];
 $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',       
     datesDisabled: datearray,
     // daysOfWeekDisabled: [0],   //Disable sunday
     autoclose:true,
-    // todayHighlight: true,
+    todayHighlight: true,
     startDate : maxDate,
-    endDate: '-0d',
+    endDate: '0d',
+    
 });
 
 
@@ -310,6 +313,10 @@ function loadListPeninjauan(){
 
    function cekPengajuan(){
     var tanggal = $('#tanggal_absensi').val()
+    if(tanggal == null || tanggal == ""){
+      tanggal = "<?= date('Y-m-d');?>";
+    }
+  
    
     $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataPengajuanAbsensiPegawai",
@@ -320,15 +327,15 @@ function loadListPeninjauan(){
               success: function(res){
                 total = res[0].total_pengajuan - res[0].total_tolak
               <?php  if( $this->general_library->getId() != '000'){ ?>
-
+               <?php  if( $this->general_library->getIdUnitKerjaPegawai() != '6170000'){ ?>
                 if(total >= 2) {
-
                   $('#btn_upload').hide()
                   $('#ket').show()
                 } else {
                   $('#btn_upload').show()
                   $('#ket').hide()
                 }
+                  <?php } ?>
                 <?php } ?>
                
               }
@@ -547,5 +554,27 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
         // }
         // }
         });
+
+        $('#tanggal_absensi').on('change', function(){
+        var tanggal =  $('#tanggal_absensi').val()
+            $("#jenis_absensi").prop('disabled',false);
+           
+
+        if(tanggal == "2025-09-19"){
+           $('#jenis_absensi').val('')
+          document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+            if (opt.value == "1") {
+                opt.disabled = true;
+            }
+        });
+        } else {
+           document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+            if (opt.value == "1") {
+                opt.disabled = false;
+            }
+        });
+        }
+        })
+
 
 </script>

@@ -51,11 +51,18 @@ class C_Cron extends CI_Controller
 		$this->kepegawaian->updateSisaCuti($id, $operand);
 	}
 
-    public function cronSyncJabatanSiasn(){
-        // $this->general->logCron('cronSyncJabatanSiasn');
-        // $this->siasn->cronRiwayatJabatanSiasn();
+    public function cronTestSyncJabatan(){
+        // $this->siasn->cronSyncJabatanSiasn();
+    }
 
-        // $this->cronAsync();
+    public function cronSyncJabatanSiasn(){
+        $this->general->logCron('cronSyncJabatanSiasn');
+        // $this->siasn->cronRiwayatJabatanSiasn();
+        $this->siasn->cronSyncJabatanSiasn();
+    }
+
+    public function removeLog($batasHari = 10){
+        $this->general->removeLog($batasHari);
     }
 
     public function cronCheckVerifCuti(){
@@ -98,8 +105,9 @@ class C_Cron extends CI_Controller
     }
 
     public function testWsSiasn($nip){
-        $data = $this->siasnlib->getRiwayatSkp22($nip);
+        // $data = $this->siasnlib->getRiwayatSkp22($nip);
         // $data = $this->siasnlib->getJabatanByNip($nip);
+        $data = $this->siasnlib->getDataUtamaPnsByNip($nip);
         dd($data);
     }
 
@@ -109,17 +117,35 @@ class C_Cron extends CI_Controller
 
     public function cekKenegaraan(){
         return $this->user->cekKenegaraan();
+        // return $this->user->cekKenegaraanCustom();
     }
 
-    public function cekProgsCuti($nip){
+    public function cekSidak(){
+        return $this->general->cekSidak();
+        // return $this->user->cekKenegaraanCustom();
+    }
+
+    public function cekProgressCuti($nip, $flagFixProgress = 0){
         $insert_id = 0;
         $peg = $this->general->getOne('m_user', 'username', $nip, 1);
         $pegawai = $this->kinerja->getAtasanPegawai(null, $peg['id'], 1);
+        // dd($pegawai);
         $progressCuti = $this->kepegawaian->buildProgressCuti($pegawai, $insert_id, $peg['id']);
         // if(isset($progressCuti['code']) && $progressCuti['code'] == 1){
         //     dd(($progressCuti));
         // }
+        if($flagFixProgress == 1){
+            $this->kepegawaian->flagFixProgress($progressCuti, $nip);
+        }
         dd(($progressCuti));
+    }
+
+    public function fixProgressCutiDinkes($nip = null){
+        $this->kepegawaian->fixProgressCutiDinkes($nip);
+    }
+
+    public function fixProgressCutiDinkesWNip(){
+        $this->kepegawaian->fixProgressCutiDinkesWNip();
     }
 
     public function createQr(){
@@ -148,6 +174,18 @@ class C_Cron extends CI_Controller
         return $this->user->addFileSpmtCpns();
     }
 
+    public function addFileSkPPPK(){
+        return $this->user->addFileSkPPPK();
+    }
+
+    public function updateJabatanPegBaru(){
+        return $this->user->updateJabatanPegBaru();
+    }
+
+    public function cekUnor(){
+        return $this->user->cekUnor();
+    }
+
     public function cekHariKerja($tanggal_awal, $tanggal_akhir){
         $hariKerja = countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir);
         dd($hariKerja);
@@ -155,5 +193,70 @@ class C_Cron extends CI_Controller
 
     public function cekMaxDateUpload($tgl, $max, $operand){
         dd(countMaxDateUpload(formatDateOnlyForEdit($tgl), 3, "plus"));
+    }
+
+    public function getDataUtamaPnsByNip($nip){
+        $res = $this->siasnlib->getDataUtamaPnsByNip($nip);
+        dd(json_decode($res['data'], true));
+    }
+
+    public function syncUnor(){
+        $this->general->syncUnor();
+    } 
+
+    public function manageDokpen($bulan, $tahun){
+        $this->kinerja->manageDokpen($bulan, $tahun);
+    }
+
+    public function deleteBackuppedDokpen($bulan, $tahun){
+        $this->kinerja->deleteBackuppedDokpen($bulan, $tahun);
+    }
+
+    public function customManageDokpen(){
+        $this->kinerja->customManageDokpen();
+    }
+
+    public function syncDataUtamaPns(){
+        $this->siasn->syncDataUtamaPns();
+    }
+
+    public function updateDataPPPK($nip = 0, $flag_save = 0){
+        $data['result'] = $this->general->updateDataPPPK($nip, $flag_save);
+        $this->load->view('master/V_TempUpdateDataPPPK', $data);
+    }
+
+    public function funcTest($str = ""){
+        $this->kepegawaian->cekErrorCuti();
+
+        // dd($this->general_library->getDataKabanBkpsdm());
+        // $randomString = generateRandomString(30, 1, 't_file_ds'); 
+        // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+        $contentQr = "https://docs.google.com/spreadsheets/d/1ksMYI1i0duXJOQCb46yIB-RmSK-CDNf5oQRvpsOYjDo/edit?gid=0#gid=0";
+        $res['qr'] = generateQr($contentQr);
+        echo "<img style='width: 300px; height: 300px;' src='".$res['qr']."'></img>";
+        // $this->load->view('adminkit/partials/V_TemplateTte', $res);
+
+        // dd(generateRandomString(16));
+
+        // $date = date("Y-m-d H:i:s");
+        // $nip = "199502182020121013";
+        // $publickKey = "AARS_251016378";
+        // $secretKey = "mb8V34s8xtxqEFVP";
+        // $string = $date.";".$secretKey;
+
+        // $encrypted = AESEncrypt($string, $publickKey, $secretKey);
+        // dd("token: ".$encrypted);
+        // dd(AESDecrypt($encrypted, $secretKey));
+    }
+
+    public function testNomorSurat($data = null){
+        $data['jenis_layanan'] = isset($data['jenis_layanan']) ? $data['jenis_layanan'] : 104;
+        $data['tahun'] = isset($data['tahun']) ? $data['tahun'] : date('Y');
+        $data['perihal'] = isset($data['perihal']) ? $data['perihal'] : "";
+        dd(getNomorSuratSiladen($data, 0));
+    }
+
+    public function hapusKenegaraan(){
+        $this->user->hapusKenegaraan();
     }
 }

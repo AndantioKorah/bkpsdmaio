@@ -7,7 +7,9 @@
 <div class="row">
   <?php if($param['status'] == 'belum_upload_file_ds'){ ?>
     <div class="colg-lg-12 text-right">
-      <button id="button_download_all" class="btn btn-success"><i class="fa fa-download"></i> Download All File</button>
+      <!-- <form action="<?=base_url('kepegawaian/C_Kepegawaian/downloadAllSkCuti')?>" target="_blank"> -->
+        <button type="submit" id="button_download_all" class="btn btn-success"><i class="fa fa-download"></i> Download All File</button>
+      <!-- </form> -->
       <button style="display: none;" id="button_download_all_loading" class="btn btn-success"><i class="fa fa-spin fa-spinner"></i> Mohon menunggu...</button>
     </div>
   <?php } ?>

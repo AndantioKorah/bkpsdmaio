@@ -7,6 +7,7 @@ class General_library
 {
     protected $nikita;
     public $userLoggedIn;
+    public $kabanBkpsdm;
     public $hakAkses;
     public $params;
     public $bios_serial_num;
@@ -15,10 +16,7 @@ class General_library
     {
         // dd(date('Y-m-d H:i:s'));
         $this->nikita = &get_instance();
-        if($this->nikita->session->userdata('user_logged_in')){
-            $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
-            $this->hakAkses = $this->nikita->session->userdata('list_hak_akses');
-        }
+        
         $this->params = $this->nikita->session->userdata('params');
         $this->bios_serial_num = shell_exec('wmic bios get serialnumber 2>&1');
         date_default_timezone_set("Asia/Singapore");
@@ -28,6 +26,20 @@ class General_library
         $this->nikita->load->model('rekap/M_Rekap', 'm_rekap');
         $this->nikita->load->model('kepegawaian/M_Layanan', 'm_layanan');
         $this->nikita->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
+
+        if($this->nikita->session->userdata('user_logged_in')){
+            $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
+            $this->hakAkses = $this->nikita->session->userdata('list_hak_akses');
+            // $this->kabanBkpsdm = $this->nikita->kepegawaian->getDataKabanBkd();
+        }
+    }
+    
+    public function getDataKabanBkpsdm(){
+        return $this->nikita->kepegawaian->getDataKabanBkd();
+    }
+
+    public function getUserLoggedIn(){
+        return $this->userLoggedIn;
     }
 
     public function listHakAkses(){
@@ -268,7 +280,7 @@ class General_library
     }
 
     public function getUnitKerjaPegawai(){
-        return $this->nikita->session->userdata('pegawai')['skpd'];
+        return $this->userLoggedIn['skpd'];
     }
 
     public function isPegawaiBkpsdm(){
@@ -279,8 +291,22 @@ class General_library
         return isKasubKepegawaian($this->getNamaJabatan()) && $this->getIdUnitKerjaPegawai() == 3010000;
     }
 
+    public function isBisaAmbilCutiTahunan(){
+        $diff = countDiffDateLengkap(date('Y-m-d'), $this->userLoggedIn['tmtcpns'], ['tahun', 'bulan']);
+        $expl = explode(" ", trim($diff));
+        if(trim($expl[1] == "tahun" && trim($expl[0]) >= 1)){
+            return true;
+        }
+        return false;
+    }
+
     public function isCpns(){
         return $this->userLoggedIn['statuspeg'] == 1;
+    }
+
+    public function isPPPKbaru(){
+        return $this->userLoggedIn['statuspeg'] == 3 
+            && (substr($this->getNipPegawai(), 8, 6) == '202521' || substr($this->getNipPegawai(), 8, 6) == '202521');
     }
 
     public function getKelengkapanBerkasCpns(){
@@ -300,9 +326,9 @@ class General_library
     }
 
     public function getDataUnitKerjaPegawai(){
-        $result['id_unitkerja'] = $this->nikita->session->userdata('pegawai')['id_unitkerja'];
-        $result['nm_unitkerja'] = $this->nikita->session->userdata('pegawai')['nm_unitkerja'];
-        $result['id_unitkerjamaster'] = $this->nikita->session->userdata('pegawai')['id_unitkerjamaster'];
+        $result['id_unitkerja'] = $this->userLoggedIn['id_unitkerja'];
+        $result['nm_unitkerja'] = $this->userLoggedIn['nm_unitkerja'];
+        $result['id_unitkerjamaster'] = $this->userLoggedIn['id_unitkerjamaster'];
         return $result;
     }
 

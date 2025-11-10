@@ -51,7 +51,7 @@ class C_Rekap extends CI_Controller
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
 
-    public function readAbsensiAars($flag_alpha = 0){
+    public function readAbsensiAars($flag_alpha = 0, $flag_rekap_tpp = 0){
         $param = $this->input->post();
         if($flag_alpha == 1){
             $param = [
@@ -60,7 +60,7 @@ class C_Rekap extends CI_Controller
                 'tahun' => '2023'
             ];
         }
-        $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha);
+        $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha, $flag_rekap_tpp, 0);
         if($flag_alpha == 1){
             dd($data['result']);
         }
@@ -252,14 +252,16 @@ class C_Rekap extends CI_Controller
     public function rekapPenilaianDisiplin()
     {
         $data['list_skpd'] = $this->user->getAllSkpd();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
         render('rekap/V_RekapPenilaianDisiplin', '', '', $data);
     }
 
     public function rekapPenilaianDisiplinSearch()
     {
-        $data = $this->rekap->rekapPenilaianDisiplinSearch($this->input->post());
+        $data = $this->rekap->rekapPenilaianDisiplinSearch($this->input->post(), 0, 0);
         $data['flag_print'] = 0;
-        $this->load->view('rekap/V_RekapPenilaianDisiplinResult', $data);
+        $this->load->view('rekap/V_RekapKehadiranResult', $data);
+        // $this->load->view('rekap/V_RekapPenilaianDisiplinResult', $data);
     }
 
     public function rekapPenilaianDisiplinSearchOld()
@@ -287,6 +289,8 @@ class C_Rekap extends CI_Controller
         $data['data_search'] = $this->input->post();
         $data['tpp_tambahan'] = $this->rekap->getTppTambahan($this->input->post());
         $data['data_format_excel'] = $this->rekap->getDataLockTpp($this->input->post());
+        $param_lock_tpp = ($this->general->getOne('m_parameter', 'parameter_name', 'PARAM_LOCK_TPP'));
+        $data['param_lock_tpp'] = json_decode($param_lock_tpp['parameter_value'], true);
         $this->load->view('rekap/V_RekapTppResult', $data);
     }
 
@@ -329,14 +333,17 @@ class C_Rekap extends CI_Controller
         $data['param']['nama_tpp_tambahan'] = isset($param['nama_tpp_tambahan']) ? $param['nama_tpp_tambahan'] : null;;
         $param['id_unitkerja'] = $skpd[0];
 
-        $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0]);
+        $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0], $param['bulan'], $param['tahun']);
         $pagu_tpp = $this->kinerja->countPaguTpp([
             'id_unitkerja' => $flag_sekolah_kecamatan == 0 ? $data['param']['id_unitkerja'] : $pd_group,
             'bulan' => $data['param']['bulan'],
             'tahun' => $data['param']['tahun']
         ], null, 0, 1, $flag_sekolah_kecamatan);
         
-        $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1);
+        $data_rekap_kehadiran = $this->rekap->rekapPenilaianDisiplinSearch($param, 1, 1);
+        // if($skpd[0] == 4011000){
+        //     dd($data_rekap_kehadiran);
+        // }
         
         $data['rekap_penilaian_tpp'] = $this->rekap->getDaftarPenilaianTpp($data_rekap_kehadiran, $param, 1);
 
@@ -395,7 +402,6 @@ class C_Rekap extends CI_Controller
             } else {
                 $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
             }
-            // dd($html);
             if($this->general_library->isProgrammer()){
                 // dd($html);
             }

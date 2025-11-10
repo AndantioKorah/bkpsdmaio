@@ -43,6 +43,13 @@
                             ->get()->result_array();
         }
 
+        public function getAllUnitKerjaMaster(){
+            return $this->db->select('*')
+                            ->from('db_pegawai.unitkerjamaster')
+                            ->order_by('nm_unitkerjamaster', 'asc')
+                            ->get()->result_array();
+        }
+
         public function loadMasterBidang(){
             return $this->db->select('*')
                             ->from('m_bidang a')
@@ -155,7 +162,7 @@
 
             $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id as id_m_user')
                             ->from('db_pegawai.pegawai a')
-                            ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                            ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat', 'left')
                             ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                             ->join('m_user e', 'a.nipbaru_ws = e.username')
                             ->where('e.flag_active', 1)
@@ -454,6 +461,27 @@
                             ->where('id_unitkerja', $id)
                             ->order_by('eselon')
                             ->get()->result_array();
+        }
+
+        public function getAllJabatanAndJabatanEselonByUnitKerja($id){
+            $eselon = $this->db->select('*')
+                            ->from('db_pegawai.jabatan')
+                            ->where('id_unitkerja', $id)
+                            ->order_by('eselon')
+                            ->get()->result_array();
+
+            $jft = $this->db->select("*")
+                            ->from('db_pegawai.jabatan')
+                            ->where('jenis_jabatan', "JFT")
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+            $data = $eselon;
+            foreach($jft as $j){
+                $data[] = $j;
+            }
+
+            return $data;
         }
 
         public function savePresentaseTpp($id_unitkerja){
@@ -1301,113 +1329,184 @@
             return $data;
         }
 
-        public function doUploadAnnouncement()
-	{
+        public function doUploadAnnouncement(){
+            $this->db->trans_begin();
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $nama_dok =  str_replace(' ', '', $_FILES['file']['name']);
+            $filename = $this->general_library->getId().$random_number.$nama_dok;
+            $target_dir						= './assets/announcement/';
+                    
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = '*';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE;
+            $config['file_name']            = $filename;
+            $this->load->library('upload', $config);
 
-        $this->db->trans_begin();
-        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-        $nama_dok =  str_replace(' ', '', $_FILES['file']['name']);
-        $filename = $this->general_library->getId().$random_number.$nama_dok;
-        $target_dir						= './assets/announcement/';
-        		
-		$config['upload_path']          = $target_dir;
-		$config['allowed_types']        = '*';
-		$config['encrypt_name']			= FALSE;
-		$config['overwrite']			= TRUE;
-		$config['detect_mime']			= TRUE;
-        $config['file_name']            = $filename;
-		$this->load->library('upload', $config);
+            
+            if (!$this->upload->do_upload('file')) {
 
-		
-		if (!$this->upload->do_upload('file')) {
-
-			$data['error']    = strip_tags($this->upload->display_errors());
-			$data['token']    = $this->security->get_csrf_hash();
-            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
-            return $res;
-	
-		} else {
-			$dataFile 			= $this->upload->data();
-            $file_tmp = $_FILES['file']['tmp_name'];
-            $url = "assets/announcement/"."$filename";
-           
-            $data_file = file_get_contents($file_tmp);
-            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
-            $path = substr($target_dir,2);
-            $dataInsert['nama_announcement']     = $this->input->post('nama');
-            $dataInsert['url_file']      = $url;
-            $result = $this->db->insert('db_efort.t_announcement', $dataInsert);
-            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
-		}
+                $data['error']    = strip_tags($this->upload->display_errors());
+                $data['token']    = $this->security->get_csrf_hash();
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+                return $res;
         
-     
-    
-    if($this->db->trans_status() == FALSE){
-        $this->db->trans_rollback();
-        $rs['code'] = 1;
-        $rs['message'] = 'Terjadi Kesalahan';
-    } else {
-        $this->db->trans_commit();
-    }
-
-    return $res;
+            } else {
+                $dataFile 			= $this->upload->data();
+                $file_tmp = $_FILES['file']['tmp_name'];
+                $url = "assets/announcement/"."$filename";
+            
+                $data_file = file_get_contents($file_tmp);
+                $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+                $path = substr($target_dir,2);
+                $dataInsert['nama_announcement']     = $this->input->post('nama');
+                $dataInsert['url_file']      = $url;
+                $result = $this->db->insert('db_efort.t_announcement', $dataInsert);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+            
         
-	}
+        
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $rs['code'] = 1;
+            $rs['message'] = 'Terjadi Kesalahan';
+        } else {
+            $this->db->trans_commit();
+        }
 
-    public function getAnnoucementById($id)
-    {
-        $this->db->select('*')
-        // ->where('id !=', 0)
-        ->from('db_efort.t_announcement')
-        ->where('id', $id)
-        ->where('flag_active', 1);
-        return $this->db->get()->result_array(); 
-    }
+        return $res;
+            
+        }
 
-    public function loadListEvent(){
-        return $this->db->select('a.*, trim(b.nama) as inputer')
-                        ->from('db_sip.event a')
+        public function getAnnoucementById($id)
+        {
+            $this->db->select('*')
+            // ->where('id !=', 0)
+            ->from('db_efort.t_announcement')
+            ->where('id', $id)
+            ->where('flag_active', 1);
+            return $this->db->get()->result_array(); 
+        }
+
+        public function loadListEvent(){
+            return $this->db->select('a.*, trim(b.nama) as inputer')
+                            ->from('db_sip.event a')
+                            ->where('a.flag_active', 1)
+                            ->join('m_user b', 'a.created_by = b.id', 'left')
+                            ->order_by('a.tgl', 'desc')
+                            ->order_by('a.created_at', 'asc')
+                            ->get()->result_array();
+        }
+
+        public function inputDataEvent($dataInput){
+            $data['code'] = 0;
+            $data['message'] = "";
+
+            $dataInput['created_by'] = $this->general_library->getId();
+            $this->db->insert('db_sip.event', $dataInput);
+
+            return $data;
+        }
+
+        public function saveEditDataEvent($dataEdit, $id){
+            $data['code'] = 0;
+            $data['message'] = "";
+
+            $dataEdit['updated_by'] = $this->general_library->getId();
+            $this->db->where('id', $id)
+                    ->update('db_sip.event', $dataEdit);
+
+            return $data;
+        }
+
+        public function deleteDataEvent($id){
+            $data['code'] = 0;
+            $data['message'] = "";
+
+            $this->db->where('id', $id)
+                    ->update('db_sip.event', [
+                        'updated_by' => $this->general_library->getId(),
+                        'flag_active' => 0
+                    ]);
+
+            return $data;
+        }
+
+        public function loadListHardcodeNominatif(){
+            return $this->db->select('a.id, d.gelar1, d.gelar2, d.nama, b.nm_unitkerja, a.nama_jabatan, a.bulan, a.tahun, a.flag_add')
+                        ->from('t_hardcode_nominatif a')
+                        ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                        ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg', 'left')
+                        ->join('db_pegawai.pegawai d', 'a.nip = d.nipbaru_ws')
                         ->where('a.flag_active', 1)
-                        ->join('m_user b', 'a.created_by = b.id', 'left')
-                        ->order_by('a.tgl', 'desc')
-                        ->order_by('a.created_at', 'asc')
+                        ->order_by('a.created_date', 'desc')
                         ->get()->result_array();
-    }
+        }
 
-    public function inputDataEvent($dataInput){
-        $data['code'] = 0;
-        $data['message'] = "";
+        public function inputHardcodeNominatif($data){
+            $rs['code'] = 0;
+            $rs['message'] = "";
 
-        $dataInput['created_by'] = $this->general_library->getId();
-        $this->db->insert('db_sip.event', $dataInput);
+            $this->db->trans_begin();
 
-        return $data;
-    }
+            $explodeJabatan = null;
+            if($data['id_jabatan']){
+                $explodeJabatan = explode(";", $data['id_jabatan']);
+            }
 
-    public function saveEditDataEvent($dataEdit, $id){
-        $data['code'] = 0;
-        $data['message'] = "";
+            $data['id_jabatan'] = isset($explodeJabatan[0]) ? $explodeJabatan[0] : null;
+            $data['nama_jabatan'] = isset($explodeJabatan[1]) ? $explodeJabatan[1] : null;
+            if($data['keterangan_jabatan'] != "def"){
+                $data['nama_jabatan'] = $data['keterangan_jabatan']." ".$explodeJabatan[1];
+            }
 
-        $dataEdit['updated_by'] = $this->general_library->getId();
-        $this->db->where('id', $id)
-                ->update('db_sip.event', $dataEdit);
+            unset($data['keterangan_jabatan']);
+            $data['created_by'] = $this->general_library->getId();
+            $this->db->insert('t_hardcode_nominatif', $data);
 
-        return $data;
-    }
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
 
-    public function deleteDataEvent($id){
-        $data['code'] = 0;
-        $data['message'] = "";
+            return $rs;
+        }
 
-        $this->db->where('id', $id)
-                ->update('db_sip.event', [
-                    'updated_by' => $this->general_library->getId(),
-                    'flag_active' => 0
-                ]);
+        public function deleteHardcodeNominatif($id){
+            $rs['code'] = 0;
+            $rs['message'] = "";
 
-        return $data;
-    }
+            $this->db->trans_begin();
 
+            try {
+                $this->db->where('id', $id)
+                        ->update('t_hardcode_nominatif', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId()
+                        ]);
+            } catch (\Throwable $th) {
+                $rs['code'] = 1;
+                $rs['message'] = json_encode($th);
+            }
 
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                if($rs['code'] == 0){
+                    $this->db->trans_commit();
+                } else {
+                    $this->db->trans_rollback();
+                }
+            }
+
+            return $rs;
+        }
 	}
 ?>

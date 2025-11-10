@@ -96,6 +96,14 @@ class C_Layanan extends CI_Controller
 		echo json_encode($this->layanan->createDpcp($data));
 	}
 
+	public function doneBerkasPensiun($id){
+		echo json_encode($this->layanan->doneBerkasPensiun($id));
+	}
+
+	public function batalDoneBerkasPensiun($id){
+		echo json_encode($this->layanan->batalDoneBerkasPensiun($id));
+	}
+
 	public function showDpcp($id){
 		// $data['result'] = $this->layanan->getDpcpData($id);
 		$data['id'] = $id;

@@ -193,7 +193,9 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='pangkalandata')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Forlap Dikti </button>
   </li>
- 
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='sertifikat_profesi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Profesi </button>
+  </li>
 
 
 </ul>
@@ -676,7 +678,7 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pangkalandata" || file == "skjabterusmenerus" || file == "transkrip" || file == "akreditasi_prodi"){
+        } else if(file == "sertifikat_profesi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pangkalandata" || file == "skjabterusmenerus" || file == "transkrip" || file == "akreditasi_prodi"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";

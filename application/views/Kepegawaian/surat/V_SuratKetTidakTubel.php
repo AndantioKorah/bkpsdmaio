@@ -96,9 +96,8 @@
 				$ns = $nomor_surat;
 			}
 		?>
-		<p class="judul" style="margin-top:5px;text-align: center;"><u>SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS</u><br>
-     Nomor : <?= $ns ?></p>
-		
+		<p class="judul" style="margin-top:5px;text-align: center;"><u>SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS</u><br></p>
+		<p style="margin-left:195px;">Nomor :  ${nomor_naskah}</p>
 	
 
 	<p>Yang nama bertanda-tangan dibawah ini :</p>
@@ -174,17 +173,26 @@
         Tugas Berlajar/Ikatan Dinas di Pemerintah Kota Manado.</p>
 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian surat keterangan dibuat untuk kelengkapan berkas 
-    Pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>.</p>
+    Pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>.
+    <!-- inpassing Jabatan Fungsional Penata Kelola Penanaman Modal -->
+
+     </p>
 
 	<table border="0" style="width:100%;margin-top:140px;">
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center"  style="width:38%;text-align: center;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br>a.n. WALI KOTA
-				MANADO</td>
+			<td class="center"  style="width:38%;text-align: left;">Manado, ${tanggal_naskah}<br>a.n. WALI KOTA
+				MANADO<br>Kepala Badan,</td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="width:38%;height:130px;text-align: center;">^</td>
+			<td class="center" style="width:38%;height:130px;text-align: left;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${ttd_pengirim}</td>
+		</tr>
+		<tr>
+			<td style="width:62%;"></td>
+			<td class="center" style="width:38%;text-align: left;"> ${nama_pengirim}<br>
+Pembina<br>
+NIP. ${nip_pengirim}</td>
 		</tr>
 	</table>
 
@@ -208,7 +216,7 @@
 	</table> -->
 	</div>
 	<div class="footer-sk">
-	<img src="<?=base_url();?>assets/images/footer.png" alt="">
+	<!-- <img src="<?=base_url();?>assets/images/footer.png" alt=""> -->
 	</div>
 	<?php
         // $this->load->view('adminkit/partials/V_FooterBsre');

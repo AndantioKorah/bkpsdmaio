@@ -138,7 +138,8 @@ class M_Layanan extends CI_Model
                         ->where_in('b.status', [1,2])
                         ->where_in('flag_active', [1,2])
                         ->where('b.hubkel', '40')
-                        ->order_by('b.tgllahir', 'asc')
+                        ->order_by('b.created_date', 'desc')
+                        // ->order_by('b.tgllahir', 'asc')
                         ->get()->result_array();
         }
 
@@ -149,7 +150,7 @@ class M_Layanan extends CI_Model
                         ->where_in('b.status', [1,2])
                         ->where_in('flag_active', [1,2])
                         ->where_in('b.hubkel', [20,30])
-                        ->order_by('b.tgllahir', 'desc')
+                        ->order_by('b.created_date', 'desc')
                         ->get()->result_array();
         
 
@@ -205,6 +206,98 @@ class M_Layanan extends CI_Model
         return $result;
     }
 
+    public function doneBerkasPensiun($id){
+        $res['code'] = 0;
+        $res['message'] = "";
+
+        $this->db->trans_begin();
+        try {
+            $data = $this->db->select('a.*, b.handphone, b.gelar1, b.gelar2, b.nama')
+                        ->from('t_checklist_pensiun a')
+                        ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                        ->where('a.id', $id)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+            if($data){
+                $this->db->where('id', $id)
+                        ->update('t_checklist_pensiun', [
+                            'flag_selesai' => 1,
+                            'id_m_user_flag_selesai' => $this->general_library->getId(),
+                            'updated_by' => $this->general_library->getId(),
+                        ]);
+
+                $this->db->insert('t_cron_wa', [
+                            'type' => 'text',
+                            'sendTo' => convertPhoneNumber($data['handphone']),
+                            'message' => "*[ADMINISTRASI KEPEGAWAIAN - PENSIUN]*\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($data).", Dokumen Kelengkapan Pensiun Anda telah selesai dibuat dan akan dihubungi oleh operator untuk proses selanjutnya.".FOOTER_MESSAGE_CUTI,
+                            'jenis_layanan' => 'Administrasi Kepegawaian - Pensiun',
+                            'created_by' => $this->general_library->getId()
+                        ]);
+            } else {
+                $res['code'] = 1;
+                $res['message'] = "Terjadi Kesalahan";
+            }
+        } catch (\Throwable $th) {
+            $res['code'] = 1;
+            $res['message'] = "Terjadi Kesalahan ".$th;
+            $this->db->trans_rollback();
+        }
+
+        if($res['code'] == 0){
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
+        }
+
+        return $res;
+    }
+
+    public function batalDoneBerkasPensiun($id){
+        $res['code'] = 0;
+        $res['message'] = "";
+
+        $this->db->trans_begin();
+        try {
+            $data = $this->db->select('a.*, b.handphone, b.gelar1, b.gelar2, b.nama')
+                        ->from('t_checklist_pensiun a')
+                        ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                        ->where('a.id', $id)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+            if($data){
+                $this->db->where('id', $id)
+                        ->update('t_checklist_pensiun', [
+                            'flag_selesai' => 0,
+                            'id_m_user_flag_selesai' => $this->general_library->getId(),
+                            'updated_by' => $this->general_library->getId(),
+                        ]);
+
+                $this->db->insert('t_cron_wa', [
+                            'type' => 'text',
+                            'sendTo' => convertPhoneNumber($data['handphone']),
+                            'message' => "*[ADMINISTRASI KEPEGAWAIAN - PENSIUN]*\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($data).", proses penyelesaian Dokumen Kelengkapan Pensiun Anda dibatalkan oleh operator. Harap menunggu informasi selanjutnya, terima kasih.".FOOTER_MESSAGE_CUTI,
+                            'jenis_layanan' => 'Administrasi Kepegawaian - Pensiun',
+                            'created_by' => $this->general_library->getId()
+                        ]);
+            } else {
+                $res['code'] = 1;
+                $res['message'] = "Terjadi Kesalahan";
+            }
+        } catch (\Throwable $th) {
+            $res['code'] = 1;
+            $res['message'] = "Terjadi Kesalahan ".$th;
+            $this->db->trans_rollback();
+        }
+
+        if($res['code'] == 0){
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
+        }
+
+        return $res;
+    }
+
     public function updateChecklistPensiun($nip, $data, $id_m_jenis_pensiun){
         $this->db->trans_begin();
         $last_id = null;
@@ -215,12 +308,14 @@ class M_Layanan extends CI_Model
                             ->where('nipbaru_ws', $nip)
                             ->get()->row_array();
 
-        $exists = $this->db->select('*')
-                        ->from('t_checklist_pensiun')
-                        ->where('nip', $nip)
-                        ->where('id_m_jenis_pensiun', $id_m_jenis_pensiun)
-                        ->where('flag_active', 1)
+        $exists = $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, a.date_flag_selesai')
+                        ->from('t_checklist_pensiun a')
+                        ->join('m_user b', 'a.id_m_user_flag_selesai = b.id', 'left')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws', 'left')
+                        ->where('a.nip', $nip)
+                        ->where('a.flag_active', 1)
                         ->get()->row_array();
+                        
         if($exists){
             $last_id = $exists['id'];
             $result = $exists;
@@ -234,10 +329,12 @@ class M_Layanan extends CI_Model
             ]);
 
             $last_id = $this->db->insert_id();
-            $result = $this->db->select('*')
-                                ->from('t_checklist_pensiun')
-                                ->where('flag_active', 1)
-                                ->where('id', $last_id)
+            $result = $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, a.date_flag_selesai')
+                                ->from('t_checklist_pensiun a')
+                                ->join('m_user b', 'a.id_m_user_flag_selesai = b.id', 'left')
+                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                ->where('a.flag_active', 1)
+                                ->where('a.id', $last_id)
                                 ->get()->row_array();
         }
 
@@ -1234,7 +1331,7 @@ class M_Layanan extends CI_Model
                     } else if($d['table_ref'] == 't_usul_ds_detail_progress'){
                         $this->db->insert('t_cron_async', [
                             'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
-                            'ref_id' => $d['id'],
+                            'ref_id' => $d['ref_id'],
                             'table_ref' => 't_usul_ds_detail_progress',
                             'param' => json_encode([
                                             'id' => $d['ref_id'],
@@ -1686,6 +1783,29 @@ class M_Layanan extends CI_Model
         return $result;
     }
 
+    public function insertRequestDs($requestDs){
+        $rs['code'] = 0;
+        $rs['message'] = null;
+        $rs['data'] = null;
+
+        $exists = $this->db->select('*')
+                        ->from('t_request_ds')
+                        ->where('table_ref', $requestDs['table_ref'])
+                        ->where('ref_id', $requestDs['ref_id'])
+                        ->where('flag_active', 1)
+                        ->where('batchId IS NULL')
+                        ->get()->row_array();
+        if(!$exists){
+            $this->db->insert('t_request_ds', $requestDs);
+            $rs['data'] = $this->db->insert_id();
+        } else {
+            $rs['code'] = 1;
+            $rs['message'] = "Data sudah terinput sebelumnya";   
+        }
+
+        return $rs;
+    }
+
     public function proceedNextVerifikatorUsulDs($params = null){
         $res['code'] = 0;
         $res['message'] = "";
@@ -1896,17 +2016,27 @@ class M_Layanan extends CI_Model
                         }
                         
                         // insert di pegcuti
-                        $this->db->insert('db_pegawai.pegcuti', [
-                            'id_pegawai' => $pegawaiYbs['id_peg'],
-                            'jeniscuti' => $pegawaiYbs['id_cuti'],
-                            'lamacuti' => $pegawaiYbs['lama_cuti'],
-                            'tglmulai' => $pegawaiYbs['tanggal_mulai'],
-                            'tglselesai' => $pegawaiYbs['tanggal_akhir'],
-                            'nosttpp' => $existsReqDs['nomor_surat'],
-                            'tglsttpp' => date('Y-m-d'),
-                            'gambarsk' => $newFileName,
-                            'status' => 2
-                        ]);
+                        $existsPegCuti = $this->db->select('*')
+                                                ->from('db_pegawai.pegcuti')
+                                                ->where('id_pegawai', $pegawaiYbs['id_peg'])
+                                                ->where('jeniscuti', $pegawaiYbs['id_cuti'])
+                                                ->where('nosttpp', $existsReqDs['nomor_surat'])
+                                                ->where('status', 2)
+                                                ->where('flag_active', 1)
+                                                ->get()->row_array();
+                        if(!$existsPegCuti){ // jika sudah ada di pegcuti, tidak usah input
+                            $this->db->insert('db_pegawai.pegcuti', [
+                                'id_pegawai' => $pegawaiYbs['id_peg'],
+                                'jeniscuti' => $pegawaiYbs['id_cuti'],
+                                'lamacuti' => $pegawaiYbs['lama_cuti'],
+                                'tglmulai' => $pegawaiYbs['tanggal_mulai'],
+                                'tglselesai' => $pegawaiYbs['tanggal_akhir'],
+                                'nosttpp' => $existsReqDs['nomor_surat'],
+                                'tglsttpp' => date('Y-m-d'),
+                                'gambarsk' => $newFileName,
+                                'status' => 2
+                            ]);
+                        }
 
                         //simpan di dokumen pendukung agar tersinkron dengan rekap absen
                         $dokumen_pendukung = null;
@@ -1937,7 +2067,18 @@ class M_Layanan extends CI_Model
                             }
                         }
                         if($dokumen_pendukung){
-                            $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+                            $existsDokpen = $this->db->select('*')
+                                                    ->from('t_dokumen_pendukung')
+                                                    ->where('id_m_jenis_disiplin_kerja', 17)
+                                                    ->where('status', 2)
+                                                    ->where('flag_outside', 1)
+                                                    ->where('tanggal', $dokumen_pendukung[0]['tanggal'])
+                                                    ->where('url_outside', $filePathCuti)
+                                                    ->where('flag_active', 1)
+                                                    ->get()->row_array();
+                            if(!$existsDokpen){ // jika sudah ada di dokpen tidak usah input
+                                $this->db->insert_batch('t_dokumen_pendukung', $dokumen_pendukung);
+                            }
                         }
                     }
                 }
@@ -2125,8 +2266,8 @@ class M_Layanan extends CI_Model
                             'tampilan' => 'INVISIBLE',
                             'reason' => 'Dokumen ini telah ditandatangani secara elektronik oleh '.$ld['nama_jabatan']." melalui apikasi Siladen."
                         ];
-
-                        $this->db->insert('t_request_ds', [
+                        
+                        $insertReqDs = [
                             'created_by' => $this->general_library->getId(),
                             'id_t_nomor_surat' => 0,
                             'ref_id' => $ld['id'],
@@ -2139,24 +2280,27 @@ class M_Layanan extends CI_Model
                             'flag_selected' => 1,
                             'id_m_jenis_layanan' => $ld['id_m_jenis_layanan'],
                             'nama_jenis_ds' => $ld['keterangan_ds'],
-                        ]);
-                        $id_t_request_ds = $this->db->insert_id();
+                        ];
 
+                        $insReq = $this->insertRequestDs($insertReqDs);
+                        $id_t_request_ds = $insReq['data'];
 
-                        $this->db->insert('t_cron_request_ds', [
-                            'credential' => json_encode([
-                                'nik' => $params['nik'],
-                                'passphrase' => $params['passphrase'],
-                            ]),
-                            'batchId' => $batchId,
-                            'request' => json_encode($requestLd),
-                            'flag_send' => 0,
-                            'date_send' => null,
-                            'flag_sent' => 0,
-                            'date_sent' => null,
-                            'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
-                            'id_t_request_ds' => $id_t_request_ds
-                        ]);
+                        if($insReq['code'] == 0){
+                            $this->db->insert('t_cron_request_ds', [
+                                'credential' => json_encode([
+                                    'nik' => $params['nik'],
+                                    'passphrase' => $params['passphrase'],
+                                ]),
+                                'batchId' => $batchId,
+                                'request' => json_encode($requestLd),
+                                'flag_send' => 0,
+                                'date_send' => null,
+                                'flag_sent' => 0,
+                                'date_sent' => null,
+                                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                                'id_t_request_ds' => $id_t_request_ds
+                            ]);   
+                        }
                     }
                 }
             }
@@ -2312,13 +2456,22 @@ class M_Layanan extends CI_Model
         $id_unitkerja = $this->general_library->getUnitKerjaPegawai();
         $unitkerja = $this->db->select('*')
                             ->from('db_pegawai.unitkerja')
+                            ->where('id_unitkerja', $id_unitkerja)
+                            ->get()->row_array();
+
+        $list_unitkerja = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
                             ->order_by('nm_unitkerja')
                             ->get()->result_array();
 
-        foreach($unitkerja as $u){
+        foreach($list_unitkerja as $u){
             if($id_unitkerja == 3010000){ //jika diknas, ambil sekolah2
-                if($u['id_unitkeraj'] == 3010000 ||
+                if($u['id_unitkerja'] == 3010000 ||
                 in_array($u['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+                    $result[] = $u;
+                }
+            } else if(stringStartWith("Kecamatan", $unitkerja['nm_unitkerja'])){
+                if($u['id_unitkerjamaster'] == $unitkerja['id_unitkerjamaster']){
                     $result[] = $u;
                 }
             } else {
@@ -2337,18 +2490,25 @@ class M_Layanan extends CI_Model
             $listUnitKerja[] = $u['id_unitkerja'];
         }
 
-        return $this->db->select('a.*, b.nama_jabatan, c.nm_pangkat, d.id as id_m_user')
-                        ->from('db_pegawai.pegawai a')
-                        ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
-                        ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
-                        ->join('m_user d', 'a.nipbaru_ws = d.username')
-                        ->where_in('a.skpd', $listUnitKerja)
-                        ->order_by('b.eselon', 'asc')
-                        // ->order_by('c.id_pangkat', 'desc')
-                        ->order_by('a.nama', 'asc')
-                        ->where('a.id_m_status_pegawai', 1)
-                        ->where('d.flag_active', 1)
-                        ->get()->result_array();
+        $this->db->select('a.*, b.nama_jabatan, c.nm_pangkat, d.id as id_m_user')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
+                ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
+                ->join('m_user d', 'a.nipbaru_ws = d.username')
+                // ->where_in('a.skpd', $listUnitKerja)
+                ->order_by('b.eselon', 'asc')
+                // ->order_by('c.id_pangkat', 'desc')
+                ->order_by('a.nama', 'asc')
+                ->where('a.id_m_status_pegawai', 1)
+                ->where('d.flag_active', 1);
+                // ->get()->result_array();
+        if(!$this->general_library->isProgrammer() &&
+            !$this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+        ){ //jika bukan kondisi, tambahkan filter cari berdasarkan SKPD
+            $this->db->where_in('a.skpd', $listUnitKerja);
+        }
+
+        return $this->db->get()->result_array();
     }
 
     public function uploadFileSuratTugasEvent(){
@@ -2552,17 +2712,23 @@ class M_Layanan extends CI_Model
             $listUk[] = $u['id_unitkerja'];
         }
 
-        return $this->db->select('a.*, b.judul, b.tgl, c.nama as inputer, d.nm_unitkerja')
+        $this->db->select('a.*, b.judul, b.tgl, c.nama as inputer, d.nm_unitkerja')
                     ->from('t_pegawai_event a')
                     ->join('db_sip.event b', 'a.id_event = b.id')
                     ->join('m_user c', 'a.created_by = c.id')
                     ->join('db_pegawai.unitkerja d', 'a.id_unitkerja = d.id_unitkerja')
                     ->where('c.flag_active', 1)
-                    ->where_in('a.id_unitkerja', $listUk)
+                    // ->where_in('a.id_unitkerja', $listUk)
                     ->where('a.flag_active', 1)
                     ->order_by('b.tgl', 'desc')
-                    ->order_by('a.created_date', 'desc')
-                    ->get()->result_array();
+                    ->order_by('a.created_date', 'desc');
+
+        if(!$this->general_library->isProgrammer()
+        && !$this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
+            $this->db->where_in('a.id_unitkerja', $listUk);
+        }
+
+        return $this->db->get()->result_array();
     }
 
     public function deleteSuratTugasEvent($id){
@@ -2614,10 +2780,11 @@ class M_Layanan extends CI_Model
         $res['code'] = 0;
         $res['message'] = "";
 
-        $dataEvent = $this->db->select('a.*')
+        $dataEvent = $this->db->select('a.*, c.max_change_date')
                             ->from('t_pegawai_event a')
                             ->join('t_pegawai_event_detail b', 'a.id = b.id_t_pegawai_event')
-                            ->where('flag_active', 1)
+                            ->join('db_sip.event c', 'a.id_event = c.id')
+                            ->where('a.flag_active', 1)
                             ->where('b.id', $id)
                             ->get()->row_array();
 

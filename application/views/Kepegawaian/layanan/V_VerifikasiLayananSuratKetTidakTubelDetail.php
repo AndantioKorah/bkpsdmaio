@@ -487,18 +487,18 @@
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
 
-          <label for="exampleInputEmail1">Nomor Surat</label>
-          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
+          <!-- <label for="exampleInputEmail1">Nomor Surat</label>
+          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat"> -->
           <label for="exampleInputEmail1">Instansi Tujuan</label>
           <input type="text" class="form-control" id="instansi_tujuan" name="instansi_tujuan">
           </div> 
           <button id="" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
 
         </form>
-         <form method="post" id="form_usul_ds" enctype="multipart/form-data"  >
+         <!-- <form method="post" id="form_usul_ds" enctype="multipart/form-data"  >
       <div class="form-group">
-          <!-- <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button> -->
-        </form>
+           <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button>
+        </form> -->
 
       </div>
     </div>

@@ -61,11 +61,9 @@
                             <!-- <button data-toggle="modal" onclick="openDetailModalDataDisiplinKerja('<?=$r['id_m_user']?>')" href="#detailModalDataDisiplinKerja" type="button" class="btn btn-navy btn-sm"><i class="fa fa-list"></i> Detail</button>
                             <button onclick="deleteDisiplinKerjaByIdUser('<?=$r['id_m_user']?>')" type="button" id="btn_delete_<?=$r['id_m_user']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
                             <button type="button" disabled style="display: none;" id="btn_loading_<?=$r['id_m_user']?>" class="btn btn-danger btn-sm"><i class="fa fa-spin fa-spinner"></i> Loading....</button> -->
-                            <?php if(($r['id_m_jenis_disiplin_kerja'] == 4 || $r['id_m_jenis_disiplin_kerja'] == 5)) { ?>
-                            <?php if($this->general_library->isProgrammer() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN 
-                            || ($r['id_m_user'] != $this->general_library->getId() && isKasubKepegawaian($this->general_library->getNamaJabatan()))
-                            ) { ?>
-                                <?php if($r['random_string']){ ?>
+                            <?php if(($r['id_m_jenis_disiplin_kerja'] == 4 || $r['id_m_jenis_disiplin_kerja'] == 5 || $r['id_m_jenis_disiplin_kerja'] == 6)) { // sidak, mtti, keneg ?>
+                            <?php if($this->general_library->isProgrammer() || $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN) { ?>
+                                <?php if($r['random_string'] && $r['flag_outside'] == 0){ ?>
                                     <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
                                 <?php } ?>
                                 <button data-list_id='<?=json_encode($r['list_id'])?>' href="#tambah_data_disiplin_kerja"
@@ -74,7 +72,8 @@
                                 </button>
                                 <?php } ?>
                                 <?php } else { ?>
-                                    <?php if($r['random_string']){ ?>
+                                    <?php if($r['random_string'] && $r['flag_outside'] == 0
+                                    && ($r['id_m_user'] == $this->general_library->getId() || isKasubKepegawaian($this->general_library->getNamaJabatan()))){ ?>
                                         <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="deleteDataDisiplinKerjaById('<?=$r['id']?>')" type="button" id="btn_delete_detail_<?=$r['id']?>" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</button>
                                     <?php } ?>
                                     <?php if($status == 3){ ?>

@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <label>Uraian Tugas</label>
                 <!-- <input required autocomplete="off" id="edit_tugas_jabatan"  class="form-control form-control-sm" name="edit_tugas_jabatan" value="<?=$rencana['tugas_jabatan']?>" readonly/> -->
-          <textarea readonly  class="form-control form-control-sm" name="edit_tugas_jabatan" id="edit_tugas_jabatan" cols="30" rows="3"><?=$rencana['tugas_jabatan']?></textarea>
+          <textarea   class="form-control form-control-sm" name="edit_tugas_jabatan" id="edit_tugas_jabatan" cols="30" rows="3"><?=$rencana['tugas_jabatan']?></textarea>
             </div>
 
             <div class="col-md-12">

@@ -350,7 +350,7 @@ class C_Kinerja extends CI_Controller
     {
         $data['rencana'] = $this->kinerja->getRencanaKinerjaEdit($id);
         $data['jumlah_realisasi'] = $jlmhrealisasi;
-        // dd($data['realisasi']);
+        // dd($data['rencana']);
         $this->load->view('kinerja/V_EditRencanaKinerja', $data);
     }
 
@@ -526,17 +526,26 @@ class C_Kinerja extends CI_Controller
     public function tinjauABsensi()
     {
         $date = new DateTime();
+<<<<<<< HEAD
         $date->modify("last day of previous month");
         $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 0, 'minus');
+=======
+        // $date->modify("last day of previous month");
+        $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'minus');
+>>>>>>> 9e0536900b2e54f0fa1d1ed661a50b4d5c3adba2
         // dd($data['maxDate']['max_date']);
         $data['skpd'] = $this->master->getAllUnitKerja();
         $data['pegawai'] = $this->kinerja->getPegawaiPeninjauanAbsensi();
+        $data['tanggal'] = array("2025-08-08");
         render('kinerja/V_PeninjauanAbsensi', '', '', $data);
     }
 
     public function verifikasiTinjauAbsensi()
     {
-        $data['unitkerja'] = $this->master->getAllUnitKerja();
+        // $data['unitkerja'] = $this->master->getAllUnitKerja();
+        $data['unitkerja'] = $this->master->getAllMasterSkpd();
+        $data['verifikator'] = $this->kinerja->getVerifikatorPeninjauan();
+        // dd($data['verifikator']);
         render('kinerja/V_VerifPeninjauanAbsensi', '', '', $data);
     }
 
@@ -598,18 +607,15 @@ class C_Kinerja extends CI_Controller
                     $config['upload_path'] = './assets/dokumen_pendukung_disiplin_kerja';
                     //   $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = '5000'; // max_size in kb
+                    $config['max_size'] = '1000'; // max_size in kb
 
                     //Load upload library
                     $this->load->library('upload', $config);
-                    if ( ! $this->upload->do_upload('file'))
-                    {
-                            $error = array('error' => $this->upload->display_errors());
-                            $res = array('msg' => $error, 'success' => false);
-                            return $res;
-                    }
+                    // if ( ! $this->upload->do_upload('file'))
+                    // {
+                            
+                    // }
 
-                  
                     if ($this->upload->do_upload('file')) {
 
                         $data = $this->upload->data();
@@ -633,6 +639,12 @@ class C_Kinerja extends CI_Controller
 
                         $this->image_lib->initialize($config);
                         $this->image_lib->resize();
+                    } else {
+                        $ress = 0;
+                        $error = array('error' => $this->upload->display_errors());
+                        $res = array('msg' => $error, 'success' => false, 'code' => 1, 'message' => trim($error['error']));
+                        echo json_encode($res);
+                        return;
                     }
                 }
                 $nama_file[] = $data['file_name'];

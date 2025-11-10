@@ -58,6 +58,26 @@ class Siasnlib{
         );
     }
 
+    function getDataUtamaPnsByNip($nip){
+        return $this->postCurl(
+            $this->API_URL.'pns/data-utama/'.$nip,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
+    function getAllDataUnor(){
+        return $this->postCurl(
+            $this->API_URL.'referensi/ref-unor',
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
     function getJabatanByNip($nip){
         return $this->postCurl(
             $this->API_URL.'jabatan/pns/'.$nip,
@@ -110,7 +130,7 @@ class Siasnlib{
 
     function saveJabatan($data){
         return $this->postCurl(
-            $this->API_URL.'jabatan/save',
+            $this->API_URL.'jabatan/unorjabatan/save',
             json_encode($data),
             "POST",
             0,

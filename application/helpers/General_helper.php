@@ -187,6 +187,7 @@ function countMaxDateUpload2($date, $max = 0, $operand = "minus"){
         $res = countHariKerjaDateToDate($date, $untillDate);
     } else {
         $untillDate = date('Y-m-d', strtotime($date. ' -'.$tempMax.' days'));
+        // dd($date);
         $res = countHariKerjaDateToDate($untillDate, $date);
     }
     $res['max_date'] = null;
@@ -793,14 +794,17 @@ function formatDateNamaBulanWithTime($data)
     return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];
 }
 
-function getNamaPegawaiFull($pegawai)
+function getNamaPegawaiFull($pegawai, $flag_capital_nama = 0)
 {
     $nama_pegawai = trim($pegawai['nama']);
+    if($flag_capital_nama == 1){
+        $nama_pegawai = strtoupper($nama_pegawai);
+    }
     if(trim(substr($nama_pegawai, strlen($nama_pegawai)-1)) != "," && ($pegawai['gelar2'] != "" && $pegawai['gelar2'] != null && $pegawai['gelar2'] != "-")){
         $nama_pegawai .= ",";
     }
 
-    return trim(trim($pegawai['gelar1']).' '.ucwords(strtolower(trim($nama_pegawai))).' '.trim($pegawai['gelar2']));
+    return trim(trim($pegawai['gelar1']).' '.ucwords(trim($nama_pegawai)).' '.trim($pegawai['gelar2']));
 }
 
 function sortArrayObjectValue($object1, $object2, $value)
@@ -1329,6 +1333,55 @@ function getExcelColumnNameByNumber($num) {
 
 function convertPhoneNumber($nohp){
     return "62".substr($nohp, 1, strlen($nohp)-1);
+}
+
+function getDefaultSubJabatan($idJabatanSiasn){
+    switch($idJabatanSiasn){
+        case "A5EB03E23DAAF6A0E040640A040252AD" : return "1100"; //PENYULUH AGAMA KRISTEN
+        case "A5EB03E23DAAF6A0E040640A040252AD" : return "1102"; //PENERJEMAH BAHASA INGGRIS
+        case "A5EB03E23DD0F6A0E040640A040252AD" : return "36"; //DOKTER GIGI(UMUM)
+        case "A5EB03E23DE9F6A0E040640A040252AD" : return "1"; //DOKTER (UMUM)
+        case "8ae482893580790801358a184e1848b9" : return "865"; //Dokter Gigi Spesialis Bedah Mulut
+        case "A5EB03E23DCFF6A0E040640A040252AD" : return "127"; //GURU KELAS
+        default: return 1;
+    }
+}
+
+function getNomorSuratSiladen($data = null, $flag_save = 0){
+    $CI = &get_instance();
+    $CI->load->model('general/M_General', 'general');
+
+    $dataInsert['jenis_layanan'] = isset($data['jenis_layanan']) ? $data['jenis_layanan'] : 104; // 104 itu lainnya (kode: 800)
+    $dataInsert['tahun'] = isset($data['tahun']) ? $data['tahun'] : date('Y');
+    $dataInsert['perihal'] = isset($data['perihal']) ? $data['perihal'] : "Lainnya";
+    
+    $rs['code'] = 0;
+    $rs['message'] = "";
+    $rs['data']['nomor_surat'] = "";
+    $rs['data']['counter'] = "";
+
+    $layanan = $CI->general->getOne('m_jenis_layanan', 'id', $dataInsert['jenis_layanan'], 1);
+    if(!$layanan){
+        $rs['code'] = 1;
+        $rs['message'] = "Jenis Layanan tidak ditemukan";
+        return $rs;
+    }
+    $nomorSurat = $CI->general->getLastFormatNomorSurat($layanan['nomor_surat'], $dataInsert['tahun']);
+
+    $rs['data']['nomor_surat'] = $nomorSurat['nomor_surat'];
+    $rs['data']['counter'] = $nomorSurat['counter'];
+
+    if($flag_save == 1){
+        $CI->general->insert('t_nomor_surat', [
+            'nomor_surat' => $rs['data']['nomor_surat'],
+            'counter' => $rs['data']['counter'],
+            'perihal' => $dataInsert['perihal'],
+            'created_by' => $rs['data']['counter'],
+            'flag_nomor_surat_otomatis' => 1
+        ]);
+    }
+
+    return $rs;
 }
 
 function isKapus($nama_jabatan){
@@ -1899,4 +1952,121 @@ function qounterNomorSurat($tahun){
     $helper->load->model('general/M_General', 'general');
     $counter = $helper->general->getlastNomorSurat($tahun);
     return $counter;
+}
+
+function validateToken($token, $publicKey){
+    $helper = &get_instance();
+    $token = str_replace(" ", "+", $token);
+
+    // cek jika dekripsinya sesuai
+    $decrypted = AESDecrypt($token, $publicKey);
+    if(!$decrypted){
+        $helper->response([
+            'code' => RC_INVALID_TOKEN['rc_code'],
+            'status' => false, 
+            'message' => RC_INVALID_TOKEN['message'],
+            "data" => null
+        ], RC_INVALID_TOKEN['code']);
+    }
+
+    $expl = explode(";", $decrypted);
+
+    // cek jika token belum kadaluarsa
+    $tokenDate = new DateTime($expl[0]);
+    $expireDate = (new DateTime())->modify('-5 minutes');
+    if($tokenDate < $expireDate){
+        $helper->response([
+            'code' => RC_EXPIRED_TOKEN['rc_code'],
+            'status' => false, 
+            'message' => RC_EXPIRED_TOKEN['message'],
+            "data" => null
+        ], RC_EXPIRED_TOKEN['code']);
+    }
+
+    // cek jika secret key sesuai
+    $secretKey = $expl[1];    
+    $client = $helper->m_general->getOne('t_api_client', 'secret_key', $secretKey, 1);
+    if(!$client || ($client && ($secretKey != $client['secret_key']))){
+        $helper->response([
+            'code' => RC_INVALID_TOKEN['rc_code'],
+            'status' => false, 
+            'message' => RC_INVALID_TOKEN['message'],
+            "data" => null
+        ], RC_INVALID_TOKEN['code']);
+    }
+
+    return $decrypted;
+}
+
+function validateParameter($requestedParameter){
+    $helper = &get_instance();
+    $param = $helper->input->post();        
+    if($param){
+        $requestedParameter[] = "token";
+        $requestedParameter[] = "publicKey";
+        foreach($requestedParameter as $rp){
+            if(!isset($param[$rp])){
+                $helper->response([
+                    'code' => RC_PARAMETER_KEY_NOT_FOUND['rc_code'],
+                    'status' => false, 
+                    'message' => "Parameter '".$rp."' Not Found",
+                    "data" => null
+                ], RC_PARAMETER_KEY_NOT_FOUND['code']);
+            }
+        }
+    } else {
+        $helper->response([
+            'code' => RC_PARAMETER_NOT_FOUND['rc_code'],
+            'status' => false, 
+            'message' => RC_PARAMETER_NOT_FOUND['message'],
+            "data" => null
+        ], RC_PARAMETER_NOT_FOUND['code']);
+    }
+
+    return $param;
+}
+
+function AESEncrypt($string, $publicKey = "", $secretKey = ""){
+    $helper = &get_instance();
+    $client = $helper->m_general->getOne('t_api_client', 'public_key', $publicKey, 1);
+
+    // jika data tidak ditemukan atau secret key tidak sama dengan yang ada di database
+    if(!$client || ($client && ($secretKey != $client['secret_key']))){
+        $helper->response([
+            'code' => RC_INVALID_PUBLIC_KEY['rc_code'],
+            'status' => false, 
+            'message' => RC_INVALID_PUBLIC_KEY['message'],
+            "data" => null
+        ], RC_INVALID_PUBLIC_KEY['code']);
+    }
+
+    return openssl_encrypt(
+        trim($string),
+        'AES-256-CBC',
+        $publicKey,
+        0,
+        $secretKey
+    );
+}
+
+function AESDecrypt($encrypted_data, $publicKey = ""){
+    $helper = &get_instance();
+    $client = $helper->m_general->getOne('t_api_client', 'public_key', $publicKey, 1);
+    
+    if(!$client){
+        $helper->response([
+            'code' => RC_INVALID_PUBLIC_KEY['rc_code'],
+            'status' => false, 
+            'message' => RC_INVALID_PUBLIC_KEY['message'],
+            "data" => null
+        ], RC_INVALID_PUBLIC_KEY['code']);
+    }
+
+    return openssl_decrypt(
+        trim($encrypted_data),
+        'AES-256-CBC',
+        $publicKey,
+        0,
+        $client['secret_key']
+    );
 }

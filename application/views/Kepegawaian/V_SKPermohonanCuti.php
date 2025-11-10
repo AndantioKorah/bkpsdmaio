@@ -207,7 +207,7 @@
             </tr>
             <tr valign="top">
               <td>3.</td>
-              <td>Pj. Sekretaris Daerah Kota Manado;</td>
+              <td>Sekretaris Daerah Kota Manado;</td>
             </tr>
             <tr valign="top">
               <td>4.</td>

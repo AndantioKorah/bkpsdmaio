@@ -290,7 +290,7 @@ $("#checkBoxID").click(function() {
 
   var statusLock = "<?=$status_lock[0]['status'];?>"
    var maxDate = "<?= $maxDate['max_date'];?>";
-  // var maxDate = "2025-04-10";
+  // var maxDate = "2025-10-10";
   console.log(maxDate)
 
    var currentDate = "<?= $current_date;?>";

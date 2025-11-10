@@ -245,7 +245,39 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananSuratKeteranganTidakTubel/")?>'+val, function(){
       $('#loader').hide()
     })
-    }     else {
+    } else if(val == 25) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananTugasBelajar/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 26) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananTugasBelajar/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 27) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananSuratMasukPt/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 28) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananMutasiPidahMasuk/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 29) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPangkat/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 30) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 31) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananJabatanFungsional/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else if(val == 32) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPmk/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    }else {
       $('#form_layanan').html('')
     }
 

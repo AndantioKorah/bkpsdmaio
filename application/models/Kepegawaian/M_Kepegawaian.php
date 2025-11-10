@@ -8,6 +8,7 @@ class M_Kepegawaian extends CI_Model
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->model('simata/M_Simata', 'simata');
         $this->load->model('kepegawaian/M_Layanan', 'layanan');
+        $this->load->model('general/M_General', 'general');
         // $this->db = $this->load->database('main', true);
     }
 
@@ -3624,12 +3625,14 @@ public function copyfoto(){
 
 public function getDataKabanBkd()
 {
-    $this->db->select('*')
+    $this->db->select('a.*, f.*, g.*, h.*, b.id as id_m_user')
     ->from('db_pegawai.pegawai a')
+    ->join('m_user b', 'a.nipbaru_ws = b.username')
     ->join('db_pegawai.pangkat f', 'a.pangkat = f.id_pangkat')
     ->join('db_pegawai.jabatan g', 'a.jabatan = g.id_jabatanpeg')
     ->join('db_pegawai.unitkerja h', 'a.skpd = h.id_unitkerja')
-
+    ->group_by('a.nipbaru_ws')
+    ->where('b.flag_active', 1)
     ->where('a.jabatan', '4018000JS01');
     return $this->db->get()->row_array(); 
 }
@@ -3992,9 +3995,10 @@ public function getAllPelanggaranByNip($nip){
 
         }
 
-        function syncSiasnJabatan($id){
+        function syncSiasnJabatan($id, $flagCronSync = 0, $dataSync = null){
             $siasn = null;
             $data = $this->getJabatanPegawaiEdit($id)[0];
+            // dd(json_encode($data));
             if($data['meta_data_siasn']){
                 $siasn = json_decode($data['meta_data_siasn'], true);
             }
@@ -4018,27 +4022,39 @@ public function getAllPelanggaranByNip($nip){
                 $jenis_jabatan = "2";
             }
             
+            $id_jabatan_siasn = $flagCronSync == 1 ? $dataSync['id_jabatan_siasn'] : $data['id_jabatan_siasn']; 
             $update = [
                 "eselonId" => $data['id_eselon_siasn'],
                 "id" => $data_siasn ? $data_siasn['id'] : null,
                 "instansiIndukId" => ID_INSTANSI_SIASN, 
                 "instansiId" => ID_INSTANSI_SIASN,
-                "jabatanFungsionalId" => $data['jenis_jabatan'] == 'JFT' ? $data['id_jabatan_siasn'] : null,
-                "jabatanFungsionalUmumId" => $data['jenis_jabatan'] == 'JFU' ? $data['id_jabatan_siasn'] : null,
-                "jabatanStrukturalId" => $data['jenis_jabatan'] == 'Struktural' ? $data['id_jabatan_siasn'] : null,
+                "jabatanFungsionalId" => $data['jenis_jabatan'] == 'JFT' ? $id_jabatan_siasn : null,
+                "jabatanFungsionalUmumId" => $data['jenis_jabatan'] == 'JFU' ? $id_jabatan_siasn : null,
+                "jabatanStrukturalId" => $data['jenis_jabatan'] == 'Struktural' ? $id_jabatan_siasn : null,
                 "jenisJabatan" => $jenis_jabatan,
                 "nomorSk" => $data['nosk'],
+                "jenisMutasiId" => $flagCronSync == 1 ? $dataSync['jenisMutasiId'] : "MJ",
+                "jenisPenugasanId" => $flagCronSync == 1 ? $dataSync['jenisPenugasanId'] : "D",
                 // "path" => $path,
                 "pnsId" => $data['id_pns_siasn'],
                 "satuanKerjaId" => ID_SATUAN_KERJA_SIASN,
                 "tanggalSk" => formatDateOnlyForEdit2($data['tglsk']),
                 "tmtJabatan" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "tmtPelantikan" => formatDateOnlyForEdit2($data['tmtjabatan']),
-                "unorId" => $data['id_unor_siasn']
+                "tmtMutasi" => formatDateOnlyForEdit2($data['tmtjabatan']),
+                "unorId" => $flagCronSync == 1 ? $dataSync['id_unor_siasn'] : $data['id_unor_siasn'],
             ];
-            $ws = $this->siasnlib->saveJabatan($update);
             
-            if($ws['code'] == 0){
+            $idSubJabatan = $flagCronSync == 1 ? $dataSync['subJabatanId'] : $data['id_m_ref_sub_jabatan_siasn'];
+            if($idSubJabatan == null){
+                if(in_array($data['kel_jabatan_id'], LIST_ID_NEED_SUB_JABATAN)){
+                    $update['subJabatanId'] = getDefaultSubJabatan($data['kel_jabatan_id']);
+                }
+            }
+            $ws = $this->siasnlib->saveJabatan($update);
+            // dd($ws);
+            $rs = json_decode($ws['data'], true);
+            if($ws['code'] == 0 && $rs['message'] != "Not Found"){
                 $data_success = json_decode($ws['data'], true);
                 $id_jabatan_siasn = $data_success['mapData']['rwJabatanId'];
 
@@ -4064,6 +4080,9 @@ public function getAllPelanggaranByNip($nip){
                                 'updated_by' => $this->general_library->getId()
                             ]);
                 }
+            } else {
+                $ws['code'] = 1;
+                $ws['message'] = json_encode($ws);
             }
 
             return $ws;
@@ -4072,12 +4091,14 @@ public function getAllPelanggaranByNip($nip){
         function getJabatanPegawaiEdit($id){
             $this->db->select('d.jenis_jabatan,c.id_unitkerja,b.skpd as unitkerja_id,c.eselon,c.pejabat,c.jenisjabatan, b.id_pns_siasn, c.id_siasn,
             c.id_jabatan,c.statusjabatan,c.id_pegawai,c.created_date,c.id,c.status,c.nm_jabatan as nama_jabatan,c.tmtjabatan, d.id_jabatan_siasn, b.nipbaru_ws,
-            c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.id_unor_siasn, c.meta_data_siasn, e.id_eselon, e.id_eselon_siasn')
+            c.angkakredit, e.nm_eselon,c.skpd,c.nosk,c.tglsk,c.ket,c.gambarsk,c.keterangan, c.id_unor_siasn, c.meta_data_siasn, e.id_eselon, e.id_eselon_siasn,
+            c.id_m_ref_sub_jabatan_siasn, f.kel_jabatan_id')
                           ->from('m_user a')
                           ->join('db_pegawai.pegawai b','a.username = b.nipbaru_ws')
                           ->join('db_pegawai.pegjabatan c','b.id_peg = c.id_pegawai')
                           ->join('db_pegawai.jabatan d','c.id_jabatan = d.id_jabatanpeg','left')
                           ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
+                          ->join('db_siasn.m_ref_jabatan_fungsional f', 'd.id_jabatan_siasn = f.id', 'left')
                           ->where('a.flag_active', 1)
                           ->where('c.id', $id);
                           $query = $this->db->get()->result_array();
@@ -4449,25 +4470,26 @@ public function submitEditJabatan(){
                         "tmtPelantikan" => formatDateOnlyForEdit2($input_post['edit_jabatan_tmt']),
                         "unorId" => $input_post['id_unor_siasn']
                     ];
-
-                    // $reqWs = $this->siasnlib->saveJabatan($update);
-                    // if($reqWs['code'] == 1){
-                    //     $res = array('msg' => 'Gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
-                    //     $this->db->trans_rollback();
-                    //     return $res;    
-                    // } else {
-                    //     if($_FILES['file']['name'] != ""){
-                    //         $url = ('arsipjabatan/'.$filename);
-                    //         $request = [
-                    //             'id_riwayat' => $pegjabatan['id_siasn'],
-                    //             'id_ref_dokumen' => 872,
-                    //             'file' => new CURLFile ($url)
-                    //         ];
-                    //         $reqWsDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
-                    //     }
-                    // }
+                    
+                    $reqWs = $this->siasnlib->saveJabatan($update);
+                    if($reqWs['code'] == 1){
+                        $res = array('msg' => 'Gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
+                        $this->db->trans_rollback();
+                        return $res;    
+                    } else {
+                        if($_FILES['file']['name'] != ""){
+                            $url = ('arsipjabatan/'.$filename);
+                            $request = [
+                                'id_riwayat' => $pegjabatan['id_siasn'],
+                                'id_ref_dokumen' => 872,
+                                'file' => new CURLFile ($url)
+                            ];
+                            $reqWsDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
+                        }
+                    }
                     
                     $updatedJabatan = $this->siasnlib->getJabatanByIdRiwayat($pegjabatan['id_siasn']);
+
                     if($updatedJabatan['code'] == 0){
                         $newMeta = json_decode($updatedJabatan['data'], true);
                         $this->db->where('id', $pegjabatan['id'])
@@ -5788,6 +5810,8 @@ public function submitEditJabatan(){
             $id_layanan[] = 7;
             $id_layanan[] = 8;
             $id_layanan[] = 9;
+            $id_layanan[] = 29;
+            $id_layanan[] = 32;
         }
 
         if($this->general_library->isHakAkses('verifikasi_ujian_dinas')){
@@ -5802,6 +5826,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 14;
             $id_layanan[] = 15;
             $id_layanan[] = 16;
+            $id_layanan[] = 30;
 
         }
 
@@ -5815,7 +5840,16 @@ public function submitEditJabatan(){
 
          if($this->general_library->isHakAkses('verifikasi_layanan_suket_tidak_tubel')){
             $id_layanan[] = 24;
+            $id_layanan[] = 25;
+            $id_layanan[] = 26;
+            $id_layanan[] = 27;
+         }
+
+          if($this->general_library->isHakAkses('verifikasi_pengajuan_mutasi_pindah_masuk')){
+            $id_layanan[] = 28;
         }
+
+
         }
 
        
@@ -6109,6 +6143,7 @@ public function submitEditJabatan(){
                     
                     // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".$resp['cuti']['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik *YA* untuk menyetujui atau *Tidak* untuk menolak.";
                     $cronWaNextVerifikator = null;
+                    // if($progress['next']['nohp'] == NOMOR_HP_KABAN){
                     if($progress['next']['nohp'] == NOMOR_HP_KABAN){
                         if($dataCuti['skpd'] == 4018000){
                             $cronWaNextVerifikator = [
@@ -6137,7 +6172,7 @@ public function submitEditJabatan(){
                         // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                     }
                     if($cronWaNextVerifikator){
-                        if($cronWaNextVerifikator['sendTo'] == CONVERTED_NOMOR_HP_KABAN){ // jika kaban
+                        if($cronWaNextVerifikator['sendTo'] == convertPhoneNumber(NOMOR_HP_KABAN)){ // jika kaban
                             if($dataCuti['skpd'] == 4018000){ // hanya pegawai bkpsdm
                                 $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                             }
@@ -6156,7 +6191,7 @@ public function submitEditJabatan(){
                     }
                 }
 
-                if(!$progress['next'] || $progress['next']['id_m_user_verifikasi'] == '193'){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
+                if(!$progress['next'] || $progress['next']['id_m_user_verifikasi'] == $this->getDataKabanBkd()['id_m_user']){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
                     $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
                             f.nama_jabatan, g.nm_unitkerja, a.id as id_t_pengajuan_cuti,
                             g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, d.nipbaru_ws')
@@ -6759,7 +6794,7 @@ public function submitEditJabatan(){
                             ->where('b.flag_active', 1)
                             ->get()->row_array();
 
-            if($dataPegawai['statuspeg'] == 3 || $dataPegawai['statuspeg'] == 1){
+            if(($dataPegawai['statuspeg'] == 3 || $dataPegawai['statuspeg'] == 1) && $data['id_cuti'] == "00"){ // jika cpns atau pppk ambil cuti tahunan
                 $diff = countDiffDateLengkap(date('Y-m-d'), $dataPegawai['tmtcpns'], ['tahun']);
                 $expl = explode(" ", trim($diff));
                 if($expl[0] < 1){
@@ -6771,24 +6806,37 @@ public function submitEditJabatan(){
             }   
 
             $filename = null;
-            if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
-                if($_FILES['surat_pendukung']['type'] != "application/pdf"){
-                    $res['code'] = 0;
-                    $res['message'] = "Surat Pendukung yang diupload harus dalam format Pdf";
-                } else {
-                    $config['upload_path'] = './assets/dokumen_pendukung_cuti';
-                    $config['allowed_types'] = '*';
-                    $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
-                    $this->load->library('upload',$config);
-                    if($this->upload->do_upload('surat_pendukung')){
-                        $upload = $this->upload->data();
-                        $filename = $upload['file_name'];
+            // if($data['id_cuti'] != "00" && $data['id_cuti'] != "10"){
+                if($flagVerifOperator == 1){
+                    if($_FILES['surat_pendukung']['type'] != "application/pdf"){
+                        $res['code'] = 0;
+                        $res['message'] = "Surat Pendukung yang diupload harus dalam format Pdf";
                     } else {
-                        $res['code'] = 1;
-                        $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                        if($_FILES['surat_pendukung']){
+                            $config['upload_path'] = './assets/dokumen_pendukung_cuti';
+                            $config['allowed_types'] = '*';
+                            $_FILES['surat_pendukung']['name'] = $dataPegawai['nipbaru_ws'].'_'.date('Ymdhis').'.pdf'; 
+                            $this->load->library('upload',$config);
+                            if($this->upload->do_upload('surat_pendukung')){
+                                $upload = $this->upload->data();
+                                $filename = $upload['file_name'];
+                            } else {
+                                $res['code'] = 1;
+                                $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                            }
+                        }
+                    }
+                } else {
+                    if(isset($dataInput['surat_pendukung']) &&
+                        $dataInput['surat_pendukung'] && 
+                        !file_exists('assets/dokumen_pendukung_cuti/'.$dataInput['surat_pendukung'])){
+                            $res['code'] = 1;
+                            $res['message'] = "Data tidak dapat disimpan karena tidak ada Dokumen Pendukung";
+                    } else {
+                        $filename = $dataInput['surat_pendukung'];
                     }
                 }
-            }
+            // }
             if($res['code'] == 0){
                 $randomString = generateRandomString(10, 1, 't_pengajuan_cuti');
                 $data['surat_pendukung'] = $filename;
@@ -6907,11 +6955,13 @@ public function submitEditJabatan(){
                 
                 if($flagVerifOperator == 1){
                     $this->db->trans_rollback();
-
+                    $meta_data = ($this->input->post());
+                    $meta_data['surat_pendukung'] = $filename;
+                    
                     $this->db->insert('t_verif_sisa_cuti', [
                         'id_cuti' => $data['id_cuti'],
                         'id_m_user' => $data['id_m_user'],
-                        'meta_data' => json_encode($this->input->post()),
+                        'meta_data' => json_encode($meta_data),
                         'created_by' => $this->general_library->getId()
                     ]);
 
@@ -7013,9 +7063,308 @@ public function submitEditJabatan(){
         return $res;
     }
 
+    public function flagFixProgress($progress, $nip){
+        $dataCuti = $this->db->select('c.*, a.gelar1, a.gelar2, a.nama')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_user b', 'a.nipbaru_ws = b.username')
+                            ->join('t_pengajuan_cuti c', 'c.id_m_user = b.id')
+                            ->where('a.nipbaru_ws', $nip)
+                            ->where('c.flag_active', 1)
+                            ->where('c.flag_ds_cuti', 0)
+                            ->where('c.flag_ditolak', 0)
+                            ->order_by('c.created_date', 'desc')
+                            ->limit(1)
+                            ->get()->row_array();
+        if($dataCuti){
+            $this->db->where('id', $dataCuti['id'])
+                    ->update('t_pengajuan_cuti', [
+                        'status_pengajuan_cuti' => "Verifikasi ".$progress[0]['nama_jabatan']
+                    ]);
+
+            $this->db->where('id_t_pengajuan_cuti', $dataCuti['id'])
+                    ->update('t_progress_cuti', [
+                        'flag_active' => 0
+                    ]);
+
+            $oldProgress = $this->db->select('*')
+                                    ->from('t_progress_cuti')
+                                    // ->where('flag_active', 1)
+                                    ->where('id_t_pengajuan_cuti', $dataCuti['id'])
+                                    ->order_by('urutan', 'asc')
+                                    ->get()->result_array();
+            // $dataOldProg = null;
+            // if($oldProgress){
+            //     foreach($oldProgress as $op){
+            //         // set old progress untuk mengecek progress mana yang sudah diverif sebelumnya
+            //         $dataOldProg[$op['urutan']] = $op;
+            //     }
+            // }
+            $newProgress = null;
+            $i = 0;
+            foreach($progress as $pr){
+                $newProgress[$i]['id_t_pengajuan_cuti'] = $dataCuti['id'];
+                $newProgress[$i]['id_m_user_verifikasi'] = $pr['id_m_user_verifikasi'];
+                $newProgress[$i]['nama_jabatan'] = $pr['nama_jabatan'];
+                $newProgress[$i]['nohp'] = $pr['nohp'];
+                $newProgress[$i]['urutan'] = $pr['urutan'];
+
+                // if(isset($dataOldProg[$pr['urutan']]) && $dataOldProg[$pr['urutan']]['flag_verif'] == 1 && $dataOldProg[$pr['urutan']]['flag_diterima'] == 1){
+                //     // $newProgress[$i]['flag_diterima'][]
+                // }
+
+                $i++;
+            }
+
+            if($newProgress){
+                $this->db->insert_batch('t_progress_cuti', $newProgress);
+                echo "done";
+                // dd($newProgress);
+            }
+        } else {
+            echo "data cuti tidak ditemukan";
+        }
+    }
+
+    public function fixProgressCutiDinkes($nip){
+        $prog = $this->db->select('a.*')
+                        ->from('t_progress_cuti a')
+                        ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                        ->join('m_user c', 'b.id_m_user = c.id')
+                        ->where('a.flag_active', 1)
+                        ->where('b.flag_active', 1)
+                        ->where('b.flag_ds_cuti', 0)
+                        ->where('a.nama_jabatan LIKE "%Sekretaris Dinas Kesehatan%"')
+                        ->where('c.username', $nip)
+                        ->where('c.flag_active', 1)
+                        ->order_by('b.id, a.urutan')
+                        ->get()->result_array();
+        $idProg = null;
+        if($prog){
+            foreach($prog as $p){
+                $idProg[] = $p['id_t_pengajuan_cuti'];
+            }
+        }
+
+        $data = $this->db->select('*')
+                        ->from('t_progress_cuti')
+                        ->where_in('id_t_pengajuan_cuti', $idProg)
+                        ->where('flag_active', 1)
+                        ->order_by('id', 'asc')
+                        ->get()->result_array();
+
+        $problemData = null;
+        $grouping = null;
+        if($data){
+            foreach($data as $d){
+                $grouping[$d['id_t_pengajuan_cuti']]['progress'][$d['urutan']] = $d;
+                if($d['nama_jabatan'] == "Plt. Kepala Dinas Kesehatan"){
+                    $grouping[$d['id_t_pengajuan_cuti']]['flag_fixed'] = 1;
+                }
+            }
+        }
+
+        if($grouping){
+            $flagPltNotFound = 1;
+            foreach($grouping as $g){
+                if(!isset($g['flag_fixed'])){
+                    $problemData[] = $g;
+                }
+            }
+        }
+        dd($problemData);
+        
+        if($problemData){
+            $i = 0;
+            foreach($problemData as $pd){
+                $id_prog_kaban_bkpsdm = null;
+                $id_prog_kadis_baru = null;
+                $flag_sudah_verif_sek = 0;
+                foreach($pd['progress'] as $pd_progress){
+                    // if($pd_progress['id_t_pengajuan_cuti'] == 2457){ // ini untuk testing
+                        if($pd_progress['id_m_user_verifikasi'] == 527){ // id user kaban bkpsdm
+                            $id_prog_kaban_bkpsdm = $pd_progress['id']; // ambil untuk urutannya di tambahkan satu
+                        }
+                        // dd($pd_progress);
+                        if($id_prog_kaban_bkpsdm){
+                            $this->db->where('id', $id_prog_kaban_bkpsdm)
+                                    ->update('t_progress_cuti', [
+                                        'urutan' => floatval($pd_progress['urutan']) + 1
+                                    ]);
+
+                            $this->db->insert('t_progress_cuti', [
+                                'id_t_pengajuan_cuti' => $pd_progress['id_t_pengajuan_cuti'],
+                                'urutan' => $pd_progress['urutan'],
+                                'id_m_user_verifikasi' => 1290,
+                                'id_jabatan' => 3012000,
+                                'nohp' => '082124714447',
+                                'nama_jabatan' => 'Plt. Kepala Dinas Kesehatan'
+                            ]);
+
+                            $id_prog_kadis_baru = $this->db->insert_id();
+                        }
+                        
+                        if($pd_progress['nama_jabatan'] == 'Sekretaris Dinas Kesehatan' && $pd_progress['flag_verif'] == 1 && $pd_progress['flag_diterima'] == 1){
+                            // jika sudah diverif sek, ubah id_t_progress_cuti menjadi id_prog_kadis_baru
+                            $flag_sudah_verif_sek = 1;
+
+                            // jika sudah diverif sek, hapus data jika sudah masuk di usul DS
+                            $usulDs = $this->db->select('*')
+                                            ->from('t_usul_ds')
+                                            ->where('ref_id', $pd_progress['id_t_pengajuan_cuti'])
+                                            ->where('table_ref', 't_pengajuan_cuti')
+                                            ->where('flag_active', 1)
+                                            ->get()->row_array();
+                            if($usulDs){
+                                //jika sudah ada, batalkan dulu karena harus menunggu verifikasi dari plt dinas kesehatan
+                                $this->db->where('id', $usulDs['id'])
+                                        ->update('t_usul_ds', [
+                                            'flag_active' => 0
+                                        ]);
+                            }
+                        }
+
+                        if($flag_sudah_verif_sek == 1 && $id_prog_kadis_baru){
+                            $this->db->where('id', $pd_progress['id_t_pengajuan_cuti'])
+                                ->update('t_pengajuan_cuti', [
+                                    'id_t_progress_cuti' => $id_prog_kadis_baru,
+                                    'status_pengajuan_cuti' => "Verifikasi Plt. Kepala Dinas Kesehatan"
+                                ]);
+                        }
+                    // } // ini untuk testing
+                }
+                $i++;
+            }
+        }
+        $new_data = $this->db->select('a.urutan, a.nama_jabatan, a.nohp, b.status_pengajuan_cuti')
+                            ->from('t_progress_cuti a')
+                            ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                            ->where('a.id_t_pengajuan_cuti', $problemData[0]['progress'][1]['id_t_pengajuan_cuti'])
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
+                            ->order_by('a.urutan', 'asc')
+                            ->get()->result_array();
+        dd($new_data);
+    }
+
+    public function fixProgressCutiDinkesWNip(){
+        $prog = $this->db->select('a.*')
+                        ->from('t_progress_cuti a')
+                        ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                        ->join('m_user c', 'b.id_m_user = c.id')
+                        ->where('a.flag_active', 1)
+                        ->where('b.flag_active', 1)
+                        ->where('b.flag_ds_cuti', 0)
+                        ->where('a.nama_jabatan LIKE "%Sekretaris Dinas Kesehatan%"')
+                        ->where('c.flag_active', 1)
+                        ->order_by('b.id, a.urutan')
+                        ->get()->result_array();
+        $idProg = null;
+        if($prog){
+            foreach($prog as $p){
+                $idProg[] = $p['id_t_pengajuan_cuti'];
+            }
+        }
+
+        $data = $this->db->select('*')
+                        ->from('t_progress_cuti')
+                        ->where_in('id_t_pengajuan_cuti', $idProg)
+                        ->where('flag_active', 1)
+                        ->order_by('id', 'asc')
+                        ->get()->result_array();
+
+        $problemData = null;
+        $grouping = null;
+        if($data){
+            foreach($data as $d){
+                $grouping[$d['id_t_pengajuan_cuti']]['progress'][$d['urutan']] = $d;
+                if($d['nama_jabatan'] == "Plt. Kepala Dinas Kesehatan"){
+                    $grouping[$d['id_t_pengajuan_cuti']]['flag_fixed'] = 1;
+                }
+            }
+        }
+
+        if($grouping){
+            $flagPltNotFound = 1;
+            foreach($grouping as $g){
+                if(!isset($g['flag_fixed'])){
+                    $problemData[] = $g;
+                }
+            }
+        }
+        dd($problemData);
+        // if($problemData){
+        //     $i = 0;
+        //     foreach($problemData as $pd){
+        //         $id_prog_kaban_bkpsdm = null;
+        //         foreach($pd['progress'] as $pd_progress){
+        //             // if($pd_progress['id_t_pengajuan_cuti'] == 2457){ // ini untuk testing
+        //                 if($pd_progress['id_m_user_verifikasi'] == 527){ // id user kaban bkpsdm
+        //                     $id_prog_kaban_bkpsdm = $pd_progress['id']; // ambil untuk urutannya di tambahkan satu
+        //                 }
+        //                 // dd($pd_progress);
+        //                 $id_prog_kadis_baru = null;
+        //                 if($id_prog_kaban_bkpsdm){
+        //                     $this->db->where('id', $id_prog_kaban_bkpsdm)
+        //                             ->update('t_progress_cuti', [
+        //                                 'urutan' => floatval($pd_progress['urutan']) + 1
+        //                             ]);
+
+        //                     $this->db->insert('t_progress_cuti', [
+        //                         'id_t_pengajuan_cuti' => $pd_progress['id_t_pengajuan_cuti'],
+        //                         'urutan' => $pd_progress['urutan'],
+        //                         'id_m_user_verifikasi' => 1290,
+        //                         'id_jabatan' => 3012000,
+        //                         'nohp' => '082124714447',
+        //                         'nama_jabatan' => 'Plt. Kepala Dinas Kesehatan'
+        //                     ]);
+
+        //                     $id_prog_kadis_baru = $this->db->insert_id();
+        //                 }
+
+        //                 if($pd_progress['nama_jabatan'] == 'Sekretaris Dinas Kesehatan' && $pd_progress['flag_verif'] == 1 && $pd_progress['flag_diterima'] == 1){
+        //                     // jika sudah diverif sek, ubah id_t_progress_cuti menjadi id_prog_kadis_baru
+        //                     if($id_prog_kadis_baru){
+        //                         $this->db->where('id', $pd_progress['id_t_pengajuan_cuti'])
+        //                             ->update('t_pengajuan_cuti', [
+        //                                 'id_t_progress_cuti' => $id_prog_kadis_baru,
+        //                                 'status_pengajuan_cuti' => "Verifikasi Plt. Kepala Dinas Kesehatan"
+        //                             ]);
+        //                     }
+
+        //                     // jika sudah diverif sek, hapus data jika sudah masuk di usul DS
+        //                     $usulDs = $this->db->select('*')
+        //                                     ->from('t_usul_ds')
+        //                                     ->where('ref_id', $pd_progress['id_t_pengajuan_cuti'])
+        //                                     ->where('table_ref', 't_pengajuan_cuti')
+        //                                     ->where('flag_active', 1)
+        //                                     ->get()->row_array();
+        //                     if($usulDs){
+        //                         //jika sudah ada, batalkan dulu karena harus menunggu verifikasi dari plt dinas kesehatan
+        //                         $this->db->where('id', $usulDs['id'])
+        //                                 ->update('t_usul_ds', [
+        //                                     'flag_active' => 0
+        //                                 ]);
+        //                     }
+        //                 }
+        //             // } // ini untuk testing
+        //         }
+        //         $i++;
+        //     }
+        // }
+        // $new_data = $this->db->select('a.urutan, a.nama_jabatan, a.nohp, b.status_pengajuan_cuti')
+        //                     ->from('t_progress_cuti a')
+        //                     ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+        //                     ->where('a.id_t_pengajuan_cuti', $problemData[0]['progress'][1]['id_t_pengajuan_cuti'])
+        //                     ->where('a.flag_active', 1)
+        //                     ->where('b.flag_active', 1)
+        //                     ->order_by('a.urutan', 'asc')
+        //                     ->get()->result_array();
+        // dd($new_data);
+    }
+
     public function buildProgressCuti($pegawai, $insert_id, $id_m_user){
         $result = [];
-        $kepalabkpsdm = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan')
+        $kepalabkpsdm = $this->db->select('a.*, b.id as id_m_user, c.nama_jabatan, c.id_jabatanpeg')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_Ws = b.username')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
@@ -7025,11 +7374,13 @@ public function submitEditJabatan(){
                                 ->get()->row_array();
 
         $thisuser = $this->db->select('a.*, b.id as id_m_user, d.id_unitkerja, d.id_unitkerjamaster, d.nm_unitkerja, c.nama_jabatan, a.handphone,
-                                d.nip_kepalaskpd_hardcode, d.flag_sekolah_negeri')
+                                d.nip_kepalaskpd_hardcode, d.flag_sekolah_negeri, e.nama_bidang, f.nama_sub_bidang, c.eselon')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_Ws = b.username', 'left')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                                 ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja', 'left')
+                                ->join('m_bidang e', 'b.id_m_bidang = e.id', 'left')
+                                ->join('m_sub_bidang f', 'b.id_m_sub_bidang = f.id', 'left')
                                 ->where('b.id', $id_m_user)
                                 ->get()->row_array();
         $progress = null;
@@ -7041,18 +7392,20 @@ public function submitEditJabatan(){
                 unset($pegawai['kadis']);
                 unset($pegawai['sek']);
         } else if(isset($pegawai['kepala']) && $pegawai['kepala']['id_unitkerja'] == '4018000'){ // jika pegawai bkpsdm
-            unset($pegawai['kepala']);
-            unset($pegawai['sek']);
+            if($thisuser['nama_bidang'] && $thisuser['nama_bidang'] != "Sekretariat"){
+                unset($pegawai['kepala']);
+                unset($pegawai['sek']);
+            }
         } else {
             // if($pegawai['atasan']['id'] == $thisuser['id_m_user']){ //jika atasan sama dengan id userloggedin, hapus atasan
             //     unset($pegawai['atasan']);
             // }
-            if(!$pegawai['atasan']){
-                return [
-                    'code' => 1,
-                    'message' => "Data Atasan belum terdata. Silahkan menghubungi Administrator. Terima Kasih."
-                ];
-            }
+            // if(!$pegawai['atasan']){
+            //     return [
+            //         'code' => 1,
+            //         'message' => "Data Atasan belum terdata. Silahkan menghubungi Administrator. Terima Kasih."
+            //     ];
+            // }
             if(($pegawai['kadis']) && $pegawai['kepala'] && $pegawai['kepala']['id'] == $pegawai['kadis']['id']){
                 //jika atasan sama dengan kepala sama dengan kadis
                 unset($pegawai['atasan']);
@@ -7069,8 +7422,28 @@ public function submitEditJabatan(){
             }
         }
 
+
+        // if($this->general_library->isProgrammer()){
+        //     dd($thisuser);
+        // }
+
+        if($thisuser['eselon'] == "II A" || $thisuser['eselon'] == "II B"){
+            unset($pegawai['sek']);
+        }
+
         if(isset($pegawai['atasan']) && $pegawai['atasan']['id'] == 380){ // jika setda pak micler hapus, karena sudah pensiun
             unset($pegawai['atasan']);
+        }
+           
+        if(in_array($thisuser['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH) ||
+        stringStartWith("Puskesmas", $thisuser['nm_unitkerja']) || 
+        stringStartWith("Rumah Sakit", $thisuser['nm_unitkerja']) || 
+        stringStartWith("Kelurahan", $thisuser['nm_unitkerja']) 
+        ){
+            $tmp = $pegawai['kepala'];
+            $pegawai['kepala'] = $pegawai['sek'];
+            $pegawai['sek'] = $tmp;
+            // dd($pegawai);
         }
 
         $new_progress = null;
@@ -7087,6 +7460,7 @@ public function submitEditJabatan(){
                     $result[$i]['id_m_user_verifikasi'] = $np['id'];
                     $result[$i]['nama_jabatan'] = isset($np['nama_jabatan_tambahan']) && $np['nama_jabatan_tambahan'] ? $np['nama_jabatan_tambahan'] : $np['nama_jabatan'];
                     $result[$i]['nohp'] = $np['handphone'];
+                    $result[$i]['id_jabatan'] = isset($np['id_jabatanpeg']) ? $np['id_jabatanpeg'] : null;
                     $i++;
                 }
             }
@@ -7122,9 +7496,11 @@ public function submitEditJabatan(){
                     'message' => "Kepala Sekolah belum terdata di sistem. Silahkan menghubungi Administrator. Terima Kasih."
                 ];
             }
-                
+            // if($this->general_library->isProgrammer()){
+            //     dd($pegawai);
+            // }
         }
-
+        
         return $this->pelengkapDataProgressCuti($result, $insert_id, $kepalabkpsdm);
     }
 
@@ -7133,9 +7509,11 @@ public function submitEditJabatan(){
         $urutan = 1;
         $i = 0;
         foreach($list as $l){
+            // dd($l);
             $result[$i] = $l;
             $result[$i]['created_by'] = $this->general_library->getId();
             $result[$i]['id_t_pengajuan_cuti'] = $insert_id;
+            $result[$i]['id_jabatan'] = $l['id_jabatan'];
             $result[$i]['urutan'] = $urutan++;
             $i++;
         }
@@ -7145,6 +7523,7 @@ public function submitEditJabatan(){
         $result[$last]['nama_jabatan'] = $kepalabkpsdm['nama_jabatan'];
         $result[$last]['id_t_pengajuan_cuti'] = $insert_id;
         $result[$last]['nohp'] = $kepalabkpsdm['handphone'];
+        $result[$last]['id_jabatan'] = $kepalabkpsdm['id_jabatanpeg'];
         $result[$last]['created_by'] = $this->general_library->getId();
         $result[$last]['urutan'] = $urutan++;
 
@@ -7159,7 +7538,7 @@ public function submitEditJabatan(){
                 ]);
     }
 
-    public function deletePermohonanCuti($id, $flag_delete_record = 1){
+    public function deletePermohonanCuti($id, $flag_delete_record = 1, $flag_sk_terbit = 0){
         $res['code'] = 0;
         $res['message'] = 'OK';
         $res['data'] = null; 
@@ -7204,6 +7583,47 @@ public function submitEditJabatan(){
 
         // $this->db->where('id_t_pengajuan_cuti', $id)
         //         ->update('t_meta_cuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+
+        // jika SK sudah terbit, hapus data cuti di profil, di dokumen pendukung
+        if($flag_sk_terbit == 1){
+            $expl = explode("-", $data['tanggal_mulai']);
+            $dokpen = $this->db->select('*')
+                            ->from('t_dokumen_pendukung')
+                            ->where('id_m_user', $data['id_m_user'])
+                            ->where('tanggal', floatval($expl[2]))
+                            ->where('bulan', floatval($expl[1]))
+                            ->where('tahun', floatval($expl[0]))
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($dokpen){
+                $this->db->where('random_string', $dokpen['random_string'])
+                        ->where('flag_active', 1)
+                        ->where('id_m_user', $data['id_m_user'])
+                        ->update('t_dokumen_pendukung', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId(),
+                            'updated_date' => date('Y-m-d H:i:s')
+                        ]);
+            }
+
+            $pegCuti = $this->db->select('a.*')
+                            ->from('db_pegawai.pegcuti a')
+                            ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                            ->join('m_user c', 'b.nipbaru_ws = c.username')
+                            ->where('c.flag_active', 1)
+                            ->where('c.id', $data['id_m_user'])
+                            ->where('a.tglmulai', $data['tanggal_mulai'])
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+            if($pegCuti){
+                $this->db->where('id', $pegCuti['id'])
+                        ->update('db_pegawai.pegcuti', [
+                            'flag_active' => 0,
+                            'updated_by' => $this->general_library->getId(),
+                            'updated_date' => date('Y-m-d H:i:s')
+                        ]);
+            }
+        }
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -7289,7 +7709,8 @@ public function submitEditJabatan(){
 		$res['code'] = 0;
 		$res['message'] = 'Permohonan Cuti Berhasil';
 		$res['data'] = null;
-        if($data['id_cuti'] == "00"){
+        // cek jika cuti tahunan atau cuti besar
+        if($data['id_cuti'] == "00" || $data['id_cuti'] == "10"){
             $hari_libur = $this->db->select('*')
                                 ->from('t_hari_libur')
                                 ->where('flag_active', 1)
@@ -7441,8 +7862,10 @@ public function submitEditJabatan(){
             $this->db->where('e.skpd', $data['id_unitkerja']);
         }
 
-        if(!$this->general_library->isProgrammer() && !$this->general_library->isKepalaBkpsdm()){ 
-            // jika bukan programmer ato bukan kaban, cari yang hanya bisa diverifikasi
+        if(!$this->general_library->isProgrammer() &&
+        !$this->general_library->isKepalaBkpsdm() &&
+        !$this->general_library->isHakAkses('admin_pengajuan_cuti')){ 
+            // jika bukan programmer ato bukan kaban atau bukan admin pengajuan cuti, cari yang hanya bisa diverifikasi
             $this->db->where('g.id_m_user_verifikasi', $this->general_library->getId());
         }
 
@@ -7465,7 +7888,8 @@ public function submitEditJabatan(){
         //     $this->db->where('e.skpd', $this->general_library->getUnitKerjaPegawai());
         // }
 
-        if($this->general_library->isProgrammer()){ // jika programmer, kirim semua data
+        if($this->general_library->isProgrammer() ||
+        $this->general_library->isHakAkses('admin_pengajuan_cuti')){ // jika programmer atau admin cuti, kirim semua data
             return $result;
         }
 
@@ -7606,7 +8030,8 @@ public function submitEditJabatan(){
 
         if($res['progress']){
             $update_data_pengajuan = null;
-            if($res['progress']['current']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){
+            // if($res['progress']['current']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){
+            if($res['progress']['current']['jabatan'] == $this->getDataKabanBkd()['id_jabatanpeg']){
                 $res['code'] = 1;
                 $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
             } else if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
@@ -7678,7 +8103,7 @@ public function submitEditJabatan(){
                         }
                     }
 
-                    if(!$res['progress']['next'] || $res['progress']['next']['id_m_user_verifikasi'] == '193'){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
+                    if(!$res['progress']['next'] || $res['progress']['next']['id_m_user_verifikasi'] == $this->getDataKabanBkd()['id_m_user']){ // jika kaban yang verif atau selanjutnya kaban, input di usul DS
                         $dataCuti = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat,
                                 f.nama_jabatan, g.nm_unitkerja, a.id as id_t_pengajuan_cuti,
                                 g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, d.nipbaru_ws')
@@ -7920,6 +8345,26 @@ public function submitEditJabatan(){
         return $res;
     }
 
+    public function sendZipSkCuti($zipName, $paramName){
+        $exists = $this->db->select('*')
+                        ->from('m_parameter')
+                        ->where('parameter_name', $paramName)
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+        if($exists){
+            if(file_exists($exists['parameter_value'])){
+                unlink($exists['parameter_value']);
+            }
+
+            $this->db->where('id', $exists['id'])
+                    ->update('m_parameter', [
+                        'flag_sent' => 0,
+                        'parameter_value' => $zipName,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+    }
+
     public function dsBulk($params){
         $res['code'] = 0;
         $res['message'] = 'ok';
@@ -7930,224 +8375,134 @@ public function submitEditJabatan(){
         $list_checked_data = null;
         $this->db->trans_begin();
 
-        // if($params['jenis_layanan'] == 4){ // permohonan cuti
-        //     $batchId = generateRandomString(10, 1, 't_cron_tte_bulk_ds'); 
-        //     // $hash_tte = $this->ttelib->hash();
-            
-        //     $list_data = $this->db->select('a.*, b.nm_cuti, b.nomor_cuti, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws, e.nm_pangkat, f.nama_jabatan, g.nm_unitkerja,
-        //             g.id_unitkerja, b.id_cuti, c.id as id_m_user, d.id_peg, d.handphone, a.id as id_t_pengajuan_cuti')
-        //             ->from('t_pengajuan_cuti a')
-        //             ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
-        //             ->join('m_user c', 'c.id = a.id_m_user')
-        //             ->join('db_pegawai.pegawai d', 'd.nipbaru_ws = c.username')
-        //             ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
-        //             ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg', 'left')
-        //             ->join('db_pegawai.unitkerja g', 'd.skpd = g.id_unitkerja')
-        //             ->where_in('a.id', $params['list_checked'])
-        //             ->where('a.flag_active', 1)
-        //             ->order_by('a.id')
-        //             ->get()->result_array(); 
+        $batchId = generateRandomString(10, 1, 't_request_ds'); 
+        $list_data = $this->db->select('*')
+                            ->from('t_request_ds')
+                            ->where_in('id', $params['list_checked'])
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+        if(!$list_data){
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan. Data tidak ditemukan.';
+            return $res;
+        } else {
+            $selected = $list_data[0];
+            $selectedId = $list_data[0]['id'];
 
-        //     if(!$list_data){
-        //         $res['code'] = 1;
-        //         $res['message'] = 'Terjadi Kesalahan';
-        //         return $res;
-        //     } else {
-        //         $fileBase64 = null;
+            $request = json_decode($selected['request'], true);
+            $request['signatureProperties']['imageBase64'] = $selected['url_image_ds'];
 
-        //         // $kepala_bkpsdm = $this->db->select('a.*, d.id as id_m_user')
-        //         //                         ->from('db_pegawai.pegawai a')
-        //         //                         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-        //         //                         ->join('m_user d', 'a.nipbaru_ws = d.username')
-        //         //                         ->where('c.kepalaskpd', 1)
-        //         //                         ->where('a.skpd', ID_UNITKERJA_BKPSDM)
-        //         //                         ->get()->row_array();
+            $base64File = null;
+            $base64File = base64_encode(file_get_contents(base_url().$selected['url_file']));
+            $jsonRequest['file'] = null;
+            $jsonRequest['file'][] = $base64File;
+            // dd($base64File);
 
-        //         //langkah ini untuk tes jika nik dan passphrase benar
-        //         $one_file = $this->dsCuti($list_data[0]['id_t_pengajuan_cuti']);
-        //         if($one_file['code'] == 1){
-        //             $res = $one_file;   
-        //             return $res;
-        //         } else {
-        //             // unset($list_data[0]);
-        //         }
-        //         // dd($one_file);
+            $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
+            $jsonRequest['nik'] = $params['nik'];
+            $jsonRequest['passphrase'] = $params['passphrase'];
+            // dd(json_encode($jsonRequest));
 
-        //         $this->db->trans_begin();
-        //         $i = 0;
-        //         $cron_tte = null;
-        //         foreach($list_data as $ld){
-        //             $this->db->where('id', $ld['id_t_pengajuan_cuti'])
-        //                     ->update('t_pengajuan_cuti', [
-        //                         'batchId' => $batchId
-        //                     ]);
-                    
-        //             // if($list_data[0]['id_t_pengajuan_cuti'] != $ld['id_t_pengajuan_cuti']){
-        //                 $credential['nik'] = $params['nik'];
-        //                 $credential['passphrase'] = $params['passphrase'];
+            $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
+            $response = json_decode($oneData, true);
+            // dd(json_encode($response));
 
-        //                 $cron_tte[$i]['id_t_pengajuan_cuti'] = $ld['id_t_pengajuan_cuti'];
-        //                 $cron_tte[$i]['random_string'] = $batchId;
-        //                 $cron_tte[$i]['credential'] = json_encode($credential);
-        //                 $cron_tte[$i]['created_by'] = $this->general_library->getId();
-        //             // }
 
-        //             $i++;
-        //         }
-                
-        //         if($cron_tte){
-        //             //insert ke dalam cron tte ds bulk
-        //             $this->db->insert_batch('t_cron_tte_bulk_ds', $cron_tte);
-        //         }
-        //     }
-        // } else {
-            $batchId = generateRandomString(10, 1, 't_request_ds'); 
-            $list_data = $this->db->select('*')
-                                ->from('t_request_ds')
-                                ->where_in('id', $params['list_checked'])
-                                ->where('flag_active', 1)
-                                ->get()->result_array();
-            if(!$list_data){
+            if($response == null || !isset($response['file'])){ // jika gagal
                 $res['code'] = 1;
-                $res['message'] = 'Terjadi Kesalahan. Data tidak ditemukan.';
-                return $res;
-            } else {
-                $selected = $list_data[0];
-                $selectedId = $list_data[0]['id'];
+                $res['message'] = $oneData;
+                $res['data'] = null;
+            } else { // jika berhasil                    
+                $this->db->where('id', $selected['ref_id'])
+                        ->update($selected['table_ref'], [
+                            $selected['nama_kolom_flag'] => 1
+                        ]);
 
-                $request = json_decode($selected['request'], true);
-                $request['signatureProperties']['imageBase64'] = $selected['url_image_ds'];
+                $this->db->where_in('id', $params['list_checked'])
+                        ->update('t_request_ds', [
+                            'batchId' => $batchId,
+                            'flag_selected' => 1,
+                            'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                        ]);
 
-                $base64File = null;
-                $base64File = base64_encode(file_get_contents(base_url().$selected['url_file']));
-                $jsonRequest['file'] = null;
-                $jsonRequest['file'][] = $base64File;
-                // dd($base64File);
+                $this->db->insert('t_file_ds', [
+                    'random_string' => $selected['random_string'],
+                    'url' => $selected['url_file'],
+                    'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                ]);
 
-                $jsonRequest['signatureProperties'][] = $request['signatureProperties'];
-                $jsonRequest['nik'] = $params['nik'];
-                $jsonRequest['passphrase'] = $params['passphrase'];
-                // dd(json_encode($jsonRequest));
-
-                $oneData = $this->ttelib->signPdfNikPass($jsonRequest);
-                $response = json_decode($oneData, true);
-                // dd(json_encode($response));
-
-
-                if($response == null || !isset($response['file'])){ // jika gagal
-                    $res['code'] = 1;
-                    $res['message'] = $oneData;
-                    $res['data'] = null;
-                } else { // jika berhasil                    
-                    $this->db->where('id', $selected['ref_id'])
-                            ->update($selected['table_ref'], [
-                                $selected['nama_kolom_flag'] => 1
-                            ]);
-
-                    $this->db->where_in('id', $params['list_checked'])
-                            ->update('t_request_ds', [
-                                'batchId' => $batchId,
-                                'flag_selected' => 1,
-                                'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
-                            ]);
-
-                    $this->db->insert('t_file_ds', [
-                        'random_string' => $selected['random_string'],
-                        'url' => $selected['url_file'],
-                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+                if($selected['table_ref'] == 't_usul_ds_detail'){
+                    // $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
+                    $this->db->insert('t_cron_async', [
+                        'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
+                        'ref_id' => $selected['ref_id'],
+                        'table_ref' => 't_usul_ds_detail',
+                        'param' => json_encode([
+                                        'id' => $selected['ref_id'],
+                                        'flag_progress' => 0,
+                                        'selectedData' => $selected
+                                    ]),
+                        'created_by' => $this->general_library->getId()
                     ]);
+                }
 
-                    if($selected['table_ref'] == 't_usul_ds_detail'){
-                        // $this->layanan->proceedNextVerifikatorUsulDs($selected['ref_id'], 0, null);
-                        $this->db->insert('t_cron_async', [
-                            'url' => 'api/C_Api/proceedNextVerifikatorUsulDs',
-                            'ref_id' => $selected['ref_id'],
-                            'table_ref' => 't_usul_ds_detail',
-                            'param' => json_encode([
-                                            'id' => $selected['ref_id'],
-                                            'flag_progress' => 0,
-                                            'selectedData' => $selected
-                                        ]),
-                            'created_by' => $this->general_library->getId()
+                $cronRequest[$selectedId] = [];
+
+                $this->db->insert('t_cron_request_ds', [
+                    'credential' => json_encode([
+                        'nik' => $params['nik'],
+                        'passphrase' => $params['passphrase'],
+                    ]),
+                    'batchId' => $batchId,
+                    'request' => $selected['request'],
+                    'response' => $oneData,
+                    'flag_send' => 1,
+                    'date_send' => date('Y-m-d H:i:s'),
+                    'flag_sent' => 1,
+                    'date_sent' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                    'id_t_request_ds' => $selectedId
+                ]);
+
+                foreach($list_data as $ld){
+                    if($ld['id'] != $selectedId){
+                        $this->db->insert('t_cron_request_ds', [
+                            'credential' => json_encode([
+                                'nik' => $params['nik'],
+                                'passphrase' => $params['passphrase'],
+                            ]),
+                            'batchId' => $batchId,
+                            'request' => $ld['request'],
+                            'flag_send' => 0,
+                            'date_send' => null,
+                            'flag_sent' => 0,
+                            'date_sent' => null,
+                            'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
+                            'id_t_request_ds' => $ld['id']
+                        ]);
+
+                        $this->db->insert('t_file_ds', [
+                            'random_string' => $ld['random_string'],
+                            'url' => $ld['url_file'],
+                            'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
                         ]);
                     }
-
-                    $cronRequest[$selectedId] = [];
-
-                    $this->db->insert('t_cron_request_ds', [
-                        'credential' => json_encode([
-                            'nik' => $params['nik'],
-                            'passphrase' => $params['passphrase'],
-                        ]),
-                        'batchId' => $batchId,
-                        'request' => $selected['request'],
-                        'response' => $oneData,
-                        'flag_send' => 1,
-                        'date_send' => date('Y-m-d H:i:s'),
-                        'flag_sent' => 1,
-                        'date_sent' => date('Y-m-d H:i:s'),
-                        'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
-                        'id_t_request_ds' => $selectedId
-                    ]);
-
-                    foreach($list_data as $ld){
-                        if($ld['id'] != $selectedId){
-                            // $cronRequest[$ld['id']] = [
-                            //     'credential' => json_encode([
-                            //         'nik' => $params['nik'],
-                            //         'passphrase' => $params['passphrase'],
-                            //     ]),
-                            //     'batchId' => $batchId,
-                            //     'request' => $ld['request'],
-                            //     'flag_send' => 0,
-                            //     'date_send' => null,
-                            //     'flag_sent' => 0,
-                            //     'date_sent' => null,
-                            //     'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
-                            //     'id_t_request_ds' => $ld['id']
-                            // ];
-                            $this->db->insert('t_cron_request_ds', [
-                                'credential' => json_encode([
-                                    'nik' => $params['nik'],
-                                    'passphrase' => $params['passphrase'],
-                                ]),
-                                'batchId' => $batchId,
-                                'request' => $ld['request'],
-                                'flag_send' => 0,
-                                'date_send' => null,
-                                'flag_sent' => 0,
-                                'date_sent' => null,
-                                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0,
-                                'id_t_request_ds' => $ld['id']
-                            ]);
-
-                            $this->db->insert('t_file_ds', [
-                                'random_string' => $ld['random_string'],
-                                'url' => $ld['url_file'],
-                                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
-                            ]);
-                        }
-                    }
-                    // dd(json_encode($cronRequest));
-                    // $this->db->insert_batch('t_cron_request_dssadasd', $cronRequest);
-
-                    base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
-                    
-                    if($selected['id_m_jenis_ds'] == 4){ // jika cuti, kirim SK cuti ke pegawai ybs
-                        $this->tteCuti($selected['id']);
-                    }
-                    // dd(json_encode($cronRequest));
-                    // $this->db->insert_batch('t_cron_request_dssadasd', $cronRequest);
-
-                    base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
-
-                    $res['code'] = 0;
-                    $res['message'] = "Berhasil";
-                    $res['data'] = null;
                 }
-            }    
-        // }
-        
+
+                base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
+                
+                if($selected['id_m_jenis_ds'] == 4){ // jika cuti, kirim SK cuti ke pegawai ybs
+                    $this->tteCuti($selected['id']);
+                }
+
+                base64ToFile($response['file'][0], $selected['url_file']); //simpan ke file
+
+                $res['code'] = 0;
+                $res['message'] = "Berhasil";
+                $res['data'] = null;
+            }
+        }    
+
         if($this->db->trans_status() == FALSE || $res['code'] != 0){
             $this->db->trans_rollback();
             $res['code'] = 4;
@@ -8651,6 +9006,10 @@ public function submitEditJabatan(){
         $this->db->insert('t_nomor_surat', $data);
     }
 
+    public function getLastFormatNomorSurat(){
+
+    }
+
     public function deleteNomorSuratManualSkCuti($id){
         $res['code'] = 0;
         $res['message'] = '';
@@ -8759,7 +9118,7 @@ public function submitEditJabatan(){
         return $res;
     }
 
-    public function saveNomorSuratManual($id, $tableName = "t_checklist_pensiun"){
+    public function saveNomorSuratManual($id, $tableName = "t_checklist_pensiun", $flagGenerateNomorSurat = 0){
         $res['code'] = 0;
         $res['message'] = '';
 
@@ -8769,12 +9128,8 @@ public function submitEditJabatan(){
         $explode_data = explode("/", $data['nomor_surat']);
         $tahun = $explode_data[count($explode_data)-1];
 
-        $exists = $this->db->select('*')
-                        ->from('t_nomor_surat')
-                        ->where('(counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'")')
-                        ->where('flag_active', 1)
-                        ->where('YEAR(tanggal_surat)', $tahun)
-                        ->get()->row_array();
+        $dataNomorSurat = null;
+        $exists = null;
 
         $usulDs = $this->db->select('a.*, b.url as url_file, c.meta_data, a.id_m_jenis_layanan')
                         ->from('t_usul_ds a')
@@ -8784,6 +9139,17 @@ public function submitEditJabatan(){
                         ->where('a.id', $id)
                         ->where('a.flag_active', 1)
                         ->get()->row_array();
+
+        if($flagGenerateNomorSurat == 1){
+            $exists = null;
+        } else {
+            $exists = $this->db->select('*')
+                        ->from('t_nomor_surat')
+                        ->where('(counter = "'.$data['counter_nomor_surat'].'" OR nomor_surat = "'.$data['nomor_surat'].'")')
+                        ->where('flag_active', 1)
+                        ->where('YEAR(tanggal_surat)', $tahun)
+                        ->get()->row_array();
+        }
 
         if($exists){
             if($exists['id'] == $usulDs['id_t_nomor_surat']){
@@ -8797,9 +9163,23 @@ public function submitEditJabatan(){
             $res['code'] = 1;
             $res['message'] = 'Terjadi Kesalahan';
         } else {
-            //insert nomor surat manual
-            $data_input['counter'] = $data['counter_nomor_surat'];
-            $data_input['nomor_surat'] = $data['nomor_surat'];
+            //get generated nomor surat
+            $dataNomorSurat = getNomorSuratSiladen([
+                'jenis_layanan' => $usulDs['id_m_jenis_layanan'],
+                'tahun' => $tahun,
+                'perihal' => $usulDs['keterangan']
+            ], 0);
+
+            if($dataNomorSurat['code'] != 0){
+                $res['code'] = $dataNomorSurat['code'];
+                $res['message'] = $dataNomorSurat['message'];
+                $this->db->trans_rollback();
+                return $res;
+            }
+            
+            //insert nomor surat
+            $data_input['counter'] = $dataNomorSurat['data']['counter'];
+            $data_input['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
             $data_input['id_m_jenis_layanan'] = $usulDs['id_m_jenis_layanan'];
             $data_input['perihal'] = $usulDs['keterangan'];
             $data_input['tanggal_surat'] = formatDateOnlyForEdit($usulDs['created_date']);
@@ -9715,6 +10095,31 @@ public function submitEditJabatan(){
 
     }
 
+    public function cekErrorCuti(){
+        $data = $this->db->select('c.id as id_progress, a.id as id_t_pengajuan_cuti, e.nm_unitkerja, b.username')
+                ->from('t_pengajuan_cuti a')
+                ->join('m_user b', 'a.id_m_user = b.id AND b.flag_active = 1')
+                ->join('t_progress_cuti c', 'c.id_t_pengajuan_cuti = a.id')
+                ->join('db_pegawai.pegawai d', 'b.username = d.nipbaru_ws')
+                ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                ->where('a.flag_active', 1)
+                ->where('c.nama_jabatan', 'Plt. Kepala Dinas Kesehatan')
+                ->get()->result_array();
+        
+        $fixed = null;
+        if($data){
+            foreach($data as $d){
+                if(!stringStartWith("Puskesmas", $d['nm_unitkerja']) &&
+                !stringStartWith("Rumah Sakit", $d['nm_unitkerja']) &&
+                !stringStartWith("Dinas Kesehatan", $d['nm_unitkerja'])){
+                    $fixed[] = $d;
+                }
+            }
+        }
+
+        dd($fixed);
+    }
+
     public function searchPenomoranSkCuti($data){
         // $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.id_t_nomor_surat, e.nomor_surat,
         //         (
@@ -9736,12 +10141,12 @@ public function submitEditJabatan(){
                 ->join('t_progress_cuti f', 'a.id = f.id_t_pengajuan_cuti AND f.flag_verif = 1 AND f.flag_active = 1')
                 // ->where('MONTH(a.created_date)', $data['bulan'])
                 // ->where('YEAR(a.created_date)', $data['tahun'])
-                ->where('MONTH(f.tanggal_verif)', $data['bulan'])
-                ->where('YEAR(f.tanggal_verif)', $data['tahun'])
+                // ->where('MONTH(f.tanggal_verif)', $data['bulan'])
+                // ->where('YEAR(f.tanggal_verif)', $data['tahun'])
                 ->where('a.meta_data IS NOT NULL')
                 // ->where('d.id_m_jenis_layanan', 3)
                 ->where('a.flag_active', 1)
-                // ->where('d.flag_active', 1)
+                ->where('d.flag_active', 1)
                 ->group_by('a.id')
                 ->order_by('f.urutan', 'desc')
                 ->order_by('a.flag_ds_cuti', 'asc')
@@ -10727,6 +11132,32 @@ public function getFileForKarisKarsu()
         return $query;  
     }
 
+    public function getIjazahS1D4()
+    {
+        $this->db->select('*')
+        ->where('a.id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where_in('b.id_tktpendidikan', [6000,7000])
+        ->where('flag_active', 1)
+        ->join('db_pegawai.tktpendidikanb as b ', 'a.tktpendidikan = b.id_tktpendidikanb')
+        ->from('db_pegawai.pegpendidikan as a');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getIjazahS1D4Admin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('a.id_pegawai', $id_peg)
+        ->where_in('b.id_tktpendidikan', [6000,7000])
+        ->where('flag_active', 1)
+        ->join('db_pegawai.tktpendidikanb as b ', 'a.tktpendidikan = b.id_tktpendidikanb')
+        ->from('db_pegawai.pegpendidikan as a');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    
+
     public function getCutiCltn()
     {
         $this->db->select('*')
@@ -10776,7 +11207,6 @@ public function getFileForKarisKarsu()
         $this->db->select('*')
         ->where('id_pegawai', $id_peg)
         ->where('flag_active', 1)
-    
         ->from('db_pegawai.pegpendidikan');
         $query = $this->db->get()->row_array();
         return $query;  
@@ -11249,6 +11679,18 @@ public function getFileForKarisKarsu()
         return $this->db->get()->result_array(); 
     }
 
+    function getNamaJabatanAll(){
+        $this->db->select('*, CONCAT(a.nama_jabatan," | ",b.nm_unitkerja) as jabatan')
+        ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+        ->where_not_in('id_jabatanpeg', ['0000005J001','0000005J002'])
+        ->where('flag_active', 1)
+        // ->where('jenis_jabatan', 'Struktural')
+        ->group_by('a.id_jabatanpeg')
+        ->order_by('a.eselon')
+        ->from('db_pegawai.jabatan a');
+        return $this->db->get()->result_array(); 
+    }
+
     function getUnitKerja(){
         $this->db->select('*')
         ->where_not_in('id_unitkerja', [5])
@@ -11416,7 +11858,7 @@ public function getFileForKarisKarsu()
                         if($id == 6 || $id == 7 || $id == 8 || $id == 9 ){
                          $this->db->join('m_status_layanan_pangkat b', 'a.status = b.status_id','left');
                         }
-                        if($id == 12 || $id == 13 || $id == 14 || $id == 15 || $id == 16){
+                        if($id == 12 || $id == 13 || $id == 14 || $id == 15 || $id == 16 || $id == 30){
                          $this->db->join('m_status_layanan_fungsional b', 'a.status = b.id','left');
                         }
                        $query = $this->db->get()->result_array();
@@ -11488,15 +11930,25 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 11);
             } else if($id_m_layanan == 18 || $id_m_layanan == 19 || $id_m_layanan == 20){
                 $this->db->where_in('a.id_m_layanan', [18,19,20]);
-            } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
-                $this->db->where_in('a.id_m_layanan', [12,13,14,15,16]);
+            } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30){
+                $this->db->where_in('a.id_m_layanan', [12,13,14,15,16,30]);
             } else if($id_m_layanan == 21){ 
                 $this->db->where('a.id_m_layanan', 21);
             } else if($id_m_layanan == 23){ 
                 $this->db->where('a.id_m_layanan', 23);
             } else if($id_m_layanan == 24){ 
                 $this->db->where('a.id_m_layanan', 24);
-            }   else {
+            } else if($id_m_layanan == 27){ 
+                $this->db->where('a.id_m_layanan', 27);
+            } else if($id_m_layanan == 25){ 
+                $this->db->where('a.id_m_layanan', 25);
+            } else if($id_m_layanan == 26){ 
+                $this->db->where('a.id_m_layanan', 26);
+            } else if($id_m_layanan == 28){ 
+                $this->db->where('a.id_m_layanan', 28);
+            } else if($id_m_layanan == 32){ 
+                $this->db->where('a.id_m_layanan', 32);
+            }  else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
 
@@ -11520,7 +11972,7 @@ public function searchPengajuanLayananFungsional($id_m_layanan){
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
              ->join('m_status_layanan_fungsional g', 'a.status = g.id')
-            ->where_in('a.id_m_layanan', [12,13,14,15,16])
+            ->where_in('a.id_m_layanan', [12,13,14,15,16,30,31])
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
                 if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
@@ -11544,7 +11996,7 @@ public function searchPengajuanLayananPangkat($id_m_layanan){
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
             ->join('m_status_layanan_pangkat g', 'a.status = g.status_id')
             ->join('db_pegawai.pegpangkat h', 'h.id = a.reference_id_dok','left')
-            ->where_in('a.id_m_layanan', [6,7,8,9])
+            ->where_in('a.id_m_layanan', [6,7,8,9,29])
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
                 if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
@@ -11594,14 +12046,17 @@ function getPengajuanLayanan($id,$id_m_layanan){
     if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
         $this->db->join('db_pegawai.pegpangkat l', 'l.id = c.reference_id_dok','left');
     }
-    if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+    if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
         $this->db->join('db_pegawai.pegjabatan l', 'l.id = c.reference_id_dok','left');
     }
     if($id_m_layanan == 23){
         $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_hd','left');
         $this->db->join('db_pegawai.pegarsip m', 'm.id = c.reference_id_pidana','left');
     }
-    if($id_m_layanan == 24){
+    if($id_m_layanan == 24 || $id_m_layanan == 27){
+        $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_dok','left');
+    }
+    if($id_m_layanan == 25 || $id_m_layanan == 26){
         $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_dok','left');
     }
     
@@ -11749,7 +12204,15 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "surat_pernyataan_hd"){
+        } else if($this->input->post('file') == "surat_pernyataan_hd" || $this->input->post('file') == "surat_keterangan_guru"){
+            $this->db->select('a.surat_pernyataan_tidak_hd')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_pernyataan_bersedia_tidak_diangkat_jabfung_lagi"){
             $this->db->select('a.surat_pernyataan_tidak_hd')
                 ->from('t_layanan as a')
                 ->where('a.id', $id_usul)
@@ -11771,6 +12234,16 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 10)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "tangkap_layar_myasn"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 91)
                 ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
@@ -11880,7 +12353,7 @@ public function getFileForVerifLayanan()
                 ->from('db_pegawai.pegpendidikan as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
-                ->order_by('a.tktpendidikan', 'desc')
+                ->order_by('a.tglijasah', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
         } else if($this->input->post('file') == "karya_tulis"){
@@ -11889,6 +12362,16 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 43)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sk_mutasi_instasi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 82)
                 ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
@@ -11951,6 +12434,17 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                   $str_serdik = $this->db->get()->result_array();
+                  if($str_serdik == null){
+                    $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 22)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                  $str_serdik = $this->db->get()->result_array();
+                  }
              }    
             return $str_serdik;
         } else if($this->input->post('file') == "rekom_instansi_pembina"){
@@ -12029,6 +12523,262 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 12)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }  else if($this->input->post('file') == "pangkalandata"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 12)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rencana_kompetensi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 86)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_pemberitahuan_mhs_baru"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 92)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rekom_masuk_pt"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 84)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surathukdis"){
+            $this->db->select('a.surat_pernyataan_tidak_hd')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "suratcltn"){
+            $this->db->select('a.surat_pernyataan_tidak_cltn')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_ket_lulus_mhs"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 85)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rencana_kompetensi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 86)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "krs"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 89)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "rencana_pengembangan_diri"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 90)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "suket_beasiswa"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 87)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "suket_online"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 88)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sk_penetapan_prestasi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 93)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "bukti_prestasi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 94)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_pelantikan_jabatan"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 98)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "spmt"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 34)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "cv"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 95)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "pas_foto"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 96)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "berita_acara_jabatan"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 97)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sk_tubel"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 14)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "ijazahd4s1"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegpendidikan as a')
+                ->join('db_pegawai.tktpendidikanb as b ', 'a.tktpendidikan = b.id_tktpendidikanb')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where_in('b.id_tktpendidikan', [6000,7000])
+                ->order_by('a.tahunlulus', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "kontrak_kerja"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 99)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "dok_pemberhentian_kerja"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 100)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_keterangan_kerja"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 101)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "slip_gaji_pmk"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 102)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sertifikat_profesi"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 103)
                 ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
@@ -12134,7 +12884,7 @@ public function getFileForVerifLayanan()
         } else if($dataPengajuan[0]['id_m_layanan'] == 20){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN UJIAN PENYESUAIAN KENAIKAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Ujian Penyesuaian Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
-        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16){
+        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16 || $dataPengajuan[0]['id_m_layanan'] == 30 || $dataPengajuan[0]['id_m_layanan'] == 31){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN JABATAN FUNGSIONAL]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Jabatan Fungsional anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Layanan Jabatan Fungsional";
         } else if($dataPengajuan[0]['id_m_layanan'] == 21){
@@ -12145,6 +12895,21 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         } else if($dataPengajuan[0]['id_m_layanan'] == 24){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 27){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN SURAT REKOMENDASI MENGIKUTI SELEKSI MASUK PERGURUAN TINGGI]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Surat Rekomendasi Mengikuti Seleksi Masuk Perguruan Tinggi anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        }  else if($dataPengajuan[0]['id_m_layanan'] == 25){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN TUGAS BELAJAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Tugas Belajar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 26){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN TUGAS BELAJAR BIAYA MANDIRI]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Tugas Belajar Biaya Mandiri anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 28){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN MUTASI PINDAH MASUK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Mutasi Pindah Masuk anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 32){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENINJAUAN MASA KERJA]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Peninjauan Masa Kerja anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        
@@ -12378,7 +13143,7 @@ public function getFileForVerifLayanan()
         } else if($dataPengajuan[0]['id_m_layanan'] == 20){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN UJIAN PENYESUAIAN KENAIKAN PANGKAT]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Ujian Penyesuaian Kenaikan Pangkat anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
-        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16){
+        } else if($dataPengajuan[0]['id_m_layanan'] == 12 || $dataPengajuan[0]['id_m_layanan'] == 13 || $dataPengajuan[0]['id_m_layanan'] == 14 || $dataPengajuan[0]['id_m_layanan'] == 15 || $dataPengajuan[0]['id_m_layanan'] == 16 || $dataPengajuan[0]['id_m_layanan'] == 30 || $dataPengajuan[0]['id_m_layanan'] == 31){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN JABATAN FUNGSIONAL]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\n\nPengajuan Layanan Jabatan Fungsional anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\n".$tambahan."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Ujian Penyesuaian Kenaikan Pangkat";
         }
@@ -12499,6 +13264,8 @@ public function getFileForVerifLayanan()
             $target_dir						= './arsipperbaikandata/';
         } else if($this->input->post('id_dokumen') == 101){
             $target_dir						= './arsippeningkatanpenambahangelar/';
+        } else if($this->input->post('id_dokumen') == 14){
+            $target_dir						= './arsiplain/';
         } else if($this->input->post('jenis_organisasi')){
             $target_dir						= './arsiporganisasi/';
         } else if($this->input->post('pegpenghargaan')){
@@ -12635,6 +13402,22 @@ public function getFileForVerifLayanan()
             $datainsKgb["gambarsk"] = $data['file_name'];
             $url_file = "arsipgjberkala/".$data['nama_file'];
 
+
+            if($dataKgb[0]['statuspeg'] == "1" || $dataKgb[0]['statuspeg'] == "2"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+            } else if($dataKgb[0]['statuspeg'] == "3") {
+            if($dataKgb[0]['pangkat'] == "55"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+1 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+            }
+            if($dataKgb[0]['pangkat'] == "57"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+3 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+            }
+            if($dataKgb[0]['pangkat'] == "59" || $dataKgb[0]['pangkat'] == "60"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+            }
+            } 
+
+                        
             $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
             $id_peggajiberkala = $this->db->insert_id();
             $datainsKgb["id_peggajiberkala"] = $id_peggajiberkala;
@@ -12642,11 +13425,14 @@ public function getFileForVerifLayanan()
             ->update('t_gajiberkala', $datainsKgb);
 
             $dataUpdatePeg["catatan_berkala"] = "";
+            $dataUpdatePeg["tmtgjberkalaberikut"] = $tmtgjberkalaberikut;
             $this->db->where('id_peg', $dataKgb[0]['id_pegawai'])
             ->update('db_pegawai.pegawai', $dataUpdatePeg);
             
             $this->updateBerkala($dataKgb[0]['id_pegawai']);
             $result = array('msg' => 'Data berhasil disimpan', 'success' => true);
+
+
 
             // $dataLayanan = $this->db->select('c.*,a.*')
             //     ->from('t_layanan a')
@@ -12720,7 +13506,7 @@ public function getFileForVerifLayanan()
 
                 $this->updatePendidikan($dataLayanan['id_peg']);
             
-            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Peningkatan Pendidikan / Penambahan Gelar Anda, File SK ini telah tersimpan dan bisa didownload melalui Aplikasi Siladen pada riwayat layanan peningkatan pendidikan / penambahan gelar anda.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nUsulan Peningkatan Pendidikan / Penambahan Gelar telah selesai dan Riwayat Pendidikan/Gelar Anda telah ditambahkan ke Profil Aplikasi Siladen dan SIASN BKN.\n\nStatus  : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
             $cronWa = [
                         'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                         'message' => $caption,
@@ -12850,7 +13636,7 @@ public function getFileForVerifLayanan()
             }
         // GAJI BERKALA
         // JABATAN 
-        if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+        if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30){
             $data["reference_id_dok"] = null; 
             $data["status"] = 4; 
             $this->db->where('id', $id_usul)
@@ -12886,7 +13672,7 @@ public function getFileForVerifLayanan()
             }
         // PIDANA HUKDIS
         // SUKET TIDAK TUBEL 
-        if($id_m_layanan == 24){
+        if($id_m_layanan == 24 || $id_m_layanan == 27 || $id_m_layanan == 25 || $id_m_layanan == 26){
         $data["status"] = 1; 
         $data["reference_id_dok"] = null; 
         $this->db->where('id', $id_usul)
@@ -13075,6 +13861,23 @@ public function getFileForVerifLayanan()
        
         $this->db->trans_begin();
     
+        if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
+        $cek =  $this->db->select('*')
+        ->from('t_layanan a')
+        ->where('a.id_m_user', $this->general_library->getId())
+        ->where('a.flag_active', 1)
+        ->where('a.id_m_layanan', $id_m_layanan)
+        ->where_not_in('a.status', [6])
+        ->get()->result_array();
+        } else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) {
+         $cek =  $this->db->select('*')
+        ->from('t_layanan a')
+        ->where('a.id_m_user', $this->general_library->getId())
+        ->where('a.flag_active', 1)
+        ->where('a.id_m_layanan', $id_m_layanan)
+        ->where_in('a.status', [2,6])
+        ->get()->result_array();
+        } else {
         $cek =  $this->db->select('*')
         ->from('t_layanan a')
         ->where('a.id_m_user', $this->general_library->getId())
@@ -13082,12 +13885,22 @@ public function getFileForVerifLayanan()
         ->where('a.id_m_layanan', $id_m_layanan)
         ->where_in('a.status', [0,2])
         ->get()->result_array();
+        }
+        // $cek =  $this->db->select('*')
+        // ->from('t_layanan a')
+        // ->where('a.id_m_user', $this->general_library->getId())
+        // ->where('a.flag_active', 1)
+        // ->where('a.id_m_layanan', $id_m_layanan)
+        // ->where_in('a.status', [0,2])
+        // ->get()->result_array();
+
+
         if($cek){
-            $res = array('msg' => 'Sudah ada usul layanan yang belum disetujui', 'success' => false);
+            $res = array('msg' => 'Sudah ada usul layanan', 'success' => false);
         } else {
             $nip = $this->input->post('nip');
             $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-            if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
+            if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/pangkat';
             } else if($id_m_layanan == 10){
@@ -13105,7 +13918,7 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 20){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/ujian_dinas';
-            } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+            } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/jabatan_fungsional';
             } else if($id_m_layanan == 21){
@@ -13117,9 +13930,23 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 24){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/suratkettidaktubel';
-            } else {
+            }  else if($id_m_layanan == 27){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/suratrekompt';
+            } else if($id_m_layanan == 25){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/tugasbelajar';
+            } else if($id_m_layanan == 28){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/mutasi_pindah_masuk';
+            } else if($id_m_layanan == 32){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/peninjauan_masa_kerja';
+            }  else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
+
+            
 
             // $file2 = null;
             $filehd = null;
@@ -13128,9 +13955,20 @@ public function getFileForVerifLayanan()
             $this->load->library('upload');
             if(isset($_FILES['file2']['name'])){
                 // $file2 = str_replace(' ', '', $_FILES['file2']['name']);
+                if($id_m_layanan == 31){
+                $filehd =  "surat_keterangan_guru_$nip"."_$random_number".".pdf";
+                } else if($id_m_layanan == 15){
+                $filehd =  "surat_pernyataan_bersedia_tidak_diangkat_jf_lagi_$nip"."_$random_number".".pdf";
+                } else {
                 $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
-                 if($id_m_layanan == 23){
+                }
+
+                if($id_m_layanan == 23){
                 $target_dir_hd	= './dokumen_layanan/suratpidanahukdis';
+                } else if($id_m_layanan == 28){
+                $target_dir_hd	= './dokumen_layanan/mutasi_pindah_masuk';
+                } else if($id_m_layanan == 31){
+                $target_dir_hd	= './dokumen_layanan/jabatan_fungsional';
                 } else {
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
                 } 
@@ -13225,6 +14063,130 @@ public function getFileForVerifLayanan()
         
 	}
 
+     public function insertUsulLayananTubel($id_m_layanan)
+	{
+       
+        $this->db->trans_begin();
+    
+      
+        $cek =  $this->db->select('*')
+        ->from('t_layanan a')
+        ->where('a.id_m_user', $this->general_library->getId())
+        ->where('a.flag_active', 1)
+        ->where('a.id_m_layanan', $id_m_layanan)
+        ->where_in('a.status', [0,2])
+        ->get()->result_array();
+        
+      
+
+
+        if($cek){
+            $res = array('msg' => 'Sudah ada usul layanan', 'success' => false);
+        } else {
+            $nip = $this->input->post('nip');
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            if($id_m_layanan == 25){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/tugasbelajar';
+            } else if($id_m_layanan == 26){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/tugasbelajarmandiri';
+            } 
+
+            // $file2 = null;
+            $filehd = null;
+            $filecltn = null;
+
+            $this->load->library('upload');
+            if(isset($_FILES['file2']['name'])){
+                $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
+                $target_dir_hd	= './dokumen_layanan/tugasbelajar/surat_ket_hd';
+            }
+
+            if(isset($_FILES['file3']['name'])){
+               $filecltn =  "surat_pernyataan_tidak_cltn_$nip"."_$random_number".".pdf";
+               $target_dir_cltn	= './dokumen_layanan/tugasbelajar/suket_cltn';
+            } 
+            
+          
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE;
+            $config['file_name']            = "$nama_file.pdf";
+            // $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+
+
+            // coba upload file		
+            if (!$this->upload->do_upload('file')) {
+                $data['error']    = strip_tags($this->upload->display_errors());
+                $data['token']    = $this->security->get_csrf_hash();
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                return $res;
+            } else {
+                    $dataFile 			= $this->upload->data();
+                    $dataUsul['id_m_user']      = $this->general_library->getId();
+                    $dataUsul['created_by']      = $this->general_library->getId();
+                    $dataUsul['id_m_layanan']      = $id_m_layanan;
+                    $dataUsul['file_pengantar']      = "$nama_file.pdf";
+                    $dataUsul['surat_pernyataan_tidak_hd']      = $filehd;
+                    $dataUsul['surat_pernyataan_tidak_cltn']      = $filecltn;
+                    
+                    $this->db->insert('db_efort.t_layanan', $dataUsul);
+                    $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+
+            if(isset($_FILES['file2']['name'])){
+                $config_hd['upload_path']       = $target_dir;
+                $config_hd['allowed_types']     = 'pdf';
+                $config_hd['encrypt_name']		= FALSE;
+                $config_hd['overwrite']			= TRUE;
+                $config_hd['detect_mime']		= TRUE;
+                $config_hd['file_name']         = $filehd;
+                $this->upload->initialize($config_hd);
+                if (!$this->upload->do_upload('file2')) {
+                    $data['error']    = strip_tags($this->upload->display_errors());
+                    $data['token']    = $this->security->get_csrf_hash();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                    return $res;
+                } else {
+                    $dataFile 			= $this->upload->data();
+                }
+            }
+
+            if(isset($_FILES['file3']['name'])){
+                $config_pidana['upload_path']       = $target_dir;
+                $config_pidana['allowed_types']     = 'pdf';
+                $config_pidana['encrypt_name']		= FALSE;
+                $config_pidana['overwrite']			= TRUE;
+                $config_pidana['detect_mime']		= TRUE;
+                $config_pidana['file_name']         = $filecltn;
+                $this->upload->initialize($config_pidana);
+                if (!$this->upload->do_upload('file3')) {
+                    $data['error']    = strip_tags($this->upload->display_errors());
+                    $data['token']    = $this->security->get_csrf_hash();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                    return $res;
+                } else {
+                    $dataFile 			= $this->upload->data();
+                }
+            }
+        }
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+        
+	}
+
     public function ajukanKembaliLayananPangkat($fieldName, $fieldValue, $tableName)
     {
         $this->db->where($fieldName, $fieldValue)
@@ -13247,10 +14209,20 @@ public function getFileForVerifLayanan()
             $target_dir	= './dokumen_layanan/ujian_dinas';
         } else if($id_m_layanan == 20){
             $target_dir	= './dokumen_layanan/ujian_dinas';
-        } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
+        } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30){
             $target_dir	= './dokumen_layanan/jabatan_fungsional';
         } else if($id_m_layanan == 21){
             $target_dir	= './dokumen_layanan/peningkatan_penambahan_gelar';
+        } else if($id_m_layanan == 24){
+            $target_dir	= './dokumen_layanan/suratkettidaktubel';
+        } else if($id_m_layanan == 25){
+            $target_dir	= './dokumen_layanan/tugasbelajar';
+        } else if($id_m_layanan == 26){
+            $target_dir	= './dokumen_layanan/tugasbelajarmandiri';
+        } else if($id_m_layanan == 27){
+            $target_dir	= './dokumen_layanan/suratrekompt';
+        } else if($id_m_layanan == 28){
+            $target_dir	= './dokumen_layanan/mutasi_pindah_masuk';
         }
 
         $this->db->trans_begin();
@@ -13417,8 +14389,9 @@ public function getFileForVerifLayanan()
     }
 
     public function cekProsesKenaikanBerkala($id_pegawai,$tahun){
-        $this->db->select('*')
+        $this->db->select('a.*,b.url_ds')
                 ->from('t_gajiberkala a')
+                ->join('t_usul_ds b', 'a.id = b.ref_id', 'left')
                 ->where('a.tahun', $tahun)
                 ->where('a.id_pegawai', $id_pegawai)
                 ->where('a.flag_active', 1);
@@ -13451,7 +14424,7 @@ public function getFileForVerifLayanan()
         return $res;
     }
 
-    public function simpanDataDrafKgb(){
+    public function simpanDataDrafKgb($no_sk){
 
         $datapost = $this->input->post();
         $this->db->trans_begin();
@@ -13461,7 +14434,7 @@ public function getFileForVerifLayanan()
             $data["pangkat"] = $datapost["edit_gb_pangkat"];
             $data["masakerja"] = $datapost["edit_gb_masa_kerja"];
             $data["pejabat"] = "Wali Kota Manado";
-            $data["nosk"] = $datapost["edit_gb_no_sk"];
+            $data["nosk"] = $no_sk;
             $data["tglsk"] = $datapost["edit_gb_tanggal_sk"];
             $data["tmtgajiberkala"] = $datapost["edit_tmt_gaji_berkala"];
             $data["gajilama"] = $datapost["gajilama"];
@@ -13736,6 +14709,89 @@ public function checkListIjazahCpns($id, $id_pegawai){
         
 	}
 
+     public function uploadSuratLayananRekomSeleksiPT()
+	{
+       
+        $this->db->trans_begin();
+        $id_pegawai = $this->input->post('id_pegawai'); 
+        $id_usul = $this->input->post('id_usul'); 
+        $id_dokumen = $this->input->post('id_dokumen'); 
+        $dataLayanan = $this->db->select('c.*,a.*')
+                ->from('t_layanan a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->where('a.id', $id_usul)
+                ->get()->row_array();
+        
+            $filesk = null;
+            $nip = $this->input->post('nip');
+
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+           
+           if($id_dokumen == 84){
+            $filesk = "rekomendasi_mengikuti_seleksi_masuk_pt_$nip"."_$random_number".".pdf";
+            $jenis_layanan = 'Rekomendasi Mengikuti Seleksi Masuk Perguruan Tinggi';
+           } else if($id_dokumen == 14) {
+            $filesk = "tugas_belajar_$nip"."_$random_number".".pdf";
+            $jenis_layanan = 'Tugas Belajar';
+
+           }
+            $target_dir	= './arsiplain/';
+
+            $this->load->library('upload');
+
+            
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE;
+            $config['file_name']            = $filesk;
+            $this->upload->initialize($config);
+
+            if (!$this->upload->do_upload('file')) {
+                $data['error']    = strip_tags($this->upload->display_errors());
+                $data['token']    = $this->security->get_csrf_hash();
+                $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                return $res;
+            } else {
+                    $dataFile 			= $this->upload->data();
+                    $dataHD['id_pegawai']      = $id_pegawai;
+                    $dataHD['created_by']      = $this->general_library->getId();
+                    $dataHD['id_dokumen']      = $id_dokumen; 
+                    $dataHD['status']          = 2; 
+                    $dataHD['gambarsk']        = $filesk;
+                    $this->db->insert('db_pegawai.pegarsip', $dataHD);
+                    $id_insert_hd = $this->db->insert_id();
+                    $dataUpdateHD["status"] = 3;
+                    $dataUpdateHD["reference_id_dok"] = $id_insert_hd;
+                    $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $dataUpdateHD);
+                    $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan Surat ".$jenis_layanan." Anda, Dokumen ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda. Apabila terjadi kesalahan pada Dokumen ini,silahkan kirim pesan dinomor WA ini.\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+                    $url_file = "arsiplain/".$filesk;
+                    $cronWa = [
+                    'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+                    'message' => $caption,
+                    'filename' => $filesk,
+                    'fileurl' => $url_file,
+                    'type' => 'document',
+                    'jenis_layanan' => $jenis_layanan
+                ];
+                $this->db->insert('t_cron_wa', $cronWa);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
+    return $res;
+        
+	}
+
     public function checkListIjazahSP($id, $id_pegawai){
         $rs['code'] = 0;        
         $rs['message'] = 'OK';
@@ -13791,7 +14847,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
     public function updateStatusLayananPangkat($id)
     {
         $data['status'] = $id;
-        $this->db->where_in('id', [6,7,8,9])
+        $this->db->where_in('id', [6,7,8,9,29])
                         ->update('m_layanan', $data);
     }
 
@@ -13830,12 +14886,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
 
-        $pendidikan = $this->db->select('*')
-                            ->from('db_pegawai.pegpendidikan')
-                            ->where('flag_active', 1)
-                            ->where('id_pegawai', $pegawai['id_peg'])
-                            ->where_in('status', [1,2])
-                            ->where_in('tktpendidikan', [5001, 6001, 7001])
+        $pendidikan = $this->db->select('a.*')
+                            ->from('db_pegawai.pegpendidikan a')
+                            ->join('db_pegawai.tktpendidikanb b', 'a.tktpendidikan = b.id_tktpendidikanb')
+                            ->where('a.flag_active', 1)
+                            ->where('a.id_pegawai', $pegawai['id_peg'])
+                            ->where_in('a.status', [1,2])
+                            // ->where_in('tktpendidikan', [1000, 2000, 2016, 5001, 6001, 7001])
+                            ->where_in('b.id_tktpendidikan', [1000, 2000, 5000, 6000, 7000])
                             ->get()->result_array();
 
         $hubkel = $this->db->select('*')
@@ -13852,7 +14910,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             ->where_in('status', [1,2])
                             ->where('id_dokumen', 37)
                             ->get()->result_array();
-
+        
         $kartukeluarga = $this->db->select('*')
                             ->from('db_pegawai.pegarsip')
                             ->where('flag_active', 1)
@@ -13892,7 +14950,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         if(!$hubkel){
             $result['message'] .= "Keluarga, ";
         }
-
+        
         if(!$ktp){
             $result['message'] .= "KTP, ";
         }
@@ -13901,17 +14959,17 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $result['message'] .= "Kartu Keluarga, ";
         }
 
-        if(!$suratPernyataanTidakPindah){
-            $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
-        }
-
+        // if(!$suratPernyataanTidakPindah){
+        //     $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
+        // }
+        
         if($result['message'] != ""){
             $result['done'] = false;
             $result['message'] = substr(trim($result['message']), 0, strlen($result['message'])-2);
             $result['message'] = "Data ".$result['message']." belum diinput.";
-        } else if(date('Y-m-d') < '2025-06-02'){
+        } else if(date('Y-m-d H:i:s') <= '2025-10-01 09:00'){
             $result['done'] = false;
-            $result['message'] = "SK dapat didownload pada tanggal 2 Juni 2025";
+            $result['message'] = "SK dapat didownload pada tanggal".formatDateNamaBulan(date('Y-m-d'))." di atas jam 09:00 pagi";
         }
 
         return $result;
@@ -13919,7 +14977,8 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
     function uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf){
         $this->db->trans_begin();
-
+        $result['done'] = true;
+        $result['message'] = "";
         $bulan = getNamaBulan(date('m'));
         $tahun = date('Y');
 
@@ -13936,16 +14995,32 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $batchId = generateRandomString();
             $data['id_m_user'] = $dataLayanan['id_m_user'];
             $data['created_by'] = $this->general_library->getId();
+            if($dataPost['id_m_layanan'] == 23){
+                if($dataPost['jenis'] == 1){
+                $data['keterangan'] = "Surat Pernyataan Tidak Pernah Dijatuhun Hukuman Disiplin Tingkat Sedang/Berat a.n. ".$dataLayanan['nama'] ;
+                } else {
+                $data['keterangan'] = "Surat Pernyataan Tidak Sedang Menjalani Proses Pidana Atau Pernah dipidana a.n. ".$dataLayanan['nama'] ;
+                }
+            } else {
             $data['keterangan'] = "Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas a.n. ".$dataLayanan['nama'] ;
+            }
             $data['ds_code'] = "^";
             $data['page'] = 1;
             $data['table_ref'] = 't_layanan';
             $data['ref_id'] = $id_usul;
+            if($dataPost['id_m_layanan'] == 23){
+            if($dataPost['jenis'] == 1){
+                $data['meta_view'] = "kepegawaian/surat/V_SuratHukdis2";
+            } else {
+                $data['meta_view'] = "kepegawaian/surat/V_SuratPidana";
+            }
+            } else {
             $data['meta_view'] = "kepegawaian/surat/V_SuratKetTidakTubel";
-            $data['nama_kolom_ds'] = "flag_ds_suket_tidak_tubel";
+            }
+            $data['nama_kolom_ds'] = "";
             $data['url_ds'] = $url2;
             $data['batch_id'] = $batchId;
-            $data['id_m_jenis_layanan'] = 30;
+            $data['id_m_jenis_layanan'] = 39;
             $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
 
             $this->db->insert('t_usul_ds', $data);
@@ -13974,12 +15049,31 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $progress2['flag_ds_now'] = 0;
             $this->db->insert('t_usul_ds_detail_progress', $progress2);
 
+           
             $dataUpdate['id_t_usul_ds'] = $id_t_usul_ds;
-            $dataUpdate['status'] = 3;
+            $dataUpdate['nomor_surat'.$dataPost['jenis']] = $dataPost['nomor_surat_siladen'];
+            // $dataUpdate['status'] = 3;
             $this->db->where('id', $id_usul)
                 ->update('t_layanan', $dataUpdate);
 
+            if($dataPost['jenis'] == 1){
+                 $perihal = "SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT a.n.".getNamaPegawaiFull($dataLayanan);
+            } else {
+                 $perihal = "SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA a.n.".getNamaPegawaiFull($dataLayanan);
+            }
+            $counter = qounterNomorSurat($tahun);
+            $this->db->insert('t_nomor_surat', [
+                            'perihal' => $perihal,
+                            'counter' => $counter,
+                            'nomor_surat' => $dataPost['nomor_surat_siladen'],
+                            'created_by' => $this->general_library->getId(),
+                            'tanggal_surat' => date('Y-m-d'),
+                            'id_m_jenis_layanan' =>39
+                        ]);
+           
+
         if($this->db->trans_status() == FALSE && $result['code'] != 0){
+            $result['done'] = false;
             $this->db->trans_rollback();
         } else {
             $this->db->trans_commit();
@@ -14085,5 +15179,703 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             $query = $this->db->get()->row_array();
                             return $query;
         }
+
+        function uploadFileUsulDsBerkala($id_usul,$dataPost,$url1,$url2,$file_pdf){
+        $this->db->trans_begin();
+        $result['done'] = true;
+        $result['message'] = "";
+        $bulan = getNamaBulan(date('m'));
+        $tahun = date('Y');
+
+
+        // $dataUpdateDS['flag_active'] = 0;
+        // $this->db->where('ref_id', $id_usul)
+        //         ->update('t_usul_ds', $dataUpdateDS);
+
+
+        //  $dataLayanan = $this->db->select('c.*,a.*,c.id as id_m_user')
+        //         ->from('t_gajiberkala a')
+        //         ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
+        //         ->join('m_user c', 'b.nipbaru_ws = c.username')
+        //         ->where('a.id', $id_usul)
+        //         ->where('c.flag_active', 1)
+        //         ->get()->row_array();
+        
+        //     $pegawai = $this->kinerja->getAtasanPegawai(0, $this->general_library->getId(), 1);
+        //     $sekbkpsdm = $this->layanan->getPegawaiByIdJabatan(ID_JABATAN_SEKBAN_BKPSDM);
+
+        //     $batchId = generateRandomString();
+        //     $data['id_m_user'] = $dataLayanan['id_m_user'];
+        //     $data['created_by'] = $this->general_library->getId();
+            
+        //     $data['keterangan'] = "SK Kenaikan Gaji Berkala a.n. ".$dataLayanan['nama'] ;
+        //     $data['ds_code'] = "^";
+        //     $data['page'] = 1;
+        //     $data['table_ref'] = 't_gajiberkala';
+        //     $data['ref_id'] = $id_usul;
+        //     $data['meta_view'] = "kepegawaian/layanan/V_DrafSkKgb";
+        //     $data['nama_kolom_ds'] = "";
+        //     $data['url_ds'] = $url2;
+        //     $data['batch_id'] = $batchId;
+        //     $data['id_m_jenis_layanan'] = 64;
+        //     $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
+
+        //     $this->db->insert('t_usul_ds', $data);
+        //     $id_t_usul_ds = $this->db->insert_id();
+
+        //     $usulDetail['id_t_usul_ds'] = $id_t_usul_ds;
+        //     $usulDetail['url'] = $url1;
+        //     $usulDetail['created_by'] = $this->general_library->getId();
+        //     $usulDetail['filename'] = $file_pdf;
+        //     $usulDetail['batch_id_detail'] = generateRandomString();
+
+        //     $this->db->insert('t_usul_ds_detail', $usulDetail);
+        //     $id_t_usul_ds_detail = $this->db->insert_id();
+
+        //     $progress1['urutan'] = 1;
+        //     $progress1['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
+        //     $progress1['id_m_user_verif'] = $pegawai['atasan']['id'];
+        //     $progress1['nama_jabatan'] = $pegawai['atasan']['nama_jabatan'];
+        //     $progress1['flag_ds_now'] = 1;
+        //     $this->db->insert('t_usul_ds_detail_progress', $progress1);
+
+        //     $progress2['urutan'] = 2;
+        //     $progress2['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
+        //     $progress2['id_m_user_verif'] = $sekbkpsdm['id_m_user'];
+        //     $progress2['nama_jabatan'] = $sekbkpsdm['nama_jabatan'];
+        //     $progress2['flag_ds_now'] = 0;
+        //     $this->db->insert('t_usul_ds_detail_progress', $progress2);
+
+           
+        //     $dataUpdate['nosk'] = $dataPost['nomor_surat_siladen'];
+        //     $dataUpdate['tglsk'] = date('Y-m-d');
+
+        //     $this->db->where('id', $id_usul)
+        //         ->update('t_gajiberkala', $dataUpdate);
+
+        //     $perihal = "SK KENAIKAN GAJI BERKALA a.n.".getNamaPegawaiFull($dataLayanan);
+
+            $counter = qounterNomorSurat($tahun);
+            $this->db->insert('t_nomor_surat', [
+                            'perihal' => $perihal,
+                            'counter' => $counter,
+                            'nomor_surat' => $dataPost['nomor_surat_siladen'],
+                            'created_by' => $this->general_library->getId(),
+                            'tanggal_surat' => date('Y-m-d'),
+                            'id_m_jenis_layanan' =>64
+                        ]);
+           
+
+        if($this->db->trans_status() == FALSE && $result['code'] != 0){
+            $result['done'] = false;
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $result;
+    }
+
+       public function updateGajiBerkalaBerikut()
+    {
+        $this->db->select('a.id_peg,a.statuspeg,a.tmtgjberkala,a.pangkat')
+            ->from('db_pegawai.pegawai a')
+            // ->where('a.tmtgjberkalaberikut is null')
+            ->where('a.id_m_status_pegawai', 1)
+            // ->where_in('a.statuspeg', [1,2])
+            ->limit(1000);
+            
+        $pegawai = $this->db->get()->result_array();
+        // dd($pegawai);
+        foreach ($pegawai as $peg) {  
+          if($peg['statuspeg'] == "1" || $peg['statuspeg'] == "2"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));
+          }
+           else if($peg['statuspeg'] == "3") {
+            if($peg['pangkat'] == "55"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+1 years', strtotime($peg['tmtgjberkala'])));
+            }
+            if($peg['pangkat'] == "57"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+3 years', strtotime($peg['tmtgjberkala'])));
+            }
+            if($peg['pangkat'] == "59" || $peg['pangkat'] == "60"){
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));
+            }
+          } 
+
+        // dd($tmtgjberkalaberikut);
+         $this->db->where('id_peg', $peg['id_peg'])
+         ->update('db_pegawai.pegawai', 
+         ['tmtgjberkalaberikut' => $tmtgjberkalaberikut]);
+         }
+    }
+
+       public function laporanJumlahPegawaiPerKecamatan(){
+
+          $unitkerjamaster = $this->db->select('*')
+                                ->from('db_pegawai.unitkerjamaster')
+                                 ->where_in('id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001'])
+                                ->get()->result_array();
+            
+            foreach($unitkerjamaster as $um){
+                $result['unitkerjamaster'][$um['id_unitkerjamaster']]['nama'] = $um['nm_unitkerjamaster'];
+                $result['unitkerjamaster'][$um['id_unitkerjamaster']]['laki'] = 0;
+                $result['unitkerjamaster'][$um['id_unitkerjamaster']]['perempuan'] = 0;
+            }
+            
+
+        $this->db->select('j.id_unitkerjamaster,j.nm_unitkerjamaster, a.jk')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            // ->join('db_pegawai.agama d', 'a.agama = d.id_agama')
+            // ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
+            // ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+            // ->join('db_pegawai.eselon g', 'c.eselon = g.nm_eselon','left')
+            // ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
+            // ->join('db_pegawai.tktpendidikan i', 'a.pendidikan = i.id_tktpendidikan')
+            ->join('db_pegawai.unitkerjamaster j', 'b.id_unitkerjamaster = j.id_unitkerjamaster')
+            ->where('a.id_m_status_pegawai', 1)
+            ->where_not_in('b.id_unitkerja', [5, 9050030])
+            ->where_in('j.id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001']);
+        $pegawai1 = $this->db->get()->result_array();
+
+      
+
+        foreach($pegawai1 as $peg){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['unitkerjamaster'][$peg['id_unitkerjamaster']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['unitkerjamaster'][$peg['id_unitkerjamaster']]['perempuan']++;
+        } 
+           
+        }
+        return $result;
+    }
+
+
+    public function laporanJumlahPegawaiMenurutPendidikan(){
+    $temp_pendidikan = $this->db->select('*')
+                                ->from('db_pegawai.tktpendidikan')
+                                ->get()->result_array();
+    foreach($temp_pendidikan as $pend){
+                $result['pendidikan'][$pend['id_tktpendidikan']] = $pend;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
+                $result['pendidikan'][$pend['id_tktpendidikan']]['laki'] = 0;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['perempuan'] = 0;
+                $result['pendidikan']['belum_terdata']['laki'] = 0;
+                $result['pendidikan']['belum_terdata']['perempuan'] = 0;
+    }
+    
+            
+
+        $this->db->select('a.pendidikan,a.jk')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+
+        foreach($pegawai1 as $peg){
+        if($peg['pendidikan'] == "0"){
+            $peg['pendidikan'] = "0000"; 
+        }
+
+        if($peg['pendidikan']){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['pendidikan'][$peg['pendidikan']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['pendidikan'][$peg['pendidikan']]['perempuan']++;
+        } 
+        } else {
+        //  $result['pendidikan'][]['nama'] = "Belum Terdata";
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+         $result['pendidikan']['belum_terdata']['laki']++; 
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+         $result['pendidikan']['belum_terdata']['perempuan']++; 
+        }
+        }
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutPendidikanPns(){
+    $temp_pendidikan = $this->db->select('*')
+                                ->from('db_pegawai.tktpendidikan')
+                                ->get()->result_array();
+    foreach($temp_pendidikan as $pend){
+                $result['pendidikan'][$pend['id_tktpendidikan']] = $pend;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
+                $result['pendidikan'][$pend['id_tktpendidikan']]['laki'] = 0;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['perempuan'] = 0;
+                $result['pendidikan']['belum_terdata']['laki'] = 0;
+                $result['pendidikan']['belum_terdata']['perempuan'] = 0;
+    }
+    
+            
+
+        $this->db->select('a.pendidikan,a.jk')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->where_in('a.statuspeg', [1,2])
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+        // dd($pegawai1);
+        foreach($pegawai1 as $peg){
+        if($peg['pendidikan'] == "0"){
+            $peg['pendidikan'] = "0000"; 
+        }
+
+        if($peg['pendidikan']){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['pendidikan'][$peg['pendidikan']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['pendidikan'][$peg['pendidikan']]['perempuan']++;
+        } 
+        } else {
+        //  $result['pendidikan'][]['nama'] = "Belum Terdata";
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+         $result['pendidikan']['belum_terdata']['laki']++; 
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+         $result['pendidikan']['belum_terdata']['perempuan']++; 
+        }
+        }
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutPendidikanPppk(){
+    $temp_pendidikan = $this->db->select('*')
+                                ->from('db_pegawai.tktpendidikan')
+                                ->get()->result_array();
+    foreach($temp_pendidikan as $pend){
+                $result['pendidikan'][$pend['id_tktpendidikan']] = $pend;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['nama'] = $pend['nm_tktpendidikan'];
+                $result['pendidikan'][$pend['id_tktpendidikan']]['laki'] = 0;
+                $result['pendidikan'][$pend['id_tktpendidikan']]['perempuan'] = 0;
+                $result['pendidikan']['belum_terdata']['laki'] = 0;
+                $result['pendidikan']['belum_terdata']['perempuan'] = 0;
+    }
+    
+            
+
+        $this->db->select('a.pendidikan,a.jk')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->where_in('a.statuspeg', [3])
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+        // dd($pegawai1);
+        foreach($pegawai1 as $peg){
+        if($peg['pendidikan'] == "0"){
+            $peg['pendidikan'] = "0000"; 
+        }
+
+        if($peg['pendidikan']){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['pendidikan'][$peg['pendidikan']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['pendidikan'][$peg['pendidikan']]['perempuan']++;
+        } 
+        } else {
+        //  $result['pendidikan'][]['nama'] = "Belum Terdata";
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+         $result['pendidikan']['belum_terdata']['laki']++; 
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+         $result['pendidikan']['belum_terdata']['perempuan']++; 
+        }
+        }
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutGolongan(){
+
+         $temp_pangkat = $this->db->select('*')
+                                ->from('db_pegawai.pangkat')
+                                ->where_not_in('id_pangkat', [18,19,20,51,52,0])
+                                ->get()->result_array();
+        foreach($temp_pangkat as $pang){
+            $result['pangkat'][$pang['id_pangkat']] = $pang;
+            $result['pangkat'][$pang['id_pangkat']]['nama'] = $pang['nm_pangkat'];
+            $result['pangkat'][$pang['id_pangkat']]['laki'] = 0;
+            $result['pangkat'][$pang['id_pangkat']]['perempuan'] = 0;
+    }
+
+
+        $this->db->select('a.pendidikan,a.jk,a.pangkat')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    // ->where_in('a.statuspeg', [3])
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+        // dd($pegawai1);
+        
+        foreach($pegawai1 as $peg){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['pangkat'][$peg['pangkat']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['pangkat'][$peg['pangkat']]['perempuan']++;
+
+        } 
+
+        }
+        return $result;
+    }
+
+
+    public function laporanJumlahPegawaiMenurutJabatan(){
+
+            $result['jabatan'][1]['nama'] = 'Jabatan Pimpinan Tinggi Utama';
+            $result['jabatan'][1]['laki'] = 0;
+            $result['jabatan'][1]['perempuan'] = 0;
+
+
+            $result['jabatan'][2]['nama'] = 'Jabatan Pimpinan Tinggi Madya';
+            $result['jabatan'][2]['laki'] = 0;
+            $result['jabatan'][2]['perempuan'] = 0;
+
+            $result['jabatan'][3]['nama'] = 'Jabatan Pimpinan Tinggi Pratama';
+            $result['jabatan'][3]['laki'] = 0;
+            $result['jabatan'][3]['perempuan'] = 0;
+
+            $result['jabatan'][4]['nama'] = 'Administrator';
+            $result['jabatan'][4]['laki'] = 0;
+            $result['jabatan'][4]['perempuan'] = 0;
+
+            $result['jabatan'][5]['nama'] = 'Pengawas';
+            $result['jabatan'][5]['laki'] = 0;
+            $result['jabatan'][5]['perempuan'] = 0;
+
+            $result['jabatan'][6]['nama'] = 'Eselon V';
+            $result['jabatan'][6]['laki'] = 0;
+            $result['jabatan'][6]['perempuan'] = 0;
+
+            $result['jabatan'][7]['nama'] = 'Jabatan Fungsional Guru ';
+            $result['jabatan'][7]['laki'] = 0;
+            $result['jabatan'][7]['perempuan'] = 0;
+
+            $result['jabatan'][8]['nama'] = 'Jabatan Fungsional Medis';
+            $result['jabatan'][8]['laki'] = 0;
+            $result['jabatan'][8]['perempuan'] = 0;
+
+            $result['jabatan'][9]['nama'] = 'Jabatan Fungsional Teknis';
+            $result['jabatan'][9]['laki'] = 0;
+            $result['jabatan'][9]['perempuan'] = 0;
+
+            $result['jabatan'][10]['nama'] = 'Jabatan Fungsional Umum';
+            $result['jabatan'][10]['laki'] = 0;
+            $result['jabatan'][10]['perempuan'] = 0;
+            $gurunakes = array("6000000","7005000","8010000","8020000","8000000");
+
+
+        $this->db->select('a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+        foreach($pegawai1 as $peg){
+        if($peg['eselon'] == "II A" || $peg['eselon'] == "II B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][3]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][3]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "III A" || $peg['eselon'] == "III B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][4]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][4]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "IV A" || $peg['eselon'] == "IV B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][5]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][5]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "V" || $peg['eselon'] == "V") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][6]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][6]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "8010000" || $peg['id_unitkerjamaster'] == "8020000" || $peg['id_unitkerjamaster'] == "8000000") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][7]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][7]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "6000000" || $peg['id_unitkerjamaster'] == "7005000" ) {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][8]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][8]['perempuan']++;
+        } 
+        } else if(!in_array($peg['id_unitkerjamaster'], $gurunakes)) { 
+        if($peg['jenis_jabatan'] == "JFT"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][9]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][9]['perempuan']++;
+        } 
+        } else {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][10]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][10]['perempuan']++;
+        } 
+        }
+        } 
+
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutSkpd(){
+         $temp_skpd = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja a')
+                                ->join('db_pegawai.unitkerja b', 'a.id_unitkerjamaster = b.id_unitkerjamaster')
+                                ->where_not_in('b.id_unitkerjamaster', ['9050000','','0000000','6000000','8010000','8020000','8000000','5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001'])
+                                // ->where_not_in('b.id_unitkerjamaster', ['6000000','8010000','8020000','8000000','5001000'])
+                                // ->where_not_in('b.id_unitkerjamaster', ['5001000'])
+                                // ->where_not_in('b.id_unitkerja', [5, 9050030])
+                                ->order_by('b.id_unitkerjamaster', 'ASC')
+                                ->order_by('b.id_unitkerja', 'ASC')
+
+                                ->get()->result_array();
+                                // dd($temp_skpd);
+        foreach($temp_skpd as $skpd){
+            $result['skpd'][$skpd['id_unitkerja']] = $skpd;
+            $result['skpd'][$skpd['id_unitkerja']]['nama'] = $skpd['nm_unitkerja'];
+            $result['skpd'][$skpd['id_unitkerja']]['laki'] = 0;
+            $result['skpd'][$skpd['id_unitkerja']]['perempuan'] = 0;
+        }
+
+        $result['skpd'][5001000]['nama'] = 'Kecamatan Bunaken';
+        $result['skpd'][5001000]['laki'] = 0;
+        $result['skpd'][5001000]['perempuan'] = 0;
+
+        $result['skpd'][5002000]['nama'] = 'Kecamatan Tuminting';
+        $result['skpd'][5002000]['laki'] = 0;
+        $result['skpd'][5002000]['perempuan'] = 0;
+
+        $result['skpd'][5003000]['nama'] = 'Kecamatan Singkil';
+        $result['skpd'][5003000]['laki'] = 0;
+        $result['skpd'][5003000]['perempuan'] = 0;
+        
+        $result['skpd'][5004000]['nama'] = 'Kecamatan Wenang';
+        $result['skpd'][5004000]['laki'] = 0;
+        $result['skpd'][5004000]['perempuan'] = 0;
+
+        $result['skpd'][5005000]['nama'] = 'Kecamatan Tikala';
+        $result['skpd'][5005000]['laki'] = 0;
+        $result['skpd'][5005000]['perempuan'] = 0;
+
+        $result['skpd'][5006000]['nama'] = 'Kecamatan Sario';
+        $result['skpd'][5006000]['laki'] = 0;
+        $result['skpd'][5006000]['perempuan'] = 0;
+
+        $result['skpd'][5007000]['nama'] = 'Kecamatan Wanea';
+        $result['skpd'][5007000]['laki'] = 0;
+        $result['skpd'][5007000]['perempuan'] = 0;
+
+        $result['skpd'][5008000]['nama'] = 'Kecamatan Mapanget';
+        $result['skpd'][5008000]['laki'] = 0;
+        $result['skpd'][5008000]['perempuan'] = 0;
+
+        $result['skpd'][5009000]['nama'] = 'Kecamatan Malalayang';
+        $result['skpd'][5009000]['laki'] = 0;
+        $result['skpd'][5009000]['perempuan'] = 0;
+
+        $result['skpd'][5010001]['nama'] = 'Kecamatan Paal Dua';
+        $result['skpd'][5010001]['laki'] = 0;
+        $result['skpd'][5010001]['perempuan'] = 0;
+
+        $result['skpd'][5011001]['nama'] = 'Kecamatan Bunaken Kepulauan';
+        $result['skpd'][5011001]['laki'] = 0;
+        $result['skpd'][5011001]['perempuan'] = 0;
+
+        $result['skpd'][6000000]['nama'] = 'Puskesmas/Gudang Farmasi';
+        $result['skpd'][6000000]['laki'] = 0;
+        $result['skpd'][6000000]['perempuan'] = 0;
+
+        $result['skpd'][8000000]['nama'] = 'Taman Kanak-kanak';
+        $result['skpd'][8000000]['laki'] = 0;
+        $result['skpd'][8000000]['perempuan'] = 0;
+
+
+        $result['skpd'][8010000]['nama'] = 'Sekolah Dasar';
+        $result['skpd'][8010000]['laki'] = 0;
+        $result['skpd'][8010000]['perempuan'] = 0;
+
+        $result['skpd'][8020000]['nama'] = 'Sekolah Menengah Pertama';
+        $result['skpd'][8020000]['laki'] = 0;
+        $result['skpd'][8020000]['perempuan'] = 0;
+
+
+        $this->db->select('b.id_unitkerja,a.jk,b.id_unitkerjamaster')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+        $pegawai1 = $this->db->get()->result_array();
+        // dd($pegawai1);
+        foreach($pegawai1 as $peg){
+
+        // if($peg['id_unitkerjamaster'] == "5001000"){
+        // if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        // $result['skpd'][5001000]['laki']++;
+        // } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        // $result['skpd'][5001000]['perempuan']++;
+        // } 
+        // } 
+
+        if($peg['id_unitkerjamaster'] == "6000000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][6000000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][6000000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "8010000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][8010000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][8010000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "8020000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][8020000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][8020000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "8000000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][8000000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][8000000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5001000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5001000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5001000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5002000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5002000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5002000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5003000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5003000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5003000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5004000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5004000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5004000]['perempuan']++;
+        } 
+        }else if($peg['id_unitkerjamaster'] == "5005000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5005000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5005000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5006000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5006000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5006000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5007000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5007000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5007000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5008000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5008000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5008000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5009000"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5009000]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5009000]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5010001"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5010001]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5010001]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "5011001"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][5011001]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][5011001]['perempuan']++;
+        } 
+        } else if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['skpd'][$peg['id_unitkerja']]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['skpd'][$peg['id_unitkerja']]['perempuan']++;
+        } 
+
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutStatusPegawai(){
+
+            $temp_statuspeg = $this->db->select('*')
+                                ->from('db_pegawai.statuspeg')
+                                ->get()->result_array();
+            foreach($temp_statuspeg as $sp){
+                $result['statuspeg'][$sp['id_statuspeg']] = $sp;
+                $result['statuspeg'][$sp['id_statuspeg']]['nama'] = $sp['nm_statuspeg'];
+                $result['statuspeg'][$sp['id_statuspeg']]['jumlah'] = 0;
+            }
+
+
+        $this->db->select('a.pendidikan,a.jk,a.pangkat,a.statuspeg')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    // ->where_in('a.statuspeg', [3])
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+         $result['total'] = count($pegawai1);
+         $result['total'] = count($pegawai1);
+        foreach($pegawai1 as $peg){
+        if($peg['statuspeg'] != null){
+                    $result['statuspeg'][$peg['statuspeg']]['jumlah']++;
+        }
+
+        }
+        return $result;
+    }
+    
 
 }

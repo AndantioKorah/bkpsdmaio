@@ -35,11 +35,14 @@
                   <?php if($result['id_t_nomor_surat']){ ?>
                     <button id="btn_delete" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> HAPUS</button>
                     <button id="btn_delete_loading" style="display: none;" type="btn" disabled class="btn btn-danger"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
+                  <?php } else { ?>
+                    <button id="btn_generate_ns" type="button" class="btn btn-info btn-sm">Generate Nomor Surat</button>
+                    <button id="btn_generate_ns_loading" style="display: none;" type="btn" disabled class="btn btn-info btn-sm"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
                   <?php } ?>
                 </div>
                 <div class="col-lg-6 text-right mt-3">
-                  <button id="btn_save" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> SIMPAN</button>
-                  <button id="btn_save_loading" style="display: none;" type="btn" disabled class="btn btn-navy"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
+                  <button id="btn_save" type="submit" class="btn btn-navy btn-sm"><i class="fa fa-save"></i> SIMPAN</button>
+                  <button id="btn_save_loading" style="display: none;" type="btn" disabled class="btn btn-navy btn-sm"><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu</button>
                 </div>
               </div>
             <?php } ?>
@@ -166,6 +169,58 @@
                   $('#btn_upload_file_loading').hide()
               }
           })
+      })
+
+      $('#form_input_nomor_surat_manual').on('submit', function(e){
+        e.preventDefault()
+        $('#btn_save').hide()
+        $('#btn_save_loading').show()
+        $.ajax({
+          url: '<?=base_url("kepegawaian/C_Kepegawaian/saveNomorSuratManualSkCuti/".$result['id_t_usul_ds'])?>',
+          method:"POST",  
+          data: $(this).serialize(),
+          success: function(res){
+            let rs = JSON.parse(res)
+            if(rs.code == 1){
+              errortoast(rs.message)
+            } else {
+              successtoast('Data berhasil disimpan')
+              $('#iframe_view_file')[0].contentWindow.location.reload(true);
+              // openModalPenomoranSkCuti('<?=$result['id_t_usul_ds']?>')
+            }
+            $('#btn_save').show()
+            $('#btn_save_loading').hide()
+          }, error: function(err){
+            errortoast('Terjadi Kesalahan')
+            $('#btn_save').show()
+            $('#btn_save_loading').hide()
+          }
+        })
+      })
+
+      $('#btn_generate_ns').on('click', function(){
+        $('#btn_generate_ns').hide()
+        $('#btn_generate_ns_loading').show()
+        $.ajax({
+          url: '<?=base_url("kepegawaian/C_Kepegawaian/saveNomorSuratManualSkCuti/".$result['id_t_usul_ds']."/1")?>',
+          method:"POST",  
+          data: $('#form_input_nomor_surat_manual').serialize(),
+          success: function(res){
+            let rs = JSON.parse(res)
+            if(rs.code == 1){
+              errortoast(rs.message)
+            } else {
+              successtoast('Data berhasil disimpan')
+              $('#iframe_view_file')[0].contentWindow.location.reload(true);
+            }
+            $('#btn_generate_ns').show()
+            $('#btn_generate_ns_loading').hide()
+          }, error: function(err){
+            errortoast('Terjadi Kesalahan')
+            $('#btn_generate_ns').show()
+            $('#btn_generate_ns_loading').hide()
+          }
+        })
       })
 
       $('#form_input_nomor_surat_manual').on('submit', function(e){

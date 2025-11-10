@@ -24,11 +24,12 @@
                     <td class="text-left"><?=getNamaPegawaiFull($r).'<br>NIP. '.$r['nipbaru']?></td>
                     <td class="text-left"><?=($r['nm_unitkerja'])?></td>
                     <?php
-                        // $bulan = $r['bulan'] < 10 ? '0'.$r['bulan'] : $r['bulan'];
-                        // $tanggal = $r['tanggal'] < 10 ? '0'.$r['tanggal'] : $r['tanggal'];
+                        $tanggal_dokumen = formatDateNamaBulan($r['dari_tanggal']);
+                        if($r['dari_tanggal'] != $r['sampai_tanggal']){
+                            $tanggal_dokumen = formatDateNamaBulan($r['dari_tanggal']).' - '.formatDateNamaBulan($r['sampai_tanggal']);
+                        }
                     ?>
-                    <!-- <td class="text-center"><?= formatDateNamaBulan($r['tahun'].'-'.$bulan.'-'.$tanggal) ?></td> -->
-                    <td class="text-center"><?= formatDateNamaBulan($r['dari_tanggal']).' - '.formatDateNamaBulan($r['sampai_tanggal']) ?></td>
+                    <td class="text-center"><?= $tanggal_dokumen ?></td>
                     <td class="text-center"><?= formatDateNamaBulanWT($r['created_date']) ?></td>
                     <td class="text-center"><?= ($r['nama_jenis_disiplin_kerja']) ?></td>
                     <td class="text-center">

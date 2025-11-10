@@ -163,7 +163,7 @@
   var fd = tahun+'-'+bulan+'-01';
    var statusLock = "<?=$status_lock[0]['status'];?>"
    var maxDate = "<?= $maxDate['max_date'];?>";
-  //  var maxDate = "2025-05-05";
+  //  var maxDate = "2025-10-05";
 
    var currentDate = "<?= $current_date;?>";
    console.log(maxDate)
@@ -193,7 +193,7 @@
   })
   } else {
      
-         $('.datetimepickerthisRealisasi').datetimepicker({
+    $('.datetimepickerthisRealisasi').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,
     todayHighlight: true,

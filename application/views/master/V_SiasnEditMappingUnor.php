@@ -7,6 +7,10 @@
                         <label>UNIT KERJA SILADEN</label><br>
                         <label style="font-weight: bold; font-size: 1.5rem;"><?=$result['nm_unitkerja']?></label>
                         <input class="form-control" value="<?=$result['id_unitkerja']?>" name="id_unitkerja" style="display: none;" />
+                        <br>
+                        <label style="color: grey; font-weight: bold; font-size: 1rem;">
+                            <?= $result['id_unor_siasn'] ? $result['id_unor_siasn'] : "" ?>
+                        </label>
                     </div>
                     <div class="col-lg-12"><hr></div>
                     <div class="col-lg-12">

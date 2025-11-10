@@ -30,7 +30,7 @@ class C_User extends CI_Controller
     public function users(){
         // $data['roles'] = $this->general->getAllWithOrder('m_role', 'nama', 'asc');
         $data['list_skpd'] = $this->user->getAllSkpd();
-        $data['pegawai'] = $this->session->userdata('pegawai');
+        $data['pegawai'] = $this->general_library->getUserLoggedIn();
         render('user/V_Users', 'user_management', 'users', $data);
     }
 
@@ -562,6 +562,7 @@ class C_User extends CI_Controller
 
     public function searchAllPegawai(){
         list($data['result'], $data['use_masa_kerja']) = $this->user->searchAllPegawai($this->input->post());
+        // dd($data);
         $this->session->set_userdata('data_search_database', $data);
         $this->load->view('user/V_PegawaiAllResult', $data);
     }

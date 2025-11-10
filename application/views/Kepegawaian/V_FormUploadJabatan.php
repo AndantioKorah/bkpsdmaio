@@ -191,7 +191,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       <select class="form-control select2" data-dropdown-parent="#modalJabatan"  name="id_unor_siasn" id="id_unor_siasn"   >
                       <option value="" disabled selected>Pilih Unor SIASN</option>
                       <?php if($unor_siasn){ foreach($unor_siasn as $r){ ?>
-                          <option value="<?=$r['id']?>"><?=$r['nama']?></option>
+                          <option value="<?=$r['id']?>"><?=$r['nama_unor'].' - '.$r['nama_unor_atasan']?></option>
                       <?php } } ?>
       </select>
     </div>
@@ -474,7 +474,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   <div class="form-group">
     <label>File SK</label>
     <input  class="form-control my-image-field" type="file" id="jabatan_pdf_file" name="file"  />
-    <span style="color:red;">* Maksimal Ukuran File : <?= round($format_dok['file_size']/1024)?> MB</span><br>
+    <span style="color:red;">* Maksimal Ukuran File : 2 MB</span><br>
   </div>
 
   <div class="form-group">
@@ -668,6 +668,7 @@ $(function(){
     function loadListJabatan(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
       var statusjabatan = "<?= $statusjabatan?>";
+
     $('#list_jabatan').html('')
     $('#list_jabatan').append(divLoaderNavy)
     $('#list_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/1'+'/'+statusjabatan, function(){
@@ -677,7 +678,7 @@ $(function(){
 
   function loadRiwayatUsulJabatan(){
       var nip = "<?= $profil_pegawai['nipbaru_ws']?>";
-      var statusjabatan = "<?= $statusjabatan?>";
+      var statusjabatan = "<?= $statusjabatan?>"
     $('#riwayat_usul_jabatan').html('')
     $('#riwayat_usul_jabatan').append(divLoaderNavy)
     $('#riwayat_usul_jabatan').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListJabatan/")?>'+nip+'/2'+'/'+statusjabatan, function(){
@@ -697,7 +698,7 @@ $(function(){
         var extension = doc[doc.length - 1]
 
         var fileSize = this.files[0].size/1024;
-        var MaxSize = <?=$format_dok['file_size']?>;
+        var MaxSize = 2048;
         
      
         if (extension != "pdf"){
@@ -706,7 +707,7 @@ $(function(){
         }
 
         if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 1 MB")
+          errortoast("Maksimal Ukuran File 2 MB")
           $(this).val('');
         }
 

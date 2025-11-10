@@ -31,7 +31,7 @@
               <?php if($rs['status_layanan'] < 4 ) echo $rs['ket_layanan']; else echo $rs['keterangan'];?></td>
            
             <td class="text-left">
-            <?php if($rs['id_m_layanan'] == '12') echo "Kenaikan Jabatan Fungsional"; else if($rs['id_m_layanan'] == '13') echo "Perpindahan Dari Jabatan Lain"; else if($rs['id_m_layanan'] == '14') echo "Penyesuaian/Inpassing"; else if($rs['id_m_layanan'] == '15') echo "Pemberhentian dari Jabatan Fungsional Atas Permintaan Sendiri"; else  echo "Pengangkatan Kembali"?>  
+            <?php if($rs['id_m_layanan'] == '12') echo "Kenaikan Jabatan Fungsional"; else if($rs['id_m_layanan'] == '13') echo "Perpindahan Dari Jabatan Lain"; else if($rs['id_m_layanan'] == '14') echo "Penyesuaian/Inpassing"; else if($rs['id_m_layanan'] == '15') echo "Pemberhentian dari Jabatan Fungsional Atas Permintaan Sendiri"; else if($rs['id_m_layanan'] == '16')  echo "Pengangkatan Kembali"; else if($rs['id_m_layanan'] == '30') echo "Pemberhentian dari Jabatan Fungsional Karena Tugas Belajar"; else echo "Pengangkatan Pertama Dalam Jabatan Fungsional Guru"?>  
             </td>
             <td class="text-center">
             <?php if($rs['status_layanan'] == 1 || $rs['status_layanan'] == 3 || $rs['status_layanan'] == 4 || $rs['status_layanan'] == 5) { ?>

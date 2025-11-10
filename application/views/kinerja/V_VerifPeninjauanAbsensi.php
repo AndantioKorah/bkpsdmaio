@@ -35,18 +35,30 @@
         </form>
         <?php } ?>
         <form id="form_search_verif_dokumen" class="mt-4">
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-lg col-md-12">
                     <label>Pilih Unit Kerja</label>
                     <select class="form-control select2-navy" style="width: 100%"
                         id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja">
                         <option selected value="0">Semua</option>
                         <?php foreach($unitkerja as $s){ ?>
-                            <option value="<?=$s['id_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
+                            <option value="<?=$s['id_unitkerjamaster']?>"><?=$s['nm_unitkerjamaster']?></option>
+                        <?php } ?>
+                    </select>
+                </div> -->
+                <div class="row">
+                <div class="col-lg-4 col-md-12">
+                    <label>Verifikator</label>
+                    <select class="form-control select2-navy" style="width: 100%"
+                        id="id_unitkerja" data-dropdown-css-class="select2-navy" name="id_unitkerja" required>
+                        <option selected value="0">Semua</option>
+                        <?php foreach($verifikator as $s){ ?>
+                            <option value="<?=$s['id_m_user']?>"><?= strtoupper($s['nama'])?></option>
                         <?php } ?>
                     </select>
                 </div>
-                <div class="col-lg col-md-12">
+
+                <div class="col-lg-4 col-md-12">
                     <label>Pilih Bulan</label>  
                     <select class="form-control select2-navy" style="width: 100%"
                         id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
@@ -69,7 +81,7 @@
                     <label>Pilih Tahun</label>  
                     <input readonly autocomplete="off" class="form-control datepicker" id="tahun" name="tahun" value="<?=date('Y')?>" />
                 </div>
-                <div class="col-lg col-md-12" style="margin-top: 28px;">
+                <div class="col-lg-2 col-md-9" style="margin-top: 28px;">
                     <button type="submit" class="btn btn-block btn-navy"><i class="fa fa-search"></i> Cari</button>
                 </div>
             </div>
@@ -101,7 +113,7 @@
     $(function(){
         $('#bulan').select2()
         $('#id_unitkerja').select2()
-        $('#form_search_verif_dokumen').submit()
+        // $('#form_search_verif_dokumen').submit()
         $('.datepicker3').datepicker({
         format: 'yyyy-mm-dd',
             // viewMode: "years", 

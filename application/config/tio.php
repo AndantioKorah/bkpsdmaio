@@ -20,6 +20,7 @@ $route['master/hak-akses'] = 'master/C_Master/masterHakAkses';
 $route['master/pelanggaran'] = 'master/C_Master/masterPelanggaran';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
 $route['master/event'] = 'master/C_Master/masterEvent';
+$route['master/hardcode-nominatif'] = 'master/C_Master/hardCodeNominatif';
 $route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
 
 //event
@@ -128,3 +129,6 @@ $route['admin/monitoring/cron-wa'] = 'admin/C_Admin/monitoringCronWa';
 $route['admin/monitoring/inbox-whatsapp'] = 'admin/C_Admin/monitoringInboxWa';
 $route['admin/monitoring/cron-ds'] = 'admin/C_Admin/monitoringDs';
 $route['admin/monitoring/event/absen'] = 'dashboard/C_Dashboard/dashboardWalikota';
+
+//internal API
+$route['api/get-data-tpp'] = 'api/C_ApiLayanan/getDataTpp';

@@ -343,6 +343,275 @@
             }
         }
 
+        public function syncDataUtamaPns(){
+            $listPegawai = $this->db->select('*')
+                                ->from('t_temp_data_pppk2024')
+                                // ->where('flag_sinkron_done', 0)
+                                ->where('log IS NOT NULL')
+                                // ->where('nip', '197302092025211006')
+                                // ->where_in('nip', [
+                                //     '199208072025212029',
+                                //     '198810232025212035',
+                                //     '199506262025211031',
+                                //     '199503162025211014',
+                                //     '199402022025211003'
+                                // ])
+                                // ->limit(5)
+                                ->get()->result_array();
+
+            $list_jabatan = null;
+            $jabatan = $this->db->select('*')
+                            ->from('db_pegawai.jabatan')
+                            ->get()->result_array();
+            foreach($jabatan as $j){
+                $list_jabatan[$j['id_jabatan_siasn']] = $j;
+            }
+
+            $list_unitkerja = null;
+            $uker = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->get()->result_array();
+            foreach($uker as $u){
+                $list_unitkerja[$u['id_unor_siasn']] = $u;
+            }
+
+            $success = null;
+            $unmappingUnor = null;
+            if($listPegawai){
+                $i = 0;
+                foreach($listPegawai as $lp){
+                    $res = json_decode($lp['log'], true);
+                    echo "trying ".$lp['nip']."<br>";
+                    if(!$res){
+                        echo "res null<br>";
+                    } else {
+                        // <<PANGKAT>>
+                        // 35 => D-IV, 40 => S-1, 30 => D-III, 15 => SLTA, 10 => SLTP
+                        $pangkat[35] = 59;
+                        $pangkat[40] = 59;
+                        $pangkat[30] = 57;
+                        $pangkat[15] = 55;
+                        $pangkat[10] = 53;
+                        $this->db->where('nipbaru_ws', $lp['nip'])
+                                ->update('db_pegawai.pegawai', [
+                                    'pangkat' => $pangkat[$res['tkPendidikanTerakhirId']]
+                                ]);
+                        // if($res['tkPendidikanTerakhirId'] != 35 &&
+                        //     $res['tkPendidikanTerakhirId'] != 40 && 
+                        //     $res['tkPendidikanTerakhirId'] != 30 &&
+                        //     $res['tkPendidikanTerakhirId'] != 15 &&
+                        //     $res['tkPendidikanTerakhirId'] != 10
+                        // ){
+                        //     if()
+                        // }
+
+
+                        // <<JABATAN>>
+                        // dd($res['jenisJabatan']);
+                        // $idJabatanSiasn = $res['jenisJabatan'] == "FUNGSIONAL_UMUM" ? $res['jabatanFungsionalUmumId'] : $res['jabatanFungsionalId'];
+                        // $namaJabatanSiasn = $res['jabatanNama'];
+                        // $jenisJabtanSiasn = $res['jenisJabatan'] == "FUNGSIONAL_UMUM" ? "JFU" : "JFT";
+                        // $selectedJabatan = isset($list_jabatan[$idJabatanSiasn]) ? $list_jabatan[$idJabatanSiasn] : null;
+
+                        // // dd($idJabatanSiasn);
+
+                        // $selectedUnor = null;
+                        // $selectedUnorJabatan = null;
+                        // if(isset($list_unitkerja[$res['unorId']])){
+                        //     $selectedUnor = $list_unitkerja[$res['unorId']];
+                        // } else {
+                        //     $unmappingUnor[$i]['id'] = $res['unorId'];
+                        //     $unmappingUnor[$i]['nama'] = $res['unorNama'];
+                        // }
+
+                        // if(!$selectedJabatan){
+                        //     $selectedJabatan = isset($list_jabatan[$res['jabatanFungsionalUmumId']]) ? $list_jabatan[$res['jabatanFungsionalUmumId']] : null;
+                        //     if(!$selectedJabatan){
+                        //         $idUnitKerjaDummy = "9999000";
+                        //         $selectedJabatan = [
+                        //             'id_jabatanpeg' => $idUnitKerjaDummy.generateRandomString(4),
+                        //             'id_unitkerja' => $idUnitKerjaDummy,
+                        //             'id_jabatan_siasn' => $idJabatanSiasn,
+                        //             'nama_jabatan' => $namaJabatanSiasn,
+                        //             'jenis_jabatan' => $jenisJabtanSiasn,
+                        //             'eselon' => "Non Eselon",
+                        //             'kepalaskpd' => null,
+                        //             'prestasi_kerja' => 50,
+                        //             'beban_kerja' => 0,
+                        //             'kondisi_kerja' => 0, 
+                        //         ];
+                        //         // echo "JABATAN TIDAK ADA DI DATABASE<br>";
+                        //         // dd(json_encode($selectedJabatan));
+                        //         $this->db->insert('db_pegawai.jabatan', $selectedJabatan);
+                        //     }
+                        // }
+                        // // dd($selectedJabatan);
+                        // if($selectedJabatan){
+                        //     $pegjabatan = $this->db->select('a.*')
+                        //                         ->from('db_pegawai.pegjabatan a')
+                        //                         ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                        //                         ->where('b.nipbaru_ws', $lp['nip'])
+                        //                         ->where('a.tmtjabatan', '2025-09-01')
+                        //                         ->get()->row_array();
+                        //     if($pegjabatan){
+                        //         $this->db->where('id', $pegjabatan['id'])
+                        //                 ->update('db_pegawai.pegjabatan', [
+                        //                     'nm_jabatan' => $selectedJabatan['nama_jabatan'],
+                        //                     'id_jabatan' => $selectedJabatan['id_jabatanpeg'],
+                        //                 ]);
+
+                        //         $this->db->where('nipbaru_ws', $lp['nip'])
+                        //                 ->update('db_pegawai.pegawai', [
+                        //                     'jabatan' => $pegjabatan['id_jabatan']
+                        //                 ]);
+
+                        //         $this->db->where('nip', $lp['nip'])
+                        //                 ->update('t_temp_data_pppk2024', [
+                        //                     'flag_sinkron_done' => 1
+                        //                 ]);
+                        //     }
+                        // } else {
+                        //     echo "JABATAN NULL<br>";
+                        //     dd(json_encode($res));
+                        // }
+                        
+                        echo "done ".$lp['nip']."<br>";
+                    }
+                    $i++;
+                }
+            }
+            dd("done");
+        }
+
+        public function cronSyncJabatanSiasn(){
+            $rs['code'] = 0;
+            $rs['message'] = 'Sinkronisasi Riwayat Jabatan dengan SIASN sudah berhasil';
+
+            $listPegawai = $this->db->select('a.*, b.nip as nip_done, d.id_unor_siasn as id_unor_siasn_bidang, e.id_unor_siasn as id_unor_siasn_subbidang')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('t_log_sync_jabatan b', 'a.nipbaru_ws = b.nip AND b.flag_active = 1', 'left')
+                                ->join('m_user c', 'a.nipbaru_ws = c.username')
+                                ->join('m_bidang d', 'c.id_m_bidang = d.id', 'left')
+                                ->join('m_sub_bidang e', 'c.id_m_sub_bidang = e.id', 'left')
+                                ->where('id_m_status_pegawai', 1)
+                                ->where_not_in('a.nipbaru_ws', ['001', '002'])
+                                // ->where('(b.nip IS NULL OR b.flag_success = 0)') // jika sudah pernah sinkron dan gagal, akan dicoba sinkron lagi
+                                ->where('b.nip IS NULL') // hanya yg belum pernah disinkron yg akan disinkron
+                                // ->where('a.skpd', 6130000)
+                                ->where_in('a.statuspeg', [2,1]) // cpns dan pns
+                                // ->where('a.nipbaru_ws', "197909272009032001")
+                                ->where('c.flag_active', 1)
+                                ->group_by('a.nipbaru_ws')
+                                ->where_not_in('a.skpd', [
+                                    9000001 // mahasiswa tugas belajar
+                                ])
+                                ->limit(10)
+                                ->get()->result_array();
+
+            if($listPegawai){
+                foreach($listPegawai as $lp){
+                    $log = "";
+                    $dataSync = null;
+                    $listJabatan = $this->db->select('a.*, b.id_unor_siasn as id_unor_siasn_pegjabatan, c.id_jabatan_siasn,
+                                        d.kel_jabatan_id, e.id_unor_siasn as id_unor_siasn_unitkerja, f.id_jabatan_siasn as id_jabatan_siasn_profil')
+                                        ->from('db_pegawai.pegjabatan a')
+                                        ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja', 'left')
+                                        ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg', 'left')
+                                        ->join('db_siasn.m_ref_jabatan_fungsional d', 'c.id_jabatan_siasn = d.id', 'left')
+                                        ->join('db_pegawai.unitkerja e', $lp['skpd'].' = e.id_unitkerja')
+                                        ->join('db_pegawai.jabatan f', '"'.$lp['jabatan'].'" = f.id_jabatanpeg', 'left')
+                                        ->where('statusjabatan', 1)
+                                        ->where('a.flag_active', 1)
+                                        ->where('a.id_pegawai', $lp['id_peg'])
+                                        ->order_by('a.tmtjabatan', 'desc')
+                                        ->limit(2)
+                                        ->get()->result_array();
+
+                    $flagProceed = 0;
+                    $log = "";
+                    if($listJabatan){
+                        $flagProceed = 1;
+                        if($listJabatan[0]['id_pegjabatan'] == null){
+                            $this->db->where('id', $listJabatan[0]['id'])
+                                    ->update('db_pegawai.pegjabatan', [
+                                        'id_jabatan' => $lp['jabatan']
+                                    ]);
+                        }
+
+                        $dataSync['id_jabatan_siasn'] = $listJabatan[0]['id_jabatan_siasn'];
+                        if($listJabatan[0]['id_jabatan_siasn'] == null) { // jika id_jabatan_siasn null harus mapping dulu
+                            $dataSync['id_jabatan_siasn'] = $listJabatan[0]['id_jabatan_siasn_profil'];
+                            if($listJabatan[0]['id_jabatan_siasn_profil'] == null){
+                                $flagProceed = 0;
+                                $log = "ID JABATAN SIASN belum dimapping ".$lp['jabatan']." ".$listJabatan[0]['nm_jabatan'];
+                            }
+                        }
+                        // dd($dataSync);
+
+                        $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_subbidang']; // ambil id_unor_siasn subbidang
+                        if($dataSync['id_unor_siasn'] == null){ // jika null, ambil id_unor_siasn bidang
+                            $dataSync['id_unor_siasn'] = $lp['id_unor_siasn_bidang'];
+                        }
+
+                        if($dataSync['id_unor_siasn'] == null){ // jika masih null, ambil id_unor_siasn di pegjabatan
+                            $dataSync['id_unor_siasn'] = $listJabatan[0]['id_unor_siasn_pegjabatan'];
+                        }
+
+                        if($dataSync['id_unor_siasn'] == null){ // jika masih null, ambil id_unor_siasn unitkerja
+                            $dataSync['id_unor_siasn'] = $listJabatan[0]['id_unor_siasn_unitkerja'];
+                        }
+
+                        if($dataSync['id_unor_siasn'] == null){ // jika masih null, masukkan di log
+                            $flagProceed = 0;
+                            $log = "ID UNOR SIASN belum dimapping";
+                        }
+                    } else {
+                        $log = "LIST JABATAN KOSONG";
+                    }
+
+                    if($flagProceed == 1){
+                        if(!isset($listJabatan[0])){
+                            dd($listJabatan);
+                        }
+
+                        $dataSync['subJabatanId'] = $listJabatan[0]['id_m_ref_sub_jabatan_siasn'];
+                        if(in_array($listJabatan[0]['kel_jabatan_id'], LIST_ID_NEED_SUB_JABATAN)){
+                            if($listJabatan[0]['id_m_ref_sub_jabatan_siasn'] == null){ // jika null ambil default
+                                $dataSync['subJabatanId'] = getDefaultSubJabatan($listJabatan[0]['kel_jabatan_id']);
+                                $this->db->where('id', $listJabatan[0]['id'])
+                                        ->update('db_pegawai.pegjabatan', [
+                                            'id_m_ref_sub_jabatan_siasn' => $dataSync['subJabatanId']
+                                        ]);
+                            }
+                        }
+
+                        $dataSync['jenisMutasiId'] = "MJ";
+                        if(isset($listJabatan[1])){
+                            if($listJabatan[0]['id_unitkerja'] != $listJabatan[1]['id_unitkerja']){
+                                $dataSync['jenisMutasiId'] = "MU";
+                            }
+                        }
+
+                        $dataSync['jenisPenugasanId'] = "D";
+                        
+                        $rs = $this->kepegawaian->syncSiasnJabatan($listJabatan[0]['id'], 1, $dataSync);
+                        if($rs['code'] == 1){
+                            $flagProceed = 0;
+                        }
+                        $log = json_encode($rs);
+                    }
+
+                    $this->db->insert('t_log_sync_jabatan', [
+                        'nip' => $lp['nipbaru_ws'],
+                        'log' => $log,
+                        'flag_success' => $flagProceed
+                    ]);
+
+                    echo $lp['nipbaru_ws']." => ".$log."<br><br>";
+                }
+            }
+        }
+
         public function syncRiwayatJabatanSiasn($id_m_user){
             $rs['code'] = 0;
             $rs['message'] = 'Sinkronisasi Riwayat Jabatan dengan SIASN sudah berhasil';

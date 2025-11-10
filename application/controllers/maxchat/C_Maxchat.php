@@ -247,7 +247,7 @@ class C_Maxchat extends CI_Controller
                             }
                         }
                     } else {
-                        $reply = "Mohon maaf, Anda tidak memiliki akses untuk menggunakan layanan ini. Layanan ini hanya tersedia bagi Kasubag Umum & Kepeg masing-masing PD, Lurah, Kepala Sekolah, Kepala TK dan pegawai yang diberikan tugas khusus untuk melakukan rekap absensi.";
+                        // $reply = "Mohon maaf, Anda tidak memiliki akses untuk menggunakan layanan ini. Layanan ini hanya tersedia bagi Kasubag Umum & Kepeg masing-masing PD, Lurah, Kepala Sekolah, Kepala TK dan pegawai yang diberikan tugas khusus untuk melakukan rekap absensi.";
                     }
                 } else if ($explode[0] == '#cek' && $explode[1] == 'profil'){
                     $pegawai = $this->user->getProfilUserByNoHp($result->from);
@@ -288,7 +288,7 @@ class C_Maxchat extends CI_Controller
             }
         }
 
-         if($result->type == "image"){
+        if($result->type == "image"){
             $this->general->retrieveImageMessage($result);
         }
 

@@ -238,6 +238,10 @@ class C_Master extends CI_Controller
         echo json_encode($this->master->getJabatanByUnitKerja($id));
     }
 
+    public function getAllJabatanAndJabatanEselonByUnitKerja($id){
+        echo json_encode($this->master->getAllJabatanAndJabatanEselonByUnitKerja($id));
+    }
+
     public function loadTpp(){
         $data['result'] = $this->master->loadMasterTpp();
         $this->load->view('master/V_TppData', $data);
@@ -513,14 +517,14 @@ class C_Master extends CI_Controller
 
     public function mappingUnor(){
         // $data['list_skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
-        // $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_unor_perencanaan', 0);
+        // $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_ref_unor', 0);
         $data['result'] = $this->general->getDataMappingUnor();
         render('master/V_SiasnMappingUnor', '', '', $data);
     }
 
     public function editMappingUnor($id){
         $data['result'] = $this->general->editMappingUnor($id);
-        $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_unor_perencanaan', 0);
+        $data['list_unor_siasn'] = $this->general->getAll('db_siasn.m_ref_unor', 0);
         $data['id_unitkerja'] = $id;
         $this->load->view('master/V_SiasnEditMappingUnor', $data);
     }
@@ -631,6 +635,26 @@ class C_Master extends CI_Controller
 
     public function deleteDataEvent($id){
         echo json_encode($this->master->deleteDataEvent($id));
+    }
+
+    public function hardcodeNominatif(){
+		$data['unit_kerja'] = $this->kepegawaian->getUnitKerja();
+        $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
+        $data['list_pegawai'] = $this->master->getAllPegawai();
+        render('master/V_MasterHardcodeNominatif', '', '', $data);
+    }
+
+    public function loadListHardcodeNominatif(){
+        $data['result'] = $this->master->loadListHardcodeNominatif();
+        $this->load->view('master/V_MasterHardcodeNominatifList', $data);
+    }
+
+    public function inputHardcodeNominatif(){
+        echo json_encode($this->master->inputHardcodeNominatif($this->input->post()));
+    }
+
+    public function deleteHardcodeNominatif($id){
+        echo json_encode($this->master->deleteHardcodeNominatif($id));
     }
 
 }

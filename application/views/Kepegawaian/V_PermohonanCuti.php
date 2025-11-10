@@ -29,6 +29,20 @@
     font-size: .9rem;
   }
 </style>
+<?php
+  $arrCuti = [
+    00,
+    // 10, // cuti besar
+    20,
+    30,
+    40, 
+    // 50, // CLTN
+  ];
+
+  if(!$this->general_library->isBisaAmbilCutiTahunan()){
+    $arrCuti = [20, 30, 40,]; // tanpa cuti tahunan
+  }
+?>
 <div class="row">
   <div class="col-lg-12">
     <div class="card card-default">
@@ -36,6 +50,7 @@
         <div class="card-title"><h5>FORM PERMOHONAN CUTI</h5></div>
         <hr>
       </div>
+      <?php // if($this->general_library->isProgrammer()){ ?>
       <div class="card-body">
         <form method="post" enctype="multipart/form-data" id="form_cuti" style="margin-top: -45px;">
           <div class="row">
@@ -48,19 +63,22 @@
               id="id_cuti" data-dropdown-css-class="select2-navy" name="id_cuti">
                   <?php if($master_jenis_cuti){
                       foreach($master_jenis_cuti as $mc){ 
-                        if($mc['id_cuti'] != 50 && $mc['id_cuti'] != 10){
-                        if($mc['id_cuti'] == 00){
+                        if(in_array($mc['id_cuti'], $arrCuti)){ // cuti besar dan CLTN tahan dulu
+                        // if((!$this->general_library->isBisaAmbilCutiTahunan() && !$mc['id_cuti'] == 00) ||
+                        //   $this->general_library->isBisaAmbilCutiTahunan()
+                        // ){
                       ?>
                       <option value="<?=$mc['id_cuti']?>">
                           <?=$mc['nm_cuti']?>
                       </option>
-                  <?php } } } 
-                } ?>
+                  <?php // } 
+                } } } ?>
               </select>
             </div>
-            <div class="col" id="div_surat_pendukung" style="display: none;">
+            <div class="col" id="div_surat_pendukung" style="display: block;">
               <label class="lbl_input">Surat Pendukung</label>
               <input name="surat_pendukung" id="surat_pendukung" class="form-control" type="file" />
+              <label style="font-style: italic; color: red; font-size: .75rem; font-weight: bold;" id="lbl_keterangan_surat_pendukung">*surat pendukung dibutuhkan jika hendak bepergian ke luar negeri</label>
             </div>
           </div>
           <div class="row mt-2">
@@ -129,6 +147,9 @@
           </div>
         </form>
       </div>
+      <?php // } else { ?>
+        <!-- <h5 style="color: red; font-weight: bold; font-size: 1.2rem;">Fitur permohonan cuti sedang dalam maintenance</h5> -->
+      <?php // } ?>
     </div>
   </div>
   <div class="col-lg-12 mt-3">
@@ -175,16 +196,22 @@
 
   $('#id_cuti').on('change', function(){
     countJumlahHariCuti()
-    if($(this).val() == "20" || $(this).val() == "30" || $(this).val() == "40"){
-      $('#div_surat_pendukung').show()
-    } else {
-      $('#div_surat_pendukung').hide()
-    }
+    // if($(this).val() == "20" || $(this).val() == "30" || $(this).val() == "40"){
+    //   $('#div_surat_pendukung').show()
+    // } else {
+    //   $('#div_surat_pendukung').hide()
+    // }
 
     if($(this).val() == "00"){
+      $('#lbl_keterangan_surat_pendukung').show()
       $('#div_cuti_option').show()
     } else {
+      $('#lbl_keterangan_surat_pendukung').hide()
       $('#div_cuti_option').hide()
+    }
+
+    if($(this).val() == "10"){
+
     }
   })
 
@@ -229,7 +256,7 @@
     var form_data = new FormData(formvalue[0]);
 
     var ins = document.getElementById('surat_pendukung').files.length;
-    if(ins == 0 && ($(this).val() == "20" || $(this).val() == "30" || $(this).val() == "40")){
+    if(ins == 0 && ($(this).val() == "10" || $(this).val() == "20" || $(this).val() == "30" || $(this).val() == "40")){
       errortoast("Silahkan melampirkan Surat Pendukung");
       $('#btn_submit').show()
       $('#btn_loading_submit').hide()

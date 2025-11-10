@@ -17,7 +17,8 @@ class Ttelib{
         $this->PASSWORD = "qwerty";
         $this->URL_BRIDGING = 'siladen.manadokota.go.id/bridging/';
         if($this->STATE == 'PROD'){
-            $this->URL = "103.178.15.54/";
+            // $this->URL = "103.178.15.54/";
+            $this->URL = "103.178.14.158/";
             $this->USERNAME = "esign";
             $this->PASSWORD = "qwerty";
         }

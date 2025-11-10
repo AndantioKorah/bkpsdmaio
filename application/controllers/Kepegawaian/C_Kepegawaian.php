@@ -2762,9 +2762,11 @@ class C_Kepegawaian extends CI_Controller
 
 	public function verifikasiLayananNew($id_m_layanan){
 		$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
-		if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
+		if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29){
+			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_m_layanan);
 			$data['nm_layanan'] = "KENAIKAN PANGKAT";
 		} else {
+			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_m_layanan);
 			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_m_layanan);
 			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
 		}
@@ -3317,8 +3319,10 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerifikasiBerkalaBkadItem', $data);
 		}
 
-		public function updateStatusLayananPangkat($id){
-			$this->kepegawaian->updateStatusLayananPangkat($id);
+		public function updateStatusLayananPangkat(){
+			$this->kepegawaian->updateStatusLayananPangkat();
+			// $response   = $this->kinerja->getDataPengajuanAbsensiPegawai();
+            // echo json_encode($response);
 		}
 
 		public function hitungMasaKerja(){

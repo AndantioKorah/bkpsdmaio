@@ -7085,7 +7085,20 @@ public function submitEditJabatan(){
                     ->update('t_progress_cuti', [
                         'flag_active' => 0
                     ]);
-            
+
+            $oldProgress = $this->db->select('*')
+                                    ->from('t_progress_cuti')
+                                    // ->where('flag_active', 1)
+                                    ->where('id_t_pengajuan_cuti', $dataCuti['id'])
+                                    ->order_by('urutan', 'asc')
+                                    ->get()->result_array();
+            // $dataOldProg = null;
+            // if($oldProgress){
+            //     foreach($oldProgress as $op){
+            //         // set old progress untuk mengecek progress mana yang sudah diverif sebelumnya
+            //         $dataOldProg[$op['urutan']] = $op;
+            //     }
+            // }
             $newProgress = null;
             $i = 0;
             foreach($progress as $pr){
@@ -7094,6 +7107,11 @@ public function submitEditJabatan(){
                 $newProgress[$i]['nama_jabatan'] = $pr['nama_jabatan'];
                 $newProgress[$i]['nohp'] = $pr['nohp'];
                 $newProgress[$i]['urutan'] = $pr['urutan'];
+
+                // if(isset($dataOldProg[$pr['urutan']]) && $dataOldProg[$pr['urutan']]['flag_verif'] == 1 && $dataOldProg[$pr['urutan']]['flag_diterima'] == 1){
+                //     // $newProgress[$i]['flag_diterima'][]
+                // }
+
                 $i++;
             }
 
@@ -7105,6 +7123,243 @@ public function submitEditJabatan(){
         } else {
             echo "data cuti tidak ditemukan";
         }
+    }
+
+    public function fixProgressCutiDinkes($nip){
+        $prog = $this->db->select('a.*')
+                        ->from('t_progress_cuti a')
+                        ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                        ->join('m_user c', 'b.id_m_user = c.id')
+                        ->where('a.flag_active', 1)
+                        ->where('b.flag_active', 1)
+                        ->where('b.flag_ds_cuti', 0)
+                        ->where('a.nama_jabatan LIKE "%Sekretaris Dinas Kesehatan%"')
+                        ->where('c.username', $nip)
+                        ->where('c.flag_active', 1)
+                        ->order_by('b.id, a.urutan')
+                        ->get()->result_array();
+        $idProg = null;
+        if($prog){
+            foreach($prog as $p){
+                $idProg[] = $p['id_t_pengajuan_cuti'];
+            }
+        }
+
+        $data = $this->db->select('*')
+                        ->from('t_progress_cuti')
+                        ->where_in('id_t_pengajuan_cuti', $idProg)
+                        ->where('flag_active', 1)
+                        ->order_by('id', 'asc')
+                        ->get()->result_array();
+
+        $problemData = null;
+        $grouping = null;
+        if($data){
+            foreach($data as $d){
+                $grouping[$d['id_t_pengajuan_cuti']]['progress'][$d['urutan']] = $d;
+                if($d['nama_jabatan'] == "Plt. Kepala Dinas Kesehatan"){
+                    $grouping[$d['id_t_pengajuan_cuti']]['flag_fixed'] = 1;
+                }
+            }
+        }
+
+        if($grouping){
+            $flagPltNotFound = 1;
+            foreach($grouping as $g){
+                if(!isset($g['flag_fixed'])){
+                    $problemData[] = $g;
+                }
+            }
+        }
+        dd($problemData);
+        
+        if($problemData){
+            $i = 0;
+            foreach($problemData as $pd){
+                $id_prog_kaban_bkpsdm = null;
+                $id_prog_kadis_baru = null;
+                $flag_sudah_verif_sek = 0;
+                foreach($pd['progress'] as $pd_progress){
+                    // if($pd_progress['id_t_pengajuan_cuti'] == 2457){ // ini untuk testing
+                        if($pd_progress['id_m_user_verifikasi'] == 527){ // id user kaban bkpsdm
+                            $id_prog_kaban_bkpsdm = $pd_progress['id']; // ambil untuk urutannya di tambahkan satu
+                        }
+                        // dd($pd_progress);
+                        if($id_prog_kaban_bkpsdm){
+                            $this->db->where('id', $id_prog_kaban_bkpsdm)
+                                    ->update('t_progress_cuti', [
+                                        'urutan' => floatval($pd_progress['urutan']) + 1
+                                    ]);
+
+                            $this->db->insert('t_progress_cuti', [
+                                'id_t_pengajuan_cuti' => $pd_progress['id_t_pengajuan_cuti'],
+                                'urutan' => $pd_progress['urutan'],
+                                'id_m_user_verifikasi' => 1290,
+                                'id_jabatan' => 3012000,
+                                'nohp' => '082124714447',
+                                'nama_jabatan' => 'Plt. Kepala Dinas Kesehatan'
+                            ]);
+
+                            $id_prog_kadis_baru = $this->db->insert_id();
+                        }
+                        
+                        if($pd_progress['nama_jabatan'] == 'Sekretaris Dinas Kesehatan' && $pd_progress['flag_verif'] == 1 && $pd_progress['flag_diterima'] == 1){
+                            // jika sudah diverif sek, ubah id_t_progress_cuti menjadi id_prog_kadis_baru
+                            $flag_sudah_verif_sek = 1;
+
+                            // jika sudah diverif sek, hapus data jika sudah masuk di usul DS
+                            $usulDs = $this->db->select('*')
+                                            ->from('t_usul_ds')
+                                            ->where('ref_id', $pd_progress['id_t_pengajuan_cuti'])
+                                            ->where('table_ref', 't_pengajuan_cuti')
+                                            ->where('flag_active', 1)
+                                            ->get()->row_array();
+                            if($usulDs){
+                                //jika sudah ada, batalkan dulu karena harus menunggu verifikasi dari plt dinas kesehatan
+                                $this->db->where('id', $usulDs['id'])
+                                        ->update('t_usul_ds', [
+                                            'flag_active' => 0
+                                        ]);
+                            }
+                        }
+
+                        if($flag_sudah_verif_sek == 1 && $id_prog_kadis_baru){
+                            $this->db->where('id', $pd_progress['id_t_pengajuan_cuti'])
+                                ->update('t_pengajuan_cuti', [
+                                    'id_t_progress_cuti' => $id_prog_kadis_baru,
+                                    'status_pengajuan_cuti' => "Verifikasi Plt. Kepala Dinas Kesehatan"
+                                ]);
+                        }
+                    // } // ini untuk testing
+                }
+                $i++;
+            }
+        }
+        $new_data = $this->db->select('a.urutan, a.nama_jabatan, a.nohp, b.status_pengajuan_cuti')
+                            ->from('t_progress_cuti a')
+                            ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                            ->where('a.id_t_pengajuan_cuti', $problemData[0]['progress'][1]['id_t_pengajuan_cuti'])
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
+                            ->order_by('a.urutan', 'asc')
+                            ->get()->result_array();
+        dd($new_data);
+    }
+
+    public function fixProgressCutiDinkesWNip(){
+        $prog = $this->db->select('a.*')
+                        ->from('t_progress_cuti a')
+                        ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                        ->join('m_user c', 'b.id_m_user = c.id')
+                        ->where('a.flag_active', 1)
+                        ->where('b.flag_active', 1)
+                        ->where('b.flag_ds_cuti', 0)
+                        ->where('a.nama_jabatan LIKE "%Sekretaris Dinas Kesehatan%"')
+                        ->where('c.flag_active', 1)
+                        ->order_by('b.id, a.urutan')
+                        ->get()->result_array();
+        $idProg = null;
+        if($prog){
+            foreach($prog as $p){
+                $idProg[] = $p['id_t_pengajuan_cuti'];
+            }
+        }
+
+        $data = $this->db->select('*')
+                        ->from('t_progress_cuti')
+                        ->where_in('id_t_pengajuan_cuti', $idProg)
+                        ->where('flag_active', 1)
+                        ->order_by('id', 'asc')
+                        ->get()->result_array();
+
+        $problemData = null;
+        $grouping = null;
+        if($data){
+            foreach($data as $d){
+                $grouping[$d['id_t_pengajuan_cuti']]['progress'][$d['urutan']] = $d;
+                if($d['nama_jabatan'] == "Plt. Kepala Dinas Kesehatan"){
+                    $grouping[$d['id_t_pengajuan_cuti']]['flag_fixed'] = 1;
+                }
+            }
+        }
+
+        if($grouping){
+            $flagPltNotFound = 1;
+            foreach($grouping as $g){
+                if(!isset($g['flag_fixed'])){
+                    $problemData[] = $g;
+                }
+            }
+        }
+        dd($problemData);
+        // if($problemData){
+        //     $i = 0;
+        //     foreach($problemData as $pd){
+        //         $id_prog_kaban_bkpsdm = null;
+        //         foreach($pd['progress'] as $pd_progress){
+        //             // if($pd_progress['id_t_pengajuan_cuti'] == 2457){ // ini untuk testing
+        //                 if($pd_progress['id_m_user_verifikasi'] == 527){ // id user kaban bkpsdm
+        //                     $id_prog_kaban_bkpsdm = $pd_progress['id']; // ambil untuk urutannya di tambahkan satu
+        //                 }
+        //                 // dd($pd_progress);
+        //                 $id_prog_kadis_baru = null;
+        //                 if($id_prog_kaban_bkpsdm){
+        //                     $this->db->where('id', $id_prog_kaban_bkpsdm)
+        //                             ->update('t_progress_cuti', [
+        //                                 'urutan' => floatval($pd_progress['urutan']) + 1
+        //                             ]);
+
+        //                     $this->db->insert('t_progress_cuti', [
+        //                         'id_t_pengajuan_cuti' => $pd_progress['id_t_pengajuan_cuti'],
+        //                         'urutan' => $pd_progress['urutan'],
+        //                         'id_m_user_verifikasi' => 1290,
+        //                         'id_jabatan' => 3012000,
+        //                         'nohp' => '082124714447',
+        //                         'nama_jabatan' => 'Plt. Kepala Dinas Kesehatan'
+        //                     ]);
+
+        //                     $id_prog_kadis_baru = $this->db->insert_id();
+        //                 }
+
+        //                 if($pd_progress['nama_jabatan'] == 'Sekretaris Dinas Kesehatan' && $pd_progress['flag_verif'] == 1 && $pd_progress['flag_diterima'] == 1){
+        //                     // jika sudah diverif sek, ubah id_t_progress_cuti menjadi id_prog_kadis_baru
+        //                     if($id_prog_kadis_baru){
+        //                         $this->db->where('id', $pd_progress['id_t_pengajuan_cuti'])
+        //                             ->update('t_pengajuan_cuti', [
+        //                                 'id_t_progress_cuti' => $id_prog_kadis_baru,
+        //                                 'status_pengajuan_cuti' => "Verifikasi Plt. Kepala Dinas Kesehatan"
+        //                             ]);
+        //                     }
+
+        //                     // jika sudah diverif sek, hapus data jika sudah masuk di usul DS
+        //                     $usulDs = $this->db->select('*')
+        //                                     ->from('t_usul_ds')
+        //                                     ->where('ref_id', $pd_progress['id_t_pengajuan_cuti'])
+        //                                     ->where('table_ref', 't_pengajuan_cuti')
+        //                                     ->where('flag_active', 1)
+        //                                     ->get()->row_array();
+        //                     if($usulDs){
+        //                         //jika sudah ada, batalkan dulu karena harus menunggu verifikasi dari plt dinas kesehatan
+        //                         $this->db->where('id', $usulDs['id'])
+        //                                 ->update('t_usul_ds', [
+        //                                     'flag_active' => 0
+        //                                 ]);
+        //                     }
+        //                 }
+        //             // } // ini untuk testing
+        //         }
+        //         $i++;
+        //     }
+        // }
+        // $new_data = $this->db->select('a.urutan, a.nama_jabatan, a.nohp, b.status_pengajuan_cuti')
+        //                     ->from('t_progress_cuti a')
+        //                     ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+        //                     ->where('a.id_t_pengajuan_cuti', $problemData[0]['progress'][1]['id_t_pengajuan_cuti'])
+        //                     ->where('a.flag_active', 1)
+        //                     ->where('b.flag_active', 1)
+        //                     ->order_by('a.urutan', 'asc')
+        //                     ->get()->result_array();
+        // dd($new_data);
     }
 
     public function buildProgressCuti($pegawai, $insert_id, $id_m_user){
@@ -9840,6 +10095,31 @@ public function submitEditJabatan(){
 
     }
 
+    public function cekErrorCuti(){
+        $data = $this->db->select('c.id as id_progress, a.id as id_t_pengajuan_cuti, e.nm_unitkerja, b.username')
+                ->from('t_pengajuan_cuti a')
+                ->join('m_user b', 'a.id_m_user = b.id AND b.flag_active = 1')
+                ->join('t_progress_cuti c', 'c.id_t_pengajuan_cuti = a.id')
+                ->join('db_pegawai.pegawai d', 'b.username = d.nipbaru_ws')
+                ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                ->where('a.flag_active', 1)
+                ->where('c.nama_jabatan', 'Plt. Kepala Dinas Kesehatan')
+                ->get()->result_array();
+        
+        $fixed = null;
+        if($data){
+            foreach($data as $d){
+                if(!stringStartWith("Puskesmas", $d['nm_unitkerja']) &&
+                !stringStartWith("Rumah Sakit", $d['nm_unitkerja']) &&
+                !stringStartWith("Dinas Kesehatan", $d['nm_unitkerja'])){
+                    $fixed[] = $d;
+                }
+            }
+        }
+
+        dd($fixed);
+    }
+
     public function searchPenomoranSkCuti($data){
         // $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.id_t_nomor_surat, e.nomor_surat,
         //         (
@@ -9866,7 +10146,7 @@ public function submitEditJabatan(){
                 ->where('a.meta_data IS NOT NULL')
                 // ->where('d.id_m_jenis_layanan', 3)
                 ->where('a.flag_active', 1)
-                // ->where('d.flag_active', 1)
+                ->where('d.flag_active', 1)
                 ->group_by('a.id')
                 ->order_by('f.urutan', 'desc')
                 ->order_by('a.flag_ds_cuti', 'asc')

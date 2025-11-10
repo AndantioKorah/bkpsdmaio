@@ -173,7 +173,10 @@
         Tugas Berlajar/Ikatan Dinas di Pemerintah Kota Manado.</p>
 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian surat keterangan dibuat untuk kelengkapan berkas 
-    Pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>.</p>
+    Pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>.
+    <!-- inpassing Jabatan Fungsional Penata Kelola Penanaman Modal -->
+
+     </p>
 
 	<table border="0" style="width:100%;margin-top:140px;">
 		<tr>

@@ -25,6 +25,142 @@
     color: white;
   }
 </style>
+
+<style>
+  .switch {
+  position: relative;
+  display: inline-block;
+  width: 150px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ca2222;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2ab934;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(55px);
+  -ms-transform: translateX(55px);
+  transform: translateX(115px);
+}
+
+/*------ ADDED CSS ---------*/
+.on
+{
+  display: none;
+}
+
+.on, .off
+{
+  color: white;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  top: 50%;
+  left: 50%;
+  font-size: 10px;
+  font-family: Verdana, sans-serif;
+}
+
+input:checked+ .slider .on
+{display: block;}
+
+input:checked + .slider .off
+{display: none;}
+
+/*--------- END --------*/
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;}
+</style>
+
+
+<?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 21 || $id_m_layanan == 29) { ?>
+
+  <?php $status = null; if($status_layanan['status'] == 1) {
+    $status = 'checked';
+  } 
+  ?>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card card-default">
+      <div class="card-header">
+        <div class="card-title">
+          <table>
+            <td><h3>Status Layanan <?=$nm_layanan;?> </h3></td>
+            <td>  <label class="switch ml-2"><input type="checkbox" id="togBtn" <?=$status;?>><div class="slider round">
+      <span class="on">Dibuka </span>
+      <span class="off"> Ditutup </span></div></label></td>
+          </table>  
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+<?php } ?>
+
+<script>
+  $('#togBtn').change(function(){
+    var id_layanan = "<?= $id_m_layanan ;?>"
+    if(this.checked) {
+      var status = 1;
+      pesan = "Layanan <?=$nm_layanan;?> dibuka";
+    } else {
+      var status = 0;
+        pesan = "Layanan <?=$nm_layanan;?> ditutup";
+    }
+
+      $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/updateStatusLayananPangkat/")?>',
+      method: 'post',
+      data : {status: status, id_layanan : id_layanan},
+      success: function(){
+      if(status == 1) {
+        successtoast(pesan);
+       } else  if(status == 0){
+        successtoast(pesan);
+       }    
+      }, error: function(e){
+      errortoast('Terjadi Kesalahan')
+      }
+    })
+});
+</script>
 <div class="row">
   <div class="col-lg-12">
     <div class="card card-default">
@@ -62,7 +198,7 @@
                 <option value="4">Proses SK Jabatan</option>
                 <option value="5">BTL</option>
                 <option value="7">TMS</option>
-              <?php } else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9) { ?>
+              <?php } else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29) { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>
                   <option value="1" >Selesai verifikasi BKPSDM dan menunggu jadwal pengusulan ke BKN</option>
@@ -78,7 +214,7 @@
                   <option value="0" selected>Pengajuan</option>
                   <option value="1" >Diterima</option>
                   <option value="2" >Ditolak</option>
-                  <?php if($id_m_layanan == 10 || $id_m_layanan == 21) { ?>
+                  <?php if($id_m_layanan == 10 || $id_m_layanan == 21 || $id_m_layanan == 24) { ?>
                   <option value="3" >Selesai</option>
                   <?php } ?>
                   <?php } ?>

@@ -140,6 +140,14 @@ class C_Cron extends CI_Controller
         dd(($progressCuti));
     }
 
+    public function fixProgressCutiDinkes($nip = null){
+        $this->kepegawaian->fixProgressCutiDinkes($nip);
+    }
+
+    public function fixProgressCutiDinkesWNip(){
+        $this->kepegawaian->fixProgressCutiDinkesWNip();
+    }
+
     public function createQr(){
         $content = "https://drive.google.com/drive/folders/1tDKJgd4_OFD5Nbhio9-phzA9zL_TlG2F";
 		$data = $this->general_library->createQrTtePortrait(null, null, $content);
@@ -218,6 +226,8 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
+        $this->kepegawaian->cekErrorCuti();
+
         // dd($this->general_library->getDataKabanBkpsdm());
         // $randomString = generateRandomString(30, 1, 't_file_ds'); 
         // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));

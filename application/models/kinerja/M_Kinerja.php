@@ -1121,6 +1121,20 @@
                             ->where('b.skpd', 3012000)
                             ->where('d.eselon', 'II B')
                             ->get()->row_array(); // kadis
+
+                if(!$kadis){
+                    $ukerKadis = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', 3012000)
+                                    ->get()->row_array();
+
+                    $kadis = $this->baseQueryAtasan()
+                                ->where('b.skpd', 3012000)
+                                ->where('b.nipbaru_ws', $ukerKadis['nip_kepalaskpd_hardcode'])
+                                ->get()->row_array();
+
+                    $kadis['nama_jabatan'] = $ukerKadis['nama_jabatan_kepalaskpd_hardcode'];
+                }
                 
                 $sek = $this->baseQueryAtasan()
                             ->where('b.skpd', 3012000)

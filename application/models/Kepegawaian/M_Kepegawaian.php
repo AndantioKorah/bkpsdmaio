@@ -9866,7 +9866,7 @@ public function submitEditJabatan(){
                 ->where('a.meta_data IS NOT NULL')
                 // ->where('d.id_m_jenis_layanan', 3)
                 ->where('a.flag_active', 1)
-                // ->where('d.flag_active', 1)
+                ->where('d.flag_active', 1)
                 ->group_by('a.id')
                 ->order_by('f.urutan', 'desc')
                 ->order_by('a.flag_ds_cuti', 'asc')

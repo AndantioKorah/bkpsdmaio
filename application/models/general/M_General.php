@@ -958,6 +958,7 @@
                             ->where('temp_count <=', 2)
                             ->where('sendTo IS NOT NULL')
                             ->where('sendTo != 62')
+                            ->where('sendTo NOT LIKE "%@%"')
                             // ->where_not_in('status', ['pending', 'sent', 'read'])
                             ->order_by('flag_prioritas', 'desc')
                             ->order_by('created_date', 'asc')

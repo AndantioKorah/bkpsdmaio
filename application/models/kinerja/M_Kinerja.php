@@ -1121,6 +1121,20 @@
                             ->where('b.skpd', 3012000)
                             ->where('d.eselon', 'II B')
                             ->get()->row_array(); // kadis
+
+                if(!$kadis){
+                    $ukerKadis = $this->db->select('*')
+                                    ->from('db_pegawai.unitkerja')
+                                    ->where('id_unitkerja', 3012000)
+                                    ->get()->row_array();
+
+                    $kadis = $this->baseQueryAtasan()
+                                ->where('b.skpd', 3012000)
+                                ->where('b.nipbaru_ws', $ukerKadis['nip_kepalaskpd_hardcode'])
+                                ->get()->row_array();
+
+                    $kadis['nama_jabatan'] = $ukerKadis['nama_jabatan_kepalaskpd_hardcode'];
+                }
                 
                 $sek = $this->baseQueryAtasan()
                             ->where('b.skpd', 3012000)
@@ -3779,7 +3793,7 @@
                 if(!isset($presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'])){
                     // dd($presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]);
                     // dd($result[$p['id_m_user']]);
-                    dd($p);
+                    dd($p); // di sini dibuka dd nya
                 }
                 $result[$p['id_m_user']]['prestasi_kerja'] =
                 $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];

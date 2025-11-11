@@ -4473,9 +4473,9 @@ public function submitEditJabatan(){
                     
                     $reqWs = $this->siasnlib->saveJabatan($update);
                     if($reqWs['code'] == 1){
-                        $res = array('msg' => 'Gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
-                        $this->db->trans_rollback();
-                        return $res;    
+                        $res = array('msg' => 'Data di SILADEN berhasil disimpan tapi gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
+                        // $this->db->trans_rollback();
+                        // return $res;    
                     } else {
                         if($_FILES['file']['name'] != ""){
                             $url = ('arsipjabatan/'.$filename);

@@ -4593,8 +4593,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         public function getListIdPegawaiForPenilaianPimpinan($data = null, $return_data_pegawai = false){
             $role = $this->general_library->getRole();
             $eselon = $this->general_library->getIdEselon();
+              
             
-          
 
             $vt = $this->db->select('*')
                         ->from('t_verif_tambahan')
@@ -4627,6 +4627,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             $list_pegawai = null;
             // if($role == 'subkoordinator'){
             if($eselon == 8){
+                
                 //pegawai yang diverif adalah staf pelaksana di sub bidang yang sama
                 $this->db->select('*, id as id_m_user')
                             ->from('m_user a')
@@ -4644,6 +4645,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 $list_pegawai = $this->db->get()->result_array();
             // } else if($role == 'kepalabidang' || $role == 'sekretarisbadan'){
             } else if($eselon == 6 || $eselon == 7){
+                
                 //pegawai yang diverif adalah subkoordinator di bidang yang sama
                 // $subbidang = $this->db->select('*')
                 //                         ->from('m_sub_bidang a')
@@ -4866,6 +4868,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
                     } else {
                         if($this_user['id_peg'] == 'PEG0000000ei657'){
+                           
                             $list_pegawai1 = $this->db->select('*, a.id as id_m_user')
                             ->from('m_user a')
                             // ->join('m_user_role b', 'a.id = b.id_m_user')
@@ -4997,10 +5000,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                                 ->group_by('a.id')
                                                 ->get()->result_array();
             
-            } else if($this->general_library->isSetda()) {
-                
+            // } else if($this->general_library->isSetda()) {
+                } else if($eselon == 4) {
                 $list_eselon = ['III A'];
-                        $list_pegawai = $this->db->select('*, a.id as id_m_user')
+                        $list_pegawai1 = $this->db->select('*, a.id as id_m_user')
                                                 ->from('m_user a')
                                                 // ->join('m_user_role b', 'a.id = b.id_m_user')
                                                 // ->join('m_role c', 'c.id = b.id_m_role')
@@ -5015,12 +5018,29 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                                 ->order_by('e.eselon', 'asc')
                                                 ->group_by('a.id')
                                                 ->get()->result_array();
+
+                          $list_pegawai2 = $this->db->select('*, a.id as id_m_user')
+                                            ->from('m_user a')
+                                            ->join('m_user_role b', 'a.id = b.id_m_user')
+                                            ->join('m_role c', 'c.id = b.id_m_role')
+                                            ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
+                                            ->where('d.skpd', $this->general_library->getUnitKerjaPegawai())
+                                            ->where('a.id !=', $this->general_library->getId())
+                                            ->where('a.flag_active', 1)
+                                            ->where('b.flag_active', 1)
+                                            ->where('a.flag_active', 1)
+                                            ->where('id_m_status_pegawai', 1)
+                                            ->group_by('a.id')
+                                            ->get()->result_array();
+
+                            $list_pegawai = array_merge($list_pegawai1,$list_pegawai2);
                
             } else if(stringStartWith('Kepala Sekolah', $this_user['nama_jabatan'])
             || stringStartWith('Kepala Taman', $this_user['nama_jabatan'])
             || stringStartWith('Kepala Sekolah', $this_user['nama_jabatan_tambahan'])
             || stringStartWith('Kepala Taman', $this_user['nama_jabatan_tambahan'])
             ){ // jika kepsek
+                
                 $list_role = ['gurusekolah'];
                 $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
@@ -5068,6 +5088,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                             ->group_by('a.id')
                                             ->get()->result_array();
             } else if($this->general_library->isKepalaPd()){
+                
                 $list_pegawai = $this->db->select('*, a.id as id_m_user')
                                             ->from('m_user a')
                                             ->join('m_user_role b', 'a.id = b.id_m_user')
@@ -5084,7 +5105,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             }
             $list_id_pegawai = array();
             $list_data_pegawai = array();
-            
+           
             if($list_pegawai){
                 foreach($list_pegawai as $lp){
                     $list_id_pegawai[] = $lp['id_m_user'];

@@ -4499,9 +4499,9 @@ public function submitEditJabatan(){
                                 ]);
                     }
                 } else {
-                    $res = array('msg' => 'Data gagal disimpan. Data Jabatan belum tersinkron dengan SIASN', 'success' => false);
-                    $this->db->trans_rollback();
-                    return $res;
+                    // $res = array('msg' => 'Data gagal disimpan. Data Jabatan belum tersinkron dengan SIASN', 'success' => false);
+                    // $this->db->trans_rollback();
+                    // return $res;
                 }
             } else {
                 $res = array('msg' => 'Data gagal disimpan. Gagal menyimpan data di SIASN', 'success' => false);

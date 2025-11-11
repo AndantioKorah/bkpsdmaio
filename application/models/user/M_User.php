@@ -3007,10 +3007,10 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 23;
-            $bulan = 9;
+            $tanggal = 28;
+            $bulan = 10;
             $tahun = 2025;
-            $namaKegiatan = "Upacara Peringatan HUT ke-61 Prov. Sulawesi Utara"; 
+            $namaKegiatan = "Upacara Peringatan Hari Sumpah Pemuda Tahun 2025"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;

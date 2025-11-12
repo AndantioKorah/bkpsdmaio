@@ -960,6 +960,7 @@
                             ->where('sendTo != 62')
                             ->where('sendTo NOT LIKE "%@%"')
                             // ->where_not_in('status', ['pending', 'sent', 'read'])
+                            ->where('type', 'text') // hanya text saja 
                             ->order_by('flag_prioritas', 'desc')
                             ->order_by('created_date', 'asc')
                             ->limit(10)

@@ -124,8 +124,8 @@ input:checked + .slider .off
           <table>
             <td><h3>Status Layanan <?=$nm_layanan;?> </h3></td>
             <td>  <label class="switch ml-2"><input type="checkbox" id="togBtn" <?=$status;?>><div class="slider round">
-      <span class="on">Dibuka </span>
-      <span class="off"> Ditutup </span></div></label></td>
+      <span class="on" style="font-size:15px;">Dibuka </span>
+      <span class="off" style="font-size:15px;"> Ditutup </span></div></label></td>
           </table>  
         </div>
       </div>

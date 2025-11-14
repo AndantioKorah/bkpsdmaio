@@ -445,7 +445,8 @@ class C_Simata extends CI_Controller
         if($id == 1){
             $this->load->view('simata/V_ProfilTalentaAdmList', $data);
         } else {
-            $this->load->view('simata/V_ProfilTalentaJptList', $data);
+            // $this->load->view('simata/V_ProfilTalentaJptList', $data);
+            $this->load->view('simata/V_list', $data);
 
         }
     }

@@ -526,13 +526,8 @@ class C_Kinerja extends CI_Controller
     public function tinjauABsensi()
     {
         $date = new DateTime();
-<<<<<<< HEAD
-        $date->modify("last day of previous month");
-        $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 0, 'minus');
-=======
         // $date->modify("last day of previous month");
         $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'minus');
->>>>>>> 9e0536900b2e54f0fa1d1ed661a50b4d5c3adba2
         // dd($data['maxDate']['max_date']);
         $data['skpd'] = $this->master->getAllUnitKerja();
         $data['pegawai'] = $this->kinerja->getPegawaiPeninjauanAbsensi();

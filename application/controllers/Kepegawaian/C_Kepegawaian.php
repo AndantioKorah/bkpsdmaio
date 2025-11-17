@@ -2729,6 +2729,7 @@ class C_Kepegawaian extends CI_Controller
 	public function loadListRiwayatLayanan($id){
 		$data['result'] = $this->kepegawaian->getRiwayatLayanan($id);
 		$data['m_layanan'] = $id;
+		$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id);
 		$this->load->view('kepegawaian/layanan/V_RiwayatLayananItem', $data);
 	}
 

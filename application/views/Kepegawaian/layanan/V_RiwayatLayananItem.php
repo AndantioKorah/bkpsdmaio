@@ -89,8 +89,8 @@
               <?php if($rs['status'] == 0 AND $rs['keterangan'] == "") { ?>
               <button title="Hapus" onclick="deleteData('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
               <?php } ?>
-
-              <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16 || $rs['id_m_layanan'] == 30) { ?>
+              <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16 || $rs['id_m_layanan'] == 30 || $rs['id_m_layanan'] == 31) { ?>
+               
                 <?php if($rs['status'] == 5) { ?>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -118,8 +118,45 @@
                 </button>
                  <?php } ?>
               <?php } ?>
-              <?php } else { ?>
-              <?php if($rs['status'] == 2 || $rs['status'] == 6) { ?>
+              <?php } else if($rs['id_m_layanan'] == 6 || $rs['id_m_layanan'] == 7 || $rs['id_m_layanan'] == 8 || $rs['id_m_layanan'] == 9 || $rs['id_m_layanan'] == 29) { ?>
+               <?php if($status_layanan['status'] == 1) { ?>
+                <?php if($rs['status'] == 2 || $rs['status'] == 6) { ?>
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
+                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
+                data-id="<?=$rs['id_t_layanan'];?>"
+                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
+                <i class="fa fa-edit"></i> Ubah Surat Pengantar 
+                </button>
+                </div>
+                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button onclick="ajukanKembali('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+                </div>
+              </div>
+              <?php } ?>
+                <?php } else { ?>
+                <?php if($rs['status'] == 6) { ?>
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
+                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
+                data-id="<?=$rs['id_t_layanan'];?>"
+                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
+                <i class="fa fa-edit"></i> Ubah Surat Pengantar 
+                </button>
+                </div>
+                <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button onclick="ajukanKembali('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
+                </div>
+              </div>
+              <?php } ?>
+                <?php } ?>
+         
+                <?php } else { ?>
+                <?php if($rs['status'] == 2 || $rs['status'] == 6) { ?>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
                 <button

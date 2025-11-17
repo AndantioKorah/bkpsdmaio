@@ -2997,15 +2997,22 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
         
 public function loadListProfilTalentaAdm($id,$jenis_pengisian){
-     $this->db->select('a.*,b.*,e.nama_jabatan,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+     $this->db->select('f.pns_id,a.*,b.*,e.nama_jabatan,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
      where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
+    //  $this->db->select('f.pns_id,`a`.nama, a.nipbaru,a.nipbaru_ws,
+    //  (SELECT d.nama_jabatan from db_pegawai.jabatan as d
+    // where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang,
+	// `b`.*,
+	// `e`.`nama_jabatan`')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg','left')
                     // ->join('db_simata.t_jabatan_target f', 'f.id_peg = b.id_peg', 'left')
                     ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
+                    ->join('db_siasn.m_ref_pns f', 'a.nipbaru_ws = f.nip_baru')
                     // ->where("FIND_IN_SET(c.eselon,'III A,III B')!=",0)
                     ->where('a.id_m_status_pegawai', 1)
                     ->where('b.jenjang_jabatan', $jenis_pengisian)
+                    // ->where_in('e.eselon', ["III A"])
                     ->order_by('e.eselon');
                     // ->group_by('a.id_peg');
                     if($id == 1){

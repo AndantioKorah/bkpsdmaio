@@ -6574,7 +6574,7 @@ public function submitEditJabatan(){
                         ->join('t_cron_wa d', 'a.chatId = d.chatId', 'left')
                         ->where('a.flag_active', 1)
                         ->where('a.id_t_pengajuan_cuti', $id)
-                        ->order_by('a.urutan')
+                        ->order_by('a.urutan', 'asc')
                         ->get()->result_array();
         if($progress){
             $i = 0;

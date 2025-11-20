@@ -1639,13 +1639,23 @@
                 "t_log_webhook",
                 "t_log_tte",
                 "t_log_ws_siasn",
-                "t_image_message"
             ];
 
             foreach($arrTable as $ar){
-                $this->db->where('created_date' < formatDateOnlyForEdit($date))
+                $this->db->where('created_date <', formatDateOnlyForEdit($date))
                         ->delete($ar);
                 echo "deleted ".$this->db->affected_rows()." from ".$ar."<br>";
+            }
+
+            //dihapus bulanan
+            $dateBulanan = date('Y-m-d', strtotime('-30 days', strtotime(date('Y-m-d'))));
+            $arrTableBulanan = [
+                "t_image_message"
+            ];
+            foreach($arrTableBulanan as $arTb){
+                $this->db->where('created_date <', formatDateOnlyForEdit($dateBulanan))
+                        ->delete($arTb);
+                echo "deleted ".$this->db->affected_rows()." from ".$arTb."<br>";
             }
 
             $arrTableCron = [
@@ -1671,7 +1681,7 @@
             ];
 
             foreach($arrTableCron as $atc){
-                $this->db->where('created_dates' < formatDateOnlyForEdit($date))
+                $this->db->where('created_date <', formatDateOnlyForEdit($date))
                         ->where($atc['col_done'] == $atc['col_done_state'])
                         ->delete($atc['name']);
                 echo "deleted ".$this->db->affected_rows()." from ".$atc['name']."<br>";

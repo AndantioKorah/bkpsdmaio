@@ -5011,6 +5011,12 @@ public function submitEditJabatan(){
        public function submitEditDisiplin(){
 
         $datapost = $this->input->post();
+     
+         $getpotongan = $this->db->select('*')
+                                            ->from('db_pegawai.jhd')
+                                            ->where('id_jhd', $datapost['edit_disiplin_jenjang'])
+                                            ->get()->row_array();
+         
       
         $this->db->trans_begin();
         $target_dir = './arsipdisiplin/';
@@ -5047,16 +5053,16 @@ public function submitEditJabatan(){
            
             $id = $datapost['id'];
 
+            $data['besar_potongan']         = $getpotongan['besar_potongan'];
+            $data['lama_potongan']         = $getpotongan['lama_potongan'];
             $data['hd']         = $this->input->post('edit_disiplin_jenis');
             $data['jhd']         = $this->input->post('edit_disiplin_jenjang');
             $data['jp']         = $this->input->post('edit_disiplin_nama');
             $data['nosurat']         = $this->input->post('edit_disiplin_nosurat');
             $data['tglsurat']         = $this->input->post('edit_disiplin_tglsurat');
             $data['tmt']         = $this->input->post('edit_disiplin_tmt');
-
             $data['tgl_mulaiberlaku']         = $this->input->post('edit_disiplin_tgl_mulaiberlaku');
             $data['tgl_selesaiberlaku']         = $this->input->post('edit_disiplin_tgl_selesaiberlaku');
-            
             $data["gambarsk"]     = $filename;
             $data['created_by']      = $this->general_library->getId();
             $data['status']      = 2;
@@ -5069,6 +5075,8 @@ public function submitEditJabatan(){
 		}
         } else {
             $id = $datapost['id'];
+            $data['besar_potongan']         = $getpotongan['besar_potongan'];
+            $data['lama_potongan']         = $getpotongan['lama_potongan'];
             $data['hd']         = $this->input->post('edit_disiplin_jenis');
             $data['jhd']         = $this->input->post('edit_disiplin_jenjang');
             $data['jp']         = $this->input->post('edit_disiplin_nama');

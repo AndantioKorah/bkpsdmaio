@@ -560,16 +560,16 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
             $("#jenis_absensi").prop('disabled',false);
            
 
-        if(tanggal == "2025-09-19"){
+        if(tanggal == "2025-11-24" || tanggal == "2025-11-19"){
            $('#jenis_absensi').val('')
           document.querySelectorAll("#jenis_absensi option").forEach(opt => {
-            if (opt.value == "1") {
+            if (opt.value == "2") {
                 opt.disabled = true;
             }
         });
         } else {
            document.querySelectorAll("#jenis_absensi option").forEach(opt => {
-            if (opt.value == "1") {
+            if (opt.value == "2") {
                 opt.disabled = false;
             }
         });

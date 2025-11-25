@@ -80,9 +80,9 @@
             data-toggle="modal" class="btn btn-sm btn-navy">Detail</button>
             <?php
                 // if(!$rs['id_progress_cuti']){
-                if(!$rs['id_t_nomor_surat'] && $rs['flag_ds_cuti'] != 1){ // jika belum input nomor surat dan belum selesai, bisa dihapus
+                if((!$rs['id_t_nomor_surat'] && $rs['flag_ds_cuti'] != 1) || ($rs['id_t_nomor_surat'] && $rs['flag_active_usul_ds'] != 1)){ // jika belum input nomor surat dan belum selesai, bisa dihapus
             ?>
-              <button onclick="deletePermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
+              <button onclick="deletePermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus </button>
             <?php } ?>
           <?php } else { ?>
             <button onclick="deleteOperatorPermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>

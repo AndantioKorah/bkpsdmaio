@@ -960,7 +960,7 @@
                             ->where('sendTo != 62')
                             ->where('sendTo NOT LIKE "%@%"')
                             // ->where_not_in('status', ['pending', 'sent', 'read'])
-                            ->where('type', 'text') // hanya text saja 
+                            // ->where('type', 'text') // hanya text saja 
                             ->order_by('flag_prioritas', 'desc')
                             ->order_by('created_date', 'asc')
                             ->limit(10)
@@ -1632,49 +1632,63 @@
         }
 
         public function removeLog($batasHari){
-            $this->logCron('cronRemoveLog');
-            $date = date('Y-m-d', strtotime('-'.$batasHari.' days', strtotime(date('Y-m-d'))));
-            $arrTable = [
-                "t_log_maxchat",
-                "t_log_webhook",
-                "t_log_tte",
-                "t_log_ws_siasn",
-                "t_image_message"
-            ];
+            $now = date('H:i');
+            $expl = explode(":", $now);
+            if($expl[0] == "22" && $expl[1] == "00"){ // jika jam 10 malam, jalankan ini
+                $this->logCron('cronRemoveLog');
+                $date = date('Y-m-d', strtotime('-'.$batasHari.' days', strtotime(date('Y-m-d'))));
+                $arrTable = [
+                    "t_log_maxchat",
+                    "t_log_webhook",
+                    "t_log_tte",
+                    "t_log_ws_siasn",
+                ];
 
-            foreach($arrTable as $ar){
-                $this->db->where('created_date' < formatDateOnlyForEdit($date))
-                        ->delete($ar);
-                echo "deleted ".$this->db->affected_rows()." from ".$ar."<br>";
-            }
+                foreach($arrTable as $ar){
+                    $this->db->where('created_date <', formatDateOnlyForEdit($date))
+                            ->delete($ar);
+                    echo "deleted ".$this->db->affected_rows()." from ".$ar."<br>";
+                }
 
-            $arrTableCron = [
-                [
-                    'name' => "t_cron_async",
-                    'col_done' => "flag_done",
-                    'col_done_state' => 1
-                ],
-                [
-                    'name' => "t_cron_rekap_absen",
-                    'col_done' => "flag_sent",
-                    'col_done_state' => 1
-                ],
-                [
-                    'name' => "t_cron_wa",
-                    'col_done' => "flag_sent",
-                    'col_done_state' => 1
-                ],[
-                    'name' => "t_cron_tte_bulk_ds",
-                    'col_done' => "flag_done",
-                    'col_done_state' => 1
-                ]
-            ];
+                //dihapus bulanan
+                $dateBulanan = date('Y-m-d', strtotime('-30 days', strtotime(date('Y-m-d'))));
+                $arrTableBulanan = [
+                    "t_image_message"
+                ];
+                foreach($arrTableBulanan as $arTb){
+                    $this->db->where('created_date <', formatDateOnlyForEdit($dateBulanan))
+                            ->delete($arTb);
+                    echo "deleted ".$this->db->affected_rows()." from ".$arTb."<br>";
+                }
 
-            foreach($arrTableCron as $atc){
-                $this->db->where('created_dates' < formatDateOnlyForEdit($date))
-                        ->where($atc['col_done'] == $atc['col_done_state'])
-                        ->delete($atc['name']);
-                echo "deleted ".$this->db->affected_rows()." from ".$atc['name']."<br>";
+                $arrTableCron = [
+                    [
+                        'name' => "t_cron_async",
+                        'col_done' => "flag_done",
+                        'col_done_state' => 1
+                    ],
+                    [
+                        'name' => "t_cron_rekap_absen",
+                        'col_done' => "flag_sent",
+                        'col_done_state' => 1
+                    ],
+                    [
+                        'name' => "t_cron_wa",
+                        'col_done' => "flag_sent",
+                        'col_done_state' => 1
+                    ],[
+                        'name' => "t_cron_tte_bulk_ds",
+                        'col_done' => "flag_done",
+                        'col_done_state' => 1
+                    ]
+                ];
+
+                foreach($arrTableCron as $atc){
+                    $this->db->where('created_date <', formatDateOnlyForEdit($date))
+                            ->where($atc['col_done'] == $atc['col_done_state'])
+                            ->delete($atc['name']);
+                    echo "deleted ".$this->db->affected_rows()." from ".$atc['name']."<br>";
+                }
             }
         }
 

@@ -1537,6 +1537,16 @@ class M_Layanan extends CI_Model
                 $data['flag_use_nomor_surat'] = isset($dataInput['flag_use_nomor_surat']) ? $dataInput['flag_use_nomor_surat'] : 0;
             }
 
+            $dataExists = $this->db->select('*')
+                                ->from('t_usul_ds')
+                                ->where('ref_id', $data['ref_id'])
+                                ->where('table_ref', $data['table_ref'])
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+
+            if($dataExists){ // jika tidak ada data yang serupa baru input di usul ds
+                return;
+            }
             $this->db->insert('t_usul_ds', $data);
             $id_t_usul_ds = $this->db->insert_id();
 

@@ -36,7 +36,7 @@
               <td class="text-left"><?=$no++;?> </td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_usul'])?></td>
               <td class="text-left">
-                 <?php if($m_layanan == 10) { ?>
+                 <?php if($m_layanan == 10 || $m_layanan == 24) { ?>
              <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Selesai"; else echo "Menunggu Verifikasi BKPSDM" ?>
           <?php } else if($m_layanan == 6 || $m_layanan == 7 || $m_layanan == 8 || $m_layanan == 9) { ?>
              <span class="badge badge-<?php if($rs['status'] == '0' || $rs['status'] == '1' || $rs['status'] == '3' || $rs['status'] == '4' || $rs['status'] == '7' || $rs['status'] == '8') echo "success"; else  echo "danger"; ?>"><?=$rs['status_verif'];?>

@@ -225,6 +225,10 @@ class C_Cron extends CI_Controller
         $this->load->view('master/V_TempUpdateDataPPPK', $data);
     }
 
+    public function rekapKehadiranPeriodik($bulan = 0, $tahun = 0){
+        $this->rekap->rekapKehadiranPeriodik($bulan = 0, $tahun = 0);
+    }
+
     public function funcTest($str = ""){
         // $this->kepegawaian->cekErrorCuti();
 

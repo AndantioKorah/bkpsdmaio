@@ -147,6 +147,24 @@
             ?>
             <span class="lbl_value_detail_cuti"><?=$tanggal_cuti?></span>
           </div>
+          <div class="col-lg-4 col-md-4 col-sm-4">
+            <span>Alasan</span>
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-1 text-center">
+            <span>:</span>
+          </div>
+          <div class="col-lg-7 col-md-7 col-sm-7">
+            <span class="lbl_value_detail_cuti"><?=$result['alasan']?></span>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4">
+            <span>Alamat</span>
+          </div>
+          <div class="col-lg-1 col-md-1 col-sm-1 text-center">
+            <span>:</span>
+          </div>
+          <div class="col-lg-7 col-md-7 col-sm-7">
+            <span class="lbl_value_detail_cuti"><?=$result['alamat']?></span>
+          </div>
           <?php if($result['id_cuti'] == "00"){ ?>
             <div class="col-lg-12 mt-2">
               <div class="row">

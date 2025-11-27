@@ -17,6 +17,7 @@
             parent::__construct();
             $this->db = $this->load->database('main', true);
             $this->load->model('kinerja/M_Kinerja', 'm_kinerja');
+            $this->load->model('general/M_General', 'm_general');
         }
 
         public function insert($tablename, $data){
@@ -4497,25 +4498,90 @@
         return $rs;
     }
 
-    public function rekapKehadiranPeriodik($bulan = 0, $tahun = 0, $data = null, $flagRecursive = 1){
-        $unitkerja = $this->db->select('*')
-                            ->from('db_pegawai.unitkerja')
-                            ->where_not_in('id_unitkerja', [9000001]) // exclude tubel
-                            ->where_not_in('id_unitkerja', [7005010, 7005020]) // exclude tubel
-                            ->get()->result_array();
-
-        $res = $this->buildDataAbsensi([
-            'id_unitkerja' => 4018000,
-            'nm_unitkerja' => "Badan Kepegawaian dan Pengembangan Sumber Daya Manusia",
-            'skpd' => "4018000;Badan Kepegawaian dan Pengembangan Sumber Daya Manusia",
-            "bulan" => 3,
-            "tahun" => 2025
-        ], 1, 0, 0, 1, 0);
+    public function rekapKehadiranPeriodik($tahun = 2025){
+        // $listJenisDisiplin = null;
+        // $jenisDisiplin = $this->db->select('*')
+        //                         ->from('m_jenis_disiplin_kerja')
+        //                         ->where('flag_active', 1)
+        //                         ->get()->result_array();
+        // foreach($jenisDisiplin as $jd){
+        //     $listJenisDisiplin[$jd['keterangan']]['nama_jenis_disiplin_kerja'] = $jd['nama_jenis_disiplin_kerja'];
+        //     $listJenisDisiplin[$jd['keterangan']]['keterangan'] = $jd['keterangan'];
+        //     $listJenisDisiplin[$jd['keterangan']]['total'] = 0;
+        // }
         
-        if($res){
-            foreach($res['result'] as $rs){
-                if($rs['nip'] == 199310072025052001){
-                    dd($rs);
+        for($i = 1; $i <= 12; $i++){
+            $bulan = formatBulan($i);
+            $unitkerja = $this->db->select('a.*')
+                                ->from('db_pegawai.unitkerja a')
+                                ->join('db_pegawai.pegawai b', 'a.id_unitkerja = b.skpd')
+                                ->join("t_rekap_kehadiran_unitkerja b", "a.id_unitkerja = b.id_unitkerja AND b.bulan = ".formatBulan($bulan)." AND b.tahun = ".$tahun." AND b.flag_active = 1", "left")
+                                ->where('b.id_unitkerja IS NULL')
+                                ->where('a.id_unitkerja !=', 0)
+                                ->where('a.id_unitkerja !=', 5)
+                                ->where('b.id_m_status_pegawai', 1)
+                                ->where_not_in('a.id_unitkerja', [9000001]) // exclude tubel
+                                ->where_not_in('a.id_unitkerja', [7005010, 7005020]) // exclude tubel
+                                ->group_by('a.id_unitkerja')
+                                ->limit(3)
+                                ->get()->result_array();
+            if($unitkerja){
+                $this->general->logCron('cronRekapKehadiran');
+                foreach ($unitkerja as $uk){
+                    $res = $this->buildDataAbsensi([
+                        'id_unitkerja' => $uk['id_unitkerja'],
+                        'nm_unitkerja' => $uk['nm_unitkerja'],
+                        'skpd' => $uk['id_unitkerja'].";".$uk['nm_unitkerja'],
+                        "bulan" => $bulan,
+                        "tahun" => $tahun
+                    ], 1, 0, 0, 1, 0);
+
+                    $saveData = null;
+                    if($res){
+                        foreach($res['result'] as $rs){
+                            $saveData[$rs['nip']] = [
+                                'nip' => $rs['nip'],
+                                'bulan' => $bulan,
+                                'tahun' => $tahun,
+                                'meta_data' => json_encode($rs['rekap']),
+                            ];
+
+                            $exists = $this->db->select('*')
+                                            ->from('t_rekap_kehadiran')
+                                            ->where('nip', $rs['nip'])
+                                            ->where('bulan', $bulan)
+                                            ->where('tahun', $tahun)
+                                            ->where('flag_active', 1)
+                                            ->get()->row_array();
+                            if($exists){
+                                $this->db->where('id', $exists['id'])
+                                        ->update('t_rekap_kehadiran', [
+                                            'flag_active' => 0
+                                        ]);
+                            }
+                        }
+                        $this->db->insert_batch('t_rekap_kehadiran', $saveData);
+                    }
+
+                    $existsUker = $this->db->select('*')
+                                    ->from('t_rekap_kehadiran_unitkerja')
+                                    ->where('id_unitkerja', $uk['id_unitkerja'])
+                                    ->where('bulan', $bulan)
+                                    ->where('tahun', $tahun)
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+                    if($existsUker){
+                        $this->db->where('id', $existsUker['id'])
+                                ->update('t_rekap_kehadiran_unitkerja', [
+                                    'flag_active' => 0
+                                ]);
+                    }
+
+                    $this->db->insert('t_rekap_kehadiran_unitkerja', [
+                        'id_unitkerja' => $uk['id_unitkerja'],
+                        'bulan' => $bulan,
+                        'tahun' => $tahun
+                    ]);
                 }
             }
         }

@@ -13509,6 +13509,8 @@ public function getFileForVerifLayanan()
 
     public function verifikasiBerkalaBkadItem(){
         $data = $this->input->post();
+
+            
         $this->db->select('*, a.tmtgajiberkala as tmtkgb, a.status as status_berkala, a.id as id_berkala')
                 ->from('t_gajiberkala a')
                 ->join('db_pegawai.pegawai e', 'a.id_pegawai = e.id_peg')
@@ -13521,6 +13523,13 @@ public function getFileForVerifLayanan()
                     $this->db->where('a.status', $data['status_berkala']);
                 } else {
                     $this->db->where_in('a.status', [3,4,5]);
+                }
+
+                if($this->general_library->getDataUnitKerjaPegawai()['id_unitkerja'] == '3010000'){
+                    $this->db->where_in('f.id_unitkerjamaster', ['8010000','8020000','8000000']);
+                } else {
+                    // $this->db->where_in('f.id_unitkerjamaster', ['8010000','8020000','8000000']);
+                    $this->db->where('e.skpd', $this->general_library->getDataUnitKerjaPegawai()['id_unitkerja']);
                 }
                
         return $this->db->get()->result_array();

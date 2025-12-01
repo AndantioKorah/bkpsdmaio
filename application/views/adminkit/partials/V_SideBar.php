@@ -702,7 +702,7 @@
 				</li>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-berkala-bkad')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Usul Berkala BKSPDM
+						<i class="align-middle me-2 far fa-circle"></i>SK Gaji Berkala
 					</a>
 				</li>
 				<?php } ?>

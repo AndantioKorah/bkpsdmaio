@@ -3007,10 +3007,10 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 28;
-            $bulan = 10;
+            $tanggal = 10;
+            $bulan = 11;
             $tahun = 2025;
-            $namaKegiatan = "Upacara Peringatan Hari Sumpah Pemuda Tahun 2025"; 
+            $namaKegiatan = "Apel Perdana Bulan November Tahun 2025"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -3165,13 +3165,13 @@
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
-                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                    // $this->db->insert('t_doku=men_pendukung', $dokpenKenegaraan);
 
                     $sendWa['sendTo'] = convertPhoneNumber($k['handphone']);
                     $sendWa['message'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($k).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran *KENEGARAAN* dengan keterangan: *".$k['keterangan_sistem']."*";
                     $sendWa['flag_prioritas'] = 0;
                     $sendWa['type'] = "text";
-                    $this->db->insert('t_cron_wa', $sendWa);
+                    // $this->db->insert('t_cron_wa', $sendWa);
 
                     // echo "input ".$k['user_id']."\n <br>";
                 } else {

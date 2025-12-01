@@ -7409,7 +7409,7 @@ public function submitEditJabatan(){
                     ->join('t_usul_ds e', 'a.id = e.ref_id AND e.table_ref = "t_pengajuan_cuti"', 'left')
                     ->where('a.id_m_user', $this->general_library->getId())
                     ->where('a.flag_active', 1)
-                    ->where('e.flag_active', 1)
+                    // ->where('e.flag_active', 1)
                     ->order_by('created_date', 'desc')
                     ->group_by('a.id')
                     ->get()->result_array();

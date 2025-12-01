@@ -17,6 +17,7 @@
             parent::__construct();
             $this->db = $this->load->database('main', true);
             $this->load->model('kinerja/M_Kinerja', 'm_kinerja');
+            $this->load->model('general/M_General', 'm_general');
         }
 
         public function insert($tablename, $data){
@@ -4495,6 +4496,252 @@
                 ]);
                 
         return $rs;
+    }
+
+    public function rekapKehadiranPeriodik($tahun = 2025){
+        // $listJenisDisiplin = null;
+        // $jenisDisiplin = $this->db->select('*')
+        //                         ->from('m_jenis_disiplin_kerja')
+        //                         ->where('flag_active', 1)
+        //                         ->get()->result_array();
+        // foreach($jenisDisiplin as $jd){
+        //     $listJenisDisiplin[$jd['keterangan']]['nama_jenis_disiplin_kerja'] = $jd['nama_jenis_disiplin_kerja'];
+        //     $listJenisDisiplin[$jd['keterangan']]['keterangan'] = $jd['keterangan'];
+        //     $listJenisDisiplin[$jd['keterangan']]['total'] = 0;
+        // }
+        
+        for($i = 1; $i <= 12; $i++){
+            $bulan = formatBulan($i);
+            $unitkerja = $this->db->select('a.*')
+                                ->from('db_pegawai.unitkerja a')
+                                ->join('db_pegawai.pegawai b', 'a.id_unitkerja = b.skpd')
+                                ->join("t_rekap_kehadiran_unitkerja b", "a.id_unitkerja = b.id_unitkerja AND b.bulan = ".formatBulan($bulan)." AND b.tahun = ".$tahun." AND b.flag_active = 1", "left")
+                                ->where('b.id_unitkerja IS NULL')
+                                ->where('a.id_unitkerja !=', 0)
+                                ->where('a.id_unitkerja !=', 5)
+                                ->where('b.id_m_status_pegawai', 1)
+                                ->where_not_in('a.id_unitkerja', [9000001]) // exclude tubel
+                                ->where_not_in('a.id_unitkerja', [7005010, 7005020]) // exclude tubel
+                                ->group_by('a.id_unitkerja')
+                                ->limit(3)
+                                ->get()->result_array();
+            if($unitkerja){
+                $this->general->logCron('cronRekapKehadiran');
+                foreach ($unitkerja as $uk){
+                    $res = $this->buildDataAbsensi([
+                        'id_unitkerja' => $uk['id_unitkerja'],
+                        'nm_unitkerja' => $uk['nm_unitkerja'],
+                        'skpd' => $uk['id_unitkerja'].";".$uk['nm_unitkerja'],
+                        "bulan" => $bulan,
+                        "tahun" => $tahun
+                    ], 1, 0, 0, 1, 0);
+
+                    $saveData = null;
+                    if($res){
+                        foreach($res['result'] as $rs){
+                            $saveData[$rs['nip']] = [
+                                'nip' => $rs['nip'],
+                                'bulan' => $bulan,
+                                'tahun' => $tahun,
+                                'meta_data' => json_encode($rs['rekap']),
+                            ];
+
+                            $exists = $this->db->select('*')
+                                            ->from('t_rekap_kehadiran')
+                                            ->where('nip', $rs['nip'])
+                                            ->where('bulan', $bulan)
+                                            ->where('tahun', $tahun)
+                                            ->where('flag_active', 1)
+                                            ->get()->row_array();
+                            if($exists){
+                                $this->db->where('id', $exists['id'])
+                                        ->update('t_rekap_kehadiran', [
+                                            'flag_active' => 0
+                                        ]);
+                            }
+                        }
+                        $this->db->insert_batch('t_rekap_kehadiran', $saveData);
+                    }
+
+                    $existsUker = $this->db->select('*')
+                                    ->from('t_rekap_kehadiran_unitkerja')
+                                    ->where('id_unitkerja', $uk['id_unitkerja'])
+                                    ->where('bulan', $bulan)
+                                    ->where('tahun', $tahun)
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+                    if($existsUker){
+                        $this->db->where('id', $existsUker['id'])
+                                ->update('t_rekap_kehadiran_unitkerja', [
+                                    'flag_active' => 0
+                                ]);
+                    }
+
+                    $this->db->insert('t_rekap_kehadiran_unitkerja', [
+                        'id_unitkerja' => $uk['id_unitkerja'],
+                        'bulan' => $bulan,
+                        'tahun' => $tahun
+                    ]);
+                }
+            }
+        }
+    }
+
+    public function rekapKehadiranPeriodikBu($bulan = 0, $tahun = 0, $data = null, $flagRecursive = 1){
+        if($flagRecursive == 0){
+            dd($data[16]);
+        }
+
+        if($tahun == 0){
+            $tahun = date('Y');
+        }
+
+        if($bulan == 0){
+            $bulan = date('m');
+        }
+        
+        $tanggal_awal = $tahun."-".formatBulan($bulan)."-01";
+        $tanggal_akhir = date("Y-m-t", strtotime($tanggal_awal));
+
+        $hariKerja = countHariKerjaDateToDate($tanggal_awal, $tanggal_akhir);
+        if($hariKerja[3]){
+            $temp = null;
+            foreach($hariKerja[3] as $hkM){
+                $temp[$hkM]['presensi'] = null;
+                $temp[$hkM]['keterangan'] = null;
+            }
+            $hariKerja[3] = $temp;
+        }
+
+        $listJenisDisiplin = null;
+        $jenisDisiplin = $this->db->select('*')
+                                ->from('m_jenis_disiplin_kerja')
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+        foreach($jenisDisiplin as $jd){
+            $listJenisDisiplin[$jd['keterangan']]['nama_jenis_disiplin_kerja'] = $jd['nama_jenis_disiplin_kerja'];
+            $listJenisDisiplin[$jd['keterangan']]['keterangan'] = $jd['keterangan'];
+            $listJenisDisiplin[$jd['keterangan']]['total'] = 0;
+        }
+
+        $listJenisDisiplin["TMK1"]['nama_jenis_disiplin_kerja'] = "Terlambat Masuk Kerja <= 30 menit";
+        $listJenisDisiplin["TMK1"]['keterangan'] = "TMK 1";
+        $listJenisDisiplin["TMK1"]['total'] = 0;
+        $listJenisDisiplin["TMK2"]['nama_jenis_disiplin_kerja'] = "Terlambat Masuk Kerja > 30 menit dan <= 60 menit";
+        $listJenisDisiplin["TMK2"]['keterangan'] = "TMK 2";
+        $listJenisDisiplin["TMK2"]['total'] = 0;
+        $listJenisDisiplin["TMK3"]['nama_jenis_disiplin_kerja'] = "Terlambat Masuk Kerja > 60 Menit";
+        $listJenisDisiplin["TMK3"]['keterangan'] = "TMK 3";
+        $listJenisDisiplin["TMK3"]['total'] = 0;
+        $listJenisDisiplin["PKSW1"]['nama_jenis_disiplin_kerja'] = "Pulang Kerja Sebelum Waktu <= 30 menit";
+        $listJenisDisiplin["PKSW1"]['keterangan'] = "PKSW 1";
+        $listJenisDisiplin["PKSW1"]['total'] = 0;
+        $listJenisDisiplin["PKSW2"]['nama_jenis_disiplin_kerja'] = "Pulang Kerja Sebelum Waktu > 30 menit dan <= 60 menit";
+        $listJenisDisiplin["PKSW2"]['keterangan'] = "PKSW 2";
+        $listJenisDisiplin["PKSW2"]['total'] = 0;
+        $listJenisDisiplin["PKSW3"]['nama_jenis_disiplin_kerja'] = "Pulang Kerja Sebelum Waktu > 60 Menit";
+        $listJenisDisiplin["PKSW3"]['keterangan'] = "PKSW 3";
+        $listJenisDisiplin["PKSW3"]['total'] = 0;
+
+        $res = null;
+        $listIdPegawai = null;
+        $pegawai = $this->db->select('a.nipbaru_ws, b.id, a.tmt_hitung_absen')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_user b', 'a.nipbaru_ws = b.username')
+                        ->where('b.flag_active', 1)
+                        ->where('a.id_m_status_pegawai', 1)
+                        ->where_not_in('a.skpd', [9000001]) // exclude tubel
+                        ->where_not_in('a.skpd', [7005010, 7005020]) // exclude tubel
+                        ->get()->result_array();
+        foreach($pegawai as $p){
+            $res[$p['id']] = $p;
+            $res[$p['id']]['disiplin'] = $listJenisDisiplin;
+            $res[$p['id']]['hari_kerja'] = $hariKerja[3];
+
+            $listIdPegawai[$p['id']] = $p['id'];
+        }
+        // dd($res[16]);
+
+        // $hariLibur = $this->db->select('*')
+        //                     ->from('t_hari_libur a')
+        //                     ->where('a.tahun', $tahun)
+        //                     ->where('flag_active', 1)
+        //                     ->where('flag_hari_libur_nasional', 1)
+        //                     ->get()->result_array();
+
+        $listDokpen = null;
+        $dokpen = $this->db->select('a.id_m_user, a.tanggal, a.bulan, a.tahun, a.id_m_jenis_disiplin_kerja, b.keterangan')
+                            ->from('t_dokumen_pendukung a')
+                            ->join('m_jenis_disiplin_kerja b', 'a.id_m_jenis_disiplin_kerja = b.id')
+                            ->where('a.tahun', $tahun)
+                            ->where('a.bulan', $bulan)
+                            ->where('a.status', 2)
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+                            
+        if($dokpen){
+            foreach($dokpen as $dok){
+                $listDokpen[$dok['id_m_user'].";".$dok['tahun']."-".formatBulan($dok['bulan'])."-".formatTanggal($dok['tanggal'])] = $dok;
+            }
+        }
+
+        $listPresensi = null;
+        $presensi = $this->db->select('a.user_id, a.tgl, a.masuk, a.pulang')
+                            ->from('db_sip.absen a')
+                            ->where('MONTH(a.tgl)', $bulan)
+                            ->where('YEAR(a.tgl)', $tahun)
+                            ->get()->result_array();
+        if($presensi){
+            foreach($presensi as $pres){
+                $listPresensi[$pres['user_id'].";".$pres['tgl']] = $pres;
+            }
+        }
+
+        foreach($hariKerja[3] as $hk){
+            if(!isset($listDokpen[$pre['user_id'].";".$pre['tgl']])){ // cek kalau tidak ada dokpen di tanggal itu
+                if($pre['pulang'] == null){
+                    $pre['pulang'] == "00:00:00";
+                }
+                $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['presensi'] = formatTimeAbsen($pre['masuk'])." - ".formatTimeAbsen($pre['pulang']);
+            } else {
+                if($listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan'] == "TLP"){
+                    $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['presensi'] = "TLP - ".formatTimeAbsen($pre['pulang']);
+                } else if($listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan'] == "TLS"){
+                    $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['presensi'] = formatTimeAbsen($pre['masuk'])." - TLS";
+                } else if(in_array($listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan'], ["SIDAK", "MTTI", "KENEG"])){
+                    $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['presensi'] = formatTimeAbsen($pre['masuk'])." - ".formatTimeAbsen($pre['pulang']);
+                }
+                $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['keterangan'] = $listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan'];
+                $res[$pre['user_id']]['disiplin'][$listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan']]['total']++;
+            }
+        }
+
+        // coba recursive tapi stop di looping pegawai
+
+        // if($presensi){
+        //     foreach($presensi as $pre){
+        //         if(isset($res[$pre['user_id']])){ // cek jika pegawai masih aktif
+        //             if(!isset($listDokpen[$pre['user_id'].";".$pre['tgl']])){ // cek kalau tidak ada dokpen di tanggal itu
+        //                 if($pre['pulang'] == null){
+        //                     $pre['pulang'] == "00:00:00";
+        //                 }
+        //                 $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['presensi'] = formatTimeAbsen($pre['masuk'])." - ".formatTimeAbsen($pre['pulang']);
+        //             } else {
+        //                 if($listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan'] == "TLP"){
+        //                     $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['presensi'] = "TLP - ".formatTimeAbsen($pre['pulang']);
+        //                 } else if($listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan'] == "TLS"){
+        //                     $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['presensi'] = formatTimeAbsen($pre['masuk'])." - TLS";
+        //                 } else if(in_array($listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan'], ["SIDAK", "MTTI", "KENEG"])){
+        //                     $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['presensi'] = formatTimeAbsen($pre['masuk'])." - ".formatTimeAbsen($pre['pulang']);
+        //                 }
+        //                 $res[$pre['user_id']]['hari_kerja'][$pre['tgl']]['keterangan'] = $listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan'];
+        //                 $res[$pre['user_id']]['disiplin'][$listDokpen[$pre['user_id'].";".$pre['tgl']]['keterangan']]['total']++;
+        //             }
+        //         }
+        //     }
+        // }
+
+        $this->rekapKehadiranPeriodik($bulan, $tahun, $res, 0);
     }
 }
 ?>

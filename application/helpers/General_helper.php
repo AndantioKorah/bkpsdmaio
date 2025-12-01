@@ -1384,6 +1384,14 @@ function getNomorSuratSiladen($data = null, $flag_save = 0){
     return $rs;
 }
 
+function formatBulan($bulan){
+    return $bulan < 10 ? "0".$bulan : $bulan;
+}
+
+function formatTanggal($tanggal){
+    return $tanggal < 10 ? "0".$tanggal : $tanggal;
+}
+
 function isKapus($nama_jabatan){
     return (stringStartWith('Kepala Puskesmas', $nama_jabatan)); 
 }

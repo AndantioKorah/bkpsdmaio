@@ -1906,6 +1906,7 @@
                                     ->where('b.flag_ditolak', 0)
                                     ->group_by('a.id')
                                     ->where('b.flag_ds_cuti', 0)
+                                    ->where('a.flag_active', 1)
                                     // ->where_in('e.nipbaru_ws', $listNip)
                                     // ->where('flag_resend !=', 1)
                                     // ->order_by('a.urutan', 'asc')

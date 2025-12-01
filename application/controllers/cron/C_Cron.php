@@ -82,6 +82,8 @@ class C_Cron extends CI_Controller
     public function cronAsync(){
         $this->general->logCron('cronAsync');
         $this->general->cronAsync();
+
+        $this->rekap->rekapKehadiranPeriodik();
     }
 
     public function getOauthToken(){
@@ -129,7 +131,7 @@ class C_Cron extends CI_Controller
         $insert_id = 0;
         $peg = $this->general->getOne('m_user', 'username', $nip, 1);
         $pegawai = $this->kinerja->getAtasanPegawai(null, $peg['id'], 1);
-        // dd($pegawai);
+        dd($pegawai);
         $progressCuti = $this->kepegawaian->buildProgressCuti($pegawai, $insert_id, $peg['id']);
         // if(isset($progressCuti['code']) && $progressCuti['code'] == 1){
         //     dd(($progressCuti));
@@ -223,6 +225,10 @@ class C_Cron extends CI_Controller
     public function updateDataPPPK($nip = 0, $flag_save = 0){
         $data['result'] = $this->general->updateDataPPPK($nip, $flag_save);
         $this->load->view('master/V_TempUpdateDataPPPK', $data);
+    }
+
+    public function rekapKehadiranPeriodik($bulan = 0, $tahun = 0){
+        $this->rekap->rekapKehadiranPeriodik();
     }
 
     public function funcTest($str = ""){

@@ -4014,12 +4014,16 @@ public function getAllPelanggaranByNip($nip){
             // if($data_siasn && isset($data_siasn['path'][872])){
             //     $path[] = $data_siasn['path'][872];
             // }
-
             $jenis_jabatan = "4";
             if($data['jenis_jabatan'] == "Struktural"){
                 $jenis_jabatan = "1";
             } else if($data['jenis_jabatan'] == "JFT"){
                 $jenis_jabatan = "2";
+            }
+
+            if(stringStartWith("Kepala Puskesmas", $data['nama_jabatan'])){
+                $jenis_jabatan = "1";
+                $data['jenis_jabatan'] = "Struktural";
             }
             
             $id_jabatan_siasn = $flagCronSync == 1 ? $dataSync['id_jabatan_siasn'] : $data['id_jabatan_siasn']; 
@@ -4044,6 +4048,7 @@ public function getAllPelanggaranByNip($nip){
                 "tmtMutasi" => formatDateOnlyForEdit2($data['tmtjabatan']),
                 "unorId" => $flagCronSync == 1 ? $dataSync['id_unor_siasn'] : $data['id_unor_siasn'],
             ];
+            // dd(json_encode($update));
             
             $idSubJabatan = $flagCronSync == 1 ? $dataSync['subJabatanId'] : $data['id_m_ref_sub_jabatan_siasn'];
             if($idSubJabatan == null){
@@ -6047,7 +6052,7 @@ public function submitEditJabatan(){
         return $result;
     }
 
-    public function verifPermohonanCutiFromWa($resp, $chat){
+    public function verifPermohonanCutiFromWa($resp, $chat, $flag_prog = 0){
         $this->db->trans_begin();
         $dataCuti = $this->db->select('a.*, c.skpd')
                             ->from('t_pengajuan_cuti a')
@@ -6057,6 +6062,9 @@ public function submitEditJabatan(){
                             ->get()->row_array();
 
         $progress = $this->getProgressCutiAktif($resp['cuti']['id']);
+        if($flag_prog == 1){
+            dd($progress);
+        }
         $flag_reply_thankyou = 1;
 
         $nomor_sender = '0'.substr($chat->from, 2, strlen($chat->from)-1);

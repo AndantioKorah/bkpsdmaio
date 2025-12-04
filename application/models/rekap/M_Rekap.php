@@ -1233,18 +1233,18 @@
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array(); 
 
-            $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                f.id as id_m_user, a.flag_bendahara,
-                e.nama_jabatan, e.kepalaskpd')
-                                    ->from('db_pegawai.pegawai a')
-                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
-                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
-                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                    ->join('m_user f', 'a.nipbaru_ws = f.username')
-                                    ->where('a.nipbaru_ws', '198505302005011001')
-                                    ->where('id_m_status_pegawai', 1)
-                                    ->get()->row_array();
-            $result['kepalaskpd']['nama_jabatan'] = "Plt. Kepala Dinas Kesehatan";
+            // $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+            //     f.id as id_m_user, a.flag_bendahara,
+            //     e.nama_jabatan, e.kepalaskpd')
+            //                         ->from('db_pegawai.pegawai a')
+            //                         ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+            //                         ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+            //                         ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+            //                         ->join('m_user f', 'a.nipbaru_ws = f.username')
+            //                         ->where('a.nipbaru_ws', '198505302005011001')
+            //                         ->where('id_m_status_pegawai', 1)
+            //                         ->get()->row_array();
+            // $result['kepalaskpd']['nama_jabatan'] = "Plt. Kepala Dinas Kesehatan";
             
             // kasubag ambil sek krna kasubag smntra cuti
             if($id_unitkerja != 7005020

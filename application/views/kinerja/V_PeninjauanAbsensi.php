@@ -133,7 +133,7 @@
 
   </div>
   <div class="form-group col-lg-12 mt-2">
-     <!-- <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button> -->
+     <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
       <span id="ket" style="display:none;color:red"><b>Sudah ada 2 kali Pengajuan Absensi untuk bulan ini</b></span>
     </div>
 </form> 
@@ -560,16 +560,16 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
             $("#jenis_absensi").prop('disabled',false);
            
 
-        if(tanggal == "2025-11-24" || tanggal == "2025-11-19"){
+        if(tanggal == "2025-11-28"){
            $('#jenis_absensi').val('')
           document.querySelectorAll("#jenis_absensi option").forEach(opt => {
-            if (opt.value == "2") {
+            if (opt.value == "1") {
                 opt.disabled = true;
             }
         });
         } else {
            document.querySelectorAll("#jenis_absensi option").forEach(opt => {
-            if (opt.value == "2") {
+            if (opt.value == "1") {
                 opt.disabled = false;
             }
         });

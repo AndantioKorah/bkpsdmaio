@@ -605,6 +605,7 @@
 	$this->general_library->isHakAkses('verifikasi_layanan_suket_tidak_tubel') ||
 	$this->general_library->isHakAkses('verifikasi_ujian_dinas') ||
 	$this->general_library->isHakAkses('menu_bidang_pekin') ||
+	$this->general_library->isHakAkses('verifikasi_berkala_opd') || 
 	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
 	$this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
 	$this->general_library->isVerifPermohonanCuti() ||
@@ -657,6 +658,7 @@
 				$this->general_library->isKepalaPd() ||
 				$this->general_library->isVerifPermohonanCuti() ||
 				$this->general_library->isKepalaSkpdHardcode() ||
+				
 				stringStartWith('Asisten', $this->general_library->getNamaJabatan())
 				){
 					?>
@@ -694,15 +696,18 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_pangkat_bkad') || $this->general_library->isHakAkses('verifikasi_berkala_opd')){ ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')){ ?>
-				<li class="sidebar-item ">
+				
+					<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pangkat-bkad')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Usul Pangkat BKSPDM
 					</a>
 				</li>
+				<?php } ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-berkala-bkad')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Usul Berkala BKSPDM
+						<i class="align-middle me-2 far fa-circle"></i>SK Gaji Berkala
 					</a>
 				</li>
 				<?php } ?>

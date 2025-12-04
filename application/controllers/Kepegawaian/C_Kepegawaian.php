@@ -3310,6 +3310,7 @@ class C_Kepegawaian extends CI_Controller
 
 
 		public function verifikasiBerkalaBkad(){
+			
 			$data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
 			render('kepegawaian/layanan/V_VerifikasiBerkalaBkad', '', '', $data);
 		}

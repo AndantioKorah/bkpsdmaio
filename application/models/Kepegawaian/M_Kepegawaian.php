@@ -13135,7 +13135,7 @@ public function getFileForVerifLayanan()
             $datainsKgb["tmtgajiberkala"] = $dataKgb[0]['tmtgajiberkala'];
             $datainsKgb["gajilama"] = $dataKgb[0]['gajilama'];
             $datainsKgb["gajibaru"] = $dataKgb[0]['gajibaru'];
-            $datainsKgb["status"] = 2;
+            $datainsKgb["status"] = 3;
             $datainsKgb["gambarsk"] = $data['file_name'];
             $url_file = "arsipgjberkala/".$data['nama_file'];
 
@@ -13517,6 +13517,8 @@ public function getFileForVerifLayanan()
 
     public function verifikasiBerkalaBkadItem(){
         $data = $this->input->post();
+
+            
         $this->db->select('*, a.tmtgajiberkala as tmtkgb, a.status as status_berkala, a.id as id_berkala')
                 ->from('t_gajiberkala a')
                 ->join('db_pegawai.pegawai e', 'a.id_pegawai = e.id_peg')
@@ -13527,8 +13529,16 @@ public function getFileForVerifLayanan()
                 ->order_by('a.tmtgajiberkala', 'asc');
                 if(isset($data['status_berkala']) && $data['status_berkala'] != ""){
                     $this->db->where('a.status', $data['status_berkala']);
-                } else {
-                    $this->db->where_in('a.status', [3,4,5]);
+                } 
+
+                if($this->general_library->getDataUnitKerjaPegawai()['id_unitkerja'] == '3010000'){
+                    $this->db->where_in('f.id_unitkerjamaster', ['8010000','8020000','8000000']);
+                    $this->db->where_in('a.status', [4,5,6]);
+                } else if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')){
+                    $this->db->where_in('a.status', [4,5,6]);
+                } else if($this->general_library->isHakAkses('verifikasi_berkala_opd')) {
+                    $this->db->where('e.skpd', $this->general_library->getDataUnitKerjaPegawai()['id_unitkerja']);
+                      $this->db->where_in('a.status', [3]);
                 }
                
         return $this->db->get()->result_array();
@@ -15270,7 +15280,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         foreach($pegawai1 as $peg){
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['pangkat'][$peg['pangkat']]['laki']++;
-        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        } else if($peg['jk'] == 'perempuan' || $peg['jk'] == null) {
         $result['pangkat'][$peg['pangkat']]['perempuan']++;
 
         } 

@@ -58,7 +58,11 @@
               <select class="form-control select2-navy" style="width: 100%"
               id="status_berkala" data-dropdown-css-class="select2-navy" name="status_berkala">
                   <option value="" >Semua</option>
+                  <?php if($this->general_library->isHakAkses('verifikasi_berkala_opd') ) { ?>
                   <option value="3" selected>Usul BKPSDM</option>
+                  <?php } else if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')) { ?>
+                  <option value="6" selected>ACC Perangkat Daerah</option>
+                   <?php } ?>
                   <option value="4" >Diterima</option>
                   <option value="5" >Ditolak</option>
                 

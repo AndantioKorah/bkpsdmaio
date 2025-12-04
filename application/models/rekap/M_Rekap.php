@@ -2155,9 +2155,21 @@
                 }
                 foreach($list_hari as $l){
                     $isNotTmtAbsen = 0;
-                    if(isset($tr['tmt_hitung_absen']) && $l < $tr['tmt_hitung_absen']){
+                    $flagHitungBatasAbsen = 0;
+                    $batasHitungAbsen = "2025-06-20"; // tahun 2025, batas hitung absen hanya sampai 19 desember 2025
+                    if(isset($tr['tmt_hitung_absen']) && $l < $tr['tmt_hitung_absen']){ // cek jika sudah masuk dalam tmt hitung absen
                         $isNotTmtAbsen = 1;
                     }
+                    if($this->general_library->isProgrammer()){
+                        // dd(intval($data['bulan']) == 6 && $data['tahun'] == 2025);
+                    }
+                    if(intval($data['bulan']) == 6 && $data['tahun'] == 2025 && $flag_rekap_tpp == 1){ // jika rekap desember 2025 dan flag rekap tpp == 1
+                        // dd('haii');
+                        $flagHitungBatasAbsen = 1;
+                    } 
+                    // if($l <= date('Y-m-d') && $isNotTmtAbsen == 0 && ($flagHitungBatasAbsen == 1 && $l <= $batasHitungAbsen)){
+                    //     dd($l);
+                    // }
                     if($l <= date('Y-m-d') && $isNotTmtAbsen == 0){
                         // if($format_hari[$l]['jam_masuk'] != '' && !isset($hari_libur[$l])){ //bukan hari libur atau hari sabtu / minggu
                         if($format_hari[$l]['jam_masuk'] != '' || isset($dokpen[$tr['nip']][$l])){ //ada jam kerja atau ada dokpen di hari libur

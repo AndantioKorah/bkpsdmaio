@@ -9,14 +9,16 @@ class C_Maxchat extends CI_Controller
         $this->load->model('rekap/M_Rekap', 'rekap');
         $this->load->model('user/M_User', 'user');
         $this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
+        $this->FLAG_PROG = 0;
         // $this->load->library('MaxchatLibrary', 'maxchat');
     }
 
-    public function webhook(){
+    public function webhook($flag_prog = 0){
         $result = $this->maxchatlibrary->webhookCapture();
         
-        if($this->general_library->isProgrammer()){
-            $resultStr = '{"id":"3ADD2EF0BCE001206C04","time":1749795765000,"type":"image","status":"none","chatType":"user","chat":"6282115407812","from":"6282115407812","name":"Andantio Korah","mimetype":"image\/jpeg","thumbnail":"\/9j\/4AAQSkZJRgABAQAAAQABAAD\/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T\/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT\/wgARCABIAEgDASIAAhEBAxEB\/8QAGgAAAgMBAQAAAAAAAAAAAAAAAAIBAwQFBv\/EABYBAQEBAAAAAAAAAAAAAAAAAAABAv\/aAAwDAQACEAMQAAAA76tAiWKUsMM6sMBEZ74AhQMW2mZZhiAgSJXxW8czem8v3l2Nzddl5QQZ82HOr6Y053VVfQV7MVGs9Y4Zc6mCzPWFiuFIgFoGb\/\/EABwRAQACAwADAAAAAAAAAAAAAAEAAhASITBBUf\/aAAgBAgEBPwDyd953rG3eMFgWmr9jUewAyz\/\/xAAcEQACAgIDAAAAAAAAAAAAAAAAAQIRECESMEH\/2gAIAQMBAT8A66HXhWODIx1tDobiWhSa0NvKR\/\/EACUQAAICAgEDBQEBAQAAAAAAAAECAAMEESEFEjEQEyJBUTIjcf\/aAAgBAQABPwAwwiERhzFEUQQQ+hhEYRRBBBCZbkmu1U9skEeYCGUEfcMYQQQQehGxEPxlti1Vl3OgJX1THts7Nlfwn7gg9AZubitvY1rU6sVbDdC2iZRi7dNtsbiDtQD8E3ACZuFoGO5feKe5t+Zk5HeGG9lvoym1wO4NrtPiUZqtQrt5lnVKkft0dynLVqyzgKNcGV5COuwwMtsRBtmAl2XUK21ZzrjUTJqdSpYlz+x8Yli3uLz4ns0pXpuTrmO61gKjEAfsXVlgA2TMit3rVVYADzMUnGIL2Dt8kS7EyLkYe8Dv7h6VkjhbOInTru75Oo19y6igBS1wDKPO4crFr\/tw\/H0I+ZjM3+eP3GWdQsQ6WpUP\/I2bc5+TSyxmHLGY3ULsc8MWH4ZZ1bIfwdR8q9\/6sMLMfJJ9Kr3pJKeTLLGsYsx2TA0pqFx5btE\/\/\/4AAwD\/2Q==","url":"https:\/\/core.maxchat.id\/bkdmdo\/download\/3ADD2EF0BCE001206C04.jpeg"}';                    
+        if($flag_prog == 1){
+            $this->FLAG_PROG = 1;
+            $resultStr = '{"id":"ACAA4307011517F9F8580DCF209F4EAF","time":1764644223000,"type":"text","status":"none","replyId":"3EB02C10CB6319B11C252F","chatType":"user","chat":"6281341965869","from":"6281341965869","name":"OM","text":"Ya"}';
             $result = json_decode($resultStr);
             // dd($result);
         }
@@ -88,7 +90,7 @@ class C_Maxchat extends CI_Controller
             $response['flag_diterima'] = 2;
         }
         $data['response'] = $response;
-        $this->kepegawaian->verifPermohonanCutiFromWa($data, $result);
+        $this->kepegawaian->verifPermohonanCutiFromWa($data, $result, $this->FLAG_PROG);
     }
 
     public function forwardToPegawai($result){

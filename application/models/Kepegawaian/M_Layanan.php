@@ -592,7 +592,6 @@ class M_Layanan extends CI_Model
                         ->where('table_ref', 't_checklist_pensiun')
                         ->where('flag_active', 1)
                         ->get()->row_array();
-
         if($exists){
             $rs['code'] = 1;
             $rs['message'] = 'DPCP sudah diajukan';
@@ -638,8 +637,12 @@ class M_Layanan extends CI_Model
             $usulDsDpcp['url_ds'] = $pathDpcp;
             $usulDsDpcp['files'][0]['url'] = $pathDpcp;
             $usulDsDpcp['files'][0]['name'] = generateRandomString()."_".$fileNameDpcp;
-
-            $this->submitUploadFileUsulDs($usulDsDpcp, 1);
+            
+            $usulDpcp = $this->submitUploadFileUsulDs($usulDsDpcp, 1);
+            if($usulDpcp['code'] != 0){
+                $this->db->trans_rollback();
+                return $usulDpcp;
+            }
 
             // $fileBase64 = convertToBase64(base_url($pathDpcp));
 
@@ -710,8 +713,12 @@ class M_Layanan extends CI_Model
                 $usulDsHukdis['url_ds'] = $pathHukdis;
                 $usulDsHukdis['files'][0]['url'] = $pathHukdis;
                 $usulDsHukdis['files'][0]['name'] = generateRandomString()."_".$fileNameHukdis;
-    
-                $this->submitUploadFileUsulDs($usulDsHukdis, 1);
+
+                $usulHukdis = $this->submitUploadFileUsulDs($usulDsHukdis, 1);
+                if($usulHukdis['code'] != 0){
+                    $this->db->trans_rollback();
+                    return $usulHukdis;
+                }
 
                 // $fileBase64 = convertToBase64(base_url($pathHukdis));
 
@@ -791,7 +798,11 @@ class M_Layanan extends CI_Model
             $usulDsPidana['files'][0]['url'] = $pathPidana;
             $usulDsPidana['files'][0]['name'] = generateRandomString()."_".$fileNamePidana;
 
-            $this->submitUploadFileUsulDs($usulDsPidana, 1);
+            $usulPidana = $this->submitUploadFileUsulDs($usulDsPidana, 1);
+            if($usulPidana['code'] != 0){
+                $this->db->trans_rollback();
+                return $usulPidana;
+            }
 
             // $fileBase64 = convertToBase64(base_url($pathPidana));
 
@@ -825,7 +836,6 @@ class M_Layanan extends CI_Model
             //     'id_m_jenis_layanan' => 39
             // ]);
         }
-
         if($this->db->trans_status() == FALSE || $rs['code'] != 0){
             $this->db->trans_rollback();
             $rs['code'] = 1;
@@ -833,7 +843,7 @@ class M_Layanan extends CI_Model
         } else {
             $this->db->trans_commit();
         }
-            
+
         return $rs;
     }
 
@@ -1490,7 +1500,7 @@ class M_Layanan extends CI_Model
 
         $bulan = getNamaBulan(date('m'));
         $tahun = date('Y');
-
+        
 		$uploadedFile = $this->session->userdata('uploaded_file_usul_ds_'.$this->general_library->getId());
         if(!$uploadedFile && $flagIntegrasi == 0){
             $result['code'] = 1;
@@ -1544,7 +1554,11 @@ class M_Layanan extends CI_Model
                                 ->where('flag_active', 1)
                                 ->get()->row_array();
 
-            if($dataExists){ // jika tidak ada data yang serupa baru input di usul ds
+            $excludeTable = [
+                't_checklist_pensiun'
+            ];
+            if($dataExists && !in_array('t_checklist_pensiun', $excludeTable)){ // jika tidak ada data yang serupa baru input di usul ds
+                $this->db->trans_rollback();
                 return;
             }
             $this->db->insert('t_usul_ds', $data);
@@ -1602,7 +1616,9 @@ class M_Layanan extends CI_Model
         } else {
             $this->db->trans_commit();
         }
-
+        // if($this->general_library->isProgrammer()){
+        //     dd(json_encode($result));
+        // }
         return $result;
     }
 

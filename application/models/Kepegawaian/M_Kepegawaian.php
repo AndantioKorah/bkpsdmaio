@@ -7801,10 +7801,11 @@ public function submitEditJabatan(){
         if($res['progress']){
             $update_data_pengajuan = null;
             // if($res['progress']['current']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){
-            if($res['progress']['current']['jabatan'] == $this->getDataKabanBkd()['id_jabatanpeg']){
-                $res['code'] = 1;
-                $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
-            } else if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
+            // if($res['progress']['current']['jabatan'] == $this->getDataKabanBkd()['id_jabatanpeg']){
+            //     $res['code'] = 1;
+            //     $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
+            // } else 
+            if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
                 // if(formatDateOnly(date("Y-m-d")) > formatDateOnly($data['tanggal_mulai'])){
                 //     $res['code'] = 1;
                 //     $res['message'] = "Verifikasi tidak dapat dilakukan karena sudah melebihi tanggal mulai cuti.";
@@ -7813,10 +7814,12 @@ public function submitEditJabatan(){
                 $reply = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($data).", permohonan ".$data['nm_cuti']." Anda telah ";
                 if($status == 1){ // jika diterima
                     $reply .= "*DISETUJUI*";
-                    $update_data_pengajuan = [
-                        'status_pengajuan_cuti' => $res['progress']['next']['keterangan'],
-                        'id_t_progress_cuti' => $res['progress']['next']['id']
-                    ];
+                    if($res['progress']['next']){
+                        $update_data_pengajuan = [
+                            'status_pengajuan_cuti' => $res['progress']['next']['keterangan'],
+                            'id_t_progress_cuti' => $res['progress']['next']['id']
+                        ];
+                    }
                     // jika masih ada next verifikator
                     if($res['progress']['next']){
                         $pada_tanggal = formatDateNamaBulan($data['tanggal_mulai']);

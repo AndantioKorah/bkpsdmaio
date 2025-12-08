@@ -7403,7 +7403,7 @@ public function submitEditJabatan(){
                                     ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
                                     ->where('a.id_m_user', $this->general_library->getId())
                                     ->where('a.flag_active', 1)
-                                    ->where('a.status_verifikasi', 0)
+                                    ->where('a.status_verifikasi !=', 1)
                                     ->order_by('a.created_date', 'desc')
                                     ->group_by('a.id')
                                     ->get()->result_array();
@@ -7425,6 +7425,9 @@ public function submitEditJabatan(){
         $list_id = null;
 
         if($operatorVerif){
+            // if($this->general_library->getId() == 119){
+            //     dd($operatorVerif);
+            // }
             foreach($operatorVerif as $ov){
                 $dt = json_decode($ov['meta_data'], true);
                 $lamaCuti = explode(" ", $dt['lama_cuti']);
@@ -7434,8 +7437,9 @@ public function submitEditJabatan(){
                 $newOv['tanggal_akhir'] = $dt['tanggal_akhir'];
                 $newOv['lama_cuti'] = $lamaCuti[0];
                 $newOv['created_date'] = $ov['created_date'];
-                $newOv['status_pengajuan_cuti'] = "Menunggu Verifikasi Operator";
+                $newOv['status_pengajuan_cuti'] = $ov['keterangan'] ? $ov['keterangan'] : "Menunggu Verifikasi Operator";
                 $newOv['flag_operator_verif'] = 1;
+                $newOv['status_verifikasi_operator'] = $ov['status_verifikasi'];
                 $result[] = $newOv;
             }    
         }
@@ -7463,6 +7467,10 @@ public function submitEditJabatan(){
                 }
             }
         }
+
+        usort($result, function($a, $b) {
+            return ($b['created_date'] > $a['created_date']);
+        });
 
         return $result;
     }

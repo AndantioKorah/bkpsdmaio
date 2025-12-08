@@ -1733,6 +1733,7 @@
     }
 
     public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0, $flag_penerima_tpp = 1){
+        $batasHitungAbsen = "2025-12-19"; // tahun 2025, batas hitung absen hanya sampai 19 desember 2025
         // dd($flag_alpha);
         $rs = null;
         $periode = null;
@@ -2065,17 +2066,24 @@
 
         if($tmp_dokpen){
             foreach($tmp_dokpen as $dok){
+                $flagIgnoreAbsen = 0;
                
                 $tanggal_dok = $dok['tanggal'] < 10 ? '0'.$dok['tanggal'] : $dok['tanggal'];
                 $bulan_dok = $dok['bulan'] < 10 ? '0'.$dok['bulan'] : $dok['bulan'];
                 $date_dok = $dok['tahun'].'-'.$bulan_dok.'-'.$tanggal_dok;
                
-                $dokpen[$dok['nip']]['nip'] = $dok['nip'];
-                $dokpen[$dok['nip']][$date_dok] = $dok['keterangan'];
-                $dokpen[$dok['nip']]["ket_".$date_dok]= $dok['keterngn'];
+                if(intval($data['bulan']) == 12 && $data['tahun'] == 2025 && $flag_rekap_tpp == 1 && $date_dok > $batasHitungAbsen){ // jika rekap desember 2025 dan flag rekap tpp == 1
+                    $flagIgnoreAbsen = 1;
+                }
 
-                $data['list_dokpen'][$dok['nip']][] = $dok;
-                $data['list_dokpen_per_date'][$dok['nip']][$date_dok][] = $dok;
+                if($flagIgnoreAbsen == 0){
+                    $dokpen[$dok['nip']]['nip'] = $dok['nip'];
+                    $dokpen[$dok['nip']][$date_dok] = $dok['keterangan'];
+                    $dokpen[$dok['nip']]["ket_".$date_dok]= $dok['keterngn'];
+
+                    $data['list_dokpen'][$dok['nip']][] = $dok;
+                    $data['list_dokpen_per_date'][$dok['nip']][$date_dok][] = $dok;
+                }
             }
         }
 
@@ -2156,14 +2164,13 @@
                 foreach($list_hari as $l){
                     $isNotTmtAbsen = 0;
                     $flagIgnoreAbsen = 0;
-                    $batasHitungAbsen = "2025-06-22"; // tahun 2025, batas hitung absen hanya sampai 19 desember 2025
                     if(isset($tr['tmt_hitung_absen']) && $l < $tr['tmt_hitung_absen']){ // cek jika sudah masuk dalam tmt hitung absen
                         $isNotTmtAbsen = 1;
                     }
                     if($this->general_library->isProgrammer()){
                         // dd(intval($data['bulan']) == 6 && $data['tahun'] == 2025);
                     }
-                    if(intval($data['bulan']) == 12 && $data['tahun'] == 2025 && $flag_rekap_tpp == 1 && $l >= $batasHitungAbsen){ // jika rekap desember 2025 dan flag rekap tpp == 1
+                    if(intval($data['bulan']) == 12 && $data['tahun'] == 2025 && $flag_rekap_tpp == 1 && $l > $batasHitungAbsen){ // jika rekap desember 2025 dan flag rekap tpp == 1
                         $flagIgnoreAbsen = 1;
                     }
                     if($flagIgnoreAbsen == 0){

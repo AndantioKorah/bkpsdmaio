@@ -7403,7 +7403,7 @@ public function submitEditJabatan(){
                                     ->join('db_pegawai.cuti b', 'a.id_cuti = b.id_cuti')
                                     ->where('a.id_m_user', $this->general_library->getId())
                                     ->where('a.flag_active', 1)
-                                    ->where('a.status_verifikasi', 0)
+                                    ->where('a.status_verifikasi !=', 1)
                                     ->order_by('a.created_date', 'desc')
                                     ->group_by('a.id')
                                     ->get()->result_array();
@@ -7425,6 +7425,9 @@ public function submitEditJabatan(){
         $list_id = null;
 
         if($operatorVerif){
+            // if($this->general_library->getId() == 119){
+            //     dd($operatorVerif);
+            // }
             foreach($operatorVerif as $ov){
                 $dt = json_decode($ov['meta_data'], true);
                 $lamaCuti = explode(" ", $dt['lama_cuti']);
@@ -7434,8 +7437,9 @@ public function submitEditJabatan(){
                 $newOv['tanggal_akhir'] = $dt['tanggal_akhir'];
                 $newOv['lama_cuti'] = $lamaCuti[0];
                 $newOv['created_date'] = $ov['created_date'];
-                $newOv['status_pengajuan_cuti'] = "Menunggu Verifikasi Operator";
+                $newOv['status_pengajuan_cuti'] = $ov['keterangan'] ? $ov['keterangan'] : "Menunggu Verifikasi Operator";
                 $newOv['flag_operator_verif'] = 1;
+                $newOv['status_verifikasi_operator'] = $ov['status_verifikasi'];
                 $result[] = $newOv;
             }    
         }
@@ -7463,6 +7467,10 @@ public function submitEditJabatan(){
                 }
             }
         }
+
+        usort($result, function($a, $b) {
+            return ($b['created_date'] > $a['created_date']);
+        });
 
         return $result;
     }
@@ -7793,10 +7801,11 @@ public function submitEditJabatan(){
         if($res['progress']){
             $update_data_pengajuan = null;
             // if($res['progress']['current']['jabatan'] == ID_JABATAN_KABAN_BKPSDM){
-            if($res['progress']['current']['jabatan'] == $this->getDataKabanBkd()['id_jabatanpeg']){
-                $res['code'] = 1;
-                $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
-            } else if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
+            // if($res['progress']['current']['jabatan'] == $this->getDataKabanBkd()['id_jabatanpeg']){
+            //     $res['code'] = 1;
+            //     $res['message'] = "Silahkan melakukan Digital Signature untuk Verifikasi Permohonan Cuti berikut.";
+            // } else 
+            if($res['progress']['current']['id_m_user_verifikasi'] == $this->general_library->getId()){
                 // if(formatDateOnly(date("Y-m-d")) > formatDateOnly($data['tanggal_mulai'])){
                 //     $res['code'] = 1;
                 //     $res['message'] = "Verifikasi tidak dapat dilakukan karena sudah melebihi tanggal mulai cuti.";
@@ -7805,10 +7814,12 @@ public function submitEditJabatan(){
                 $reply = "*[PERMOHONAN CUTI - ".$data['random_string']."]*\n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($data).", permohonan ".$data['nm_cuti']." Anda telah ";
                 if($status == 1){ // jika diterima
                     $reply .= "*DISETUJUI*";
-                    $update_data_pengajuan = [
-                        'status_pengajuan_cuti' => $res['progress']['next']['keterangan'],
-                        'id_t_progress_cuti' => $res['progress']['next']['id']
-                    ];
+                    if($res['progress']['next']){
+                        $update_data_pengajuan = [
+                            'status_pengajuan_cuti' => $res['progress']['next']['keterangan'],
+                            'id_t_progress_cuti' => $res['progress']['next']['id']
+                        ];
+                    }
                     // jika masih ada next verifikator
                     if($res['progress']['next']){
                         $pada_tanggal = formatDateNamaBulan($data['tanggal_mulai']);

@@ -60,10 +60,11 @@
                   <option value="" >Semua</option>
                   <?php if($this->general_library->isHakAkses('verifikasi_berkala_opd') ) { ?>
                   <option value="3" selected>Usul BKPSDM</option>
+                  <option value="6" >Diterima</option>
                   <?php } else if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')) { ?>
                   <option value="6" selected>ACC Perangkat Daerah</option>
-                   <?php } ?>
                   <option value="4" >Diterima</option>
+                   <?php } ?>
                   <option value="5" >Ditolak</option>
                 
               </select>

@@ -512,7 +512,17 @@
 				<i class="align-middle me-2 far fa-circle"></i>Administrasi Kepegawaian
 			</a>
 		</li>
-
+		<?php 
+			if($this->general_library->isProgrammer() 
+			|| $this->general_library->isAdminAplikasi()
+			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()))
+			{ ?>
+		<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/C_Kepegawaian/layananMutasiAsn/33')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Mutasi ASN
+					</a>
+		</li>
+		<?php } ?>
    <?php if($this->general_library->isAdminAplikasi()){ ?>
 		<!-- <li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
@@ -713,6 +723,8 @@
 				</li>
 				<?php } ?>
 
+			
+
 				<?php if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/10')?>">
@@ -774,6 +786,11 @@
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/28')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Layanan Mutasi Pindah <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Masuk
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/33')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Layanan Mutasi ASN
 					</a>
 				</li>
 				<?php } ?>

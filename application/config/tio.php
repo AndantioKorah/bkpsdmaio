@@ -48,6 +48,7 @@ $route['rekapitulasi/absensi'] = 'rekap/C_Rekap/rekapAbsensiNew';
 $route['rekapitulasi/penilaian/disiplin'] = 'rekap/C_Rekap/rekapPenilaianDisiplin';
 $route['rekapitulasi/penilaian/produktivitas'] = 'rekap/C_Rekap/rekapPenilaian';
 $route['rekapitulasi/tpp'] = 'rekap/C_Rekap/rekapTpp';
+$route['rekapitulasi/kehadiran-periodik'] = 'rekap/C_Rekap/rekapKehadiranPeriodik';
 $route['rekap/hukdis'] = 'rekap/C_Rekap/rekapHukdis';
 $route['master/tpp'] = 'master/C_Master/tpp';
 

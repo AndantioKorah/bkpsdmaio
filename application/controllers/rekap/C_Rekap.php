@@ -883,4 +883,14 @@ class C_Rekap extends CI_Controller
     public function testDropzone(){
         dd($_FILES);
     }
+
+    public function rekapKehadiranPeriodik(){
+        $data['unitkerja'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        render('rekap/V_RekapKehadiranPeriodik', '', '', $data);
+    }
+
+    public function searchRekapKehadiranPeriodik(){
+        $data['result'] = $this->rekap->searchRekapKehadiranPeriodik($this->input->post());
+        $this->load->view('rekap/V_RekapKehadiranPeriodikResult', $data);
+    }
 }

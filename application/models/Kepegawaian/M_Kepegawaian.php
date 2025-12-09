@@ -13538,7 +13538,7 @@ public function getFileForVerifLayanan()
 
     public function verifikasiBerkalaBkadItem(){
         $data = $this->input->post();
-            
+            // dd($this->general_library->getDataUnitKerjaPegawai()['id_unitkerjamaster']);
        
         $this->db->select('*, a.tmtgajiberkala as tmtkgb, a.status as status_berkala, a.id as id_berkala')
                 ->from('t_gajiberkala a')
@@ -13560,8 +13560,17 @@ public function getFileForVerifLayanan()
                     $this->db->where_in('a.status', $data['status_berkala']);
                      }
                 } else if($this->general_library->isHakAkses('verifikasi_berkala_opd')) {
-                // Pendidikan                    
-                  if($this->general_library->getDataUnitKerjaPegawai()['id_unitkerja'] == '3010000'){
+                // Setda
+                if($this->general_library->getDataUnitKerjaPegawai()['id_unitkerjamaster'] == '1000000'){
+                    if($data['status_berkala'] == ""){
+                    $this->db->where_in('f.id_unitkerjamaster', ['1000000']);
+                    $this->db->where_in('a.status', [3,5,6]);
+                    } else {
+                    $this->db->where_in('f.id_unitkerjamaster', ['1000000']);
+                    $this->db->where_in('a.status', $data['status_berkala']);
+                    }
+                // Pendidikan
+                } else if($this->general_library->getDataUnitKerjaPegawai()['id_unitkerja'] == '3010000'){
                     if($data['status_berkala'] == ""){
                     $this->db->where_in('f.id_unitkerjamaster', ['8010000','8020000','8000000']);
                     $this->db->where_in('a.status', [3,5,6]);

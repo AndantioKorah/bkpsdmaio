@@ -2757,13 +2757,15 @@
                     $message = "*[DOKUMEN PENDUKUNG ABSENSI]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($list_dokumen[0]).$kata_verifikasi." dokumen *".$list_dokumen[0]['nama_jenis_disiplin_kerja']."* Anda pada tanggal ".$tanggal." telah *".$hasil_verif."*";
 
                     if($status == 3 || $status == 4){
-                        $this->db->insert('t_cron_wa', [
-                            'type' => 'text',
-                            'sendTo' => convertPhoneNumber($list_dokumen[0]['handphone']),
-                            'message' => $message.FOOTER_MESSAGE_CUTI,
-                            'jenis_layanan' => 'Dokumen Pendukung Absensi',
-                            'created_by' => $this->general_library->getId()
-                        ]);
+                        // notif dokumen pendukung absensi yang ditolak untuk sementara dimatikan dulu
+
+                        // $this->db->insert('t_cron_wa', [
+                        //     'type' => 'text',
+                        //     'sendTo' => convertPhoneNumber($list_dokumen[0]['handphone']),
+                        //     'message' => $message.FOOTER_MESSAGE_CUTI,
+                        //     'jenis_layanan' => 'Dokumen Pendukung Absensi',
+                        //     'created_by' => $this->general_library->getId()
+                        // ]);
                     }
                 }
 

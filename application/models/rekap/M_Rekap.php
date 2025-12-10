@@ -4560,7 +4560,7 @@
                                 'nip' => $rs['nip'],
                                 'bulan' => $bulan,
                                 'tahun' => $tahun,
-                                'meta_data' => json_encode($rs['rekap']),
+                                'meta_data' => json_encode($rs),
                             ];
 
                             $exists = $this->db->select('*')

@@ -54,20 +54,25 @@
         <div class="div_freeze_table">
             <table style="width: 2000px; margin-top : -10px" border="1" id="table_result" class="table_result table-sm cd-table table">
                 <thead>
-                    <th class="text-center">No</th>
-                    <th class="text-center">Pegawai</th>
-                    <?php if($params['skpd'] == 0){ ?>
-                        <th class="text-center">Unit Kerja</th>
-                    <?php } ?>
-                    <th class="text-center">TMK 1</th>
-                    <th class="text-center">TMK 2</th>
-                    <th class="text-center">TMK 3</th>
-                    <th class="text-center">PKSW 1</th>
-                    <th class="text-center">PKSW 2</th>
-                    <th class="text-center">PKSW 3</th>
-                    <?php foreach($jenisdisiplin as $jd){ ?>
-                        <th class="text-center"><?=$jd['keterangan']?></th>
-                    <?php } ?>
+                    <tr>
+                        <th rowspan="2" class="text-center">No</th>
+                        <th rowspan="2" class="text-center">Pegawai</th>
+                        <?php if($params['skpd'] == 0){ ?>
+                            <th rowspan="2" class="text-center">Unit Kerja</th>
+                        <?php } ?>
+                        <th rowspan="1" colspan=18 class="text-center">Keterangan</th>
+                    </tr>
+                    <tr>
+                        <th rowspan="1" colspan="1" class="text-center">TMK 1</th>
+                        <th rowspan="1" colspan="1" class="text-center">TMK 2</th>
+                        <th rowspan="1" colspan="1" class="text-center">TMK 3</th>
+                        <th rowspan="1" colspan="1" class="text-center">PKSW 1</th>
+                        <th rowspan="1" colspan="1" class="text-center">PKSW 2</th>
+                        <th rowspan="1" colspan="1" class="text-center">PKSW 3</th>
+                        <?php foreach($jenisdisiplin as $jd){ ?>
+                            <th rowspan="1" colspan="1" class="text-center"><?=$jd['keterangan']?></th>
+                        <?php } ?>
+                    </tr>
                 </thead>
                 <tbody>
                     <?php if($result){ $no = 1; foreach($result as $rs){

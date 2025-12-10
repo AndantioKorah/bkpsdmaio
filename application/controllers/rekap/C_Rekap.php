@@ -890,7 +890,9 @@ class C_Rekap extends CI_Controller
     }
 
     public function searchRekapKehadiranPeriodik(){
+        $data['params'] = $this->input->post();
         $data['result'] = $this->rekap->searchRekapKehadiranPeriodik($this->input->post());
+        $data['jenisdisiplin'] = $this->general->getAll('m_jenis_disiplin_kerja', 1);
         $this->load->view('rekap/V_RekapKehadiranPeriodikResult', $data);
     }
 }

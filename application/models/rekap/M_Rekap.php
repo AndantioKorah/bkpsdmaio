@@ -4761,8 +4761,60 @@
         $this->rekapKehadiranPeriodik($bulan, $tahun, $res, 0);
     }
 
-    public function searchRekapKehadiranPeriodik($data){
-        dd($data);
+    public function searchRekapKehadiranPeriodik($params){
+        $result = null;
+        $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+                        d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
+                        a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk, e.id as id_m_user,
+                        a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg, g.meta_data')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                ->join('m_user e', 'a.nipbaru_ws = e.username')
+                ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+                ->join('t_rekap_kehadiran g', 'a.nipbaru_ws = g.nip')
+                ->where('a.nipbaru_ws !=', 'guest')
+                // ->where('a.skpd', $id_unitkerja)
+                ->where('id_m_status_pegawai', 1)
+                ->where('e.flag_active', 1)
+                ->where('g.tahun', $params['tahun'])
+                ->where('g.flag_active', 1)
+                ->order_by('c.eselon ASC')
+                ->order_by('f.urutan ASC')
+                ->order_by('c.jenis_jabatan ASC')
+                ->order_by('d.id_pangkat DESC');
+                // ->order_by('a.tmtcpns ASC')
+                // ->group_by('a.id_peg');
+
+        if($params['skpd'] != 0){
+            $explodeUk = explode(";", $params['skpd']);
+            $this->db->where('a.skpd', $explodeUk[0]);
+        }
+
+        if($params['bulan'] != 0){
+            $this->db->where('g.bulan', $params['bulan']);
+        }
+
+        $data = $this->db->get()->result_array();
+        if($data){
+            foreach($data as $d){
+                if(!isset($result[$d['id_m_user']])){ // jika belum ada, mappingkan
+                    $result[$d['id_m_user']] = $d;
+                    unset($result[$d['id_m_user']]['meta_data']);
+                    $result[$d['id_m_user']]['rekap'] = json_decode($d['meta_data'], true);
+                } else { // jika sudah ada, tambahkan meta_data
+                    $metaData = json_decode($d['meta_data'], true);
+                    foreach($metaData as $k => $v){
+                        // dd($k.'  '.$v.'    '.$params['bulan'].'    '.$d['nipbaru_ws']);
+                        // echo $result[$d['id_m_user']]['rekap'][$k]."<br>";
+                        $result[$d['id_m_user']]['rekap'][$k] += $v;
+                        // dd($result[$d['id_m_user']]['rekap'][$k]);
+                    }
+                }
+            }
+        }
+        return $result;
     }
 }
 ?>

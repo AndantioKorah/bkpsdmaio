@@ -623,6 +623,8 @@
 	$this->general_library->isKepalaSkpdHardcode() ||
 	stringStartWith('Asisten', $this->general_library->getNamaJabatan()) ||
 	stringStartWith('Inspektur Pembantu', $this->general_library->getNamaJabatan()) ||
+	(stringStartWith('Sekretaris', $this->general_library->getNamaJabatan()) && $this->general_library->getIdUnitKerjaPegawai() == 4011000) ||
+	stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan()) ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -669,7 +671,9 @@
 				$this->general_library->isKepalaPd() ||
 				$this->general_library->isVerifPermohonanCuti() ||
 				$this->general_library->isKepalaSkpdHardcode() ||
+				stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan()) ||
 				stringStartWith('Inspektur Pembantu', $this->general_library->getNamaJabatan()) ||
+				(stringStartWith('Sekretaris', $this->general_library->getNamaJabatan()) && $this->general_library->getIdUnitKerjaPegawai() == 4011000) ||
 				stringStartWith('Asisten', $this->general_library->getNamaJabatan())
 				){
 					?>

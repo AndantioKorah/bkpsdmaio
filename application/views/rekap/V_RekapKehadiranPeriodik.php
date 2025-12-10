@@ -40,7 +40,7 @@
                                 id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
                                 <option selected value="0">Semua</option>
                                 <?php foreach($unitkerja as $u){ ?>
-                                    <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
+                                    <option value="<?=$u['id_unitkerja'].';'.$u['nm_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -68,7 +68,7 @@
 
     $('#form_rekap_kehadiran_periodik').on('submit', function(e){
         e.preventDefault()
-        $('#div_rekap_kehadiran_periodik_result').html()
+        $('#div_rekap_kehadiran_periodik_result').html('')
         $('#div_rekap_kehadiran_periodik_result').append(divLoaderNavy)
         $.ajax({
             url: '<?=base_url("rekap/C_Rekap/searchRekapKehadiranPeriodik")?>',

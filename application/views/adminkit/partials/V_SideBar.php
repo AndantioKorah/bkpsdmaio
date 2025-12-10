@@ -712,14 +712,12 @@
 				</li>
 				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_pangkat_bkad') || $this->general_library->isHakAkses('verifikasi_berkala_opd')){ ?>
-				<?php if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')){ ?>
 				
 					<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pangkat-bkad')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Usul Pangkat BKSPDM
+						<i class="align-middle me-2 far fa-circle"></i>SK Pangkat BKSPDM
 					</a>
 				</li>
-				<?php } ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-berkala-bkad')?>">
 						<i class="align-middle me-2 far fa-circle"></i>SK Gaji Berkala

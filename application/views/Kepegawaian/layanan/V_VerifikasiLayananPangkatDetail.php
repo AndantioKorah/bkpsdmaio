@@ -70,7 +70,7 @@
       data-toggle="modal" 
       href="#modal_upload_sk"
       onclick="loadModalUploadSK('<?=$id_usul;?>','<?=$id_m_layanan;?>')" title="Ubah Data" class="btn btn-sm btn-primary ml-2"> 
-      <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK </button>
+      <i class="fa fa-upload" aria-hidden="true"> </i> Upload SK  </button>
     <?php } ?>
   <?php if($result[0]['reference_id_dok'] == null) { ;?>
   <button 
@@ -168,8 +168,10 @@
     <button onclick="kirimBkad('<?=$id_usul;?>',3)" id="btn_lihat_file" class="btn btn-sm btn-navy-outline ml-1">
     Teruskan ke BKAD <i class="fa fa-arrow-right"></i></button>
     <?php } else if($result[0]['status_layanan'] == 3) { ?>
-    <button onclick="kirimBkad('<?=$id_usul;?>',1)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
-    Batal Teruskan ke BKAD <i class="fa fa-arrow-left"></i></button>
+      <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
+    <i class="fa fa-file-trash"></i> Hapus File</button>
+    <!-- <button onclick="kirimBkad('<?=$id_usul;?>',1)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
+    Batal Teruskan ke BKAD <i class="fa fa-arrow-left"></i></button> -->
     <?php } ?>
     <?php } ?>
 
@@ -633,7 +635,7 @@
         </button>
       </div>
       <div class="modal-body" id="modal_body">
-        ...
+        ... bb
       </div>
      
     </div>

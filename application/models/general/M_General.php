@@ -1814,9 +1814,9 @@
             $expl = explode(":", $timeNow);
             $flag_cek = 0;
             if($expl[0] == "11" && $expl[1] == "00"){
-                $flag_cek = 1;
+                // $flag_cek = 1;
             } else if($expl[0] == "22" && $expl[1] == "00"){
-                $this->removeLog(3);
+                $this->removeLog(10);
             } else if($expl[0] == "08" && $expl[1] == "30"){
                 $this->notifVerifikatorPeninjauanAbsensi();
             } else {

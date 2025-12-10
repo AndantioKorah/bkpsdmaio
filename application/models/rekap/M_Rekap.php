@@ -4760,5 +4760,9 @@
 
         $this->rekapKehadiranPeriodik($bulan, $tahun, $res, 0);
     }
+
+    public function searchRekapKehadiranPeriodik($data){
+        dd($data);
+    }
 }
 ?>

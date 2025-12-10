@@ -7421,7 +7421,7 @@ public function submitEditJabatan(){
                     ->order_by('created_date', 'desc')
                     ->group_by('a.id')
                     ->get()->result_array();
-
+        
         $list_id = null;
 
         if($operatorVerif){
@@ -7471,6 +7471,12 @@ public function submitEditJabatan(){
         usort($result, function($a, $b) {
             return ($b['created_date'] > $a['created_date']);
         });
+
+        $temp = $result;
+        $result = null;
+        foreach($temp as $t){
+            $result[$t['id']] = $t;
+        }
 
         return $result;
     }

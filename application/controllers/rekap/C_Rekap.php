@@ -895,4 +895,10 @@ class C_Rekap extends CI_Controller
         $data['jenisdisiplin'] = $this->general->getAll('m_jenis_disiplin_kerja', 1);
         $this->load->view('rekap/V_RekapKehadiranPeriodikResult', $data);
     }
+
+    public function loadDetailRekapKehadiran($id_m_user, $tahun){
+        $data['result'] = $this->rekap->searchRekapKehadiranPeriodikByIdUser($id_m_user, $tahun);
+        $data['jenisdisiplin'] = $this->general->getAll('m_jenis_disiplin_kerja', 1);
+        $this->load->view('rekap/V_RekapKehadiranPeriodikDetail', $data);
+    }
 }

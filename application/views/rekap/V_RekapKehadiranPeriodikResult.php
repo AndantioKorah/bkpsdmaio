@@ -16,14 +16,13 @@
     }
 
     .classNotZero{
-        /* color: black; */
-        opacity: 1;
+        color: black !important;
         font-weight: bold;
     }
 
     .classZero{
-        /* color: grey; */
-        opacity: .3;
+        color: #e3e1e1 !important;
+        font-weight: 100;
     }
 
     /* Styles for .tr_data elements when they ARE hovered (optional, but often used for contrast) */
@@ -123,6 +122,11 @@
     })
 
     function openDetail(id){
-        alert(id)
+        $('#detail_rekap_kehadiran_modal').modal('show')
+        $('#detail_rekap_kehadiran_modal_content').html('')
+        $('#detail_rekap_kehadiran_modal_content').append(divLoaderNavy)
+        $('#detail_rekap_kehadiran_modal_content').load('<?=base_url("rekap/C_Rekap/loadDetailRekapKehadiran/")?>'+id+'/'+'<?=$params['tahun']?>', function(){
+            $('#loader').hide()
+        })
     }
 </script>

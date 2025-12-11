@@ -4556,12 +4556,12 @@
                     $saveData = null;
                     if($res){
                         foreach($res['result'] as $rs){
-                            $saveData[$rs['nip']] = [
-                                'nip' => $rs['nip'],
-                                'bulan' => $bulan,
-                                'tahun' => $tahun,
-                                'meta_data' => json_encode($rs),
-                            ];
+                            // $saveData[$rs['nip']] = [
+                            //     'nip' => $rs['nip'],
+                            //     'bulan' => $bulan,
+                            //     'tahun' => $tahun,
+                            //     'meta_data' => json_encode($rs),
+                            // ];
 
                             $exists = $this->db->select('*')
                                             ->from('t_rekap_kehadiran')
@@ -4573,11 +4573,18 @@
                             if($exists){
                                 $this->db->where('id', $exists['id'])
                                         ->update('t_rekap_kehadiran', [
-                                            'flag_active' => 0
+                                            'meta_data' => json_encode($rs)
                                         ]);
+                            } else {
+                                $this->db->insert('t_rekap_kehadiran', [
+                                    'nip' => $rs['nip'],
+                                    'bulan' => $bulan,
+                                    'tahun' => $tahun,
+                                    'meta_data' => json_encode($rs),
+                                ]);
                             }
                         }
-                        $this->db->insert_batch('t_rekap_kehadiran', $saveData);
+                        // $this->db->insert_batch('t_rekap_kehadiran', $saveData);
                     }
 
                     $existsUker = $this->db->select('*')
@@ -4763,7 +4770,7 @@
 
     public function searchRekapKehadiranPeriodik($params){
         $result = null;
-        $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+        $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan, g.updated_date as last_update_rekap,
                         d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
                         a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk, e.id as id_m_user,
                         a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg, g.meta_data')
@@ -4796,25 +4803,60 @@
             $this->db->where('g.bulan', $params['bulan']);
         }
 
+        // klik tombol refresh, hanya untuk pencarian skpd tertentu
+        // ketika klik, set flag active 0 di rekap kehadiran unitkerja
+        // buat fungsi baru untuk 1 pintu simpan data rekap kehadiran periodik
+
         $data = $this->db->get()->result_array();
         if($data){
             foreach($data as $d){
+                $metaData = json_decode($d['meta_data'], true);
                 if(!isset($result[$d['id_m_user']])){ // jika belum ada, mappingkan
                     $result[$d['id_m_user']] = $d;
                     unset($result[$d['id_m_user']]['meta_data']);
-                    $result[$d['id_m_user']]['rekap'] = json_decode($d['meta_data'], true);
+                    $result[$d['id_m_user']]['rekap'] = $metaData['rekap'];
+                    $result[$d['id_m_user']]['rekap']['last_update'] = $d['last_update_rekap'];
                 } else { // jika sudah ada, tambahkan meta_data
-                    $metaData = json_decode($d['meta_data'], true);
-                    foreach($metaData as $k => $v){
-                        // dd($k.'  '.$v.'    '.$params['bulan'].'    '.$d['nipbaru_ws']);
-                        // echo $result[$d['id_m_user']]['rekap'][$k]."<br>";
+                    foreach($metaData['rekap'] as $k => $v){
                         $result[$d['id_m_user']]['rekap'][$k] += $v;
-                        // dd($result[$d['id_m_user']]['rekap'][$k]);
+                    }
+                    if($d['last_update_rekap'] > $result[$d['id_m_user']]['rekap']['last_update']){
+                        $result[$d['id_m_user']]['rekap']['last_update'] = $d['last_update_rekap'];
                     }
                 }
             }
         }
         return $result;
     }
+
+    public function searchRekapKehadiranPeriodikByIdUser($idUser, $tahun){
+        $data = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan, g.updated_date as last_update_rekap,
+                        d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
+                        a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk, e.id as id_m_user,
+                        a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg, g.meta_data, g.bulan')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                        ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                        ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                        ->join('m_user e', 'a.nipbaru_ws = e.username')
+                        ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+                        ->join('t_rekap_kehadiran g', 'a.nipbaru_ws = g.nip')
+                        ->where('e.id', $idUser)
+                        ->where('g.tahun', $tahun)
+                        ->order_by('g.bulan')
+                        ->get()->result_array();
+
+        $result = null;
+        if($data){
+            foreach($data as $d){
+                $metaData = json_decode($d['meta_data'], true);
+                $result[$d['bulan']]['rekap'] = $metaData['rekap'];
+                $result[$d['bulan']]['rekap']['last_update'] = $d['last_update_rekap'];
+                $result['data'] = $d;
+            }
+        }
+        return $result;
+    }
+
 }
 ?>

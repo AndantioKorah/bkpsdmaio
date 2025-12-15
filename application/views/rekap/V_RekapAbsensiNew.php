@@ -5,15 +5,15 @@
     <div class="card-body" style="display: block;">
         <!-- <form id="form_upload_file" enctype="multipart/form-data" method="post"> -->
         <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="custom-content-below-database-tab" data-toggle="pill" 
+            <!-- <li class="nav-item">
+                <a class="nav-link" id="custom-content-below-database-tab" data-toggle="pill" 
                 href="#custom-content-below-database" role="tab" aria-controls="custom-content-below-database" aria-selected="true">Database</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="custom-content-below-excel-tab" data-toggle="pill" 
                 href="#custom-content-below-excel" role="tab" aria-controls="custom-content-below-excel" aria-selected="false">Excel</a>
-            </li>
-            <li class="nav-item">
+            </li> -->
+            <li class="nav-item active">
                 <a class="nav-link" id="custom-content-below-aars-tab" data-toggle="pill" 
                 href="#custom-content-below-aars" role="tab" aria-controls="custom-content-below-aars" aria-selected="false">AARS</a>
             </li>
@@ -25,10 +25,52 @@
                         <div class="col-lg-4 col-md-4">
                             <div class="form-group">
                                 <label class="bmd-label-floating">Pilih SKPD</label>
-                                <select class="form-control select2-navy" style="width: 100%"
+                                <!-- <select class="form-control select2-navy" style="width: 100%"
                                     id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
                                     <?php foreach($list_skpd as $s){ ?>
                                         <option value="<?=$s['id_unitkerja'].';'.$s['nm_unitkerja']?>"><?=$s['nm_unitkerja']?></option>
+                                    <?php } ?>
+                                </select> -->
+                                <select class="form-control select2-navy" style="width: 100%;"
+                                    id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
+                                        <?php if($list_skpd){
+                                            foreach($list_skpd as $uk){ if($uk['id_unitkerja'] != 0 && $uk['id_unitkerja'] != 5){
+                                            ?>
+                                            <?php if($this->general_library->isProgrammer() 
+                                            || $this->general_library->isAdminAplikasi() 
+                                            || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
+                                            <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
+                                                <?=$uk['nm_unitkerja']?>
+                                            </option>
+                                            <?php } else if($this->general_library->getIdUnitKerjaPegawai() == 1030525){
+                                                $list_uk_bagian_umum = [1030525, 1000001, 2000100]; //jika Bagian UMUM, buka akses untuk bagian umum, setda, staf ahli
+                                                if(in_array($uk['id_unitkerja'], $list_uk_bagian_umum)){
+                                            ?> 
+                                                <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
+                                                    <?=$uk['nm_unitkerja']?>
+                                                </option>
+                                            <?php } } else { if($skpd_plt && isset($skpd_plt[$uk['id_unitkerja']])){ // cek jika ada unitkerja plt ?>
+                                                <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
+                                                    <?=$uk['nm_unitkerja']?>
+                                                </option>
+                                            <?php } else if($uk['id_unitkerja'] == $this->general_library->getIdUnitKerjaPegawai()){  ?>
+                                            <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
+                                                <?=$uk['nm_unitkerja']?>
+                                            </option>
+                                            <?php } } ?>
+                                        <?php } } ?>
+                                        <?php 
+                                            if($this->general_library->isProgrammer() 
+                                            || $this->general_library->isAdminAplikasi() 
+                                            || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+                                            || $this->general_library->getIdUnitKerjaPegawai() == 3010000) //jika diknas, buka akses untuk Sekolah per Kecamatan
+                                            { 
+                                                foreach($skpd_diknas as $sd){
+                                        ?>
+                                            <option value="<?='sekolah_'.$sd['id_unitkerja'].';'.$sd['nm_unitkerja']?>">
+                                                <?=$sd['nm_unitkerja']?>
+                                            </option>
+                                        <?php } } ?>
                                     <?php } ?>
                                 </select>
                             </div>

@@ -623,6 +623,8 @@
 	$this->general_library->isKepalaSkpdHardcode() ||
 	stringStartWith('Asisten', $this->general_library->getNamaJabatan()) ||
 	stringStartWith('Inspektur Pembantu', $this->general_library->getNamaJabatan()) ||
+	(stringStartWith('Sekretaris', $this->general_library->getNamaJabatan()) && $this->general_library->getIdUnitKerjaPegawai() == 4011000) ||
+	stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan()) ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -669,7 +671,9 @@
 				$this->general_library->isKepalaPd() ||
 				$this->general_library->isVerifPermohonanCuti() ||
 				$this->general_library->isKepalaSkpdHardcode() ||
+				stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan()) ||
 				stringStartWith('Inspektur Pembantu', $this->general_library->getNamaJabatan()) ||
+				(stringStartWith('Sekretaris', $this->general_library->getNamaJabatan()) && $this->general_library->getIdUnitKerjaPegawai() == 4011000) ||
 				stringStartWith('Asisten', $this->general_library->getNamaJabatan())
 				){
 					?>
@@ -850,12 +854,16 @@
 		</a>
 		<ul id="rekapitulasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 		
-			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
-			|| $this->general_library->isHakAkses('menu_bidang_pekin') 
-			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-			// || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
-			|| $this->general_library->isHakAkses('rekap_absensi_aars') 
-			|| $this->general_library->isWalikota()){ ?>
+			<?php
+			if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+				// || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+				|| $this->general_library->isHakAkses('rekap_absensi_aars') 
+				|| $this->general_library->isWalikota()
+				|| $this->general_library->isHakAksesRekapAbsen()
+				){
+			?>
 			<li class="sidebar-item ">
 				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Absensi

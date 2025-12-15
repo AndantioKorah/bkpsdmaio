@@ -40,7 +40,7 @@
                                 id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
                                 <option selected value="0">Semua</option>
                                 <?php foreach($unitkerja as $u){ ?>
-                                    <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
+                                    <option value="<?=$u['id_unitkerja'].';'.$u['nm_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -60,6 +60,21 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="detail_rekap_kehadiran_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" 
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div id="modal-dialog" class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">DETAIL REKAP KEHADIRAN PEGAWAI</h6>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="detail_rekap_kehadiran_modal_content">
+            </div>
+        </div>
+    </div>
+  </div>
 <script>
     $(function(){
         $('#bulan').select2()
@@ -68,7 +83,7 @@
 
     $('#form_rekap_kehadiran_periodik').on('submit', function(e){
         e.preventDefault()
-        $('#div_rekap_kehadiran_periodik_result').html()
+        $('#div_rekap_kehadiran_periodik_result').html('')
         $('#div_rekap_kehadiran_periodik_result').append(divLoaderNavy)
         $.ajax({
             url: '<?=base_url("rekap/C_Rekap/searchRekapKehadiranPeriodik")?>',
@@ -81,4 +96,6 @@
             }
         })
     })
+
+    
 </script>

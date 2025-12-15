@@ -433,6 +433,7 @@ class General_library
             $current_url = substr($_SERVER["REQUEST_URI"], 1, strlen($_SERVER["REQUEST_URI"])-1);
             $url_exist = $this->nikita->session->userdata('list_exist_url');
             $list_url = $this->nikita->session->userdata('list_url');
+
             // dd($list_url);
             if($this->getBidangUser() == ID_BIDANG_PEKIN){
                 if(isset($list_url[$current_url])){
@@ -1050,5 +1051,9 @@ class General_library
 		return $rs;
 		// echo "<img src='".$uri."' />";
 	}
+
+    public function cekKinerja(){
+        return $this->nikita->m_kinerja->cekKinerja();
+    }
 
 }

@@ -5494,16 +5494,27 @@
      public function cekKinerja(){
      $bulan = date('n');
      $tahun = '2025';
-     $kinerja = $this->db->select('*')
+     $res = 0;
+     $this->session->set_userdata('apps_error', 'Anda belum menginput sasaran kerja bulan desember silahkan untuk menginput sasaran kerja terlebih dahulu. Terima Kasih.');
+     $kinerja = $this->db->select('a.id')
                         ->from('t_rencana_kinerja as a ')
                         ->where('a.id_m_user',$this->general_library->getId())
                         ->where('a.bulan', $bulan)
                         ->where('a.tahun', $tahun)
                         ->where('a.flag_active', 1)
                         ->get()->row_array();
+                        
+    if($kinerja){
+     $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
+    if($_SESSION['search_detail_tpp_pegawai']['presentase_pk'] < 100){ 
+    $res = 1;
+    } else {
+    $res = 2;
+    }
+    }
 
     
-    return $kinerja;
+    return $res;
      }
 
 }

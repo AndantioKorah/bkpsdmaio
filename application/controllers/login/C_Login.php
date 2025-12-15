@@ -35,6 +35,13 @@ class C_Login extends CI_Controller
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
+
+        if($this->general_library->cekKinerja() == 0){
+            redirect('kinerja/rencana');
+        } else if($this->general_library->cekKinerja() == 1) {
+            redirect('kinerja/realisasi');
+        }
+
         // $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
         $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
         // dd($data);

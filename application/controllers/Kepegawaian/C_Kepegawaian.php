@@ -19,6 +19,13 @@ class C_Kepegawaian extends CI_Controller
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
 		};
+
+		if($this->general_library->cekKinerja() == 0){
+            redirect('kinerja/rencana');
+        } else if($this->general_library->cekKinerja() == 1) {
+            redirect('kinerja/realisasi');
+        }
+		
 	}
 
 	public function autocuti($year){

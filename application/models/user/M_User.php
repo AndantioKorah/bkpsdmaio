@@ -2413,7 +2413,7 @@
                             ->get()->row_array();
         }
 
-        public function cekAksesPegawaiRekapAbsen($nip){
+        public function cekAksesPegawaiRekapAbsen($nip, $flagWa = 1){
             $hak_akses = $this->db->select('*')
                                 ->from('t_hak_akses a')
                                 ->join('m_user b', 'a.id_m_user = b.id')
@@ -2446,7 +2446,29 @@
                     b.nama_jabatan LIKE ("Lurah%"))'
                 );
             }
-            return $this->db->get()->row_array();
+            $res = $this->db->get()->row_array();
+
+            if(!$res && $flagWa == 0){
+                $res = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja')
+                                ->where('nip_kepalaskpd_hardcode', $nip)
+                                ->get()->row_array();
+            }
+
+            return $res;
+        }
+
+        public function getSkpdPlt(){
+            $res = null;
+            $data = $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            ->where('nip_kepalaskpd_hardcode', $this->general_library->getNipPegawai())
+                            ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $res['id_unitkerja'] = $d;
+                }
+            }
         }
 
         public function loadDetailPdmUser(){

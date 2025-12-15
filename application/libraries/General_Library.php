@@ -332,6 +332,10 @@ class General_library
         return $result;
     }
 
+    public function isHakAksesRekapAbsen(){
+        return $this->nikita->m_user->cekAksesPegawaiRekapAbsen($this->getNipPegawai(), 0);
+    }
+
     public function getNipPegawai(){
         return $this->userLoggedIn['nipbaru_ws'];
     }

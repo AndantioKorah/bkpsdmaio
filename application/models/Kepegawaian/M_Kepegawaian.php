@@ -7468,14 +7468,16 @@ public function submitEditJabatan(){
             }
         }
 
-        usort($result, function($a, $b) {
-            return ($b['created_date'] > $a['created_date']);
-        });
+        if($result){
+            usort($result, function($a, $b) {
+                return ($b['created_date'] > $a['created_date']);
+            });
 
-        $temp = $result;
-        $result = null;
-        foreach($temp as $t){
-            $result[$t['id']] = $t;
+            $temp = $result;
+            $result = null;
+            foreach($temp as $t){
+                $result[$t['id']] = $t;
+            }
         }
 
         return $result;

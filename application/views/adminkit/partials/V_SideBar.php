@@ -854,12 +854,16 @@
 		</a>
 		<ul id="rekapitulasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 		
-			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
-			|| $this->general_library->isHakAkses('menu_bidang_pekin') 
-			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-			// || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
-			|| $this->general_library->isHakAkses('rekap_absensi_aars') 
-			|| $this->general_library->isWalikota()){ ?>
+			<?php
+			if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+				// || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+				|| $this->general_library->isHakAkses('rekap_absensi_aars') 
+				|| $this->general_library->isWalikota()
+				|| $this->general_library->isHakAksesRekapAbsen()
+				){
+			?>
 			<li class="sidebar-item ">
 				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Absensi

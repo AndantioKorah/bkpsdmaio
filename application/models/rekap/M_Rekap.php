@@ -4532,8 +4532,8 @@
             $unitkerja = $this->db->select('a.*')
                                 ->from('db_pegawai.unitkerja a')
                                 ->join('db_pegawai.pegawai b', 'a.id_unitkerja = b.skpd')
-                                ->join("t_rekap_kehadiran_unitkerja b", "a.id_unitkerja = b.id_unitkerja AND b.bulan = ".formatBulan($bulan)." AND b.tahun = ".$tahun." AND b.flag_active = 1", "left")
-                                ->where('b.id_unitkerja IS NULL')
+                                ->join("t_rekap_kehadiran_unitkerja c", "a.id_unitkerja = c.id_unitkerja AND c.bulan = ".formatBulan($bulan)." AND c.tahun = ".$tahun." AND c.flag_active = 1", "left")
+                                ->where('c.id_unitkerja IS NULL')
                                 ->where('a.id_unitkerja !=', 0)
                                 ->where('a.id_unitkerja !=', 5)
                                 ->where('b.id_m_status_pegawai', 1)
@@ -4556,12 +4556,13 @@
                     $saveData = null;
                     if($res){
                         foreach($res['result'] as $rs){
-                            // $saveData[$rs['nip']] = [
-                            //     'nip' => $rs['nip'],
-                            //     'bulan' => $bulan,
-                            //     'tahun' => $tahun,
-                            //     'meta_data' => json_encode($rs),
-                            // ];
+                            // $lockTpp = $this->db->select('id')
+                            //                     ->from('t_lock_tpp')
+                            //                     ->where('id_unitkerja', $uk['id_unitkerja'])
+                            //                     ->where('flag_active', 1)
+                            //                     ->where('bulan', $bulan)
+                            //                     ->where('tahun', $tahun)
+                            //                     ->get()->row_array();
 
                             $exists = $this->db->select('*')
                                             ->from('t_rekap_kehadiran')
@@ -4571,10 +4572,12 @@
                                             ->where('flag_active', 1)
                                             ->get()->row_array();
                             if($exists){
-                                $this->db->where('id', $exists['id'])
+                                if($exists['bulan'] == date('m') && $exists['tahun'] == date('Y')){ // kalau data sudah ada dan masih pada bulan yang berjalan maka update
+                                    $this->db->where('id', $exists['id'])
                                         ->update('t_rekap_kehadiran', [
                                             'meta_data' => json_encode($rs)
                                         ]);
+                                }
                             } else {
                                 $this->db->insert('t_rekap_kehadiran', [
                                     'nip' => $rs['nip'],
@@ -4594,18 +4597,19 @@
                                     ->where('tahun', $tahun)
                                     ->where('flag_active', 1)
                                     ->get()->row_array();
+
                     if($existsUker){
                         $this->db->where('id', $existsUker['id'])
                                 ->update('t_rekap_kehadiran_unitkerja', [
                                     'flag_active' => 0
                                 ]);
+                    } else {
+                        $this->db->insert('t_rekap_kehadiran_unitkerja', [
+                            'id_unitkerja' => $uk['id_unitkerja'],
+                            'bulan' => $bulan,
+                            'tahun' => $tahun
+                        ]);
                     }
-
-                    $this->db->insert('t_rekap_kehadiran_unitkerja', [
-                        'id_unitkerja' => $uk['id_unitkerja'],
-                        'bulan' => $bulan,
-                        'tahun' => $tahun
-                    ]);
                 }
             }
         }

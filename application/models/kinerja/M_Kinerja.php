@@ -5490,5 +5490,20 @@
             echo "customDirFileBacked: ".count($customDirFileBacked)."<br>";
         }
     }
+
+     public function cekKinerja(){
+     $bulan = date('n');
+     $tahun = '2025';
+     $kinerja = $this->db->select('*')
+                        ->from('t_rencana_kinerja as a ')
+                        ->where('a.id_m_user',$this->general_library->getId())
+                        ->where('a.bulan', $bulan)
+                        ->where('a.tahun', $tahun)
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+
     
+    return $kinerja;
+     }
+
 }

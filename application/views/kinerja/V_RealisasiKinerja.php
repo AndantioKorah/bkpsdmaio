@@ -174,6 +174,7 @@
     autoclose: true,
     todayHighlight: true,
     todayBtn: true,
+    startDate: fd, 
     endDate: new Date()
     })
     } else {

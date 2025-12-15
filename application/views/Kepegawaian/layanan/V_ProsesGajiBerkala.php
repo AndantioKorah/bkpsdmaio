@@ -788,7 +788,7 @@
         </button>
       </div>
       <div class="modal-body">
-         <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKKgb')?>" >
+         <form method="post" target="_blank" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKKgb')?>" >
          <div class="form-group">
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$profil_pegawai['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>" readonly>

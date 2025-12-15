@@ -19,13 +19,12 @@ class C_Kepegawaian extends CI_Controller
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
 		};
+		// dd($_SESSION);
 
-		if($this->general_library->cekKinerja() == 0){
-            redirect('kinerja/rencana');
-        } else if($this->general_library->cekKinerja() == 1) {
-            redirect('kinerja/realisasi');
-        }
-		
+		// if($this->general_library->cekKinerja() == null) {
+        //     redirect('kinerja/realisasi');
+        //   }
+
 	}
 
 	public function autocuti($year){
@@ -585,6 +584,11 @@ class C_Kepegawaian extends CI_Controller
 	}
 	
 	public function profilPegawai($nip){
+
+		if($this->general_library->cekKinerja() == null) {
+            redirect('kinerja/realisasi');
+        }
+
 		if(!$this->general_library->isProgrammer() 
 		&& !$this->general_library->isAdminAplikasi() 
 		&& !$this->general_library->isHakAkses('akses_profil_pegawai')
@@ -626,6 +630,10 @@ class C_Kepegawaian extends CI_Controller
 
 	public function uploadDokumen($page = null){
 		
+	   if($this->general_library->cekKinerja() == null) {
+            redirect('kinerja/realisasi');
+        }
+
         // $this->kepegawaian->copyfoto();
 		
         // $data['dokumen'] = $this->kepegawaian->get_datatables_query_lihat_dokumen_pns()
@@ -979,6 +987,11 @@ class C_Kepegawaian extends CI_Controller
 
 
 	public function layanan(){
+
+		if($this->general_library->cekKinerja() == null) {
+            redirect('kinerja/realisasi');
+        }
+
 		$data['jenis_layanan'] = $this->kepegawaian->getJenisLayanan();
         render('kepegawaian/V_Layanan', '', '', $data);
     }

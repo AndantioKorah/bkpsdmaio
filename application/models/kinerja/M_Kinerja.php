@@ -5492,28 +5492,41 @@
     }
 
      public function cekKinerja(){
+
+    //  $data['tpp'] = $this->general_library->getPaguTppPegawai('11','2025');
+    //  dd($_SESSION['live_tpp']['presentase_pk']);
+
+
      $bulan = date('n');
      $tahun = '2025';
-     $res = 0;
-     $this->session->set_userdata('apps_error', 'Anda belum menginput sasaran kerja bulan desember silahkan untuk menginput sasaran kerja terlebih dahulu. Terima Kasih.');
-     $kinerja = $this->db->select('a.id')
+
+     $res = 1;
+
+    if($bulan == 12 && $tahun == '2025'){
+    $kinerja = $this->db->select('sum(a.target_kuantitas) as target, sum(a.total_realisasi) as realisasi')
                         ->from('t_rencana_kinerja as a ')
                         ->where('a.id_m_user',$this->general_library->getId())
-                        ->where('a.bulan', $bulan)
+                        ->where('a.bulan', 12)
                         ->where('a.tahun', $tahun)
                         ->where('a.flag_active', 1)
                         ->get()->row_array();
-                        
-    if($kinerja){
-     $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
-    if($_SESSION['search_detail_tpp_pegawai']['presentase_pk'] < 100){ 
-    $res = 1;
+    if($kinerja['target']){
+    $realisasi = $kinerja['realisasi'] * 100 / $kinerja['target'];         
+    if($realisasi < 100) {
+    $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
+    $res = null;
     } else {
-    $res = 2;
+    $res = 1;
     }
-    }
+    } else {
+    $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
+    $res = null;
+    }  
 
-    
+     }
+      
+
+
     return $res;
      }
 

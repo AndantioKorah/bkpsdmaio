@@ -36,11 +36,9 @@ class C_Login extends CI_Controller
             redirect('logout');
         };
 
-        if($this->general_library->cekKinerja() == 0){
-            redirect('kinerja/rencana');
-        } else if($this->general_library->cekKinerja() == 1) {
-            redirect('kinerja/realisasi');
-        }
+     
+
+      
 
         // $data['tpp'] = $this->general_library->getPaguTppPegawai(date('m'), date('Y'));
         $data['chart'] = $this->m_general->getDataChartDashboardAdmin();
@@ -70,6 +68,12 @@ class C_Login extends CI_Controller
          $data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
         //  dd($data['mbidang']);
         }
+
+        
+          if($this->general_library->cekKinerja() == null) {
+            redirect('kinerja/realisasi');
+          }
+
         render('login/V_Welcome', '', '', $data);
     }
 

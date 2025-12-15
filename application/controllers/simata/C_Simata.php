@@ -14,11 +14,9 @@ class C_Simata extends CI_Controller
             redirect('logout');
         };
         
-        if($this->general_library->cekKinerja() == 0){
-            redirect('kinerja/rencana');
-        } else if($this->general_library->cekKinerja() == 1) {
+      if($this->general_library->cekKinerja() == null) {
             redirect('kinerja/realisasi');
-        }
+       }
     }
 
     public function masterIndikator(){

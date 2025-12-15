@@ -3898,5 +3898,30 @@
             }
         }
 
+        public function rekapCutiDesember(){
+            $tanggalAkhir = "2025-12-19";
+            $tanggalAwal = "2025-12-01";
+            $hariKerja = countHariKerjaDateToDate($tanggalAwal, $tanggalAkhir);
+            dd($hariKerja);
+
+            $data = $this->db->select('b.id_m_user, b.tanggal_awal, b.tanggal_akhir')
+                            ->from('t_pengajuan_cuti a')
+                            ->join('m_user b', 'a.id_m_user = b.id')
+                            ->where('b.flag_active', 1)
+                            ->where('a.flag_active', 1)
+                            ->where('a.flag_ditolak', 0)
+                            ->where('a.tanggal_akhir >=', $tanggalAkhir)
+                            ->where("(a.tanggal_mulai <= '".$tanggalAwal."' OR
+                                    a.tanggal_mulai BETWEEN '".$tanggalAwal."' AND '".$tanggalAkhir."')")
+                            ->where('a.id_cuti', "00")
+                            ->get()->result_array();
+
+            if($data){
+                foreach($data as $d){
+                    // cek kalau melebihi 7 hari kerja, input di t_potong_cuti
+                }
+            }
+        }
+
 	}
 ?>

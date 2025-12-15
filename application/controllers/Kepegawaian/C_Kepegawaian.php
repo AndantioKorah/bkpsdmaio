@@ -1738,6 +1738,11 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function verifikasiPermohonanCuti(){
+
+		if($this->general_library->cekKinerja() == null) {
+            redirect('kinerja/realisasi');
+          }
+		  
 		// $data['unitkerja'] = $this->general->getGroupUnitKerja($this->general_library->getIdUnitKerjaPegawai());
 		$data['unitkerja'] = null;
 		// if($this->general_library->isKepalaBkpsdm() 

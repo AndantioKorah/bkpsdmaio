@@ -5494,14 +5494,13 @@
      public function cekKinerja(){
 
     //  $data['tpp'] = $this->general_library->getPaguTppPegawai('11','2025');
-    //  dd($_SESSION['live_tpp']['presentase_pk']);
 
 
      $bulan = date('n');
      $tahun = '2025';
 
      $res = 1;
-
+    if($_SESSION['user_logged_in'][0]['flag_terima_tpp'] == 1){
     if($bulan == 12 && $tahun == '2025'){
     $kinerja = $this->db->select('sum(a.target_kuantitas) as target, sum(a.total_realisasi) as realisasi')
                         ->from('t_rencana_kinerja as a ')
@@ -5524,6 +5523,8 @@
     }  
 
     }
+    } 
+    
       
     return $res;
     }

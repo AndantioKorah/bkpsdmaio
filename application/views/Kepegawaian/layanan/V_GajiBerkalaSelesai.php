@@ -60,7 +60,7 @@
                   <option value="3" >Selesai BKPSDM</option>
                   <option value="6" >ACC Operator SIMGAJI</option>
                   <option value="4" >Diterima BKAD</option>
-                  <option value="5" >Ditolak BKAD</option>
+                  <option value="5" >Ditolak Operator / BKAD</option>
                 
               </select>
             </div>

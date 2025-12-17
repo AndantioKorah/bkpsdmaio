@@ -13189,7 +13189,7 @@ public function getFileForVerifLayanan()
             $datainsKgb["tmtgajiberkala"] = $dataKgb[0]['tmtgajiberkala'];
             $datainsKgb["gajilama"] = $dataKgb[0]['gajilama'];
             $datainsKgb["gajibaru"] = $dataKgb[0]['gajibaru'];
-            $datainsKgb["status"] = 3;
+            $datainsKgb["status"] = 2;
             $datainsKgb["gambarsk"] = $data['file_name'];
             $url_file = "arsipgjberkala/".$data['nama_file'];
 

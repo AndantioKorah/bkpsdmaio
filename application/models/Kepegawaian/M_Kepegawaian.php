@@ -5953,11 +5953,16 @@ public function submitEditJabatan(){
     }
 
     public function getSisaCuti($id_m_user = 0){
+        $this->db->trans_begin();
+
         if($id_m_user == 0){
             $id_m_user = $this->general_library->getId();
         }
         $total_year = 3;
         $tahunIni = date('Y');
+        // if($this->general_library->isProgrammer()){
+        //     $tahunIni = 2026;
+        // }
         $yearlist = null;
         for($i = $total_year-1; $i >= 0; $i--){
             $tahun = $tahunIni-$i;
@@ -6000,17 +6005,37 @@ public function submitEditJabatan(){
                                 ->where('flag_potong_cuti', 1)
                                 ->get()->result_array();
 
+                    $dataPotongCuti = $this->db->select('*')
+                                        ->from('t_potong_cuti')
+                                        ->where('id_m_user', $id_m_user)
+                                        ->where('flag_active', 1)
+                                        ->where('flag_executed', 0)
+                                        ->get()->row_array();
+                    $potongCuti = $dataPotongCuti ? $dataPotongCuti['jumlah'] : 0;
+                    if($dataPotongCuti){
+                        $this->db->where('id', $dataPotongCuti['id'])
+                                ->update('t_potong_cuti', [
+                                    'flag_executed' => 1
+                                ]);
+                    }
+
                     $dataInsert = [
                         'id_m_user' => $id_m_user,
                         'tahun' => $tahun,
                         'jatah' => $jatah,
-                        'sisa' => $jatah - count($cuti_bersama),
+                        'sisa' => $jatah - count($cuti_bersama) - $potongCuti,
                         'created_by' => $this->general_library->getId(),
                     ];
                 }
                 $this->db->insert('t_sisa_cuti', $dataInsert);
                 $yearlist[$tahun] = $dataInsert;
             }
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+        } else {
+            $this->db->trans_commit();
         }
         return $yearlist;
     }

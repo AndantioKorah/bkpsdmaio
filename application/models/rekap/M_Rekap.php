@@ -1734,6 +1734,8 @@
 
     public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0, $flag_penerima_tpp = 1){
         $batasHitungAbsen = "2025-12-19"; // tahun 2025, batas hitung absen hanya sampai 19 desember 2025
+        $startExcludeCuti = "2025-12-01";
+        $endExcludeCuti = "2025-12-19";
         // dd($flag_alpha);
         $rs = null;
         $periode = null;
@@ -2039,11 +2041,12 @@
                 ->where_not_in('id', [11, 12])
                 ->get()->result_array();
 
-        $this->db->select('b.username as nip, a.tanggal, a.bulan, a.tahun, a.pengurangan, d.keterangan, a.keterangan as keterngn')
+        $this->db->select('b.username as nip, a.tanggal, a.bulan, a.tahun, a.pengurangan, d.keterangan, a.keterangan as keterngn, e.id_cuti')
                 ->from('t_dokumen_pendukung a')
                 ->join('m_user b', 'a.id_m_user = b.id')
                 ->join('db_pegawai.pegawai c','b.username = c.nipbaru_ws')
                 ->join('m_jenis_disiplin_kerja d', 'a.id_m_jenis_disiplin_kerja = d.id')
+                ->join('t_pengajuan_cuti e', 'a.random_string = e.random_string AND a.id_m_user = e.id_m_user', 'left')
                 ->where('a.bulan', floatval($data['bulan']))
                 ->where('a.tahun', floatval($data['tahun']))
                 ->where('a.flag_active', 1)
@@ -2063,6 +2066,7 @@
         $dokpen = null;
 
         $data['list_dokpen'] = null;
+        $excludeCuti = null;
 
         if($tmp_dokpen){
             foreach($tmp_dokpen as $dok){
@@ -2083,6 +2087,14 @@
 
                     $data['list_dokpen'][$dok['nip']][] = $dok;
                     $data['list_dokpen_per_date'][$dok['nip']][$date_dok][] = $dok;
+
+                    if($date_dok >= $startExcludeCuti && $date_dok <= $endExcludeCuti && $dok['id_cuti'] == "00"){
+                        if(isset($excludeCuti[$dok['nip']])){
+                            $excludeCuti[$dok['nip']]++;
+                        } else {
+                            $excludeCuti[$dok['nip']] = 1;
+                        }
+                    }
                 }
             }
         }
@@ -2161,6 +2173,7 @@
                         $lp[$tr['nip']]['rekap'][$dk['keterangan']] = 0;
                     }
                 }
+                $lp[$tr['nip']]['rekap']['exclude_cuti'] = isset($excludeCuti[$tr['nip']]) ? $excludeCuti[$tr['nip']] : 0;
                 foreach($list_hari as $l){
                     $isNotTmtAbsen = 0;
                     $flagIgnoreAbsen = 0;
@@ -2683,10 +2696,19 @@
                     $result['result'][$tr['nip']]['nama_jabatan'] = $tr['nama_jabatan'];
                     $result['result'][$tr['nip']]['golongan'] = $tr['golongan'];
                     $result['result'][$tr['nip']]['rekap']['jhk'] = $tr['rekap']['jhk'];
+                    
                     $result['result'][$tr['nip']]['rekap']['hadir'] = $tr['rekap']['hadir'];
                     $result['result'][$tr['nip']]['rekap']['tidak_hadir'] = 0;
-                    $result['result'][$tr['nip']]['rekap']['presentase_kehadiran'] = $tr['rekap']['hadir'] != 0 ? ($tr['rekap']['hadir'] / $tr['rekap']['jhk']) * 100 : 0;
                     
+                    // $result['result'][$tr['nip']]['rekap']['hadir'] = $tr['rekap']['hadir'] + $tr['rekap']['exclude_cuti'];
+                    // if($result['result'][$tr['nip']]['rekap']['hadir'] > $tr['rekap']['jhk']){
+                    //     $result['result'][$tr['nip']]['rekap']['hadir'] = $tr['rekap']['jhk'];
+                    // }
+                    // $result['result'][$tr['nip']]['rekap']['tidak_hadir'] = 0 - $tr['rekap']['exclude_cuti'];
+                    $result['result'][$tr['nip']]['rekap']['presentase_kehadiran'] = $tr['rekap']['hadir'] != 0 ? (($tr['rekap']['hadir'] +  $tr['rekap']['exclude_cuti']) / $tr['rekap']['jhk']) * 100 : 0;
+                    if($result['result'][$tr['nip']]['rekap']['presentase_kehadiran'] > 100){
+                        $result['result'][$tr['nip']]['rekap']['presentase_kehadiran'] = 100;
+                    }
                     $result['result'][$tr['nip']]['rekap']['capaian_disiplin_kerja'] = 0;
                     $result['result'][$tr['nip']]['rekap']['capaian_bobot_disiplin_kerja'] = 0;
                     $total_pengurangan = 0;
@@ -3115,12 +3137,24 @@
                     $result[$l['nipbaru_ws']]['presentase_tpp'] = formatTwoMaxDecimal(
                         floatval($result[$l['nipbaru_ws']]['bobot_produktivitas_kerja']) + 
                         floatval($result[$l['nipbaru_ws']]['bobot_disiplin_kerja']));
+                    
 
-                    if($result[$l['nipbaru_ws']]['presentase_kehadiran'] < 25){
-                        $result[$l['nipbaru_ws']]['presentase_tpp'] = 0;
-                    } else if($result[$l['nipbaru_ws']]['presentase_kehadiran'] >= 25 && $result[$l['nipbaru_ws']]['presentase_kehadiran'] < 50){
-                        $result[$l['nipbaru_ws']]['presentase_tpp'] *= 0.5;
-                    }
+                    // untuk desember tahun 2025, cek yang cuti tahunan dan menyebabkan kehadiran < 50%, agar dibuatkan kehadirannya menjadi 100%
+                    // if($param['bulan'] != 12 && $param['tahun'] != 2025){
+                    // if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == '197608072003122009'){
+                    //     dd($result[$l['nipbaru_ws']]);
+                    // }
+
+                        if($result[$l['nipbaru_ws']]['presentase_kehadiran'] < 25){
+                            $result[$l['nipbaru_ws']]['presentase_tpp'] = 0;
+                        } else if($result[$l['nipbaru_ws']]['presentase_kehadiran'] >= 25 && $result[$l['nipbaru_ws']]['presentase_kehadiran'] < 50){
+                            $result[$l['nipbaru_ws']]['presentase_tpp'] *= 0.5;
+                        }
+                    // } else {
+                        // if($this->general_library->isProgrammer()){
+                        //     dd(json_encode($data_rekap));
+                        // }
+                    // }
 
                     // if($this->general_library->getId() == 16){
                     //     dd(json_encode($data_rekap));
@@ -3474,7 +3508,6 @@
 
                 $result[$p['nipbaru_ws']]['presentase_tpp'] = floatval($result[$p['nipbaru_ws']]['bobot_produktivitas_kerja']) + $result[$p['nipbaru_ws']]['bobot_disiplin_kerja'];
               
-
                 if($result[$p['nipbaru_ws']]['presentasi_kehadiran'] < 25){
                     $result[$p['nipbaru_ws']]['presentase_tpp'] = 0;
                 } else if($result[$p['nipbaru_ws']]['presentasi_kehadiran'] >= 25 && $result[$p['nipbaru_ws']]['presentasi_kehadiran'] < 50){

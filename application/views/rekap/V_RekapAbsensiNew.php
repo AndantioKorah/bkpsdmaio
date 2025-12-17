@@ -14,13 +14,13 @@
                 href="#custom-content-below-excel" role="tab" aria-controls="custom-content-below-excel" aria-selected="false">Excel</a>
             </li> -->
             <li class="nav-item active">
-                <a class="nav-link" id="custom-content-below-aars-tab" data-toggle="pill" 
+                <a class="nav-link" id="custom-content-below-database-tab" data-toggle="pill" 
                 href="#custom-content-below-aars" role="tab" aria-controls="custom-content-below-aars" aria-selected="false">AARS</a>
             </li>
         </ul>
         <div class="tab-content mt-3" id="custom-content-below-tabContent">
-            <div class="tab-pane fade show active" id="custom-content-below-database" role="tabpanel" aria-labelledby="custom-content-below-database-tab">
-                <form id="search_form" enctype="multipart/form-data" method="post">
+            <div class="tab-pane fade show active" id="custom-content-below-aars" role="tabpanel" aria-labelledby="custom-content-below-database-tab">
+                <form id="search_form_aars" enctype="multipart/form-data" method="post">
                     <div class="row">
                         <div class="col-lg-4 col-md-4">
                             <div class="form-group">
@@ -110,7 +110,7 @@
                 </form>
                 <div class="col-12">
                     <hr>
-                    <div id="result_search" class="row mt-3 table-responsive">
+                    <div id="result_search_aars" class="row mt-3 table-responsive">
                     </div>
                 </div>
             </div>
@@ -143,7 +143,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="custom-content-below-aars" role="tabpanel" aria-labelledby="custom-content-below-aars-tab">
+            <!-- <div class="tab-pane fade" id="custom-content-below-aars" role="tabpanel" aria-labelledby="custom-content-below-aars-tab">
                 <form id="search_form_aars" enctype="multipart/form-data" method="post">
                     <div class="row">
                         <div class="col-lg-4 col-md-4">
@@ -195,7 +195,7 @@
                     <div id="result_search_aars" class="row mt-3 table-responsive">
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

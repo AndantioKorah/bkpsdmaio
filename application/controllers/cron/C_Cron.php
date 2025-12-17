@@ -83,7 +83,7 @@ class C_Cron extends CI_Controller
         $this->general->logCron('cronAsync');
         $this->general->cronAsync();
 
-        $this->rekap->rekapKehadiranPeriodik();
+        // $this->rekap->rekapKehadiranPeriodik();
     }
 
     public function getOauthToken(){

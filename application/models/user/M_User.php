@@ -3902,11 +3902,13 @@
             $tanggalAkhir = "2025-12-19";
             $tanggalAwal = "2025-12-01";
             $hariKerja = countHariKerjaDateToDate($tanggalAwal, $tanggalAkhir);
-            dd($hariKerja);
+            $max = intval(count($hariKerja[3]) / 2);
+            // dd($hariKerja);
 
-            $data = $this->db->select('b.id_m_user, b.tanggal_awal, b.tanggal_akhir')
+            $data = $this->db->select('a.id_m_user, a.tanggal_mulai, a.tanggal_akhir, a.id as id_t_pengajuan_cuti, c.id as id_t_potong_cuti')
                             ->from('t_pengajuan_cuti a')
                             ->join('m_user b', 'a.id_m_user = b.id')
+                            ->join('t_potong_cuti c', 'b.id = c.id_m_user AND c.flag_active = 1', 'left')
                             ->where('b.flag_active', 1)
                             ->where('a.flag_active', 1)
                             ->where('a.flag_ditolak', 0)
@@ -3914,12 +3916,32 @@
                             ->where("(a.tanggal_mulai <= '".$tanggalAwal."' OR
                                     a.tanggal_mulai BETWEEN '".$tanggalAwal."' AND '".$tanggalAkhir."')")
                             ->where('a.id_cuti', "00")
+                            ->where('a.flag_ds_cuti', 1)
                             ->get()->result_array();
 
             if($data){
+                $res = null; 
                 foreach($data as $d){
-                    // cek kalau melebihi 7 hari kerja, input di t_potong_cuti
+                    if(!$d['id_t_potong_cuti']){ // jika null
+                        // cek kalau melebihi 7 hari kerja, input di t_potong_cuti
+                        $cutiHariKerja = countHariKerjaDateToDate($d['tanggal_mulai'], $tanggalAkhir);
+                        $presentaseKehadiran = ((count($hariKerja[3]) - count($cutiHariKerja[3])) / count($hariKerja[3])) * 100;
+                        if($presentaseKehadiran < 50){
+                            $res[$d['id_t_pengajuan_cuti']] = $d;
+                            $res[$d['id_t_pengajuan_cuti']]['jumlah_hari_cuti'] = $cutiHariKerja[3];
+                            $res[$d['id_t_pengajuan_cuti']]['presentase_kehadiran'] = $presentaseKehadiran;
+
+                            $this->db->insert('t_potong_cuti', [
+                                'id_m_user' => $d['id_m_user'],
+                                'tahun' => 2026,
+                                'jumlah' =>  count($cutiHariKerja[3]) - $max,
+                                'meta_data' => json_encode($res[$d['id_t_pengajuan_cuti']])
+                            ]);
+                        }
+                    }
                 }
+                $jumlah = $res ? count($res) : 0;
+                dd("inserted ".$jumlah." data");
             }
         }
 

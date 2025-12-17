@@ -13,11 +13,6 @@ class C_VerifKinerja extends CI_Controller
             redirect('logout');
         };
 
-        if($this->general_library->cekKinerja() == 0){
-            redirect('kinerja/rencana');
-        } else if($this->general_library->cekKinerja() == 1) {
-            redirect('kinerja/realisasi');
-        }
     }
 
     public function verifKinerja(){

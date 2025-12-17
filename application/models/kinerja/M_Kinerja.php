@@ -5039,6 +5039,8 @@
             ->where('b.flag_active', 1)
             // ->where('b.id', 16)
             ->order_by('c.eselon, b.username')
+             ->where('month(a.tmt_hitung_absen)', >= $data['bulan'])
+             ->where('year(a.tmt_hitung_absen)', $data['tahun'])
             ->where('a.id_m_status_pegawai', 1);
             // ->where('a.flag_terima_tpp', 1);
             
@@ -5491,7 +5493,7 @@
         }
     }
 
-     public function cekKinerja(){
+    public function cekKinerja(){
 
     //  $data['tpp'] = $this->general_library->getPaguTppPegawai('11','2025');
 
@@ -5521,7 +5523,6 @@
     $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
     $res = null;
     }  
-
     }
     } 
     

@@ -187,7 +187,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     
   <div class="form-group">
     <label>Tahun</label>
-    <input class="form-control yearpicker" type="text" id="gb_masa_kerja" name="skp_tahun" autocomplete="off"  required/>
+    <input class="form-control yearpicker" type="text" id="skp_tahun" name="skp_tahun" autocomplete="off"  required/>
   </div>
 
   <div class="form-group">
@@ -268,6 +268,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 
 <script type="text/javascript">
 
+   
 
 $(function(){
   $(".select2").select2({   
@@ -276,22 +277,35 @@ $(function(){
 		allowClear: true,
 	});
       loadListSkp()
+
     })
 
     
 
 
-    $('.datepicker').datepicker({
-        format: 'dd-mm-yyyy',
+
+    // $('.datepicker').datepicker({
+    // format: 'yyyy',
     // viewMode: "years", 
     // minViewMode: "years",
-    // orientation: 'bottom',
-    autoclose: true
-    });
+    // // orientation: 'bottom',
+    // autoclose: true
+    // });
 
+
+     $('.yearpicker').change(function() {
+        // Code to run when the value changes
+        var selectedValue = $(this).val(); // Get the new value
+        if(selectedValue == 2024){
+          errortoast("Untuk SKP 2024 silahkan lakukan Sinkron SIASN")
+          $('.yearpicker').datepicker('setDate', null);
+        } 
+    });
+   
+     
     var statuspeg = "<?= $profil_pegawai['statuspeg']?>";
     var end = new Date();
-    end.setFullYear(end.getFullYear() - 2);
+    // end.setFullYear(end.getFullYear() - 2);
     if(statuspeg == 1 || statuspeg == 2){
     $('.yearpicker').datepicker({
     format: 'yyyy',

@@ -70,9 +70,9 @@ class C_Login extends CI_Controller
         }
 
         
-          if($this->general_library->cekKinerja() == null) {
-            redirect('kinerja/realisasi');
-          }
+        //   if($this->general_library->cekKinerja() == null) {
+        //     redirect('kinerja/realisasi');
+        //   }
 
         render('login/V_Welcome', '', '', $data);
     }

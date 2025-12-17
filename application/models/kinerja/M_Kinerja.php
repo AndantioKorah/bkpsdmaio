@@ -5031,6 +5031,8 @@
             ->where('id_unitkerja', $skpd[0])
             ->get()->row_array();
             
+            $tanggal = $data['tahun'].'-'.$data['bulan'].'-30';
+
             $this->db->select('a.statuspeg,b.username as nip, a.nama, a.gelar1, a.gelar2, b.id, c.nama_jabatan, c.eselon, c.kelas_jabatan')
             ->from('db_pegawai.pegawai a')
             ->join('m_user b', 'a.nipbaru_ws = b.username')
@@ -5039,8 +5041,7 @@
             ->where('b.flag_active', 1)
             // ->where('b.id', 16)
             ->order_by('c.eselon, b.username')
-             ->where('month(a.tmt_hitung_absen)', >= $data['bulan'])
-             ->where('year(a.tmt_hitung_absen)', $data['tahun'])
+             ->where('a.tmt_hitung_absen <', $tanggal)
             ->where('a.id_m_status_pegawai', 1);
             // ->where('a.flag_terima_tpp', 1);
             

@@ -13937,6 +13937,7 @@ public function getFileForVerifLayanan()
         $id_berkala = $datapost['id_berkala'];
         $data["status"] = $datapost["status"];
         $data["keterangan_bkad"] = $datapost['keterangan'];
+        $data["updated_by"] = $this->general_library->getId();
         $this->db->where('id', $id_berkala)
                 ->update('t_gajiberkala', $data);
 

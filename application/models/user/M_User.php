@@ -2443,6 +2443,7 @@
                     b.nama_jabatan LIKE ("Kepala Sekolah%") OR
                     b.nama_jabatan LIKE ("Kepala Taman%") OR
                     b.nama_jabatan LIKE ("Kepala Sub Bagian Tata Usaha%") OR
+                    b.nama_jabatan LIKE ("Kepala Puskesmas%") OR
                     b.nama_jabatan LIKE ("Lurah%"))'
                 );
             }

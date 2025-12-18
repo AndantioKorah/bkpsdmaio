@@ -5041,7 +5041,7 @@
             ->where('b.flag_active', 1)
             // ->where('b.id', 16)
             ->order_by('c.eselon, b.username')
-             ->where('a.tmt_hitung_absen <', $tanggal)
+             ->where('a.tmtcpns <', $tanggal)
             ->where('a.id_m_status_pegawai', 1);
             // ->where('a.flag_terima_tpp', 1);
             

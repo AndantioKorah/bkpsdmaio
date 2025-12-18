@@ -569,10 +569,10 @@ ol {
                 class="fas fa-<?php if($sk_jabatan_fungsional_pertama) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>
-                <a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
-                onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
-                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir* <i
-                class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
+                <a class="<?php if($sk_jf_asal) echo 'select'; else echo 'unselect';?>" <?php if($sk_jf_asal) { ?>
+                onclick="viewBerkasPangkat('<?=$sk_jf_asal['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir dari Instansi Asal (Upload di Arsip Lainnya)* <i
+                class="fas fa-<?php if($sk_jf_asal) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>
                 <a class="<?php if($sk_pengaktifan_kembali) echo 'select'; else echo 'unselect';?>" <?php if($sk_pengaktifan_kembali) { ?>

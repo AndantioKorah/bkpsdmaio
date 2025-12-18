@@ -2698,6 +2698,7 @@ class C_Kepegawaian extends CI_Controller
 				$data['sk_pengaktifan_kembali'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','74','0');	
 				$data['cltn'] = $this->kepegawaian->getCutiCltn(); 
 				$data['sk_mutasi_instansi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','82','0');	
+				$data['sk_jf_asal'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','104','0');	
 
 			}
 

@@ -65,7 +65,7 @@
                   <option value="6" selected>ACC Perangkat Daerah</option>
                   <option value="4" >Diterima</option>
                    <?php } ?>
-                  <option value="5" >Ditolak</option>
+                  <option value="5" >Ditolak Operator / BKAD</option>
                 
               </select>
             </div>

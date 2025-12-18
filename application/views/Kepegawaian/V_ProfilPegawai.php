@@ -177,6 +177,8 @@
                   $badge_status = 'badge-pns';
                 } else if($profil_pegawai['statuspeg'] == 3){
                   $badge_status = 'badge-pppk';
+                } else if($profil_pegawai['statuspeg'] == 6){
+                  $badge_status = 'badge-pppk-pw';
                 }
 
                 $badge_aktif = 'badge-aktif';

@@ -15080,9 +15080,15 @@ public function checkListIjazahCpns($id, $id_pegawai){
         //     $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
         // }
         
+        if($this->general_library->isProgrammer()){
+            $result['done'] = true;
+            return $result;
+        }
+
         $tanggal = '2026-01-05';
         $jam = '08:00';
         $tanggalJam = $tanggal." ".$jam.":00";
+
         if($result['message'] != ""){
             $result['done'] = false;
             $result['message'] = substr(trim($result['message']), 0, strlen($result['message'])-2);

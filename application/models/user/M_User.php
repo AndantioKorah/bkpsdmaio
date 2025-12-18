@@ -3770,22 +3770,38 @@
         }
 
         public function addFileSkJabatanCpns(){
-            $pegawai = $this->db->select("a.*, b.no_peserta, c.id as id_pegjabatan")
+            // $pegawai = $this->db->select("a.*, b.no_peserta, c.id as id_pegjabatan")
+            //             ->from('db_pegawai.pegawai a')
+            //             ->join('t_temp_data_pppk2024 b', 'a.nipbaru_ws = b.nip')
+            //             ->join('db_pegawai.pegjabatan c', 'a.id_peg = c.id_pegawai')
+            //             ->where('a.id_peg LIKE "PEG202512%"')
+            //             ->where('statuspeg', 3)
+            //             ->where('b.no_peserta IS NOT NULL')
+            //             ->group_by('a.nipbaru_ws')
+            //             ->get()->result_array();
+
+            $pegawai = $this->db->select("a.*, b.id as id_pegjabatan, c.nm_unitkerja")
                         ->from('db_pegawai.pegawai a')
-                        ->join('t_temp_data_pppk2024 b', 'a.nipbaru_ws = b.nip')
-                        ->join('db_pegawai.pegjabatan c', 'a.id_peg = c.id_pegawai')
-                        ->where('a.id_peg LIKE "PEG202510%"')
+                        ->join('db_pegawai.pegjabatan b', 'a.id_peg = b.id_pegawai')
+                        ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                        ->where('a.id_peg LIKE "PEG202512%"')
+                        ->where('b.nm_jabatan NOT LIKE "Guru%"')
                         ->where('statuspeg', 3)
-                        ->where('b.no_peserta IS NOT NULL')
+                        ->where('b.flag_active', 1)
                         ->group_by('a.nipbaru_ws')
                         ->get()->result_array();
 
             // dd($pegawai);
-            foreach($pegawai as $p){
-                $this->db->where('id', $p['id_pegjabatan'])
-                        ->update('db_pegawai.pegjabatan', [
-                            'gambarsk' => "SK_".$p['no_peserta']."_sign.pdf"
-                        ]);
+            if($pegawai){
+                foreach($pegawai as $p){
+                    $this->db->where('id', $p['id_pegjabatan'])
+                            ->update('db_pegawai.pegjabatan', [
+                                'id_unitkerja' => $p['skpd'],
+                                'id_unitkerja' => $p['skpd'],
+                                'gambarsk' => "SK_".$p['nipbaru_ws']."_sign.pdf"
+                            ]);
+                    echo 'updating '.$p['id_pegjabatan'].' => '."SK_".$p['nipbaru_ws']."_sign.pdf"." ".$p['nm_unitkerja']."\n<br>";
+                }
             }
 
             dd('done');
@@ -3817,10 +3833,11 @@
                     $input = [];
                     $input['id_pegawai'] = $c['id_peg'];
                     $input['nama_sk'] = "SPMT";
-                    $input['gambarsk'] = "SPMT_".$c['nipbaru_ws']."_sign.pdf";
+                    $input['gambarsk'] = "SPMT_".$c['nipbaru_ws']."_sign_sign.pdf";
                     $input['status'] = 2;
                     $input['tanggal_verif'] = date('Y-m-d H:i:s');
                     $input['id_dokumen'] = 34;
+                    // dd($input);
                     $this->db->insert('db_pegawai.pegarsip', $input);
                 }
             }
@@ -3843,7 +3860,7 @@
             $pppk = $this->db->select("a.*")
                         ->from('db_pegawai.pegawai a')
                         ->where('a.id_peg LIKE "PEG202512%"')
-                        ->where('statuspeg', 3)
+                        ->where('statuspeg', 6)
                         ->group_by('a.nipbaru_ws')
                         ->get()->result_array();
 
@@ -3865,14 +3882,20 @@
                     $input['id_pegawai'] = $p['id_peg'];
                     $input['jenissk'] = 3;
                     $input['status'] = 2;
-                    $input['gambarsk'] = "SK_".$p['nip']."_sign.pdf";
+                    $input['gambarsk'] = "SK_".$p['nipbaru_ws'].".pdf";
                     $input['tanggal_verif'] = date('Y-m-d H:i:s');
+                    echo "inserting ".$input['gambarsk']."<br>\n";
                     $this->db->insert('db_pegawai.pegberkaspns', $input);
-
                     // $this->db->where('id_pegawai', $p['id_peg'])
                     //     ->update('db_pegawai.pegarsip', [
                     //         'gambarsk' => "SK_".$p['no_peserta']."_sign.pdf"
                     //     ]);
+                } else {
+                    $this->db->where('id', $exists[$p['id_peg']]['id'])
+                            ->update('db_pegawai.pegberkaspns', [
+                                'gambarsk' => "SK_".$p['nipbaru_ws'].".pdf"
+                            ]);
+                    echo "updating "."SK_".$p['nipbaru_ws'].".pdf"."<br>\n";
                 }
             }
 

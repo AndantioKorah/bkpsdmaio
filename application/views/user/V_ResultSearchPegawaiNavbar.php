@@ -33,6 +33,8 @@
               $badge_status = 'badge-pns';
             } else if($rs['statuspeg'] == 3){
               $badge_status = 'badge-pppk';
+            } else if($rs['statuspeg'] == 6){
+              $badge_status = 'badge-pppk-pw';
             }
 
             $badge_aktif = 'badge-aktif';

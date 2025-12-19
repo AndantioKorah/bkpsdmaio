@@ -294,7 +294,7 @@
     <button onclick="getFile(file='sk_jabatan_fungsional_pertama')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pengangkatan Pertama dalam Jabatan Fungsional</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='sk_jf_asal')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir dari Asal Instansi</button>
+    <button onclick="getFile(file='sk_jf_asal')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir dari Instansi Asal</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sk_pemberhentian_dari_jabfung')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pemberhentian dari Jabatan Fungsional</button>

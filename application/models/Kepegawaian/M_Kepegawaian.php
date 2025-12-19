@@ -15080,13 +15080,22 @@ public function checkListIjazahCpns($id, $id_pegawai){
         //     $result['message'] .= "Surat Pernyataan Tidak Mengajukan Pindah Tugas, ";
         // }
         
+        if($this->general_library->isProgrammer()){
+            $result['done'] = true;
+            return $result;
+        }
+
+        $tanggal = '2026-01-05';
+        $jam = '08:00';
+        $tanggalJam = $tanggal." ".$jam.":00";
+
         if($result['message'] != ""){
             $result['done'] = false;
             $result['message'] = substr(trim($result['message']), 0, strlen($result['message'])-2);
             $result['message'] = "Data ".$result['message']." belum diinput.";
-        } else if(date('Y-m-d H:i:s') <= '2025-10-01 09:00'){
+        } else if(date('Y-m-d H:i:s') <= $tanggalJam){
             $result['done'] = false;
-            $result['message'] = "SK dapat didownload pada tanggal".formatDateNamaBulan(date('Y-m-d'))." di atas jam 09:00 pagi";
+            $result['message'] = "SK dapat didownload pada tanggal".formatDateNamaBulan($tanggal)." di atas jam ".$jam." pagi";
         }
 
         return $result;

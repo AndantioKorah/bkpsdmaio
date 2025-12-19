@@ -156,7 +156,10 @@ class C_Cron extends CI_Controller
 		echo "<img src='data:image/png;base64, ".$data['data']['qrBase64']."' />";
 	}
 
-    public function getPengadaanInstansiWs($tahun){
+    public function getPengadaanInstansiWs($tahun = 0){
+        if($tahun == 0){
+            $tahun = date('Y');
+        }
         return $this->general->getListPengadaan($tahun);
     }
 

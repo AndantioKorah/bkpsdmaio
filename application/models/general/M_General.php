@@ -2018,7 +2018,7 @@
 
             $tNip = null;
             $tempNip = $this->db->select('*')
-                                ->from('t_temp_data_pppk2024')
+                                ->from('t_temp_data_pppk_pw')
                                 ->get()->result_array();
             foreach($tempNip as $tn){
                 $tNip[$tn['nip']] = $tn;
@@ -2027,12 +2027,11 @@
             $dataPppk = null;
             $resultJson = $this->db->select('*')
                             ->from('m_parameter')
-                            ->where('parameter_name', 'TEMP_PENGADAAN_2024')
+                            ->where('parameter_name', 'TEMP_PPPK_PW')
                             ->get()->row_array();
-            $result = json_decode($resultJson['parameter_value'], true);
+            $result = json_decode("[".$resultJson['parameter_value']."]", true);
             $exists = null;
             $double = null;
-
             foreach($result as $rs){
                 if(isset($tNip[$rs['nip']]) && !isset($dataPppk[$rs['nip']])){
                     $dataPppk[$rs['nip']] = $rs;

@@ -5,6 +5,7 @@
         {
             parent::__construct();
             $this->db = $this->load->database('main', true);
+            $this->load->model('general/M_General', 'general');
         }
 
         public function insert($tablename, $data){
@@ -3384,27 +3385,27 @@
             }
 
             $tNip = null;
-            // $tempNip = $this->db->select('*')
-            //                     ->from('t_temp_data_pppk2024')
-            //                     ->where('flag_sinkron_done', 0) // comment ini untuk ambil semua, ini dipakai untuk kebutuhan khusus
-            //                     ->get()->result_array();
+            $tempNip = $this->db->select('*')
+                                ->from('t_temp_data_pppk_pw')
+                                // ->where('flag_sinkron_done', 0) // comment ini untuk ambil semua, ini dipakai untuk kebutuhan khusus
+                                ->get()->result_array();
 
             // custom, untuk inputan awal pake yg di atas
-            $tempNip = $this->db->select('c.*, c.id as id_pegjabatan, a.nip')
-                                ->from('t_temp_data_pppk2024 a')
-                                ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
-                                ->join('db_pegawai.pegjabatan c', 'b.id_peg = c.id_pegawai')
-                                ->where('a.flag_sinkron_done', 0) // comment ini untuk ambil semua, ini dipakai untuk kebutuhan khusus
-                                // ->where('c.id_unitkerja', null)
-                                ->group_by('c.id')
-                                ->get()->result_array();
+            // $tempNip = $this->db->select('c.*, c.id as id_pegjabatan, a.nip')
+            //                     ->from('t_temp_data_pppk_pw a')
+            //                     ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+            //                     ->join('db_pegawai.pegjabatan c', 'b.id_peg = c.id_pegawai')
+            //                     ->where('a.flag_sinkron_done', 0) // comment ini untuk ambil semua, ini dipakai untuk kebutuhan khusus
+            //                     // ->where('c.id_unitkerja', null)
+            //                     ->group_by('c.id')
+            //                     ->get()->result_array();
             foreach($tempNip as $tn){
                 $tNip[$tn['nip']] = $tn;
             }
 
             $resultJson = $this->db->select('*')
                                 ->from('m_parameter')
-                                ->where('parameter_name', 'TEMP_PPPK_2024_II')
+                                ->where('parameter_name', 'TEMP_PPPK_PW')
                                 ->get()->row_array();
             $result = json_decode($resultJson['parameter_value'], true);
             $dataPppk = null;
@@ -3418,67 +3419,91 @@
                 // untuk perbaikan unor
                 if(isset($tNip[$res['nip']])){
                     $dataPppk[$res['id']] = $res;
-                    $dataPppk[$res['id']]['id_pegjabatan'] = $tNip[$res['nip']]['id_pegjabatan'];
+                    $dataPppk[$res['id']]['pangkat'] = $res;
+                    // $dataPppk[$res['id']]['id_pegjabatan'] = $tNip[$res['nip']]['id_pegjabatan'];
                     // $dataPppk[$res['id']] = $tNip[$res['nip']]; // custom, untuk inputan awal pake yg di atas
                     $dataPppk[$res['id']]['unor_induk_id'] = $res['unor_induk_id'];
                     $dataPppk[$res['id']]['unor_id'] = $res['unor_id'];
                 }
             }
 
-            // dd($dataPppk);
+            // foreach($tNip as $dpk){
+            //     $id_pangkat = 53;
+            //     if($dpk['pangkat'] == "IV"){
+            //         $id_pangkat = 54;
+            //     } else if($dpk['pangkat'] == "IX"){
+            //         $id_pangkat = 59;
+            //     } else if($dpk['pangkat'] == "V"){
+            //         $id_pangkat = 55;
+            //     }
+            //     $this->db->where('nipbaru_ws', $dpk['nip'])
+            //             ->update('db_pegawai.pegawai', [
+            //                 'pangkat' => $id_pangkat
+            //             ]);
+            //     echo "updating pangkat ".$dpk['nip']." to ".$id_pangkat."\n<br>";
+            // }
+
+            dd($dataPppk);
 
             $this->db->trans_begin();
 
             // perbaikan unor
-            foreach($dataPppk as $dpk){
-                // dd($dpk);
-                // $id_uker = substr($dpk['id_jabatan'], 0, 7);
-                // $uker = null;
-                // if($id_uker){
-                //     if(isset($listUnitKerjaId[$id_uker])){
-                //         $uker = $listUnitKerjaId[$id_uker];
-                //     }
-                // }
-                $uker = null;
-                if($dpk['unor_induk_id'] == "8ae482a75dcb9d79015ddef24f7c3221"){
-                    $dpk['unor_induk_id'] = $dpk["unor_id"];   
-                }
-                if(isset($listUnitKerja[$dpk['unor_induk_id']])){
-                    $uker = $listUnitKerja[$dpk['unor_induk_id']];
-                }
+            // foreach($dataPppk as $dpk){
+            //     // dd($dpk);
+            //     // $id_uker = substr($dpk['id_jabatan'], 0, 7);
+            //     // $uker = null;
+            //     // if($id_uker){
+            //     //     if(isset($listUnitKerjaId[$id_uker])){
+            //     //         $uker = $listUnitKerjaId[$id_uker];
+            //     //     }
+            //     // }
+            //     $uker = null;
+            //     if($dpk['unor_induk_id'] == "8ae482a75dcb9d79015ddef24f7c3221"){
+            //         $dpk['unor_induk_id'] = $dpk["unor_id"];   
+            //     }
 
-                $unorJab = null;
-                // dd($dpk);
-                if(isset($listBidang[$dpk['unor_id']])){
-                    $unorJab = $listBidang[$unorJab[$dpk['unor_id']]];
-                }
-                if(!$unorJab && isset($listSubBidang[$dpk['unor_id']])){
-                    $unorJab = $listSubBidang[$dpk['unor_id']];
-                }
-                // dd($uker);  
-                if($uker){
-                    $this->db->where('id', $dpk['id_pegjabatan'])
-                        ->update('db_pegawai.pegjabatan', [
-                            'id_unitkerja' => $uker['id_unitkerja'],
-                            'id_unor_siasn' => $unorJab ? $unorJab['id_unor_siasn'] : $uker['id_unor_siasn']
-                        ]);
+            //     if(isset($listUnitKerja[$dpk['unor_id']])){
+            //         $uker = $listUnitKerja[$dpk['unor_id']];
+            //     }
 
-                    $this->db->where('nipbaru_ws', $dpk['nip'])
-                                ->update('db_pegawai.pegawai', [
-                                    'skpd' => $uker['id_unitkerja']
-                                ]);
+            //     if(!$uker){
+            //         if(isset($listUnitKerja[$dpk['unor_induk_id']])){
+            //             $uker = $listUnitKerja[$dpk['unor_induk_id']];
+            //         }
+            //     }
 
-                    $this->db->where('nip', $dpk['nip'])
-                            ->update('t_temp_data_pppk2024', [
-                                'flag_sinkron_done' => 1
-                            ]);
-                } else {
-                    $this->db->where('nip', $dpk['nip'])
-                            ->update('t_temp_data_pppk2024', [
-                                'flag_sinkron_done' => 0
-                            ]);
-                }
-            }
+            //     $unorJab = null;
+            //     // dd($dpk);
+            //     if(isset($listBidang[$dpk['unor_id']])){
+            //         $unorJab = $listBidang[$unorJab[$dpk['unor_id']]];
+            //     }
+            //     if(!$unorJab && isset($listSubBidang[$dpk['unor_id']])){
+            //         $unorJab = $listSubBidang[$dpk['unor_id']];
+            //     }
+            //     // dd($uker);  
+            //     if($uker){
+            //         $this->db->where('id', $dpk['id_pegjabatan'])
+            //             ->update('db_pegawai.pegjabatan', [
+            //                 'id_unitkerja' => $uker['id_unitkerja'],
+            //                 'id_unor_siasn' => $unorJab ? $unorJab['id_unor_siasn'] : $uker['id_unor_siasn']
+            //             ]);
+
+            //         $this->db->where('nipbaru_ws', $dpk['nip'])
+            //                     ->update('db_pegawai.pegawai', [
+            //                         'skpd' => $uker['id_unitkerja']
+            //                     ]);
+
+            //         $this->db->where('nip', $dpk['nip'])
+            //                 ->update('t_temp_data_pppk_pw', [
+            //                     'flag_sinkron_done' => 1
+            //                 ]);
+            //     } else {
+            //         $this->db->where('nip', $dpk['nip'])
+            //                 ->update('t_temp_data_pppk_pw', [
+            //                     'flag_sinkron_done' => 0
+            //                 ]);
+            //     }
+            // }
 
             // core
             // foreach($dataPppk as $rs){
@@ -3516,6 +3541,7 @@
             //         // dd($rs);
             //         $rs['gelar1'] = $rs['gelar_depan'];
             //         $rs['gelar2'] = $rs['gelar_belakang'];
+            //         $insertUser = null;
             //         $insertUser =  [
             //             'username' => $rs['nip'],
             //             'password' => $newEncPassword,
@@ -3552,25 +3578,29 @@
             //             $rs[$keyUk] = "8ae483a661412ba40161415634aa124f";
             //         }
 
-            //         if(isset($listUnitKerja[$rs[$keyUk]])){
-            //             $uker = $listUnitKerja[$rs[$keyUk]];
-            //         }
+            //         // if(isset($listUnitKerja[$rs[$keyUk]])){
+            //         //     $uker = $listUnitKerja[$rs[$keyUk]];
+            //         // }
 
-            //         if(!$uker){
-            //             if(isset($listBidang[$rs[$keyUk]])){
-            //                 $uker = $listBidang[$rs[$keyUk]];
-            //             }
-            //         }
+            //         // if(!$uker){
+            //         //     if(isset($listBidang[$rs[$keyUk]])){
+            //         //         $uker = $listBidang[$rs[$keyUk]];
+            //         //     }
+            //         // }
 
-            //         if(!$uker){
-            //             if(isset($listSubBidang[$rs[$keyUk]])){
-            //                 $uker = $listSubBidang[$rs[$keyUk]];
-            //             }
-            //         }
+            //         // if(!$uker){
+            //         //     if(isset($listSubBidang[$rs[$keyUk]])){
+            //         //         $uker = $listSubBidang[$rs[$keyUk]];
+            //         //     }
+            //         // }
 
             //         $uker = null;
             //         if(isset($listUnitKerja[$rs['unor_induk_id']])){
             //             $uker = $listUnitKerja[$rs['unor_induk_id']];
+            //         }
+
+            //         if(!$uker){
+            //             $uker = $listUnitKerja[$rs['unor_id']];
             //         }
 
             //         $unorJab = null;
@@ -3585,7 +3615,8 @@
             //             echo "uker tidak ada";
             //             // dd($keyUk);
             //             // dd($rs);
-            //             // $this->db->trans_rollback();
+            //             $this->db->trans_rollback();
+            //             break;
             //         } else {
             //             if(!isset($listJabatanPelaksana[$uker['id_unitkerja']])){
             //                 $jabatan['id_jabatanpeg'] = '9999000JFU';
@@ -3597,8 +3628,9 @@
             //             }
             //         }
 
-            //         $idpeg = "PEG202510".generateRandomNumber(5);
+            //         $idpeg = "PEG202512".generateRandomNumber(5);
 
+            //         $insertPegawai = null;
             //         $insertPegawai =  [
             //             'id_peg' => $idpeg,
             //             'niplama' => "",
@@ -3626,7 +3658,7 @@
             //             'gelar2' => $rs['gelar_belakang'],
             //             'besaran_gaji' => $rs['gaji_pokok'],
             //             'id_pns_siasn' => $rs['orang_id'],
-            //             'tmt_hitung_absen' => "2025-10-01",
+            //             'tmt_hitung_absen' => "2026-01-04",
             //         ];
 
             //         // dd($insertPegawai);
@@ -3641,6 +3673,7 @@
             //             $id_unor_siasn = $uker['id_unor_siasn'];
             //         }
 
+            //         $pegjabatan = null;
             //         $pegjabatan = [
             //             'id_pegawai' => $idpeg,
             //             'nm_jabatan' => "Pelaksana",
@@ -3651,7 +3684,7 @@
             //             'jenisjabatan' => 10,
             //             'pejabat' => "Wali Kota Manado",
             //             'eselon' => 1,
-            //             'nosk' => "800.1.2.5/BKPSDM/SK/PPPK/04/2025",
+            //             'nosk' => "800.1.2.5/BKPSDM/SK/PPPK-PW/01/2025",
             //             'tglsk' => '2025-10-01',
             //             'skpd' => $uker ? $uker['nm_unitkerja'] : null,
             //             'status' => 2,
@@ -3664,7 +3697,7 @@
 
             //         if($uker){
             //             $this->db->where('nip', $rs['nip'])
-            //                         ->update('t_temp_data_pppk2024', [
+            //                         ->update('t_temp_data_pppk_pw', [
             //                             'flag_sinkron_done' => 1,
             //                         ]);
             //         }
@@ -3737,22 +3770,38 @@
         }
 
         public function addFileSkJabatanCpns(){
-            $pegawai = $this->db->select("a.*, b.no_peserta, c.id as id_pegjabatan")
+            // $pegawai = $this->db->select("a.*, b.no_peserta, c.id as id_pegjabatan")
+            //             ->from('db_pegawai.pegawai a')
+            //             ->join('t_temp_data_pppk2024 b', 'a.nipbaru_ws = b.nip')
+            //             ->join('db_pegawai.pegjabatan c', 'a.id_peg = c.id_pegawai')
+            //             ->where('a.id_peg LIKE "PEG202512%"')
+            //             ->where('statuspeg', 3)
+            //             ->where('b.no_peserta IS NOT NULL')
+            //             ->group_by('a.nipbaru_ws')
+            //             ->get()->result_array();
+
+            $pegawai = $this->db->select("a.*, b.id as id_pegjabatan, c.nm_unitkerja")
                         ->from('db_pegawai.pegawai a')
-                        ->join('t_temp_data_pppk2024 b', 'a.nipbaru_ws = b.nip')
-                        ->join('db_pegawai.pegjabatan c', 'a.id_peg = c.id_pegawai')
-                        ->where('a.id_peg LIKE "PEG202510%"')
+                        ->join('db_pegawai.pegjabatan b', 'a.id_peg = b.id_pegawai')
+                        ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                        ->where('a.id_peg LIKE "PEG202512%"')
+                        ->where('b.nm_jabatan NOT LIKE "Guru%"')
                         ->where('statuspeg', 3)
-                        ->where('b.no_peserta IS NOT NULL')
+                        ->where('b.flag_active', 1)
                         ->group_by('a.nipbaru_ws')
                         ->get()->result_array();
 
             // dd($pegawai);
-            foreach($pegawai as $p){
-                $this->db->where('id', $p['id_pegjabatan'])
-                        ->update('db_pegawai.pegjabatan', [
-                            'gambarsk' => "SK_".$p['no_peserta']."_sign.pdf"
-                        ]);
+            if($pegawai){
+                foreach($pegawai as $p){
+                    $this->db->where('id', $p['id_pegjabatan'])
+                            ->update('db_pegawai.pegjabatan', [
+                                'id_unitkerja' => $p['skpd'],
+                                'id_unitkerja' => $p['skpd'],
+                                'gambarsk' => "SK_".$p['nipbaru_ws']."_sign.pdf"
+                            ]);
+                    echo 'updating '.$p['id_pegjabatan'].' => '."SK_".$p['nipbaru_ws']."_sign.pdf"." ".$p['nm_unitkerja']."\n<br>";
+                }
             }
 
             dd('done');
@@ -3761,7 +3810,7 @@
         public function addFileSpmtCpns(){
             $cpns = $this->db->select("a.*")
                         ->from('db_pegawai.pegawai a')
-                        ->where('a.id_peg LIKE "PEG202510%"')
+                        ->where('a.id_peg LIKE "PEG202512%"')
                         ->group_by('a.nipbaru_ws')
                         ->get()->result_array();
             
@@ -3769,7 +3818,7 @@
                         ->from('db_pegawai.pegarsip')
                         ->where('flag_active', 1)
                         ->where('id_dokumen', 34)
-                        ->like('id_pegawai', "PEG202510")
+                        ->where('id_pegawai LIKE "PEG202512%"')
                         ->get()->result_array();
 
             if($exists){
@@ -3780,13 +3829,15 @@
 
             foreach($cpns as $c){
                 if(!isset($listExists[$c['id_peg']])){
+                    $input = null;
                     $input = [];
                     $input['id_pegawai'] = $c['id_peg'];
                     $input['nama_sk'] = "SPMT";
-                    $input['gambarsk'] = "SPMT_".$c['nipbaru_ws']."_sign.pdf";
+                    $input['gambarsk'] = "SPMT_".$c['nipbaru_ws']."_sign_sign.pdf";
                     $input['status'] = 2;
                     $input['tanggal_verif'] = date('Y-m-d H:i:s');
                     $input['id_dokumen'] = 34;
+                    // dd($input);
                     $this->db->insert('db_pegawai.pegarsip', $input);
                 }
             }
@@ -3806,18 +3857,16 @@
         }
 
         public function addFileSkPPPK(){
-            $pppk = $this->db->select("a.*, b.no_peserta")
+            $pppk = $this->db->select("a.*")
                         ->from('db_pegawai.pegawai a')
-                        ->join('t_temp_data_pppk2024 b', 'a.nipbaru_ws = b.nip')
-                        ->where('a.id_peg LIKE "PEG202510%"')
-                        ->where('statuspeg', 3)
-                        ->where('b.no_peserta IS NOT NULL')
+                        ->where('a.id_peg LIKE "PEG202512%"')
+                        ->where('statuspeg', 6)
                         ->group_by('a.nipbaru_ws')
                         ->get()->result_array();
 
             $listExists = $this->db->select('*')
                             ->from('db_pegawai.pegberkaspns')
-                            ->where('id_pegawai LIKE "PEG202510%"')
+                            ->where('id_pegawai LIKE "PEG202512%"')
                             ->where('flag_active', 1)
                             ->get()->result_array();
             $exists = null;
@@ -3833,14 +3882,20 @@
                     $input['id_pegawai'] = $p['id_peg'];
                     $input['jenissk'] = 3;
                     $input['status'] = 2;
-                    $input['gambarsk'] = "SK_".$p['no_peserta']."_sign.pdf";
+                    $input['gambarsk'] = "SK_".$p['nipbaru_ws'].".pdf";
                     $input['tanggal_verif'] = date('Y-m-d H:i:s');
+                    echo "inserting ".$input['gambarsk']."<br>\n";
                     $this->db->insert('db_pegawai.pegberkaspns', $input);
-
                     // $this->db->where('id_pegawai', $p['id_peg'])
                     //     ->update('db_pegawai.pegarsip', [
                     //         'gambarsk' => "SK_".$p['no_peserta']."_sign.pdf"
                     //     ]);
+                } else {
+                    $this->db->where('id', $exists[$p['id_peg']]['id'])
+                            ->update('db_pegawai.pegberkaspns', [
+                                'gambarsk' => "SK_".$p['nipbaru_ws'].".pdf"
+                            ]);
+                    echo "updating "."SK_".$p['nipbaru_ws'].".pdf"."<br>\n";
                 }
             }
 

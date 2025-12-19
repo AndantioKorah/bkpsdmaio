@@ -62,6 +62,7 @@
     :root{
       --primary-color: #222e3c;
       --badge-pppk-color: #efa304;
+      --badge-pppk-pw-color: #72e0eeff;
       --badge-cpns-color: #990000;
       --badge-pns-color: #222e3c;
       --badge-aktif-color: #22a74a;
@@ -71,6 +72,13 @@
       --badge-mutasi-color: #0fb1ab;
       --badge-meninggal-color: #000000;
       --badge-tidak-aktif-color: #000000;
+    }
+
+    .badge-pppk-pw{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-pppk-pw-color);
+      border: 2px solid var(--badge-pppk-pw-color);
+      color: #222e3c;
     }
 
     .badge-pppk{

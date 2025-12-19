@@ -1245,7 +1245,6 @@
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
             $result['kepalaskpd']['nama_jabatan'] = "Kepala Dinas Kesehatan";
-            
             // kasubag ambil sek krna kasubag smntra cuti
             if($id_unitkerja != 7005020
             && $id_unitkerja != 7005010){
@@ -1260,6 +1259,7 @@
                                     ->where('a.nipbaru_ws', '198604132010012005')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
+
             }
         }
 
@@ -1415,9 +1415,11 @@
             } else if($result['flag_sekolah'] == 1){
                 $result['kepsek'] = $tempresult['kepalaskpd'];
                 $result['kepsek']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
-            }else {
-                $result['kepalaskpd'] = $tempresult['kepalaskpd'];
-                $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
+            } else {
+                if(!$result['kepalaskpd']){
+                    $result['kepalaskpd'] = $tempresult['kepalaskpd'];
+                    $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
+                }
             }
         }
 

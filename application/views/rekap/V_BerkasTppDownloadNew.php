@@ -518,7 +518,6 @@
                         $data_header['kepalaskpd'] = $pegawai['setda'];
                         $data_header['kasubag'] = $pegawai['bendahara_setda'];
                     }
-                    // dd($data_header);
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
             </div>

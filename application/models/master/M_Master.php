@@ -739,7 +739,7 @@
             ->order_by('c.eselon ASC')
             ->order_by('f.urutan ASC')
             ->order_by('c.jenis_jabatan ASC')
-            ->order_by('d.id_pangkat DESC')
+            ->order_by('d.urutan ASC')
             ->order_by('a.tmtcpns ASC')
             ->group_by('a.id_peg')
             ->get()->result_array();

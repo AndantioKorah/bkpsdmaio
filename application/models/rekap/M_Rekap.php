@@ -962,10 +962,10 @@
         $explode = explode('-', $today);
         $date_param = date("Y-m-01", strtotime($param['tahun'].'-'.$param['bulan'].'-01'));
         $date_today = date("Y-m-01", strtotime($explode[0].'-'.$explode[1].'-01'));
-        // dd($date_param.' ; '.$date_today);
-        if($date_param >= $date_today){
-            return null;
-        }
+        // jika tanggal hari ini belum lewat bulan tarik TPP, maka jangan dulu lock. khusus desember 2025, di comment dulu untuk dilock.
+        // if($date_param >= $date_today){
+        //     return null;
+        // }
         
         $param['meta_data'] = json_encode($data);
         $param['nama_param_unitkerja'] = $data['param']['nm_unitkerja'];
@@ -1245,7 +1245,6 @@
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
             $result['kepalaskpd']['nama_jabatan'] = "Kepala Dinas Kesehatan";
-            
             // kasubag ambil sek krna kasubag smntra cuti
             if($id_unitkerja != 7005020
             && $id_unitkerja != 7005010){
@@ -1260,6 +1259,7 @@
                                     ->where('a.nipbaru_ws', '198604132010012005')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
+
             }
         }
 
@@ -1415,9 +1415,11 @@
             } else if($result['flag_sekolah'] == 1){
                 $result['kepsek'] = $tempresult['kepalaskpd'];
                 $result['kepsek']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
-            }else {
-                $result['kepalaskpd'] = $tempresult['kepalaskpd'];
-                $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
+            } else {
+                if(!$result['kepalaskpd']){
+                    $result['kepalaskpd'] = $tempresult['kepalaskpd'];
+                    $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
+                }
             }
         }
 

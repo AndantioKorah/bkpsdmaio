@@ -2090,13 +2090,14 @@
                     $data['list_dokpen'][$dok['nip']][] = $dok;
                     $data['list_dokpen_per_date'][$dok['nip']][$date_dok][] = $dok;
 
-                    if($date_dok >= $startExcludeCuti && $date_dok <= $endExcludeCuti && $dok['id_cuti'] == "00"){
+                    if($date_dok >= $startExcludeCuti && $date_dok <= $endExcludeCuti && ($dok['id_cuti'] == "00" || $dok['id_cuti'] == "20")){
                         if(isset($excludeCuti[$dok['nip']])){
                             $excludeCuti[$dok['nip']]++;
                         } else {
                             $excludeCuti[$dok['nip']] = 1;
                         }
                     }
+                    
                 }
             }
         }

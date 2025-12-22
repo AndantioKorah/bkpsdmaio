@@ -5503,29 +5503,29 @@
      $tahun = '2025';
 
      $res = 1;
-    if($_SESSION['user_logged_in'][0]['flag_terima_tpp'] == 1){
-    if($bulan == 12 && $tahun == '2025'){
-    $kinerja = $this->db->select('sum(a.target_kuantitas) as target, sum(a.total_realisasi) as realisasi')
-                        ->from('t_rencana_kinerja as a ')
-                        ->where('a.id_m_user',$this->general_library->getId())
-                        ->where('a.bulan', 12)
-                        ->where('a.tahun', $tahun)
-                        ->where('a.flag_active', 1)
-                        ->get()->row_array();
-    if($kinerja['target']){
-    $realisasi = $kinerja['realisasi'] * 100 / $kinerja['target'];         
-    if($realisasi < 100) {
-    $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
-    $res = null;
-    } else {
-    $res = 1;
-    }
-    } else {
-    $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
-    $res = null;
-    }  
-    }
-    } 
+    // if($_SESSION['user_logged_in'][0]['flag_terima_tpp'] == 1){
+    // if($bulan == 12 && $tahun == '2025'){
+    // $kinerja = $this->db->select('sum(a.target_kuantitas) as target, sum(a.total_realisasi) as realisasi')
+    //                     ->from('t_rencana_kinerja as a ')
+    //                     ->where('a.id_m_user',$this->general_library->getId())
+    //                     ->where('a.bulan', 12)
+    //                     ->where('a.tahun', $tahun)
+    //                     ->where('a.flag_active', 1)
+    //                     ->get()->row_array();
+    // if($kinerja['target']){
+    // $realisasi = $kinerja['realisasi'] * 100 / $kinerja['target'];         
+    // if($realisasi < 100) {
+    // $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
+    // $res = null;
+    // } else {
+    // $res = 1;
+    // }
+    // } else {
+    // $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
+    // $res = null;
+    // }  
+    // }
+    // } 
     
       
     return $res;

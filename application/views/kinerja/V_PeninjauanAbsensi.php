@@ -133,7 +133,7 @@
 
   </div>
   <div class="form-group col-lg-12 mt-2">
-     <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
+     <button class="btn btn-block btn-primary customButton" style="width:100%;display:none;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
       <span id="ket" style="display:none;color:red"><b>Sudah ada 2 kali Pengajuan Absensi untuk bulan ini</b></span>
     </div>
 </form> 
@@ -274,17 +274,24 @@ $(function(){
  $("#jenis_absensi").prop('disabled',true);
         loadListPeninjauan()
         cekPengajuan()
+
+var today = new Date();
+  if(today.getDay() == 0 || today.getDay() == 6){
+    $('#btn_upload').hide()
+  } else {
+    $('#btn_upload').show()
+  }
+    
     })
 
     var maxDate = "<?= $maxDate['max_date'];?>";
     // var maxDate = "2025-07-09";
 
-
-    var datearray = ["2025-07-04","2025-07-14"];
+    var datearray = ["2025-12-24","2025-12-23","2025-12-29","2025-12-30","2025-12-31"];
 $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',       
     datesDisabled: datearray,
-    // daysOfWeekDisabled: [0],   //Disable sunday
+    daysOfWeekDisabled: [0,6],   //Disable sunday
     autoclose:true,
     todayHighlight: true,
     startDate : maxDate,

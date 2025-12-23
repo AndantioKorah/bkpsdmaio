@@ -83,7 +83,7 @@ class C_Cron extends CI_Controller
         $this->general->logCron('cronAsync');
         $this->general->cronAsync();
 
-        $this->rekap->rekapKehadiranPeriodik();
+        // $this->rekap->rekapKehadiranPeriodik();
     }
 
     public function getOauthToken(){
@@ -131,7 +131,7 @@ class C_Cron extends CI_Controller
         $insert_id = 0;
         $peg = $this->general->getOne('m_user', 'username', $nip, 1);
         $pegawai = $this->kinerja->getAtasanPegawai(null, $peg['id'], 1);
-        dd($pegawai);
+        // dd($pegawai);
         $progressCuti = $this->kepegawaian->buildProgressCuti($pegawai, $insert_id, $peg['id']);
         // if(isset($progressCuti['code']) && $progressCuti['code'] == 1){
         //     dd(($progressCuti));
@@ -156,7 +156,10 @@ class C_Cron extends CI_Controller
 		echo "<img src='data:image/png;base64, ".$data['data']['qrBase64']."' />";
 	}
 
-    public function getPengadaanInstansiWs($tahun){
+    public function getPengadaanInstansiWs($tahun = 0){
+        if($tahun == 0){
+            $tahun = date('Y');
+        }
         return $this->general->getListPengadaan($tahun);
     }
 
@@ -232,6 +235,8 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
+        $this->user->rekapCutiDesember();
+
         // $this->kepegawaian->cekErrorCuti();
 
         dd($this->kepegawaian->getProgressCutiAktif(2637));

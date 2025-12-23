@@ -58,10 +58,17 @@
               <select class="form-control select2-navy" style="width: 100%"
               id="status_pengajuan" data-dropdown-css-class="select2-navy" name="status_pengajuan">
                   <option value="" >Semua</option>
-                  <option value="3" selected>Usul BKPSDM</option>
+                  <?php if($this->general_library->isHakAkses('verifikasi_berkala_opd') ) { ?>
+                  <option value="10" selected>Usul BKPSDM</option>
+                  <option value="3" >Diterima</option>
+                  <?php } else if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')) { ?>
+                  <option value="3" selected>ACC Perangkat Daerah</option>
                   <option value="4" >Diterima</option>
+                   <?php } ?>
                   <option value="5" >Ditolak</option>
                 
+              
+
               </select>
             </div>
           </div>

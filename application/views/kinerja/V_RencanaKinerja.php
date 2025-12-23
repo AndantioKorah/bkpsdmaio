@@ -1,4 +1,6 @@
 <!-- <h1 class="h3 mb-3">Penetapan Sasaran Kerja</h1> -->
+
+
 <h1 class="h3 mb-3">Sasaran Kerja Bulanan Pegawai</h1>
 
 <div class="card card-default" >
@@ -223,6 +225,15 @@ $("#checkBoxID").click(function() {
     });
 
     loadRencanaKinerja(bulan,tahun)
+
+       <?php if($this->session->userdata('apps_error')){ ?>
+			errortoast("<?=$this->session->userdata('apps_error')?>");
+		//   $('#error_div').show()
+		//   $('#error_div').append('<label>'+'<?=$this->session->userdata('apps_error')?>'+'</label>')
+		<?php
+		$this->session->set_userdata('apps_error', null);
+		} ?>
+    
 
     })
 

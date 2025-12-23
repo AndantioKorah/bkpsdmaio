@@ -2757,13 +2757,15 @@
                     $message = "*[DOKUMEN PENDUKUNG ABSENSI]*\n\nSelamat ".greeting().", Yth. ".getNamaPegawaiFull($list_dokumen[0]).$kata_verifikasi." dokumen *".$list_dokumen[0]['nama_jenis_disiplin_kerja']."* Anda pada tanggal ".$tanggal." telah *".$hasil_verif."*";
 
                     if($status == 3 || $status == 4){
-                        $this->db->insert('t_cron_wa', [
-                            'type' => 'text',
-                            'sendTo' => convertPhoneNumber($list_dokumen[0]['handphone']),
-                            'message' => $message.FOOTER_MESSAGE_CUTI,
-                            'jenis_layanan' => 'Dokumen Pendukung Absensi',
-                            'created_by' => $this->general_library->getId()
-                        ]);
+                        // notif dokumen pendukung absensi yang ditolak untuk sementara dimatikan dulu
+
+                        // $this->db->insert('t_cron_wa', [
+                        //     'type' => 'text',
+                        //     'sendTo' => convertPhoneNumber($list_dokumen[0]['handphone']),
+                        //     'message' => $message.FOOTER_MESSAGE_CUTI,
+                        //     'jenis_layanan' => 'Dokumen Pendukung Absensi',
+                        //     'created_by' => $this->general_library->getId()
+                        // ]);
                     }
                 }
 
@@ -5029,6 +5031,8 @@
             ->where('id_unitkerja', $skpd[0])
             ->get()->row_array();
             
+            $tanggal = $data['tahun'].'-'.$data['bulan'].'-30';
+
             $this->db->select('a.statuspeg,b.username as nip, a.nama, a.gelar1, a.gelar2, b.id, c.nama_jabatan, c.eselon, c.kelas_jabatan')
             ->from('db_pegawai.pegawai a')
             ->join('m_user b', 'a.nipbaru_ws = b.username')
@@ -5037,6 +5041,7 @@
             ->where('b.flag_active', 1)
             // ->where('b.id', 16)
             ->order_by('c.eselon, b.username')
+             ->where('a.tmtcpns <', $tanggal)
             ->where('a.id_m_status_pegawai', 1);
             // ->where('a.flag_terima_tpp', 1);
             
@@ -5488,5 +5493,42 @@
             echo "customDirFileBacked: ".count($customDirFileBacked)."<br>";
         }
     }
+
+    public function cekKinerja(){
+
+    //  $data['tpp'] = $this->general_library->getPaguTppPegawai('11','2025');
+
+
+     $bulan = date('n');
+     $tahun = '2025';
+
+     $res = 1;
+    // if($_SESSION['user_logged_in'][0]['flag_terima_tpp'] == 1){
+    // if($bulan == 12 && $tahun == '2025'){
+    // $kinerja = $this->db->select('sum(a.target_kuantitas) as target, sum(a.total_realisasi) as realisasi')
+    //                     ->from('t_rencana_kinerja as a ')
+    //                     ->where('a.id_m_user',$this->general_library->getId())
+    //                     ->where('a.bulan', 12)
+    //                     ->where('a.tahun', $tahun)
+    //                     ->where('a.flag_active', 1)
+    //                     ->get()->row_array();
+    // if($kinerja['target']){
+    // $realisasi = $kinerja['realisasi'] * 100 / $kinerja['target'];         
+    // if($realisasi < 100) {
+    // $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
+    // $res = null;
+    // } else {
+    // $res = 1;
+    // }
+    // } else {
+    // $this->session->set_userdata('apps_error', 'Realisasi Produktivitas Kerja bulan desember anda belum 100% silahkan menginput realisasi kerja anda. Terima Kasih.');
+    // $res = null;
+    // }  
+    // }
+    // } 
     
+      
+    return $res;
+    }
+
 }

@@ -512,7 +512,17 @@
 				<i class="align-middle me-2 far fa-circle"></i>Administrasi Kepegawaian
 			</a>
 		</li>
-
+		<?php 
+			if($this->general_library->isProgrammer() 
+			|| $this->general_library->isAdminAplikasi()
+			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()))
+			{ ?>
+		<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/C_Kepegawaian/layananMutasiAsn/33')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Mutasi ASN
+					</a>
+		</li>
+		<?php } ?>
    <?php if($this->general_library->isAdminAplikasi()){ ?>
 		<!-- <li class="sidebar-item">
 								<a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link sidebar-link-child" aria-expanded="true">
@@ -605,12 +615,16 @@
 	$this->general_library->isHakAkses('verifikasi_layanan_suket_tidak_tubel') ||
 	$this->general_library->isHakAkses('verifikasi_ujian_dinas') ||
 	$this->general_library->isHakAkses('menu_bidang_pekin') ||
+	$this->general_library->isHakAkses('verifikasi_berkala_opd') || 
 	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
 	$this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
 	$this->general_library->isVerifPermohonanCuti() ||
 	$this->general_library->isHakAkses('admin_pengajuan_cuti') ||
 	$this->general_library->isKepalaSkpdHardcode() ||
 	stringStartWith('Asisten', $this->general_library->getNamaJabatan()) ||
+	stringStartWith('Inspektur Pembantu', $this->general_library->getNamaJabatan()) ||
+	(stringStartWith('Sekretaris', $this->general_library->getNamaJabatan())) ||
+	stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan()) ||
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -657,6 +671,9 @@
 				$this->general_library->isKepalaPd() ||
 				$this->general_library->isVerifPermohonanCuti() ||
 				$this->general_library->isKepalaSkpdHardcode() ||
+				stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan()) ||
+				stringStartWith('Inspektur Pembantu', $this->general_library->getNamaJabatan()) ||
+				(stringStartWith('Sekretaris', $this->general_library->getNamaJabatan())) ||
 				stringStartWith('Asisten', $this->general_library->getNamaJabatan())
 				){
 					?>
@@ -694,18 +711,21 @@
 					</a>
 				</li>
 				<?php } ?>
-				<?php if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')){ ?>
-				<li class="sidebar-item ">
+				<?php if($this->general_library->isHakAkses('verifikasi_pangkat_bkad') || $this->general_library->isHakAkses('verifikasi_berkala_opd')){ ?>
+				
+					<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-pangkat-bkad')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Usul Pangkat BKSPDM
+						<i class="align-middle me-2 far fa-circle"></i>SK Pangkat BKSPDM
 					</a>
 				</li>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-berkala-bkad')?>">
-						<i class="align-middle me-2 far fa-circle"></i>Usul Berkala BKSPDM
+						<i class="align-middle me-2 far fa-circle"></i>SK Gaji Berkala
 					</a>
 				</li>
 				<?php } ?>
+
+			
 
 				<?php if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){ ?>
 				<li class="sidebar-item ">
@@ -770,6 +790,11 @@
 						<i class="align-middle me-2 far fa-circle"></i>Layanan Mutasi Pindah <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Masuk
 					</a>
 				</li>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/33')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Layanan Mutasi ASN
+					</a>
+				</li>
 				<?php } ?>
 				
 				<?php if($this->general_library->isHakAkses('verifikasi_peningkatan_penambahan_gelar')){ ?>
@@ -829,17 +854,31 @@
 		</a>
 		<ul id="rekapitulasi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 		
-			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
-			|| $this->general_library->isHakAkses('menu_bidang_pekin') 
-			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-			// || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
-			|| $this->general_library->isHakAkses('rekap_absensi_aars') 
-			|| $this->general_library->isWalikota()){ ?>
+			<?php
+			if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+				|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+				// || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
+				|| $this->general_library->isHakAkses('rekap_absensi_aars') 
+				|| $this->general_library->isWalikota()
+				|| $this->general_library->isHakAksesRekapAbsen()
+				){
+			?>
 			<li class="sidebar-item ">
 				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Absensi
 				</a>
 			</li>
+			<?php } ?>
+			<?php if($this->general_library->isProgrammer()
+			|| $this->general_library->isAdminAplikasi()
+			|| $this->general_library->isHakAkses('menu_bidang_pekin') 
+			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/kehadiran-periodik')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Kehadiran
+					</a>
+				</li>
 			<?php } ?>
 			<?php if($this->general_library->isProgrammer()
 				|| $this->general_library->isAdminAplikasi()
@@ -848,14 +887,14 @@
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 				){ ?>		
 				<li class="sidebar-item ">
-				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/realisasi-kinerja')?>">
-					<i class="align-middle me-2 far fa-circle"></i>Realisasi Kinerja
-				</a>
-			</li>
-			<li class="sidebar-item ">
-				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/disiplin')?>">
-					<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
-				</a>
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/realisasi-kinerja')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Realisasi Kinerja
+					</a>
+				</li>
+				<li class="sidebar-item ">
+					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/penilaian/disiplin')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Penilaian Disiplin Kerja
+					</a>
 			</li>
 			<?php } if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
 			|| $this->general_library->isProgrammer() 

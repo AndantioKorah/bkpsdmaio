@@ -133,7 +133,7 @@
 
   </div>
   <div class="form-group col-lg-12 mt-2">
-     <!-- <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button> -->
+     <button class="btn btn-block btn-primary customButton" style="width:100%;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
       <span id="ket" style="display:none;color:red"><b>Sudah ada 2 kali Pengajuan Absensi untuk bulan ini</b></span>
     </div>
 </form> 

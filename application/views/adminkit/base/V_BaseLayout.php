@@ -62,6 +62,7 @@
     :root{
       --primary-color: #222e3c;
       --badge-pppk-color: #efa304;
+      --badge-pppk-pw-color: #72e0eeff;
       --badge-cpns-color: #990000;
       --badge-pns-color: #222e3c;
       --badge-aktif-color: #22a74a;
@@ -71,6 +72,13 @@
       --badge-mutasi-color: #0fb1ab;
       --badge-meninggal-color: #000000;
       --badge-tidak-aktif-color: #000000;
+    }
+
+    .badge-pppk-pw{
+      box-shadow: 3px 3px 10px #888888;
+      background-color: var(--badge-pppk-pw-color);
+      border: 2px solid var(--badge-pppk-pw-color);
+      color: #222e3c;
     }
 
     .badge-pppk{
@@ -497,6 +505,88 @@
           background: #f2f2f2;
       }
         /* TUTUP FIXED LEFT COLOUM WITH HEADER  */
+
+        /* FIXED LEFT COLOUM WITH HEADER */
+      .div_freeze_table {
+    /* height: calc(100vh - 180px);
+    width: calc(100vw - 100px);
+    overflow: scroll;
+    border: 1px solid #6f6f6f; */
+    overflow-y: auto; height: 600px;
+
+    }
+
+.div_freeze_table table { 
+      border: 1px solid #fff;
+      font-size: 12px;
+      width: 100%;
+  } 
+  
+.div_freeze_table thead {
+            position: sticky;
+            top: 0;
+            z-index: 400;
+            }
+
+.div_freeze_table td {
+             font-size: 12px;
+            } 
+   
+
+.div_freeze_table th {
+        background: #464646;
+        color: #d1d1d1;
+        width: 100px;
+        min-width: 100px;
+        padding: 6px;
+        /* outline: 1px solid #7a7a7a; */
+        font-weight: normal;
+        margin-bottom:50px;
+    }
+
+    /* .div_freeze_table td {
+        padding: 6px;
+        outline: 1px solid #c3c3c3;
+    } */
+
+        /* .div_freeze_table th:nth-child(1),
+        .div_freeze_table td:nth-child(1) {
+            position: sticky;
+            left: 0;
+            width: 130px;
+            min-width: 130px;
+        } */
+
+   @media screen and (width> 600px) {
+          .div_freeze_table th:nth-child(2),
+          .div_freeze_table td:nth-child(2) {
+            position: sticky;
+            left: 0;
+            width: 50px;
+            min-width: 50px;
+        }
+         }
+
+
+        
+    .div_freeze_table td:nth-child(2) {
+              z-index: 200;
+              min-width: 20em;
+          }
+
+      .div_freeze_table th:nth-child(1),
+      .div_freeze_table th:nth-child(2) {
+          z-index: 300;
+      }
+
+      .div_freeze_table tr:nth-child(odd) td {
+      /* background: white; */
+    
+      }
+
+      .div_freeze_table tr:nth-child(even) td {
+          /* background: #f2f2f2; */
+      }
 
   
 

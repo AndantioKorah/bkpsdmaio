@@ -4,6 +4,7 @@
           <th class="text-left">No</th>
           <th class="text-left">Nama</th>
           <th class="text-left">Unit Kerja</th>
+          <th class="text-center">TMT Gaji Berkala</th>
           <th class="text-center">File Gaji Berkala</th>
           <th>Status</th>
           <th>Keterangan</th>
@@ -17,13 +18,14 @@
               <td class="text-left"> <?=getNamaPegawaiFull($rs);?><br>
                <span>NIP. <?=$rs['nipbaru_ws']?></span> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
+              <td class="text-left"><?= formatDateNamaBulan($rs['tmtgajiberkala'])?></td>
             
             <td class="text-center">
                 <button href="#modal_view_file" onclick="openFileGajiberkala('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                 <i class="fa fa-file-pdf"></i></button>
               </td>
               <td>
-              <?php if($rs['status_berkala'] == '2') echo "Selesai BKPSDM"; else if($rs['status_berkala'] == '3') echo "Usul BKAD"; else if($rs['status_berkala'] == '4') echo "Diterima BKAD"; else echo "Ditolak BKAD"?>  
+              <?php if($rs['status_berkala'] == '2') echo "Selesai BKPSDM"; else if($rs['status_berkala'] == '3') echo "Usul BKAD"; else if($rs['status_berkala'] == '4') echo "Diterima BKAD"; else if($rs['status_berkala'] == '6') echo "ACC Operator Simgaji"; else echo "Ditolak BKAD"?>  
               </td>
               <td>
               <?=$rs['keterangan_bkad']?>

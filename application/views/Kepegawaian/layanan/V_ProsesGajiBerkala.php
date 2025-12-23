@@ -127,8 +127,8 @@
        <?php if($result[0]['status'] == 3){ ?>
         <button id="btn_lihat_file" href="#modal_view_file" onclick="openFileKgb('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> File SK Kenaikan Berkala</button>
-        <button onclick="kirimBerkalaBkad('<?=$result[0]['id'];?>',2)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
-        Batal Teruskan ke BKAD <i class="fa fa-arrow-left"></i></button>
+        <!-- <button onclick="kirimBerkalaBkad('<?=$result[0]['id'];?>',2)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
+        Batal Teruskan Operator Perangkat Daerah <i class="fa fa-arrow-left"></i></button> -->
        <?php } ?>
        <?php if($result[0]['status'] == 4){ ?>
         <button id="btn_lihat_file" href="#modal_view_file" onclick="openFileKgb('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
@@ -788,7 +788,7 @@
         </button>
       </div>
       <div class="modal-body">
-         <form method="post" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKKgb')?>" >
+         <form method="post" target="_blank" enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDrafSKKgb')?>" >
          <div class="form-group">
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$profil_pegawai['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>" readonly>

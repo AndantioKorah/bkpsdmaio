@@ -61,6 +61,7 @@
         <td class="text-left"><?=$rs['lama_cuti'].' hari'?></td>
         <td style="width: 25%;" class="text-center">
           <?php
+            $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             $badge = "badge-warning";
             if(stringStartWith("Digital Signature", $rs['status_pengajuan_cuti'])){
               if($rs['flag_ds_cuti'] == 1){
@@ -69,11 +70,12 @@
               } else {
                 $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
               }
-            } else if(isset($rs['flag_ditolak']) && $rs['flag_ditolak'] == 1){
+            } else if((isset($rs['flag_ditolak']) && $rs['flag_ditolak'] == 1) || isset($rs['flag_operator_verif']) && $rs['status_verifikasi_operator'] == 2){
               $badge = "badge-danger";
+              $statusPengajuanCuti = "Ditolak oleh Operator Cuti, ".$statusPengajuanCuti;
             }
           ?>
-          <span style="text-wrap: pretty;" class="badge <?=$badge?>"><?=($rs['status_pengajuan_cuti'])?></span></td>
+          <span style="text-wrap: pretty;" class="badge <?=$badge?>"><?=($statusPengajuanCuti)?></span></td>
         <td class="text-center">
           <?php if(!isset($rs['flag_operator_verif'])){ ?>
             <button type="button" href="#modal_detail_cuti" onclick="loadDetailCuti('<?=$rs['id']?>')"
@@ -85,7 +87,9 @@
               <button onclick="deletePermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus </button>
             <?php } ?>
           <?php } else { ?>
-            <button onclick="deleteOperatorPermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
+            <?php if(isset($rs['status_verifikasi_operator']) && $rs['status_verifikasi_operator'] == 0){ ?>
+              <button onclick="deleteOperatorPermohonanCuti('<?=$rs['id']?>')" type="button" class="btn btn-sm btn-danger">Hapus</button>
+            <?php } ?>
           <?php } ?>
         </td>
       </tr>

@@ -48,6 +48,8 @@ class C_Rekap extends CI_Controller
     {
         $data['list_skpd'] = $this->user->getAllSkpd();
         $data['jam_kerja'] = $this->general->getAll('t_jam_kerja');
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
+        $data['skpd_plt'] = $this->user->getSkpdPlt();
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
 
@@ -882,5 +884,23 @@ class C_Rekap extends CI_Controller
 
     public function testDropzone(){
         dd($_FILES);
+    }
+
+    public function rekapKehadiranPeriodik(){
+        $data['unitkerja'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        render('rekap/V_RekapKehadiranPeriodik', '', '', $data);
+    }
+
+    public function searchRekapKehadiranPeriodik(){
+        $data['params'] = $this->input->post();
+        $data['result'] = $this->rekap->searchRekapKehadiranPeriodik($this->input->post());
+        $data['jenisdisiplin'] = $this->general->getAll('m_jenis_disiplin_kerja', 1);
+        $this->load->view('rekap/V_RekapKehadiranPeriodikResult', $data);
+    }
+
+    public function loadDetailRekapKehadiran($id_m_user, $tahun){
+        $data['result'] = $this->rekap->searchRekapKehadiranPeriodikByIdUser($id_m_user, $tahun);
+        $data['jenisdisiplin'] = $this->general->getAll('m_jenis_disiplin_kerja', 1);
+        $this->load->view('rekap/V_RekapKehadiranPeriodikDetail', $data);
     }
 }

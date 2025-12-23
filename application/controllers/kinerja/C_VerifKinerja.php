@@ -12,6 +12,7 @@ class C_VerifKinerja extends CI_Controller
         if(!$this->general_library->isNotMenu()){
             redirect('logout');
         };
+
     }
 
     public function verifKinerja(){

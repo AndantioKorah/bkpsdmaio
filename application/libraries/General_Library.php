@@ -306,7 +306,10 @@ class General_library
 
     public function isPPPKbaru(){
         return $this->userLoggedIn['statuspeg'] == 3 
-            && (substr($this->getNipPegawai(), 8, 6) == '202521' || substr($this->getNipPegawai(), 8, 6) == '202521');
+            && (
+                // (substr($this->getNipPegawai(), 8, 6) == '202521' || substr($this->getNipPegawai(), 8, 6) == '202521') ||
+                (stringStartWith("PEG202512", $this->getUserLoggedIn()['id_peg']))
+        );
     }
 
     public function getKelengkapanBerkasCpns(){
@@ -330,6 +333,10 @@ class General_library
         $result['nm_unitkerja'] = $this->userLoggedIn['nm_unitkerja'];
         $result['id_unitkerjamaster'] = $this->userLoggedIn['id_unitkerjamaster'];
         return $result;
+    }
+
+    public function isHakAksesRekapAbsen(){
+        return $this->nikita->m_user->cekAksesPegawaiRekapAbsen($this->getNipPegawai(), 0);
     }
 
     public function getNipPegawai(){
@@ -429,6 +436,7 @@ class General_library
             $current_url = substr($_SERVER["REQUEST_URI"], 1, strlen($_SERVER["REQUEST_URI"])-1);
             $url_exist = $this->nikita->session->userdata('list_exist_url');
             $list_url = $this->nikita->session->userdata('list_url');
+
             // dd($list_url);
             if($this->getBidangUser() == ID_BIDANG_PEKIN){
                 if(isset($list_url[$current_url])){
@@ -1046,5 +1054,9 @@ class General_library
 		return $rs;
 		// echo "<img src='".$uri."' />";
 	}
+
+    public function cekKinerja(){
+        return $this->nikita->m_kinerja->cekKinerja();
+    }
 
 }

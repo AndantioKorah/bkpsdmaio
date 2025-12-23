@@ -29,6 +29,7 @@ class C_Master extends CI_Controller
 
     public function loadSkpdDetailPegawai(){
         $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
+        // $this->session->set_userdata('list_pegawai_detail_skpd', null);
         $this->load->view('master/V_MasterSkpdPegawaiItem', $data);
     }
 

@@ -8,7 +8,7 @@
           <!-- <th class="text-center">Surat Pengantar</th> -->
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
-          <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad')) { ?>
+          <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad') || $this->general_library->isHakAkses('verifikasi_berkala_opd')) { ?>
             <th class="text-center">Jenis Kenaikan Pangkat</th>
             <th class="text-center">TMT Pangkat</th>
 
@@ -30,12 +30,12 @@
               <i class="fa fa-file-pdf"></i></button>
               </td> -->
               <td class="text-left">
-              <span class="badge badge-<?php if($rs['status_pengajuan'] == '3') echo "success"; else if($rs['status_pengajuan'] == '5') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '3') echo "Usul BKPSDM"; else if($rs['status_pengajuan'] == '4') echo "Diterima"; else if($rs['status_pengajuan'] == '5') echo "ditolak"; ?>
+              <span class="badge badge-<?php if($rs['status_pengajuan'] == '3') echo "success"; else if($rs['status_pengajuan'] == '5') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '10') echo "Usul BKPSDM"; else if($rs['status_pengajuan'] == '4') echo "Diterima"; else if($rs['status_pengajuan'] == '5') echo "ditolak"; else if($rs['status_pengajuan'] == '3') echo "ACC Perangkat Daerah"; ?>
               </span>
             </td>
             <td class="text-left"><?=$rs['keterangan_bkad']?></td>
            
-          <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad') ) { ?>
+          <?php if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat') || $this->general_library->isHakAkses('verifikasi_pangkat_bkad') || $this->general_library->isHakAkses('verifikasi_berkala_opd') ) { ?>
             <td class="text-left">
             <?php if($rs['id_m_layanan'] == '6') echo "Kenaikan Pangkat Reguler"; else if($rs['id_m_layanan'] == '7') echo "Kenaikan Pangkat Jabatan Fungsional"; else if($rs['id_m_layanan'] == '8') echo "Kenaikan Pangkat Menduduki Jabatan Struktural"; else echo "3"?>  
             </td>
@@ -98,8 +98,15 @@
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
         <option selected>--</option>
-        <option value="4">ACC</option>
+          <?php if($this->general_library->isHakAkses('verifikasi_berkala_opd') ) { ?>
+          <option value="3">ACC</option>
+          <?php } else if($this->general_library->isHakAkses('verifikasi_pangkat_bkad')) { ?>
+          <option value="4">ACC</option>
+          <?php } ?>
         <option value="5">TOLAK</option>
+        
+      
+
         <!-- <option value="3">TMS</option> -->
       </select>
       </div>

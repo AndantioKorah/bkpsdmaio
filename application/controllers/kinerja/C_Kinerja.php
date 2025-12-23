@@ -17,6 +17,7 @@ class C_Kinerja extends CI_Controller
         if (!$this->general_library->isNotMenu()) {
             redirect('logout');
         };
+
     }
 
     public function Kinerja()
@@ -519,12 +520,19 @@ class C_Kinerja extends CI_Controller
 
     public function disiplinKerja()
     {
+        if($this->general_library->cekKinerja() == null) {
+            redirect('kinerja/realisasi');
+          }
         $data['skpd'] = $this->master->getAllUnitKerja();
         render('kinerja/V_DisiplinKerja', '', '', $data);
     }
 
     public function tinjauABsensi()
     {
+        if($this->general_library->cekKinerja() == null) {
+            redirect('kinerja/realisasi');
+          }
+
         $date = new DateTime();
         // $date->modify("last day of previous month");
         $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'minus');
@@ -537,6 +545,10 @@ class C_Kinerja extends CI_Controller
 
     public function verifikasiTinjauAbsensi()
     {
+
+        if($this->general_library->cekKinerja() == null) {
+            redirect('kinerja/realisasi');
+          }
         // $data['unitkerja'] = $this->master->getAllUnitKerja();
         $data['unitkerja'] = $this->master->getAllMasterSkpd();
         $data['verifikator'] = $this->kinerja->getVerifikatorPeninjauan();

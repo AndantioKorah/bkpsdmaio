@@ -732,10 +732,15 @@
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
             ->join('m_user e', 'a.nipbaru_ws = e.username')
+            ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
             ->where('a.skpd', $id_unitkerja)
             ->where('id_m_status_pegawai', 1)
             ->where('e.flag_active', 1)
-            ->order_by('c.eselon')
+            ->order_by('c.eselon ASC')
+            ->order_by('f.urutan ASC')
+            ->order_by('c.jenis_jabatan ASC')
+            ->order_by('d.urutan ASC')
+            ->order_by('a.tmtcpns ASC')
             ->group_by('a.id_peg')
             ->get()->result_array();
 

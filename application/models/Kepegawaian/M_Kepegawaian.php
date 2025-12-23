@@ -13222,6 +13222,7 @@ public function getFileForVerifLayanan()
             $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
             $id_peggajiberkala = $this->db->insert_id();
             $datainsKgb["id_peggajiberkala"] = $id_peggajiberkala;
+            $datainsKgb["status"] = 3;
             $this->db->where('id', $id)
             ->update('t_gajiberkala', $datainsKgb);
 

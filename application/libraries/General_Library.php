@@ -307,8 +307,8 @@ class General_library
     public function isPPPKbaru(){
         return $this->userLoggedIn['statuspeg'] == 3 
             && (
-                (substr($this->getNipPegawai(), 8, 6) == '202521' || substr($this->getNipPegawai(), 8, 6) == '202521')
-                || (stringStartWith("PEG202512", $this->getUserLoggedIn()['id_peg']))
+                // (substr($this->getNipPegawai(), 8, 6) == '202521' || substr($this->getNipPegawai(), 8, 6) == '202521') ||
+                (stringStartWith("PEG202512", $this->getUserLoggedIn()['id_peg']))
         );
     }
 

@@ -287,7 +287,7 @@ var today = new Date();
     var maxDate = "<?= $maxDate['max_date'];?>";
     // var maxDate = "2025-07-09";
 
-    var datearray = ["2025-12-24","2025-12-23","2025-12-29","2025-12-30","2025-12-31"];
+    var datearray = ["2025-12-24","2025-12-29","2025-12-30","2025-12-31"];
 $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',       
     datesDisabled: datearray,

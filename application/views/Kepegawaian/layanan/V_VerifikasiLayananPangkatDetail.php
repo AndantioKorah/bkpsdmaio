@@ -201,6 +201,10 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat Akhir</button>
   <li>
+  <li>
+    <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='skp3')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$currentYear;?></button>
+  <li>
 
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skp1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_1_lalu;?></button>
@@ -208,7 +212,7 @@
   
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skp2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_2_lalu;?></button>
-  <li>
+
 
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='pmk')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peninjauan Masa Kerja </button>
@@ -726,7 +730,7 @@ function openProfileTab(){
           dir = "arsipberkaspns/";
         } else if(file == "skpangkat"){
           dir = "arsipelektronik/";
-        } else if(file == "skp1" || file == "skp2"){
+        } else if(file == "skp1" || file == "skp2" || file == "skp3"){
           dir = "arsipskp/";
         } else if(file == "berita_acara_jabatan" || file == "pas_foto" || file == "cv" || file == "spmt" || file == "surat_pelantikan_jabatan" || file == "bukti_prestasi" || file == "sk_penetapan_prestasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
           dir = "arsiplain/";

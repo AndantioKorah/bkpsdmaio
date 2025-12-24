@@ -11916,6 +11916,16 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "skp3"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegskp as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.tahun', $currentYear)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         } else if($this->input->post('file') == "ibel"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')

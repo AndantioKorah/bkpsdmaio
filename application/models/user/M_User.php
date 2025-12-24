@@ -3780,27 +3780,26 @@
             //             ->group_by('a.nipbaru_ws')
             //             ->get()->result_array();
 
-            $pegawai = $this->db->select("a.*, b.id as id_pegjabatan, c.nm_unitkerja")
+            $pegawai = $this->db->select("a.*, b.id as id_pegjabatan")
                         ->from('db_pegawai.pegawai a')
                         ->join('db_pegawai.pegjabatan b', 'a.id_peg = b.id_pegawai')
-                        ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                        // ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
                         ->where('a.id_peg LIKE "PEG202512%"')
-                        ->where('b.nm_jabatan NOT LIKE "Guru%"')
-                        ->where('statuspeg', 3)
+                        // ->where('b.nm_jabatan NOT LIKE "Guru%"')
+                        ->where('statuspeg', 6)
                         ->where('b.flag_active', 1)
                         ->group_by('a.nipbaru_ws')
                         ->get()->result_array();
 
-            // dd($pegawai);
             if($pegawai){
                 foreach($pegawai as $p){
                     $this->db->where('id', $p['id_pegjabatan'])
                             ->update('db_pegawai.pegjabatan', [
-                                'id_unitkerja' => $p['skpd'],
-                                'id_unitkerja' => $p['skpd'],
-                                'gambarsk' => "SK_".$p['nipbaru_ws']."_sign.pdf"
+                                // 'id_unitkerja' => $p['skpd'],
+                                // 'id_unitkerja' => $p['skpd'],
+                                'gambarsk' => "SK_".$p['nipbaru_ws'].".pdf"
                             ]);
-                    echo 'updating '.$p['id_pegjabatan'].' => '."SK_".$p['nipbaru_ws']."_sign.pdf"." ".$p['nm_unitkerja']."\n<br>";
+                    echo 'updating '.$p['id_pegjabatan'].' => '."SK_".$p['nipbaru_ws'].".pdf";
                 }
             }
 

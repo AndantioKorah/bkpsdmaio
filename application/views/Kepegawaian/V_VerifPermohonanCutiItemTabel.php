@@ -32,19 +32,31 @@
         <td style="border: 1px solid grey;" class="text-center"><?=$rs['lama_cuti'].' hari'?></td>
         <td style="border: 1px solid grey;" class="text-center">
           <?php
+            $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             $badge = "badge-warning";
-            if(stringStartWith("Digital Signature", $rs['status_pengajuan_cuti'])){
-              if($rs['flag_ds_cuti'] == 1){
-                $badge = "badge-success";
-                $rs['status_pengajuan_cuti'] = "Selesai";
-              } else {
-                $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
-              }
-            } else if(isset($rs['flag_ditolak']) && $rs['flag_ditolak'] == 1){
+            if(isset($rs['flag_ds_cuti']) && $rs['flag_ds_cuti'] == 1){
+              $badge = "badge-success";
+              $rs['status_pengajuan_cuti'] = "Selesai";
+              $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
+            } else if((isset($rs['flag_ditolak']) && $rs['flag_ditolak'] == 1) || isset($rs['flag_operator_verif']) && $rs['status_verifikasi_operator'] == 2){
               $badge = "badge-danger";
+              $statusPengajuanCuti = "Ditolak, ".$statusPengajuanCuti;
+            } else {
+              $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
+              $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             }
+            // if(stringStartWith("Digital Signature", $rs['status_pengajuan_cuti'])){
+            //   if($rs['flag_ds_cuti'] == 1){
+            //     $badge = "badge-success";
+            //     $rs['status_pengajuan_cuti'] = "Selesai";
+            //   } else {
+            //     $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
+            //   }
+            // } else if(isset($rs['flag_ditolak']) && $rs['flag_ditolak'] == 1){
+            //   $badge = "badge-danger";
+            // }
           ?>
-          <span style="max-width: 25vw; text-wrap: pretty;" class="badge <?=$badge?>"><?=($rs['status_pengajuan_cuti'])?></span>
+          <span style="max-width: 25vw; text-wrap: pretty;" class="badge <?=$badge?>"><?=($statusPengajuanCuti)?></span>
         </td>
         <td style="border: 1px solid grey;" class="text-center">
           <!-- <button type="button" href="#modal_detail_cuti" onclick="loadDetailCutiVerif('<?=$rs['id']?>')"

@@ -15471,6 +15471,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             // ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
             // ->join('db_pegawai.tktpendidikan i', 'a.pendidikan = i.id_tktpendidikan')
             ->join('db_pegawai.unitkerjamaster j', 'b.id_unitkerjamaster = j.id_unitkerjamaster')
+             ->where_not_in('a.statuspeg', [4])
             ->where('a.id_m_status_pegawai', 1)
             ->where_not_in('b.id_unitkerja', [5, 9050030])
             ->where_in('j.id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001']);
@@ -15509,6 +15510,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                     ->where_not_in('a.statuspeg', [4])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15651,7 +15653,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                    // ->where_in('a.statuspeg', [3])
+                    ->where_not_in('a.statuspeg', [4])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15661,7 +15663,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         foreach($pegawai1 as $peg){
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['pangkat'][$peg['pangkat']]['laki']++;
-        } else if($peg['jk'] == 'perempuan' || $peg['jk'] == null) {
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['pangkat'][$peg['pangkat']]['perempuan']++;
 
         } 
@@ -15721,6 +15723,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
+                    ->where_not_in('a.statuspeg', [4])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15868,6 +15871,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                     ->where_not_in('a.statuspeg', [4])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
         $pegawai1 = $this->db->get()->result_array();

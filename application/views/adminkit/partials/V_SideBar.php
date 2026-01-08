@@ -402,7 +402,7 @@
 		</li>
 		<?php if($this->general_library->isProgrammer()){ ?>
 			<li class="sidebar-item">
-			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/C_Master/openStrukturOrganisasiSkpd/')?><?= $this->general_library->getUnitKerjaPegawai();?>">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/C_Master/openStrukturOrganisasiSkpdMenu/')?><?= $this->general_library->getUnitKerjaPegawai();?>">
 				<i class="fa fa-database"></i> <span class="align-middle">Struktur Organisasi</span>
 			</a>
 		</li>

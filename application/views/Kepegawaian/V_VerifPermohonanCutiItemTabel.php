@@ -34,7 +34,7 @@
           <?php
             $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             $badge = "badge-warning";
-            if($rs['flag_ds_cuti'] == 1){
+            if(isset($rs['flag_ds_cuti']) && $rs['flag_ds_cuti'] == 1){
               $badge = "badge-success";
               $rs['status_pengajuan_cuti'] = "Selesai";
               $statusPengajuanCuti = $rs['status_pengajuan_cuti'];

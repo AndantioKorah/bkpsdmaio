@@ -2575,10 +2575,13 @@ class C_Kepegawaian extends CI_Controller
 		$currentYear = date('Y'); 
 		$previous1Year = $currentYear - 1;   
 		$previous2Year = $currentYear - 2; 
+		$data['currentYear'] = $currentYear;
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
 		$data['skp2'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous2Year); 
+		$data['skp3'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$currentYear); 
+
 		$data['pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','29','0');	
 		$data['stlud'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','10','0');	
 		$data['id_m_layanan'] = $id_layanan;
@@ -2878,6 +2881,7 @@ class C_Kepegawaian extends CI_Controller
 		$currentYear = date('Y'); 
 		$previous1Year = $currentYear - 1;   
 		$previous2Year = $currentYear - 2; 
+		$data['currentYear'] = $currentYear;
 		$data['tahun_1_lalu'] = $previous1Year;
 		$data['tahun_2_lalu'] = $previous2Year;
 		$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkatAdmin('db_pegawai.pegskp',$previous1Year,$id_peg);
@@ -3865,12 +3869,12 @@ class C_Kepegawaian extends CI_Controller
 
 
 	public function laporan(){
-		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
-		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
-		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
-		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
-		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
-
+		// $data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
+		// $data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
+		// $data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
+		// $data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
+		// $data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
+		$data = null;
 
 		// dd($data['golongan']);
 		// $this->load->view('kepegawaian/laporan/V_laporanDetail', $data);
@@ -3881,6 +3885,7 @@ class C_Kepegawaian extends CI_Controller
 	
 	public function laporanJumlahASN(){
 		$data = null;
+		// dd($data);
 		if($this->input->post('jenis_laporan') == "0"){
 		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
 		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();

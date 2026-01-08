@@ -63,7 +63,11 @@
           <?php
             $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             $badge = "badge-warning";
+<<<<<<< HEAD
             if($rs['flag_ds_cuti'] == 1){
+=======
+            if(isset($rs['flag_ds_cuti']) && $rs['flag_ds_cuti'] == 1){
+>>>>>>> 8f3a18ef1f18ab2c4b0e80fc1f221ea03c64c89e
               $badge = "badge-success";
               $rs['status_pengajuan_cuti'] = "Selesai";
               $statusPengajuanCuti = $rs['status_pengajuan_cuti'];

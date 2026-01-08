@@ -40,6 +40,14 @@ class C_Master extends CI_Controller
     public function openStrukturOrganisasiSkpd($id_unitkerja){
         $data['result'] = $this->master->loadStrukturOrganisasiSkpd($id_unitkerja);
         // dd(json_encode($data['result']));
+        // $this->load->view('master/V_MasterSkpdStrukturOrganisasi', $data);
+        render('master/V_MasterSkpdStrukturOrganisasi', '', '', $data);
+
+    }
+
+      public function openStrukturOrganisasiSkpdMenu($id_unitkerja){
+        $data['result'] = $this->master->loadStrukturOrganisasiSkpd($id_unitkerja);
+        // dd(json_encode($data['result']));
         $this->load->view('master/V_MasterSkpdStrukturOrganisasi', $data);
     }
 

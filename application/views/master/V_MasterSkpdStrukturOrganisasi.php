@@ -214,7 +214,9 @@ Thanks :)*/
                 <table>
                     <tr>
                         <td class="td_nama_jabatan_level_1">
-                            <?=$result['kepalaskpd']['nama_jabatan']?>
+                            <?=
+                                $result['kepalaskpd']['nama_jabatan']
+                            ?>
                         </td>
                     </tr>
                     <tr>
@@ -266,10 +268,10 @@ Thanks :)*/
                                                 <center>
                                                     <img style="width: 75px; height: 75px;object-fit: cover" class="img-fluid rounded-circle mb-2 b-lazy"
                                                     src="<?php
-                                                        $path = './assets/fotopeg/'.$b['kepala']['fotopeg'];
+                                                        // $path = './assets/fotopeg/'.$b['kepala']['fotopeg'];
                                                         // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                                                        if($b['kepala']['fotopeg']){
-                                                        if (file_exists($path)) {
+                                                        if($b['kepala'] && $b['kepala']['fotopeg']){
+                                                        if (file_exists('./assets/fotopeg/'.$b['kepala']['fotopeg'])) {
                                                         $src = './assets/fotopeg/'.$b['kepala']['fotopeg'];
                                                         //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
                                                         } else {

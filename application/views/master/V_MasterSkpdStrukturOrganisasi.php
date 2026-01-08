@@ -215,7 +215,6 @@ Thanks :)*/
                     <tr>
                         <td class="td_nama_jabatan_level_1">
                             <?=
-                                dd(json_encode($result));
                                 $result['kepalaskpd']['nama_jabatan']
                             ?>
                         </td>

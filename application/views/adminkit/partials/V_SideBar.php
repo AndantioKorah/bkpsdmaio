@@ -402,8 +402,8 @@
 		</li>
 		<?php if($this->general_library->isProgrammer()){ ?>
 			<li class="sidebar-item">
-			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/C_Master/openStrukturOrganisasiSkpdMenu/')?><?= $this->general_library->getUnitKerjaPegawai();?>">
-				<i class="fa fa-database"></i> <span class="align-middle">Struktur Organisasi</span>
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/struktur/')?><?= $this->general_library->getUnitKerjaPegawai();?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Nominatif Pegawai</span>
 			</a>
 		</li>
 				<?php } ?>

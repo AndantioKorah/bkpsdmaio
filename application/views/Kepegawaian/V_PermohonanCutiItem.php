@@ -63,17 +63,28 @@
           <?php
             $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             $badge = "badge-warning";
-            if(stringStartWith("Digital Signature", $rs['status_pengajuan_cuti'])){
-              if($rs['flag_ds_cuti'] == 1){
-                $badge = "badge-success";
-                $rs['status_pengajuan_cuti'] = "Selesai";
-              } else {
-                $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
-              }
+            if($rs['flag_ds_cuti'] == 1){
+              $badge = "badge-success";
+              $rs['status_pengajuan_cuti'] = "Selesai";
+              $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             } else if((isset($rs['flag_ditolak']) && $rs['flag_ditolak'] == 1) || isset($rs['flag_operator_verif']) && $rs['status_verifikasi_operator'] == 2){
               $badge = "badge-danger";
-              $statusPengajuanCuti = "Ditolak oleh Operator Cuti, ".$statusPengajuanCuti;
+              $statusPengajuanCuti = "Ditolak, ".$statusPengajuanCuti;
+            } else {
+              $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
+              $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             }
+            // if(stringStartWith("Digital Signature", $rs['status_pengajuan_cuti'])){
+            //   if($rs['flag_ds_cuti'] == 1){
+            //     $badge = "badge-success";
+            //     $rs['status_pengajuan_cuti'] = "Selesai";
+            //   } else {
+            //     $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
+            //   }
+            // } else if((isset($rs['flag_ditolak']) && $rs['flag_ditolak'] == 1) || isset($rs['flag_operator_verif']) && $rs['status_verifikasi_operator'] == 2){
+            //   $badge = "badge-danger";
+            //   $statusPengajuanCuti = "Ditolak, ".$statusPengajuanCuti;
+            // }
           ?>
           <span style="text-wrap: pretty;" class="badge <?=$badge?>"><?=($statusPengajuanCuti)?></span></td>
         <td class="text-center">

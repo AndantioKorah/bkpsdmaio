@@ -1597,8 +1597,8 @@ class M_Layanan extends CI_Model
                 
                 $progress[2]['urutan'] = 2;
                 $progress[2]['id_t_usul_ds_detail'] = $id_t_usul_ds_detail;
-                $progress[2]['id_m_user_verif'] = $sekbkpsdm['id_m_user'];
-                $progress[2]['nama_jabatan'] = $sekbkpsdm['nama_jabatan'];
+                $progress[2]['id_m_user_verif'] = $sekbkpsdm ? $sekbkpsdm['id_m_user'] : null;
+                $progress[2]['nama_jabatan'] = $sekbkpsdm ? $sekbkpsdm['nama_jabatan'] : null;
                 $progress[2]['flag_ds_now'] = 0;
 
                 $this->db->insert_batch('t_usul_ds_detail_progress', $progress);

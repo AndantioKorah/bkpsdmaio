@@ -15639,7 +15639,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
          $temp_pangkat = $this->db->select('*')
                                 ->from('db_pegawai.pangkat')
-                                ->where_not_in('id_pangkat', [18,19,20,51,52,0,50])
+                                ->where_not_in('id_pangkat', [18,19,20,51,52,0])
                                 ->get()->result_array();
         foreach($temp_pangkat as $pang){
             $result['pangkat'][$pang['id_pangkat']] = $pang;

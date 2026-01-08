@@ -184,7 +184,10 @@
 					</a>
 				</li>
 				<?php } ?>
+				
+
 				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+				
 				<li class="sidebar-item ">
 					<a title="Presentase TPP" class="sidebar-link sidebar-link-child" href="<?=base_url('master/presentase-tpp')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Presentase TPP
@@ -397,6 +400,13 @@
 				<i class="fa fa-database"></i> <span class="align-middle">Perangkat Daerah</span>
 			</a>
 		</li>
+		<?php if($this->general_library->isProgrammer()){ ?>
+			<li class="sidebar-item">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/C_Master/openStrukturOrganisasiSkpd/')?><?= $this->general_library->getUnitKerjaPegawai();?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Struktur Organisasi</span>
+			</a>
+		</li>
+				<?php } ?>
 		<?php if(!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item">
 			<a title="Nomor Surat" class="sidebar-link" href="<?=base_url('kepegawaian/nomor-surat')?>">

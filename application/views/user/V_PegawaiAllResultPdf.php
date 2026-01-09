@@ -27,12 +27,13 @@
         <?php
             $this->load->view('adminkit/partials/V_HeaderRekapAbsen', '');
         ?>
-        <b><center>DAFTAR NOMINATIF<br><?=strtoupper($result[0]['nm_unitkerja'])?></center><b>
+        <b><center>DAFTAR NOMINATIF<br></center><b>
         <table border=1 style="width: 100%; border-collapse: collapse; padding: 3px; margin-top: 10px;" id="result_all_pegawai">
             <tr>
                 <td style="font-weight: bold; text-align: center;">No</td>
                 <td style="font-weight: bold; text-align: center;">Pegawai</td>
                 <td style="font-weight: bold; text-align: center;">Eselon</td>
+                <td style="font-weight: bold; text-align: center;">Unit Kerja</td>
                 <td style="font-weight: bold; text-align: center;">NIK</td>
                 <td style="font-weight: bold; text-align: center;">No. HP</td>
                 <td style="font-weight: bold; text-align: center;">Email</td>
@@ -53,6 +54,7 @@
                             <span><?="NIP. ".($rs['nipbaru_ws'])?></span><br>
                         </td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['eselon']?></td>
+                        <td style="padding: 5px; text-align: center;"><?=$rs['nm_unitkerja']?></td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['nik']?></td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['handphone']?></td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['email']?></td>

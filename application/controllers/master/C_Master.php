@@ -73,9 +73,10 @@ class C_Master extends CI_Controller
     }
 
      public function openListPegawaiDetailSkpdMenu(){
-        $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
+        // $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
+        $data['result'] = $this->master->getDetailMasterSkpd($this->general_library->getUnitKerjaPegawai());
+        // dd($data['result']['list_jft']);
         render('master/V_MasterSkpdDetailPegawai', '', '', $data);
-
     }
 
     public function loadUnitKerjaByIdUnitKerjaMaster($ukmaster){

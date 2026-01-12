@@ -793,7 +793,7 @@
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$profil_pegawai['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="id" name="id" value="<?=$result[0]['id'];?>" readonly>
-          <input type="text" class="form-control" id="tmt_cpns" name="tmt_cpns" value="<?=$profil_pegawai['tmtcpns'];?>" readonly>
+          <input type="hidden" class="form-control" id="tmt_cpns" name="tmt_cpns" value="<?=$profil_pegawai['tmtcpns'];?>" readonly>
 
           
           <label for="exampleInputEmail1">Nama Lengkap</label>

@@ -52,9 +52,11 @@
         <div class="row mt-3">
             <div class="col-lg-12">
                 <div class="row">
+                    <?php if($this->general_library->isProgrammer() || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){ ?>
                     <div class="col-lg-12">
                         <button id="btn_filter" class="btn btn-sm btn-navy">Filter Pegawai <i class="fa fa-filter"></i></button>
                     </div>
+                    <?php } ?>
                     <div class="col-lg-12">
                         <form id="form_cari" style="display:none;" class="form-group mt-2">
                             <div class="row">
@@ -173,8 +175,10 @@
                             <hr>
                         <?php } ?>
                     </div>
+                    <?php if($this->general_library->isProgrammer()){ ?>
                     <div class="col-lg-12" id="div_result">
                     </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>

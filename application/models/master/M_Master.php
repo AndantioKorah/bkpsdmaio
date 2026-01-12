@@ -746,8 +746,19 @@
                 $result['statuspeg'][$sp['id_statuspeg']]['jumlah'] = 0;
             }
 
-            $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
-                                d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
+            $tempJabatan = null;
+            $temp_jabatan = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->get()->result_array();
+            foreach($temp_jabatan as $jab){
+                $tempJabatan[$jab['id_jabatanpeg']] = $jab;
+                $tempJabatan[$jab['id_jabatanpeg']]['nama'] = $jab['nama_jabatan'];
+                $tempJabatan[$jab['id_jabatanpeg']]['kelas_jabatan'] = $jab['kelas_jabatan'];
+                // $tempJabatan['jabatan'][$jab['id_jabatanpeg']]['jumlah'] = 0;
+            }
+
+            $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan, c.kelas_jabatan,
+                                d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg, c.jenis_jabatan,
                                 a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk,
                                 a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg')
                                 ->from('db_pegawai.pegawai a')
@@ -799,6 +810,13 @@
                     $result['jenis_kelamin']['perempuan']['jumlah']++;
                 }
                 $result['statuspeg'][$peg['statuspeg']]['jumlah']++;
+
+                if($peg['jenis_jabatan'] == "JFT"){
+                    $result['list_jft'][$peg['id_jabatanpeg']]['nama_jabatan'] = $tempJabatan[$peg['id_jabatanpeg']]['nama'];
+                    $result['list_jft'][$peg['id_jabatanpeg']]['kelas_jabatan'] = $tempJabatan[$peg['id_jabatanpeg']]['kelas_jabatan'];
+                    $result['list_jft'][$peg['id_jabatanpeg']]['total'] = isset($result['list_jft'][$peg['id_jabatanpeg']]['total']) ? $result['list_jft'][$peg['id_jabatanpeg']]['total'] += 1 : 1;
+                }
+                
             }
             // dd($result);
             return $result;
@@ -808,14 +826,22 @@
             $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
             a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk,
-            a.fotopeg, b.id_unitkerja')
+            a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->join('m_user e', 'a.nipbaru_ws = e.username')
+            ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
             ->where('a.skpd', $data['id_unitkerja'])
             ->where('id_m_status_pegawai', 1)
-            ->order_by('c.eselon');
+            ->where('e.flag_active', 1)
+            ->order_by('c.eselon ASC')
+            ->order_by('f.urutan ASC')
+            ->order_by('c.jenis_jabatan ASC')
+            ->order_by('d.urutan ASC')
+            ->order_by('a.tmtcpns ASC')
+            ->group_by('a.id_peg');
 
             if($data['eselon'] != "0"){
                 $this->db->where('c.eselon', $data['eselon']);
@@ -827,6 +853,10 @@
 
             if($data['agama'] != "0"){
                 $this->db->where('a.agama', $data['agama']);
+            }
+
+            if($data['jenis_jabatan'] != "0"){
+                $this->db->where('c.jenis_jabatan', $data['jenis_jabatan']);
             }
 
             if($data['status_pegawai'] != "0"){

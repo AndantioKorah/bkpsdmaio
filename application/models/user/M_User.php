@@ -2520,7 +2520,11 @@
                     ->where('i.flag_active', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030])
                     ->group_by('a.nipbaru_ws')
-                    ->order_by('c.eselon, a.nama');
+                    // ->order_by('c.eselon, a.nama');
+                    // ->order_by('c.eselon, a.nama')
+                    ->order_by('b.nm_unitkerja');
+
+
             if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){
                 $this->db->like('a.nama', $data['nama_pegawai']);
             }

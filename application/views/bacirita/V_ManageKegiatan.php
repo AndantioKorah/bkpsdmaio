@@ -21,7 +21,7 @@
 				<hr>
 			</div>
 			<div id="div_form_input_kegiatan" style="display:none;" class="col-lg-12">
-				<form id="form_input_kegiatan">
+					 <form method="post" id="form_input_kegiatan" enctype="multipart/form-data" >
 					<div class="row">
 						<div class="col-lg-9">
 							<label  cass="lbl-form-input-kegiatan">Topik:</label>
@@ -114,11 +114,22 @@
 							<label class="lbl-form-input-kegiatan">Link Facebook:</label>
 							<input class="form-control" name="link_facebook" id="link_facebook"/>
 						</div>
+						
+
+						<div class="col-lg-12 mt-2">
+							<label class="lbl-form-divider">Banner</label>
+						</div>
+						
+						<div class="col-lg-12 mt-1">
+						 <input class="form-control" type="file" id="banner_file" name="file"  />
+						</div>
 						<div class="col-lg-12 text-right">
 							<hr>
 							<button id="btn_simpan" class="btn btn-navy btn-block" type="submit"><i class="fa fa-save"></i> Simpan Kegiatan</button>
 							<button id="btn_simpan_loading" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
 						</div>
+
+						
 					</div>
 				</form>
 			</div>
@@ -174,11 +185,18 @@
 		e.preventDefault()
 		$('#btn_simpan').hide()
 		$('#btn_simpan_loading').show()
-		$.ajax({
-            url: '<?=base_url("bacirita/C_Bacirita/saveDataKegiatan")?>',
-            method: 'post',
-            data: $(this).serialize(),
-            success: function(data){
+		var formvalue = $('#form_input_kegiatan');
+		var form_data = new FormData(formvalue[0]);
+
+		$.ajax({  
+        url: '<?=base_url("bacirita/C_Bacirita/saveDataKegiatan")?>',
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        // dataType: "json",
+           success: function(data){
                 let resp = JSON.parse(data)
                 if(resp.code == 0){
                     $('#topik').val('')
@@ -193,7 +211,7 @@
                 errortoast('Terjadi Kesalahan')
 				$('#btn_simpan').show()
 				$('#btn_simpan_loading').hide()
-            }
-        })
+            }  
+        });
 	})
 </script>

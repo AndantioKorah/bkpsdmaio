@@ -403,7 +403,7 @@
 
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/jft')?>">
-				<i class="fa fa-database"></i> <span class="align-middle">Nominatif Pegawai</span>
+				<i class="fa fa-database"></i> <span class="align-middle">List JFT</span>
 			</a>
 		</li>
 

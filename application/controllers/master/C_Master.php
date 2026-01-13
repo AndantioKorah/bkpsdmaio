@@ -73,10 +73,20 @@ class C_Master extends CI_Controller
     }
 
      public function openListPegawaiDetailSkpdMenu(){
-        // $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
+        $data['unitkerja'] = $this->master->getAllSkpd();
         $data['result'] = $this->master->getDetailMasterSkpd($this->general_library->getUnitKerjaPegawai());
-        // dd($data['result']['list_jft']);
-        render('master/V_MasterSkpdDetailPegawai', '', '', $data);
+        // $this->load->view('master/V_skpdListJft', $data);
+        render('master/V_skpdListJft', '', '', $data);
+    }
+
+     public function openListPegawaiDetailSkpdMenuItem(){
+        if($this->input->post('id_unitkerja') == null){
+        $data['result'] = $this->master->getDetailMasterSkpd($this->general_library->getUnitKerjaPegawai());
+        } else {
+        $data['result'] = $this->master->getDetailMasterSkpd($this->input->post('id_unitkerja'));
+        }
+        $this->load->view('master/V_skpdListJftItem', $data);
+        
     }
 
     public function loadUnitKerjaByIdUnitKerjaMaster($ukmaster){

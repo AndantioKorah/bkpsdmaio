@@ -15,6 +15,40 @@ class M_Bacirita extends CI_Model
         $this->db->insert($tablename, $data);
     }
 
-    
+    public function saveDataKegiatan($data){
+        $res = [
+            'code' => 0,
+            'message' => null
+        ];
+
+        if(!$data['jam_mulai']){
+            $res['message'] = "Jam Mulai belum diinput";
+        }
+
+        if(!isset($data['chck_selesai']) && !$data['jam_selesai']){
+            $res['message'] = "Jam Selesai belum diinput";
+        }
+
+        if(isset($data['chck_selesai']) && $data['chck_selesai'] == "on"){
+            unset($data['chck_selesai']);
+            $data['jam_selesai'] = 0;
+        }
+
+        if(!$data['jam_batas_absensi']){
+            $res['message'] = "Jam Batas Absensi belum diinput";
+        }
+
+        if(!$data['jam_batas_pendaftaran']){
+            $res['message'] = "Jam Batas Pendaftaran belum diinput";
+        }
+
+        $data['id_m_tipe_kegiatan'] = $data['tipe_kegiatan'];
+        unset($data['tipe_kegiatan']);
+        $data['created_by'] = $this->general_library->getId();
+
+        $this->insert('db_bacirita.t_kegiatan', $data);
+        
+        return $res;
+    }
 
 }

@@ -13,4 +13,8 @@ class C_Bacirita extends CI_Controller
         render('bacirita/V_ManageKegiatan', null, null, null);
     }
 
+    public function saveDataKegiatan(){
+        echo json_encode($this->bacirita->saveDataKegiatan($this->input->post()));
+    }
+
 }

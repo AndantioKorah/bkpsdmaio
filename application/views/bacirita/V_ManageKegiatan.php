@@ -24,8 +24,8 @@
 				<form id="form_input_kegiatan">
 					<div class="row">
 						<div class="col-lg-9">
-							<label require class="lbl-form-input-kegiatan">Topik:</label>
-							<input class="form-control" name="topik" />
+							<label  cass="lbl-form-input-kegiatan">Topik:</label>
+							<input required id="topik" class="form-control" name="topik" />
 						</div>
 						<div class="col-lg-3">
 							<label class="lbl-form-input-kegiatan">Tipe Kegiatan:</label>
@@ -40,15 +40,15 @@
 						</div>
 						<div class="col-lg-4 mt-1">
 							<label class="lbl-form-input-kegiatan">Tanggal:</label>
-							<input require class="form-control" name="tanggal" id="tanggal" readonly value="<?=date('Y-m-d')?>" />
+							<input required class="form-control" name="tanggal" id="tanggal" readonly value="<?=date('Y-m-d')?>" />
 						</div>
 						<div class="col-lg-4 mt-1">
 							<label class="lbl-form-input-kegiatan">Jam Mulai</label>
-							<input require class="form-control" type="time" name="jam_mulai" id="jam_mulai"/>
+							<input required class="form-control" type="time" name="jam_mulai" id="jam_mulai"/>
 						</div>
 						<div class="col-lg-4 mt-1">
 							<label class="lbl-form-input-kegiatan">Jam Selesai</label>
-							<input require class="form-control" type="time" name="jam_selesai" id="jam_selesai"/>
+							<input class="form-control" type="time" name="jam_selesai" id="jam_selesai"/>
 							<div>
 								<input style="accent-color: green;" type="checkbox" id="chck_selesai" name="chck_selesai" />
 								<label for="chck_selesai" id="lbl_sampai_selesai"><i>Sampai Selesai</i></label>
@@ -62,11 +62,11 @@
 						</div>
 						<div class="col-lg-4 mt-1">
 							<label class="lbl-form-input-kegiatan">Tanggal:</label>
-							<input require class="form-control" name="tanggal_batas_absensi" id="tanggal_batas_absensi" readonly value="<?=date('Y-m-d')?>" />
+							<input required class="form-control" name="tanggal_batas_absensi" id="tanggal_batas_absensi" readonly value="<?=date('Y-m-d')?>" />
 						</div>
 						<div class="col-lg-4 mt-1">
 							<label class="lbl-form-input-kegiatan">Jam Batas Absensi</label>
-							<input require class="form-control" type="time" name="jam_batas_absensi" id="jam_batas_absensi"/>
+							<input required class="form-control" type="time" name="jam_batas_absensi" id="jam_batas_absensi"/>
 						</div>
 						<div class="col-lg-12">
 							<hr>
@@ -76,11 +76,11 @@
 						</div>
 						<div class="col-lg-4 mt-1">
 							<label class="lbl-form-input-kegiatan">Tanggal:</label>
-							<input require class="form-control" name="tanggal_batas_pendaftaran" id="tanggal_batas_pendaftaran" readonly value="<?=date('Y-m-d')?>" />
+							<input required class="form-control" name="tanggal_batas_pendaftaran" id="tanggal_batas_pendaftaran" readonly value="<?=date('Y-m-d')?>" />
 						</div>
 						<div class="col-lg-4 mt-1">
 							<label class="lbl-form-input-kegiatan">Jam Batas Pendaftaran</label>
-							<input require class="form-control" type="time" name="jam_batas_pendaftaran" id="jam_batas_pendaftaran"/>
+							<input required class="form-control" type="time" name="jam_batas_pendaftaran" id="jam_batas_pendaftaran"/>
 						</div>
 						<div class="col-lg-12">
 							<hr>
@@ -116,7 +116,8 @@
 						</div>
 						<div class="col-lg-12 text-right">
 							<hr>
-							<button class="btn btn-navy btn-block" type="submit"><i class="fa fa-save"></i> Simpan Kegiatan</button>
+							<button id="btn_simpan" class="btn btn-navy btn-block" type="submit"><i class="fa fa-save"></i> Simpan Kegiatan</button>
+							<button id="btn_simpan_loading" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
 						</div>
 					</div>
 				</form>
@@ -168,4 +169,31 @@
 			endDate: $('#tanggal').val()
 		})
 	}
+
+	$('#form_input_kegiatan').on('submit', function(e){
+		e.preventDefault()
+		$('#btn_simpan').hide()
+		$('#btn_simpan_loading').show()
+		$.ajax({
+            url: '<?=base_url("bacirita/C_Bacirita/saveDataKegiatan")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                let resp = JSON.parse(data)
+                if(resp.code == 0){
+                    $('#topik').val('')
+					$('#div_form_input_kegiatan').hide()
+					successtoast('Data berhasil disimpan')
+                } else {
+                    errortoast(resp.message)
+                }
+				$('#btn_simpan').show()
+				$('#btn_simpan_loading').hide()
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+				$('#btn_simpan').show()
+				$('#btn_simpan_loading').hide()
+            }
+        })
+	})
 </script>

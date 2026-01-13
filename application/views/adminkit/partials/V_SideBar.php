@@ -400,19 +400,20 @@
 				<i class="fa fa-database"></i> <span class="align-middle">Perangkat Daerah</span>
 			</a>
 		</li>
-		<?php if($this->general_library->isProgrammer()){ ?>
-			<li class="sidebar-item">
-			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/struktur/')?><?= $this->general_library->getUnitKerjaPegawai();?>">
-				<i class="fa fa-database"></i> <span class="align-middle">Nominatif Pegawai</span>
+
+		<li class="sidebar-item">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/jft')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">List JFT</span>
 			</a>
 		</li>
-				<?php } ?>
+
 		<?php if(!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item">
 			<a title="Nomor Surat" class="sidebar-link" href="<?=base_url('kepegawaian/nomor-surat')?>">
 				<i class="fa fa-file-alt"></i> <span class="align-middle">Nomor Surat</span>
 			</a>
 		</li>
+
 		<?php } ?>
 	<?php } ?>
 	<?php

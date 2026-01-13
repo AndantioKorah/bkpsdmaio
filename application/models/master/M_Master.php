@@ -639,6 +639,15 @@
                             ->get()->result_array();
         }
 
+         public function getAllSkpd(){
+            return $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            // ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH)
+                            ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
+                            ->order_by('id_unitkerjamaster', 'asc')
+                            ->get()->result_array();
+        }
+
         public function getAllPegawaiByIdUnitKerja($id_unitkerja){
             return $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
                                 d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,

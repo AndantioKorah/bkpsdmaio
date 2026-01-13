@@ -135,3 +135,6 @@ $route['admin/monitoring/event/absen'] = 'dashboard/C_Dashboard/dashboardWalikot
 
 //internal API
 $route['api/get-data-tpp'] = 'api/C_ApiLayanan/getDataTpp';
+
+//BKPSDM Bacirita
+$route['bkpsdm-bacirita/kegiatan'] = 'bacirita/C_Bacirita/manageKegiatan';

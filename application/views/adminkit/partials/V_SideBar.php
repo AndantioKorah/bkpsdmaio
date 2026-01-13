@@ -1488,6 +1488,27 @@
 					</a>	
 				</li>
 			<?php } ?>
+			<?php if($this->general_library->isHakAkses('admin_bkpsdm_bacirita') || $this->general_library->isProgrammer()){?>
+				<li class="sidebar-header">
+					BKPSDM Bacirita
+				</li>
+				<li class="sidebar-item">
+					<a title="Kegiatan" href="<?=base_url();?>bkpsdm-bacirita/kegiatan" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-file"></i> 
+						<span class="align-middle">
+							Kegiatan
+						</span>
+					</a>	
+				</li>
+				<!-- <li class="sidebar-item">
+					<a title="Menu BKAD" href="<?=base_url();?>bkad/upload-gaji" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-file-upload"></i> 
+						<span class="align-middle">
+							Upload Gaji
+						</span>
+					</a>	
+				</li> -->
+			<?php } ?>
 		
 
 		

@@ -210,6 +210,7 @@
                     $('#topik').val('')
 					$('#div_form_input_kegiatan').hide()
 					successtoast('Data berhasil disimpan')
+					loadListKegiatan()
                 } else {
                     errortoast(resp.message)
                 }

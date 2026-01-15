@@ -902,6 +902,14 @@ function getNamaHariFromNumber($hari)
     }
 }
 
+function textElipsis($text, $length = 100){
+    $rs = $text;
+    if(strlen($text) > 100){
+        $rs = substr($text, 0, 100)."...";
+    }
+    return $rs;
+}
+
 function getNamaHari($date)
 {
     $dayofweek = date('w', strtotime($date));

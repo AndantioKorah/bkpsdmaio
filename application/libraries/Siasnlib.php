@@ -58,6 +58,16 @@ class Siasnlib{
         );
     }
 
+    function getRiwayatSertifikasi($nip){
+        return $this->postCurl(
+            $this->API_URL.'pns/rw-sertifikasi/'.$nip,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
     function getDataUtamaPnsByNip($nip){
         return $this->postCurl(
             $this->API_URL.'pns/data-utama/'.$nip,

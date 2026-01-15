@@ -191,8 +191,8 @@
 
 	$('#form_input_kegiatan').on('submit', function(e){
 		e.preventDefault()
-		$('#btn_simpan').hide()
-		$('#btn_simpan_loading').show()
+		// $('#btn_simpan').hide()
+		// $('#btn_simpan_loading').show()
 		var formvalue = $('#form_input_kegiatan');
 		var form_data = new FormData(formvalue[0]);
 

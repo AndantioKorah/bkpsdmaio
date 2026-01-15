@@ -67,7 +67,7 @@ class M_Bacirita extends CI_Model
 
         $nama_file =  $_FILES['file']['name'];
 
-        if($_FILES){
+        if($_FILES['file']['name'] != ""){
             $config['upload_path']          = $target_dir;
             $config['allowed_types']        = '*';
             $config['encrypt_name']			= FALSE;
@@ -88,9 +88,13 @@ class M_Bacirita extends CI_Model
                 $data['url_banner'] = $target_dir.$nama_file;
 
             }
+            $this->insert('db_bacirita.t_kegiatan', $data);
+        } else {
+            $this->insert('db_bacirita.t_kegiatan', $data);
+
         }
 
-        $this->insert('db_bacirita.t_kegiatan', $data);
+        
         
         return $res;
     }

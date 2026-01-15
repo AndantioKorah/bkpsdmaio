@@ -28,6 +28,9 @@
            <?php if($m_layanan == 25 || $m_layanan == 26) { ?>
           <th class="text-left">Surat Pernyataan tidak sedang Cuti Luar Tanggungan Negara</th>
           <?php } ?>
+            <?php if($m_layanan == 34) { ?>
+          <th class="text-left">Formulir Cuti</th>
+          <?php } ?>
           <th style="width:40%;"></th>
         </thead>
         <tbody>
@@ -82,6 +85,12 @@
            <?php if($m_layanan == 25 || $m_layanan == 26) { ?>
           <td class="text-left">
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_cltn']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          </td>
+          <?php } ?>
+            <?php if($m_layanan == 34) { ?>
+          <td class="text-left">
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
           </td>
           <?php } ?>
@@ -344,6 +353,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || i
   $link = "<?=base_url();?>dokumen_layanan/mutasi_pindah_masuk/"+filename+"?v="+number;
 } else if(id_layanan == 32){
   $link = "<?=base_url();?>dokumen_layanan/peninjauan_masa_kerja/"+filename+"?v="+number;
+} else if(id_layanan == 34){
+  $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)
@@ -367,7 +378,9 @@ if(id_layanan == 12 || id_layanan == 13){
   $link = "<?=base_url();?>dokumen_layanan/tugasbelajarmandiri/"+filename+"?v="+number;
 } else if(id_layanan == 28){
   $link = "<?=base_url();?>dokumen_layanan/mutasi_pindah_masuk/"+filename+"?v="+number;
-}   else {
+} else if(id_layanan == 34){
+  $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
+}  else {
   $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
 }
 

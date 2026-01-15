@@ -736,7 +736,13 @@
 				</li>
 				<?php } ?>
 
-			
+			<?php if($this->general_library->isHakAkses('admin_pengajuan_cuti')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/34')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Cuti Besar
+					</a>
+				</li>
+				<?php } ?>
 
 				<?php if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){ ?>
 				<li class="sidebar-item ">

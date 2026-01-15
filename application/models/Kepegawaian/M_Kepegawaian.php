@@ -5875,6 +5875,9 @@ public function submitEditJabatan(){
             $id_layanan[] = 1;
         }
 
+        if($this->general_library->isHakAkses('admin_pengajuan_cuti')){
+            $id_layanan[] = 34;
+        }
    
         $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')
             ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')
@@ -11731,7 +11734,9 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 32);
             } else if($id_m_layanan == 33){ 
                 $this->db->where('a.id_m_layanan', 33);
-            }   else {
+            } else if($id_m_layanan == 34){ 
+                $this->db->where('a.id_m_layanan', 34);
+            }     else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
 
@@ -11842,6 +11847,10 @@ function getPengajuanLayanan($id,$id_m_layanan){
     if($id_m_layanan == 25 || $id_m_layanan == 26){
         $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_dok','left');
     }
+     if($id_m_layanan == 34){
+        $this->db->join('db_pegawai.pegcuti l', 'l.id = c.reference_id_dok','left');
+    }
+    
     
     
     return $this->db->get()->result_array();
@@ -12594,6 +12603,14 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "formulir_cuti"){
+            $this->db->select('a.surat_pernyataan_tidak_hd')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         }     else {
          return [''];
         }
@@ -12721,6 +12738,9 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         } else if($dataPengajuan[0]['id_m_layanan'] == 32){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENINJAUAN MASA KERJA]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Peninjauan Masa Kerja anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 34){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN CUTI BESAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Cuti Besar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        
@@ -13403,6 +13423,50 @@ public function getFileForVerifLayanan()
                     $this->db->insert('t_cron_wa', $cronWa);
             // JABATAN
             
+            } else  if($id_dok == 17){
+            // CUTI BESAR   
+            $dataInsert['id_pegawai']     = $id_peg;
+            $dataInsert['jeniscuti']      = $this->input->post('cuti_jenis');
+            $dataInsert['lamacuti']      = "0";
+            $dataInsert['tglmulai']      = $this->input->post('cuti_tglmulai');
+            $dataInsert['tglselesai']      = $this->input->post('cuti_tglselesai');
+            $dataInsert['nosttpp']      = $this->input->post('cuti_nosurat');
+            $dataInsert['tglsttpp']      = $this->input->post('cuti_tglsurat');
+            $dataInsert['gambarsk']      = $data['nama_file'];
+            $dataInsert['created_by']      = $this->general_library->getId();
+            $dataInsert['status']      = 2;
+            $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+            $dataInsert['id_m_user_verif']      = $this->general_library->getId();
+            // dd($dataInsert);
+            $result = $this->db->insert('db_pegawai.pegcuti', $dataInsert);
+             $id_insert_dok = $this->db->insert_id();
+
+            $dataUpdate['status'] = 3;
+            $dataUpdate['reference_id_dok'] = $id_insert_dok;
+             $url_file = "arsipcuti/".$data['nama_file'];
+            $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $dataUpdate);
+
+             $dataLayanan = $this->db->select('c.*,a.*')
+                    ->from('t_layanan a')
+                    ->join('m_user b', 'a.id_m_user = b.id')
+                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                    ->where('a.id', $id_usul)
+                    ->get()->row_array();
+            
+    
+            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Cuti Besar anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nPosisi Usulan : BKAD\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+            $cronWa = [
+                        'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+                        'message' => $caption,
+                        'filename' => "SK CUTI BESAR.pdf",
+                        'fileurl' => $url_file,
+                        'type' => 'document',
+                        'jenis_layanan' => 'Cuti'
+                    ];
+                    $this->db->insert('t_cron_wa', $cronWa);
+            // CUTI BESAR
+            
             }
        
         return $result;
@@ -13495,6 +13559,17 @@ public function getFileForVerifLayanan()
                     ->update('db_pegawai.pegarsip', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
         }
          // SUKET TIDAK TUBEL
+        // CUTI BESAR
+        if($id_m_layanan == 34){
+        $data["status"] = 1; 
+        $data["reference_id_dok"] = null; 
+        $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $data);
+                  
+        $this->db->where('id', $reference_id_dok)
+                    ->update('db_pegawai.pegcuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+        }
+            // CUTI BESAR
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;
@@ -14061,6 +14136,9 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 32){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/peninjauan_masa_kerja';
+            } else if($id_m_layanan == 34){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/cuti_besar';
             }  else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
@@ -14078,16 +14156,19 @@ public function getFileForVerifLayanan()
                 $filehd =  "surat_keterangan_guru_$nip"."_$random_number".".pdf";
                 } else if($id_m_layanan == 15){
                 $filehd =  "surat_pernyataan_bersedia_tidak_diangkat_jf_lagi_$nip"."_$random_number".".pdf";
+                } else if($id_m_layanan == 34){
+                $filehd =  "formulir_cuti_besar_$nip"."_$random_number".".pdf";
                 } else {
                 $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
                 }
-
                 if($id_m_layanan == 23){
                 $target_dir_hd	= './dokumen_layanan/suratpidanahukdis';
                 } else if($id_m_layanan == 28){
                 $target_dir_hd	= './dokumen_layanan/mutasi_pindah_masuk';
                 } else if($id_m_layanan == 31){
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional';
+                } else if($id_m_layanan == 34){
+                $target_dir_hd	= './dokumen_layanan/cuti_besar';
                 } else {
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
                 } 

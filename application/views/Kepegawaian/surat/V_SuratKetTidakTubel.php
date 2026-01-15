@@ -170,7 +170,7 @@
 
 	<p class="justify" >
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adalah Benar Pegawai Negeri Sipil Kota Manadi dan saat ini tidak sedang menjalani 
-        Tugas Berlajar/Ikatan Dinas di Pemerintah Kota Manado.</p>
+        Tugas Belajar/Ikatan Dinas di Pemerintah Kota Manado.</p>
 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian surat keterangan dibuat untuk kelengkapan berkas 
     Pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>.

@@ -277,6 +277,10 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananPmk/")?>'+val, function(){
       $('#loader').hide()
     })
+    } else if(val == 34) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/cutiBesar/")?>'+val, function(){
+      $('#loader').hide()
+    })
     }else {
       $('#form_layanan').html('')
     }

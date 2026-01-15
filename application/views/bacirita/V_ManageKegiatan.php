@@ -144,7 +144,6 @@
 				<hr>
 			</div>
 			<div id="div_list_kegiatan" class="col-lg-12">
-				asdasdsad
 			</div>
 		</div>
 	</div>
@@ -154,6 +153,7 @@
 	$(function(){
 		$('#tipe_kegiatan').select2()
 		refreshDatePicker()
+		loadListKegiatan()
 	})
 
 	function refreshDatePicker(){
@@ -178,6 +178,14 @@
 			autoclose: true,
 			// todayBtn: true,
 			endDate: $('#tanggal').val()
+		})
+	}
+
+	function loadListKegiatan(){
+		$('#div_list_kegiatan').html()
+		$('#div_list_kegiatan').append(divLoaderNavy)
+		$('#div_list_kegiatan').load('<?=base_url("bacirita/C_Bacirita/loadListKegiatan")?>', function(){
+			$('#loader').hide()
 		})
 	}
 

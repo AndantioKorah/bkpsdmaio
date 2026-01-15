@@ -15,6 +15,15 @@ class M_Bacirita extends CI_Model
         $this->db->insert($tablename, $data);
     }
 
+    public function loadListKegiatan(){
+        return $this->db->select('a.*')
+                    ->from('db_bacirita.t_kegiatan a')
+                    ->join('m_user b', 'a.created_by = b.id')
+                    ->order_by('a.created_date', 'desc')
+                    ->where('a.flag_active', 1)
+                    ->get()->result_array();
+    }
+
     public function saveDataKegiatan($data){
         $res = [
             'code' => 0,

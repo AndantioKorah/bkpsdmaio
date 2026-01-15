@@ -96,7 +96,7 @@
           <?php } ?>
               <td>
               <?php if($rs['status'] == 0 AND $rs['keterangan'] == "") { ?>
-              <button title="Hapus" onclick="deleteData('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button title="Hapus" onclick="deleteData('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i></button> 
               <?php } ?>
               <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16 || $rs['id_m_layanan'] == 30 || $rs['id_m_layanan'] == 31) { ?>
                
@@ -309,8 +309,11 @@
                                  if(id_layanan == 27){
                                 loadListRiwayatSuratMasukPt()
                                }
-                                  if(id_layanan == 25 || id_layanan == 26){
+                                if(id_layanan == 25 || id_layanan == 26){
                                 loadListRiwayatTugasBelajar()
+                               }
+                                if(id_layanan == 34){
+                                loadListRiwayatCutiBesar()
                                }
                                
                                
@@ -442,6 +445,12 @@ function ajukanKembali(id){
                                if(id_layanan == 28){
                                 loadListRiwayatMutasiPidahMasuk()
                                }
+                                if(id_layanan == 34){
+                                  alert()
+                                loadListRiwayatCutiBesar()
+                               }
+
+                               
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

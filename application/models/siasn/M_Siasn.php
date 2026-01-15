@@ -760,6 +760,56 @@
 
             return $rs;
         }
+
+        public function addDataForSyncBangkom(){
+            $data = $this->db->select('nipbaru_ws as nip')
+                            ->from('db_pegawai.pegawai')
+                            ->where('id_m_status_pegawai', 1)
+                            ->get()->result_array();
+
+            foreach($data as $d){
+                $this->db->insert('t_cron_sync_bangkom_siasn', [
+                    'nip' => $d['nip'],
+                    'temp_count' => 0,
+                ]);
+            }
+        }
+
+        public function cronSyncBangkom(){
+            $list = $this->db->select('a.*')
+                            ->from('t_cron_sync_bangkom_siasn a')
+                            ->where('a.flag_active', 1)
+                            ->where('a.temp_count < 3')
+                            ->where('a.flag_done', 0)
+                            ->limit(5);
+
+            if($list){
+                foreach($list as $l){
+                    $rwSerti = $this->siasnlib->getRiwayatSertifikasi(199310072025052001);
+                    if($rwSerti['code'] == 0){
+                        $rs = json_decode($rwSerti['data'], true);
+                        dd($rs);
+                        if($rs['data']){
+
+                        } else {
+                            // $this->db->where('nip', $l['nip'])
+                            //         ->update('t_cron_sync_bangkom_siasn', [
+                            //             'flag_done' => 1,
+                            //             'done_date' => date('Y-m-d H:i:s'),
+                            //         ]);
+                        }
+                    }
+
+                    // $this->db->where('nip', $l['nip'])
+                    //         ->update('t_cron_sync_bangkom_siasn', [
+                    //             'log' => $rwSerti['data'],
+                    //             'last_try_date' => date('Y-m-d H:i:s'),
+                    //             'temp_count' => $l['temp_count'] += 1
+                    //         ]);
+                }
+            }
+        }
+
     }
 
 ?>

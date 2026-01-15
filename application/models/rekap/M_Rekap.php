@@ -4813,7 +4813,8 @@
         $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan, g.updated_date as last_update_rekap,
                         d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
                         a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk, e.id as id_m_user,
-                        a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg, g.meta_data')
+                        a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg, g.meta_data,
+                        g.bulan, g.tahun')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
@@ -4866,6 +4867,8 @@
                 }
             }
         }
+
+        // remove duplikat data
         return $result;
     }
 
@@ -4884,6 +4887,7 @@
                         ->where('e.id', $idUser)
                         ->where('g.tahun', $tahun)
                         ->order_by('g.bulan')
+                        ->where('g.flag_active', 1)
                         ->get()->result_array();
 
         $result = null;

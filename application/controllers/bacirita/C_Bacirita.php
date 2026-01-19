@@ -22,4 +22,9 @@ class C_Bacirita extends CI_Controller
         $this->load->view('bacirita/V_ListKegiatanAdmin', $data);
     }
 
+    public function modalLoadDetailKegiatan($id){
+        $data['result'] = $this->bacirita->modalLoadDetailKegiatan($id);
+        $this->load->view('bacirita/V_ModalEditKegiatan', $data);
+    }
+
 }

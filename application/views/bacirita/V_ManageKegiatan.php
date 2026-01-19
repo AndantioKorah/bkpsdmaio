@@ -148,7 +148,21 @@
 		</div>
 	</div>
 </div>
-
+<div class="modal fade" id="modal_detail_kegiatan" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" 
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div id="modal-dialog" class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">DETAIL KEGIATAN</h6>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modal_detail_kegiatan_content">
+            </div>
+        </div>
+    </div>
+  </div>
 <script>
 	$(function(){
 		$('#tipe_kegiatan').select2()

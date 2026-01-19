@@ -95,7 +95,8 @@
 										</span>
 									</div>
 									<div class="col-lg-6 text-right">
-										<a href="#" class="text-right btn btn-navy">Detail</a>
+										<a href="#modal_detail_kegiatan" data-toggle="modal" onclick="openDetailModal('<?=$rs['id']?>')"
+										class="text-right btn btn-navy">Detail</a>
 									</div>
 								</div>
 							</div>
@@ -106,3 +107,13 @@
 		<?php } ?>
 	</div>
 <?php } ?>
+
+<script>
+	function openDetailModal(id){
+		$('#modal_detail_kegiatan_content').html('')
+		$('#modal_detail_kegiatan_content').append(divLoaderNavy)
+		$('#modal_detail_kegiatan_content').load('<?=base_url("bacirita/C_Bacirita/modalLoadDetailKegiatan/")?>'+id, function(){
+			$('#loader').hide()
+		})
+	}
+</script>

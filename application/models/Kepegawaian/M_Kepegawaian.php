@@ -2932,6 +2932,16 @@ function getNamaJabatan(){
     return $this->db->get()->result_array(); 
 }
 
+function getNamaJabatanFungsional(){
+    $this->db->select('*')
+    ->where_not_in('id_jabatanpeg', ['0000005J001','0000005J002'])
+    ->where('flag_active', 1)
+     ->where('jenis_jabatan', "JFT")
+    ->group_by('a.nama_jabatan')
+    ->from('db_pegawai.jabatan a');
+    return $this->db->get()->result_array(); 
+}
+
 function getJenisJabatan(){
     $this->db->select('*')
     ->where_in('id_jenisjab', ['00','10'])
@@ -15498,9 +15508,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
     {
         $this->db->select('a.id_peg,a.statuspeg,a.tmtgjberkala,a.pangkat')
             ->from('db_pegawai.pegawai a')
-            // ->where('a.tmtgjberkalaberikut is null')
+            ->where('a.tmtgjberkalaberikut is null')
             ->where('a.id_m_status_pegawai', 1)
-            // ->where_in('a.statuspeg', [1,2])
+            ->where_in('a.statuspeg', [1,2,3])
             ->limit(1000);
             
         $pegawai = $this->db->get()->result_array();
@@ -16204,6 +16214,65 @@ public function checkListIjazahCpns($id, $id_pegawai){
                        $query = $this->db->get()->result_array();
                        return $query;
    }
+
+   public function submitTambahkebutuhanJf(){
+    
+                $datapost = $this->input->post();
+                
+                $this->db->trans_begin();
+            
+                // $data["id_sub_unsur_penilaian"] = $datapost["sub_unsur_penilaian"];
+                // $data["nm_indikator"] = $datapost["indikator"];
+                // $data["bobot"] = $datapost["bobot"];
+                
+                 $this->db->select('*')
+                       ->from('t_kebutuhan_fungsional a')
+                       ->where('a.id_jabatan', $datapost["id_jabatan"])
+                       ->where('a.id_unitkerja', $datapost["id_unitkerja"])
+                       ->where('a.flag_active', 1);
+                         $cek = $this->db->get()->result_array();
+                if($cek){
+                $res = array('msg' => 'Sudah data kebutuhan', 'false' => true);
+                } else {
+                $this->db->insert('t_kebutuhan_fungsional', $datapost);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                }
+               
+
+            
+            
+                if($this->db->trans_status() == FALSE){
+                    $this->db->trans_rollback();
+                    // $res['code'] = 1;
+                    // $res['message'] = 'Terjadi Kesalahan';
+                    // $res['data'] = null;
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+                } else {
+                    $this->db->trans_commit();
+                }
+            
+                return $res;
+            }
+
+    public function loadListkebutuhanJf(){
+                return $this->db->select('*')
+                                ->from('t_kebutuhan_fungsional a')  
+                                ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')
+                                ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
+                                ->where('a.flag_active', 1)
+                                ->order_by('b.nama_jabatan', 'asc')
+                                ->get()->result_array();
+        }
+
+        public function editKebutuhanJf($id){
+            $data['kebutuhan'] = $this->input->post('kebutuhan');
+
+            $this->db->where('id', $id)
+                    ->update('t_kebutuhan_fungsional', $data);
+                    $res = array('msg' => 'Data berhasil diubah', 'success' => true);
+        return $res;
+
+        }
     
 
 }

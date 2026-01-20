@@ -831,6 +831,34 @@
             return $result;
         }
 
+        public function listJftItem($id_unitkerja){
+        //     $list_jft = $this->db->select('*,  COUNT(a.jabatan) as total,
+        //     (select aa.kebutuhan from t_kebutuhan_fungsional as aa where a.jabatan = aa.id_jabatan and a.skpd = aa.id_unitkerja and aa.flag_active = 1) as kebutuhan')
+        //                         ->from('db_pegawai.pegawai a')
+        //                         ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+        //                         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+        //                         ->where('a.skpd', $id_unitkerja)
+        //                          ->where('c.jenis_jabatan', "JFT")
+        //                         ->where('id_m_status_pegawai', 1)
+        //                         ->group_by('a.jabatan')
+        //                          ->order_by('a.pangkat', 'desc')
+        //                         ->get()->result_array();
+        //    return $list_jft;
+
+         $list_jft = $this->db->select('*,
+         (select count(aa.jabatan) from db_pegawai.pegawai as aa where a.id_jabatan = aa.jabatan and a.id_unitkerja = aa.skpd and aa.id_m_status_pegawai = 1) as total
+         ')
+                                ->from('t_kebutuhan_fungsional a')
+                                ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                                ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg')
+                                ->where('a.id_unitkerja', $id_unitkerja)
+                                 ->where('a.flag_active', 1)
+                                 ->order_by('c.nama_jabatan', 'asc')
+
+                                ->get()->result_array();
+           return $list_jft;
+        }
+
         public function searchPegawaiSkpdByFilter($data){
             $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,

@@ -1245,6 +1245,21 @@ function isSuratCutiTahunan($array){
     ];
 }
 
+function formatDateNotifikasi($date){
+    $now = date('Y-m-d');
+    if($date > $now){
+        return formatDateNamaBulanWithTime($date);
+    } else {
+        $now = date('Y-m-d H:i:s');
+        $diffJam = countDiffDateLengkap($date, $now, ['jam']);
+        if($diffJam < 1){
+            return countDiffDateLengkap($date, $now, ['menit']).' menit';
+        } else {
+            return $diffJam.' jam';
+        }
+    }
+}
+
 function countDiffDateLengkap($date1, $date2, $params = '')
 {
     $total_waktu = "";

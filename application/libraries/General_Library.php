@@ -333,6 +333,10 @@ class General_library
           return $this->nikita->kepegawaian->getVerifLayananPensiun($this->getId());
     }
 
+    public function getNotifikasiPegawai(){
+        return $this->nikita->m_general->getNotifikasiPegawai();
+    }
+
     public function getDataUnitKerjaPegawai(){
         $result['id_unitkerja'] = $this->userLoggedIn['id_unitkerja'];
         $result['nm_unitkerja'] = $this->userLoggedIn['nm_unitkerja'];

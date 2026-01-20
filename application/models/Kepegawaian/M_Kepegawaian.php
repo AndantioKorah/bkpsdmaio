@@ -6838,7 +6838,8 @@ public function submitEditJabatan(){
                             ->where('b.flag_active', 1)
                             ->get()->row_array();
 
-            if(($dataPegawai['statuspeg'] == 3 || $dataPegawai['statuspeg'] == 1) && $data['id_cuti'] == "00"){ // jika cpns atau pppk ambil cuti tahunan
+            // if(($dataPegawai['statuspeg'] == 3 || $dataPegawai['statuspeg'] == 1) && $data['id_cuti'] == "00"){ // jika cpns atau pppk ambil cuti tahunan
+            if(($dataPegawai['statuspeg'] == 1) && $data['id_cuti'] == "00"){ // jika cpns ambil cuti tahunan
                 $diff = countDiffDateLengkap(date('Y-m-d'), $dataPegawai['tmtcpns'], ['tahun']);
                 $expl = explode(" ", trim($diff));
                 if($expl[0] < 1){

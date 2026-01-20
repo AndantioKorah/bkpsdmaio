@@ -294,6 +294,11 @@ class General_library
     public function isBisaAmbilCutiTahunan(){
         $diff = countDiffDateLengkap(date('Y-m-d'), $this->userLoggedIn['tmtcpns'], ['tahun', 'bulan']);
         $expl = explode(" ", trim($diff));
+
+        if($this->userLoggedIn['statuspeg'] == 3 || $this->userLoggedIn['statuspeg'] == 6){
+            return true;
+        }
+
         if(trim($expl[1] == "tahun" && trim($expl[0]) >= 1)){
             return true;
         }
@@ -326,6 +331,10 @@ class General_library
         // $result['layanan'] = $this->nikita->kepegawaian->getVerifLayanan($this->getId());
         // return $result;
           return $this->nikita->kepegawaian->getVerifLayananPensiun($this->getId());
+    }
+
+    public function getNotifikasiPegawai(){
+        return $this->nikita->m_general->getNotifikasiPegawai();
     }
 
     public function getDataUnitKerjaPegawai(){

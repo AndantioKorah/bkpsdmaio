@@ -2474,5 +2474,30 @@
                 $this->db->trans_commit();
             }
         }
+
+        public function getNotifikasiPegawai(){
+            $data = $this->db->select('*')
+                        ->from('t_notifikasi')
+                        ->where('id_m_user', $this->general_library->getId())
+                        ->where('flag_active', 1)
+                        ->order_by('created_date', 'desc')
+                        ->get()->result_array();
+
+            $notif['show'] = null;
+            $notif['read'] = null;
+            $notif['total'] = 0;
+            if($data){
+                $notif['total'] = count($data);
+                foreach($data as $d){
+                    if($d['flag_read'] == 0){
+                        $notif['show'][] = $d;
+                    } else {
+                        $notif['read'][] = $d;
+                    }
+                }
+            }
+
+            return $notif;
+        }
 	}
 ?>

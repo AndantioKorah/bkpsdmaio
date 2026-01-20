@@ -91,12 +91,19 @@ class M_Bacirita extends CI_Model
             $this->insert('db_bacirita.t_kegiatan', $data);
         } else {
             $this->insert('db_bacirita.t_kegiatan', $data);
-
         }
-
-        
-        
         return $res;
+    }
+
+    public function modalLoadDetailKegiatan($id){
+        return $this->db->select('a.*, c.nama_tipe_kegiatan')
+                    ->from('db_bacirita.t_kegiatan a')
+                    ->join('m_user b', 'a.created_by = b.id')
+                    ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
+                    ->order_by('a.created_date', 'desc')
+                    ->where('a.id', $id)
+                    ->where('a.flag_active', 1)
+                    ->get()->row_array();
     }
 
 }

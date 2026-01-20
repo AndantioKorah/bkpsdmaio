@@ -246,6 +246,7 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
+        phpinfo();
         $this->user->rekapCutiDesember();
 
         // $this->kepegawaian->cekErrorCuti();

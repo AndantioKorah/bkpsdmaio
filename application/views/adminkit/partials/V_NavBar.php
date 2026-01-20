@@ -140,6 +140,7 @@
   $list_role = $this->general_library->getListRole();
   $list_notif_layanan = $this->general_library->getListAdminLayanan();
   $list_notif_layanan_pensiun = $this->general_library->getListAdminLayananPensiun();
+  $list_notif_pegawai = $this->general_library->getNotifikasiPegawai();
 //   dd( $list_notif_layanan);
   $active_role = $this->general_library->getActiveRole();
 ?>
@@ -295,70 +296,94 @@
 			
 			<!-- role  -->
 
-			<?php if($this->general_library->isPegawaiBkpsdm()) { ?>
+			<?php // if($this->general_library->isPegawaiBkpsdm()) { ?>
 				<li class="nav-item dropdown">
-				<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
-								<div class="position-relative">
-									<i class="align-middle" data-feather="bell"></i>
-									<?php 
-									$layanan = 0;
-									$layanan2 = 0;
-									if($list_notif_layanan){
-										$layanan = count($list_notif_layanan);
-									}
-									if($list_notif_layanan_pensiun){
-										$layanan2 = count($list_notif_layanan_pensiun);
-									} 
-									$total = $layanan + $layanan2;  
-									;?>
-									
-									<?php if($total > 0) { ?>
-									<span class="indicator" ><?= $total;?></span>
-									<?php } ?>
-								</div>
-							</a>
-							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">
-								<div class="dropdown-menu-header">
-									Notifikasi Baru
-								</div>
-								<div class="list-group" style="
-									width: 100%;
-									height: 400px;
-									overflow: scroll;">
-								<?php foreach($list_notif_layanan as $ly){ ?>
-									<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<i class="text-danger" data-feather="alert-circle"></i>
-											</div>
-											<div class="col-10">
-												<div class="text-dark"><?=$ly['nama_layanan']?></div>
-												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>a.n. <?=$ly['nama']?></div>
-												<div class="text-muted small mt-1"><?=formatDateNamaBulan($ly['tanggal_pengajuan'])?></div>
-											</div>
-										</div>
-									</a>
-									<?php } ?>
-									<?php foreach($list_notif_layanan_pensiun as $ly){ ?>
-									<a href="<?php echo base_url('kepegawaian/pensiun/kelengkapan-berkas/');?><?=$ly['username']?>" class="list-group-item">
-									<!-- <a href="<?php echo base_url('kepegawaian/verifikasi-pensiun-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['jenis_pensiun']?>" class="list-group-item"> -->
+					<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
+						<div class="position-relative">
+							<i class="align-middle" data-feather="bell"></i>
+							<?php 
+							$layanan = 0;
+							$layanan2 = 0;
+							$notifPegawai = 0;
+							if($list_notif_layanan){
+								$layanan = count($list_notif_layanan);
+							}
+							if($list_notif_layanan_pensiun){
+								$layanan2 = count($list_notif_layanan_pensiun);
+							}
+							if($list_notif_pegawai && isset($list_notif_pegawai['show']) && count($list_notif_pegawai['show']) > 0){
+								$notifPegawai = count($list_notif_pegawai['show']);
+							} 
+							$total = $layanan + $layanan2 + $notifPegawai;  
 
-										<div class="row g-0 align-items-center">
-											<div class="col-2">
-												<i class="text-danger" data-feather="alert-circle"></i>
-											</div>
-											<div class="col-10">
-												<div class="text-dark"><?=$ly['nama_layanan']?></div>
-												<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>a.n. <?=$ly['nama']?></div>
-												<div class="text-muted small mt-1"><?=formatDateNamaBulan($ly['tanggal_pengajuan'])?></div>
-											</div>
-										</div>
-									</a>
-									<?php } ?>
-								</div>
+							if(!$this->general_library->isPegawaiBkpsdm()){
+								$total = $notifPegawai;
+							}
+							;?>
+							
+							<?php if($total > 0) { ?>
+							<span class="indicator" ><?= $total;?></span>
+							<?php } ?>
+						</div>
+					</a>
+					<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">
+						<?php if($this->general_library->isPegawaiBkpsdm()){ ?>
+							<div class="dropdown-menu-header">
+								Administrasi Kepegawaian
 							</div>
+							<div class="list-group" style="
+								width: 100%;
+								height: 400px;
+								overflow: scroll;">
+							<?php if($list_notif_layanan){ foreach($list_notif_layanan as $ly){ ?>
+								<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
+									<div class="row g-0 align-items-center">
+										<div class="col-2">
+											<i class="text-danger" data-feather="alert-circle"></i>
+										</div>
+										<div class="col-10">
+											<div class="text-dark"><?=$ly['nama_layanan']?></div>
+											<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>a.n. <?=$ly['nama']?></div>
+											<div class="text-muted small mt-1"><?=formatDateNamaBulan($ly['tanggal_pengajuan'])?></div>
+										</div>
+									</div>
+								</a>
+							<?php } } ?>
+							<?php if($list_notif_layanan_pensiun){ foreach($list_notif_layanan_pensiun as $ly){ ?>
+								<a href="<?php echo base_url('kepegawaian/pensiun/kelengkapan-berkas/');?><?=$ly['username']?>" class="list-group-item">
+								<!-- <a href="<?php echo base_url('kepegawaian/verifikasi-pensiun-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['jenis_pensiun']?>" class="list-group-item"> -->
+
+									<div class="row g-0 align-items-center">
+										<div class="col-2">
+											<i class="text-danger" data-feather="alert-circle"></i>
+										</div>
+										<div class="col-10">
+											<div class="text-dark"><?=$ly['nama_layanan']?></div>
+											<div class="text-muted small mt-1">Pengajuan layanan belum diverifikasi. <br>a.n. <?=$ly['nama']?></div>
+											<div class="text-muted small mt-1"><?=formatDateNamaBulan($ly['tanggal_pengajuan'])?></div>
+										</div>
+									</div>
+								</a>
+							<?php } } ?>
+							<?php if($list_notif_pegawai && $list_notif_pegawai['show']) { foreach($list_notif_pegawai['show'] as $np){ ?>
+								<a class="list-group-item p-0" style="padding: 5px !important;">
+									<div class="row g-0 align-items-center">
+										<div class="col-2 text-center">
+											<i class="fa fa-times fa-2x text-danger"></i>
+										</div>
+										<div class="col-10">
+											<div class="text-dark"><?=$np['judul_notifikasi']?></div>
+											<div class="text-muted small mt-1"><?=$np['pesan']?></div>
+											<div class="text-muted small mt-1"><?=formatDateNotifikasi($np['created_date'])?></div>
+										</div>
+									</div>
+								</a>
+							<?php } } ?>
+							</div>
+						<?php } ?>
+					</div>
 				</li>
-				<?php } ?>	
+			<?php // } ?>	
 			<?php 
 			$cari_role = array_search("admin_aplikasi", array_column($list_role, 'role_name'));
 			if($cari_role == false){ ?>	

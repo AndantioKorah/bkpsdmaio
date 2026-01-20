@@ -26,7 +26,7 @@
         </td>
         <td class="text-center"><?=$rs['kelas_jabatan']?></td>
         <?php if($this->general_library->isProgrammer()){ ?>
-          <td class="text-center"><?=formatCurrencyWithoutRp(($pagu_tpp[$rs['kelas_jabatan']]), 0)?></td>
+          <td class="text-center"><?=isset($pagu_tpp[$rs['kelas_jabatan']]) ? formatCurrencyWithoutRp(($pagu_tpp[$rs['kelas_jabatan']]), 0) : 0?></td>
           <td class="text-center"><?=(floatval($rs['prestasi_kerja'])).'%'?></td>
           <td class="text-center"><?=(floatval($rs['beban_kerja'])).'%'?></td>
           <td class="text-center"><?=(floatval($rs['kondisi_kerja'])).'%'?></td>

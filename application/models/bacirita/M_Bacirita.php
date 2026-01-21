@@ -64,8 +64,7 @@ class M_Bacirita extends CI_Model
         
         // dd($this->input->post());
         // dd($_FILES['file']['name']);
-
-        $nama_file =  $_FILES['file']['name'];
+        $nama_file = str_replace(' ', '',$_FILES['file']['name']); 
 
         if($_FILES['file']['name'] != ""){
             $config['upload_path']          = $target_dir;
@@ -104,6 +103,90 @@ class M_Bacirita extends CI_Model
                     ->where('a.id', $id)
                     ->where('a.flag_active', 1)
                     ->get()->row_array();
+    }
+
+
+    public function editDataKegiatan($data){
+        $res = [
+            'code' => 0,
+            'message' => null
+        ];
+
+        $id = $data['id_kegiatan'];
+        unset($data['id_kegiatan']);
+        $data['topik'] = trim($data['topik']);
+        $data['link_url'] = preg_replace('/[^a-zA-Z0-9_ -]/s', '', $data['topik']);
+        $data['link_url'] = strtolower(str_replace(" ", "-", $data['link_url']));
+
+        if(!$data['jam_mulai']){
+            $res['message'] = "Jam Mulai belum diinput";
+        }
+
+        if(!isset($data['chck_selesai']) && !$data['jam_selesai']){
+            $res['message'] = "Jam Selesai belum diinput";
+        }
+
+        if(isset($data['chck_selesai']) && $data['chck_selesai'] == "on"){
+            unset($data['chck_selesai']);
+            $data['jam_selesai'] = 0;
+        }
+
+        if(!$data['jam_batas_absensi']){
+            $res['message'] = "Jam Batas Absensi belum diinput";
+        }
+
+        if(!$data['jam_batas_pendaftaran']){
+            $res['message'] = "Jam Batas Pendaftaran belum diinput";
+        }
+
+        $data['id_m_tipe_kegiatan'] = $data['tipe_kegiatan'];
+        unset($data['tipe_kegiatan']);
+        $data['created_by'] = $this->general_library->getId();
+        
+        $target_dir = 'arsipbkpsdmbacirita/banner_kegiatan/';
+        
+        $nama_file = str_replace(' ', '',$_FILES['file']['name']); 
+
+        if($_FILES['file']['name'] != ""){
+
+            $banner_lama = $this->db->select('a.url_banner')
+                    ->from('db_bacirita.t_kegiatan a')
+                    ->where('a.id', $id)
+                    ->where('a.flag_active', 1)
+                    ->get()->row_array();
+                    
+            unlink($banner_lama['url_banner']);
+            
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = '*';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = $nama_file;
+
+            $this->load->library('upload', $config);
+        
+            if (!$this->upload->do_upload('file')) {
+                $data['error']    = strip_tags($this->upload->display_errors());
+                $res['code'] = 1;
+                $res['message'] = "Terjadi Kesalahan";
+                return $res;
+
+            } else {
+                $dataFile 			= $this->upload->data();
+                 $data['url_banner'] = $target_dir.$nama_file;
+
+            }
+
+            $this->db->where('id', $id)
+                    ->update('db_bacirita.t_kegiatan', $data);
+
+        
+        } else {
+            $this->db->where('id', $id)
+                    ->update('db_bacirita.t_kegiatan', $data);
+        }
+        return $res;
     }
 
 }

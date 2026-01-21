@@ -81,9 +81,9 @@ class C_Master extends CI_Controller
 
      public function openListPegawaiDetailSkpdMenuItem(){
         if($this->input->post('id_unitkerja') == null){
-        $data['result'] = $this->master->getDetailMasterSkpd($this->general_library->getUnitKerjaPegawai());
+        $data['result'] = $this->master->listJftItem($this->general_library->getUnitKerjaPegawai());
         } else {
-        $data['result'] = $this->master->getDetailMasterSkpd($this->input->post('id_unitkerja'));
+        $data['result'] = $this->master->listJftItem($this->input->post('id_unitkerja'));
         }
         $this->load->view('master/V_skpdListJftItem', $data);
         

@@ -402,6 +402,12 @@
 		</li>
 
 		<li class="sidebar-item">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('kepegawaian/C_Kepegawaian/kebutuhanJf')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Admin JFT</span>
+			</a>
+		</li>
+
+		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/jft')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">List JFT</span>
 			</a>
@@ -433,6 +439,7 @@
 		}
 	?>
 	<?php if(!$this->general_library->isWalikota()){ ?>
+
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
 		<a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link">
@@ -735,7 +742,7 @@
 					</a>
 				</li>
 				<?php } ?>
-
+			
 			<?php if($this->general_library->isHakAkses('admin_pengajuan_cuti')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/34')?>">
@@ -1039,6 +1046,7 @@
 			</ul>
 		</li>
 		<?php } ?>
+		
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#skbp" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
@@ -1053,6 +1061,7 @@
 			</a>
 			<ul id="skbp" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				<?php if(!$this->general_library->isWalikota()){ ?>
+				
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('kinerja/rencana')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Sasaran Kerja

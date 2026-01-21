@@ -1,7 +1,9 @@
 <?php if($result){ $rs = $result; ?>
+
 	<div class="row p-3">
 		<div class="col-lg-12">
-			<form method="post" id="form_input_kegiatan_edit" enctype="multipart/form-data" >
+			<form method="post" id="form_edit_kegiatan" enctype="multipart/form-data" >
+				<input type="hidden" name="id_kegiatan" id="id_kegiatan" value="<?=$rs['id']?>">
 				<div class="row">
 					<div class="col-lg-9">
 						<label cass="lbl-form-input-kegiatan">Topik:</label>
@@ -24,11 +26,11 @@
 					</div>
 					<div class="col-lg-4 mt-1">
 						<label class="lbl-form-input-kegiatan">Jam Mulai</label>
-						<input required class="form-control" type="time" name="jam_mulai" id="jam_mulai_edit" value="<?=$rs['jam_mulai']?>" />
+						<input required class="form-control" type="time" name="jam_mulai" id="jam_mulai_edit" value="<?= substr($rs['jam_mulai'], 0, 5);?>" />
 					</div>
 					<div class="col-lg-4 mt-1">
 						<label class="lbl-form-input-kegiatan">Jam Selesai</label>
-						<input class="form-control" type="time" name="jam_selesai" id="jam_selesai_edit" value="<?=$rs['jam_selesai']?>" />
+						<input class="form-control" type="time" name="jam_selesai" id="jam_selesai_edit" value="<?= substr($rs['jam_selesai'], 0, 5); ?>" />
 						<div>
 							<input style="accent-color: green;" type="checkbox" id="chck_selesai_edit" name="chck_selesai" <?=formatTimeAbsen($rs['jam_selesai']) == "00:00" ? "checked" : ""?> />
 							<label for="chck_selesai" id="lbl_sampai_selesai_edit"><i>Sampai Selesai</i></label>
@@ -46,7 +48,7 @@
 					</div>
 					<div class="col-lg-4 mt-1">
 						<label class="lbl-form-input-kegiatan">Jam Batas Absensi</label>
-						<input required class="form-control" type="time" name="jam_batas_absensi" id="jam_batas_absensi_edit" value="<?=$rs['jam_batas_absensi']?>"/>
+						<input required class="form-control" type="time" name="jam_batas_absensi" id="jam_batas_absensi_edit" value="<?= substr($rs['jam_batas_absensi'], 0, 5);?>"/>
 					</div>
 					<div class="col-lg-12">
 						<hr>
@@ -60,7 +62,7 @@
 					</div>
 					<div class="col-lg-4 mt-1">
 						<label class="lbl-form-input-kegiatan">Jam Batas Pendaftaran</label>
-						<input required class="form-control" type="time" name="jam_batas_pendaftaran" id="jam_batas_pendaftaran_edit" value="<?=$rs['jam_batas_pendaftaran']?>"/>
+						<input required class="form-control" type="time" name="jam_batas_pendaftaran" id="jam_batas_pendaftaran_edit" value="<?= substr($rs['jam_batas_pendaftaran'], 0, 5);?>"/>
 					</div>
 					<div class="col-lg-12">
 						<hr>
@@ -102,7 +104,7 @@
 					</div>
 					<div class="col-lg-12 text-right">
 						<hr>
-						<button id="btn_simpan_edit" class="btn btn-navy btn-block" type="submit"><i class="fa fa-save"></i> Simpan</button>
+						<button id="btn_simpan_edit" class="btn btn-navy btn-block" ><i class="fa fa-save"></i> Simpan</button>
 						<button id="btn_simpan_loading_edit" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
 					</div>
 				</div>
@@ -141,4 +143,39 @@
 			endDate: $('#tanggal_edit').val()
 		})
 	}
+
+	$('#form_edit_kegiatan').on('submit', function(e){
+		e.preventDefault()
+		// $('#btn_simpan').hide()
+		// $('#btn_simpan_loading').show()
+		var formvalue = $('#form_edit_kegiatan');
+		var form_data = new FormData(formvalue[0]);
+
+		$.ajax({  
+        url: '<?=base_url("bacirita/C_Bacirita/editDataKegiatan")?>',
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        // dataType: "json",
+           success: function(data){
+                let resp = JSON.parse(data)
+                if(resp.code == 0){
+                    $('#topik').val('')
+					$('#div_form_edit_kegiatan').hide()
+					successtoast('Data berhasil disimpan')
+					loadListKegiatan()
+                } else {
+                    errortoast(resp.message)
+                }
+				$('#btn_simpan').show()
+				$('#btn_simpan_loading').hide()
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+				$('#btn_simpan').show()
+				$('#btn_simpan_loading').hide()
+            }  
+        });
+	})
 </script>

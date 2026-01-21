@@ -27,4 +27,8 @@ class C_Bacirita extends CI_Controller
         $this->load->view('bacirita/V_ModalEditKegiatan', $data);
     }
 
+     public function editDataKegiatan(){
+        echo json_encode($this->bacirita->editDataKegiatan($this->input->post()));
+    }
+
 }

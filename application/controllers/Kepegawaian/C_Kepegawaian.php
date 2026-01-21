@@ -15,6 +15,8 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->model('simata/M_Simata', 'simata');
 		$this->load->model('siasn/M_Siasn', 'siasn');
+        $this->load->model('master/M_Master', 'master');
+
 		       
 		if (!$this->general_library->isNotMenu()) {
 			redirect('logout');
@@ -4079,6 +4081,32 @@ class C_Kepegawaian extends CI_Controller
 		$data['m_layanan'] = $id;
 		$this->load->view('kepegawaian/layanan/V_RiwayatLayananMutasiAsn', $data);
 	}
+
+	 public function kebutuhanJf(){
+       	// $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+		  $data['unit_kerja'] = $this->master->getAllSkpd();
+		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanFungsional();
+        render('kepegawaian/V_KebutuhanJf', '', '', $data);
+    }
+
+	   public function submitTambahkebutuhanJf()
+	{ 
+		echo json_encode( $this->kepegawaian->submitTambahkebutuhanJf());
+	}
+
+	 public function loadListkebutuhanJf(){
+        $data['result'] = $this->kepegawaian->loadListkebutuhanJf();
+        $this->load->view('kepegawaian/V_KebutuhanJfItem', $data);
+    }
+
+	 public function deleteKebutuhanJf($id){
+        $this->general->delete('id', $id, 't_kebutuhan_fungsional');
+    }
+
+	public function editKebutuhanJf($id)
+    {
+        echo json_encode($this->kepegawaian->editKebutuhanJf($id));
+    }
 
 
 }

@@ -2766,6 +2766,15 @@
                         //     'jenis_layanan' => 'Dokumen Pendukung Absensi',
                         //     'created_by' => $this->general_library->getId()
                         // ]);
+
+                        $this->db->insert('t_notifikasi', [
+                            'id_m_user' => $this->general_library->getId(),
+                            'jenis_notifikasi' => 'dokumen_pendukung_absensi',
+                            'judul_notifikasi' => 'Dokumen Pendukung Absensi',
+                            'pesan' => $message,
+                            'fa_icon' => "fa fa-times",
+                            'icon_color' => "red"
+                        ]);
                     }
                 }
 

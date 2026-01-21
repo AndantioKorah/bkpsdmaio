@@ -1247,15 +1247,16 @@ function isSuratCutiTahunan($array){
 
 function formatDateNotifikasi($date){
     $now = date('Y-m-d');
-    if($date > $now){
-        return formatDateNamaBulanWithTime($date);
+    $expl = explode(" ", $date);
+    if($now != $expl[0]){
+        return formatDateNamaBulan($expl[0])." ".formatTimeAbsen($expl[1]);
     } else {
         $now = date('Y-m-d H:i:s');
         $diffJam = countDiffDateLengkap($date, $now, ['jam']);
         if($diffJam < 1){
-            return countDiffDateLengkap($date, $now, ['menit']).' menit';
+            return countDiffDateLengkap($date, $now, ['menit']).' yang lalu';
         } else {
-            return $diffJam.' jam';
+            return $diffJam.' yang lalu';
         }
     }
 }

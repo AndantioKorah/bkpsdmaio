@@ -390,6 +390,12 @@
 										</div>
 									</a>
 								<?php } } ?>
+							</div>
+						<?php } ?>
+						<div class="list-group" style="
+							width: 100%;
+							max-height: 400px;
+							overflow: scroll;">
 								<?php if(isset($list_notif_pegawai['show']) || isset($list_notif_pegawai['read'])){
 									$total_notifikasi_pegawai = 0;
 									if(isset($list_notif_pegawai['read'])){
@@ -431,8 +437,7 @@
 										</div>
 									</span>
 								<?php } ?>
-							</div>
-						<?php } ?>
+						</div>
 					</div>
 				</li>
 			<?php // } ?>	

@@ -2721,7 +2721,8 @@
                 $this->db->where('random_string', $temp['random_string'])
                     ->update('t_dokumen_pendukung', $data_verif);
 
-                $list_dokumen = $this->db->select('c.skpd, a.tanggal, a.bulan, a.tahun, a.random_string, c.handphone, d.nama_jenis_disiplin_kerja, c.gelar1, c.nama, c.gelar2')
+                $list_dokumen = $this->db->select('c.skpd, a.tanggal, a.bulan, a.tahun, a.random_string, c.handphone, a.id_m_user,
+                                    d.nama_jenis_disiplin_kerja, c.gelar1, c.nama, c.gelar2')
                                     ->from('t_dokumen_pendukung a')
                                     ->join('m_user b', 'a.id_m_user = b.id')
                                     ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
@@ -2768,10 +2769,11 @@
                         // ]);
 
                         $this->db->insert('t_notifikasi', [
-                            'id_m_user' => $this->general_library->getId(),
+                            'id_m_user' => $list_dokumen[0]['id_m_user'],
                             'jenis_notifikasi' => 'dokumen_pendukung_absensi',
                             'judul_notifikasi' => 'Dokumen Pendukung Absensi',
                             'pesan' => $message,
+                            'link_href' => 'dokumen-pendukung-absensi/upload',
                             'fa_icon' => "fa fa-times",
                             'icon_color' => "red"
                         ]);

@@ -75,6 +75,7 @@ class C_Master extends CI_Controller
      public function openListPegawaiDetailSkpdMenu(){
         $data['unitkerja'] = $this->master->getAllSkpd();
         $data['result'] = $this->master->getDetailMasterSkpd($this->general_library->getUnitKerjaPegawai());
+        dd($data['result']);
         // $this->load->view('master/V_skpdListJft', $data);
         render('master/V_skpdListJft', '', '', $data);
     }

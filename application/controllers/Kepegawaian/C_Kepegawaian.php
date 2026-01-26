@@ -3949,10 +3949,17 @@ class C_Kepegawaian extends CI_Controller
 		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
 		} else if($this->input->post('jenis_laporan') == "7") {
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
+		} else if($this->input->post('jenis_laporan') == "8") {
+		$data['result'] = $this->kepegawaian->rincianAsn($this->general_library->getUnitKerjaPegawai());
+		}
+		$data['jenis_laporan'] = $this->input->post('jenis_laporan');
+
+		if($this->input->post('jenis_laporan') == "8") {
+		$this->load->view('kepegawaian/laporan/V_laporanJumlahJenisJabatan', $data);
+		} else {
+		$this->load->view('kepegawaian/laporan/V_laporanDetail', $data);
 		}
 
-		$data['jenis_laporan'] = $this->input->post('jenis_laporan');
-		$this->load->view('kepegawaian/laporan/V_laporanDetail', $data);
 		// render('kepegawaian/laporan/V_laporanDetail', null, null, $data);
 	}
 
@@ -3980,8 +3987,16 @@ class C_Kepegawaian extends CI_Controller
 		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
 		} else if($this->input->post('jenis_laporan') == "7") {
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
+		} else if($this->input->post('jenis_laporan') == "8") {
+		$data['result'] = $this->kepegawaian->rincianAsn($this->general_library->getUnitKerjaPegawai());
 		}
+
+		if($this->input->post('jenis_laporan') == "8") {
+		$this->load->view('kepegawaian/laporan/V_laporanJumlahJenisJabatanExcel', $data);
+		} else {
 		$this->load->view('kepegawaian/laporan/V_laporanDetailExcel', $data);
+		}
+
 	}
 
 	public function laporanJumlahASNPdf(){
@@ -4020,6 +4035,9 @@ class C_Kepegawaian extends CI_Controller
 		} else if($this->input->post('jenis_laporan') == "7") {
 		$nama_file = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja";
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
+		} else if($this->input->post('jenis_laporan') == "8") {
+		$nama_file = "Jumlah ASN Kota Manado Menurut Jenis Jabatan Per Unit Kerja";
+		$data['result'] = $this->kepegawaian->rincianAsn($this->general_library->getUnitKerjaPegawai());
 		}
 		// render('kepegawaian/laporan/V_laporanDetailPdf', null, null, $data);
 		// $this->load->view('kepegawaian/laporan/V_laporanDetailPdf', $data);
@@ -4046,7 +4064,14 @@ class C_Kepegawaian extends CI_Controller
         );
 		
 		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+
+		if($this->input->post('jenis_laporan') == "8") {
+		$html = $this->load->view('kepegawaian/laporan/V_laporanJumlahJenisJabatanPdf', $data, true); 
+		} else {
 		$html = $this->load->view('kepegawaian/laporan/V_laporanDetailPdf', $data, true); 
+		}
+
+
 		$file_pdf = $nama_file." per tanggal ".formatDateNamaBulan(date('Y-m-d')).'.pdf';   	
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
@@ -4107,6 +4132,9 @@ class C_Kepegawaian extends CI_Controller
     {
         echo json_encode($this->kepegawaian->editKebutuhanJf($id));
     }
+
+
+	
 
 
 }

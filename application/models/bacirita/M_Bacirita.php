@@ -154,8 +154,9 @@ class M_Bacirita extends CI_Model
                     ->where('a.id', $id)
                     ->where('a.flag_active', 1)
                     ->get()->row_array();
-                    
+            if($banner_lama['url_banner']){
             unlink($banner_lama['url_banner']);
+            }
             
             $config['upload_path']          = $target_dir;
             $config['allowed_types']        = '*';

@@ -198,6 +198,8 @@ input:checked + .slider .off
                 <option value="4">Proses SK Jabatan</option>
                 <option value="5">BTL</option>
                 <option value="7">TMS</option>
+                <option value="6">Selesai</option>
+
               <?php } else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29) { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>

@@ -4004,5 +4004,30 @@
             }
         }
 
+        public function changeNotifStatus($id){
+            $this->db->where('id', $id)
+                    ->update('t_notifikasi', [
+                        'flag_read' => 1,
+                        'read_date' => date('Y-m-d H:i:s'),
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        public function loadAllNotifikasi(){
+            $this->db->where('id_m_user', $this->general_library->getId())
+                    ->update('t_notifikasi', [
+                        'flag_read' => 1,
+                        'read_date' => date('Y-m-d H:i:s'),
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            return $this->db->select('*')
+                            ->from('t_notifikasi')
+                            ->where('id_m_user', $this->general_library->getId())
+                            ->where('flag_active', 1)
+                            ->order_by('created_date', 'desc')
+                            ->get()->result_array();
+        }
+
 	}
 ?>

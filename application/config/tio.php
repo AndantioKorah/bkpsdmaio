@@ -23,6 +23,7 @@ $route['master/event'] = 'master/C_Master/masterEvent';
 $route['master/hardcode-nominatif'] = 'master/C_Master/hardCodeNominatif';
 $route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
 $route['master/perangkat-daerah/jft'] = 'master/C_Master/openListPegawaiDetailSkpdMenu';
+$route['notifikasi-pegawai'] = 'user/C_User/notifikasiPegawai';
 
 
 //event

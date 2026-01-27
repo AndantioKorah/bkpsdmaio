@@ -15511,9 +15511,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
     {
         $this->db->select('a.id_peg,a.statuspeg,a.tmtgjberkala,a.pangkat')
             ->from('db_pegawai.pegawai a')
-            ->where('a.tmtgjberkalaberikut is null')
+            // ->where('a.tmtgjberkalaberikut is null')
             ->where('a.id_m_status_pegawai', 1)
-            ->where_in('a.statuspeg', [1,2,3])
+            ->where_in('a.statuspeg', [3])
             ->limit(1000);
             
         $pegawai = $this->db->get()->result_array();
@@ -15527,7 +15527,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+1 years', strtotime($peg['tmtgjberkala'])));
             }
             if($peg['pangkat'] == "57"){
-                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+3 years', strtotime($peg['tmtgjberkala'])));
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));
             }
             if($peg['pangkat'] == "59" || $peg['pangkat'] == "60"){
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));
@@ -16275,6 +16275,278 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     $res = array('msg' => 'Data berhasil diubah', 'success' => true);
         return $res;
 
+        }
+
+        public function rincianAsn($id_unitkerja){
+        $result = null;
+        $temp_skpd = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja a')
+                                ->join('db_pegawai.unitkerja b', 'a.id_unitkerjamaster = b.id_unitkerjamaster')
+                                ->where_not_in('b.id_unitkerjamaster', ['9050000','','0000000','6000000','8010000','8020000','8000000','5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001'])
+                                ->order_by('b.id_unitkerjamaster', 'ASC')
+                                ->order_by('b.id_unitkerja', 'ASC')
+
+                                ->get()->result_array();
+                                // dd($temp_skpd);
+        foreach($temp_skpd as $skpd){
+            $result['skpd'][$skpd['id_unitkerja']] = $skpd;
+            $result['skpd'][$skpd['id_unitkerja']]['nama'] = $skpd['nm_unitkerja'];
+        }
+
+        $result['skpd'][5001000]['nama'] = 'Kecamatan Bunaken';
+        $result['skpd'][5002000]['nama'] = 'Kecamatan Tuminting';
+        $result['skpd'][5003000]['nama'] = 'Kecamatan Singkil';
+        $result['skpd'][5004000]['nama'] = 'Kecamatan Wenang';
+        $result['skpd'][5005000]['nama'] = 'Kecamatan Tikala';
+        $result['skpd'][5006000]['nama'] = 'Kecamatan Sario';
+        $result['skpd'][5007000]['nama'] = 'Kecamatan Wanea';
+        $result['skpd'][5008000]['nama'] = 'Kecamatan Mapanget';
+        $result['skpd'][5009000]['nama'] = 'Kecamatan Malalayang';
+        $result['skpd'][5010001]['nama'] = 'Kecamatan Paal Dua';
+        $result['skpd'][5011001]['nama'] = 'Kecamatan Bunaken Kepulauan';
+        $result['skpd'][6000000]['nama'] = 'Puskesmas/Gudang Farmasi';
+        $result['skpd'][8000000]['nama'] = 'Taman Kanak-kanak';
+        $result['skpd'][8010000]['nama'] = 'Sekolah Dasar';
+        $result['skpd'][8020000]['nama'] = 'Sekolah Menengah Pertama';
+     
+
+        $this->db->select('a.skpd,b.nm_unitkerja, b.id_unitkerjamaster, c.jenis_jabatan, count(c.jenis_jabatan) as total')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+            ->where('a.id_m_status_pegawai', 1)
+            // ->where('a.skpd', 4018000)
+            ->where_not_in('c.id_unitkerja', [5, 9050030])
+            ->group_by('a.skpd, c.jenis_jabatan');
+        $pegawai = $this->db->get()->result_array();
+
+       for($x=1;$x<=15;$x++){
+        $result['total_struktural'][$x] = 0; 
+        $result['total_jft'][$x] = 0; 
+        $result['total_pelaksana'][$x] = 0; 
+        }
+      
+        
+
+
+            foreach($pegawai as $peg){
+            
+            if($peg['id_unitkerjamaster'] == "6000000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][6000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][6000000]['total_struktural'] =  $result['total_struktural'][1] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][6000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][6000000]['total_jft'] =   $result['total_jft'][1] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][6000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][6000000]['total_pelaksana'] = $result['total_pelaksana'][1] += $peg['total'];
+            }
+            } 
+            else if($peg['id_unitkerjamaster'] == "8010000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][8010000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8010000]['total_struktural'] =  $result['total_struktural'][2] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][8010000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8010000]['total_jft'] =   $result['total_jft'][2] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][8010000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8010000]['total_pelaksana'] =  $result['total_pelaksana'][2] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "8020000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][8020000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8020000]['total_struktural'] =    $result['total_struktural'][3] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][8020000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8020000]['total_jft'] =    $result['total_jft'][3] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][8020000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8020000]['total_pelaksana'] =   $result['total_pelaksana'][3] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "8000000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][8000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8000000]['total_struktural'] =   $result['total_struktural'][4] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][8000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8000000]['total_jft'] =   $result['total_jft'][4] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][8000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8000000]['total_pelaksana'] =  $result['total_pelaksana'][4] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5001000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5001000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5001000]['total_struktural'] =   $result['total_struktural'][5] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5001000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5001000]['total_jft'] =   $result['total_jft'][5] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5001000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5001000]['total_pelaksana'] =  $result['total_pelaksana'][5] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5002000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5002000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5002000]['total_struktural'] =   $result['total_struktural'][6] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5002000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5002000]['total_jft'] =   $result['total_jft'][6] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5002000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5002000]['total_pelaksana'] =  $result['total_pelaksana'][6] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5003000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5003000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5003000]['total_struktural'] =   $result['total_struktural'][7] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5003000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5003000]['total_jft'] =   $result['total_jft'][7] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5003000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5003000]['total_pelaksana'] =  $result['total_pelaksana'][7] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5004000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5004000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5004000]['total_struktural'] =   $result['total_struktural'][8] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5004000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5004000]['total_jft'] =   $result['total_jft'][8] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5004000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5004000]['total_pelaksana'] =  $result['total_pelaksana'][8] += $peg['total'];
+            }
+            }else if($peg['id_unitkerjamaster'] == "5005000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5005000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5005000]['total_struktural'] =   $result['total_struktural'][9] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5005000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5005000]['total_jft'] =   $result['total_jft'][9] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5005000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5005000]['total_pelaksana'] =  $result['total_pelaksana'][9] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5006000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5006000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5006000]['total_struktural'] =   $result['total_struktural'][10] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5006000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5006000]['total_jft'] =   $result['total_jft'][10] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5006000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5006000]['total_pelaksana'] =  $result['total_pelaksana'][10] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5007000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5007000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5007000]['total_struktural'] =   $result['total_struktural'][11] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5007000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5007000]['total_jft'] =   $result['total_jft'][11] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5007000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5007000]['total_pelaksana'] =  $result['total_pelaksana'][11] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5008000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5008000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5008000]['total_struktural'] =   $result['total_struktural'][12] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5008000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5008000]['total_jft'] =   $result['total_jft'][12] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5008000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5008000]['total_pelaksana'] =  $result['total_pelaksana'][12] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5009000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5009000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5009000]['total_struktural'] =   $result['total_struktural'][13] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5009000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5009000]['total_jft'] =   $result['total_jft'][13] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5009000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5009000]['total_pelaksana'] =  $result['total_pelaksana'][13] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5010001"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5010001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5010001]['total_struktural'] =   $result['total_struktural'][14] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5010001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5010001]['total_jft'] =   $result['total_jft'][14] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5010001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5010001]['total_pelaksana'] =  $result['total_pelaksana'][14] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5011001"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5011001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5011001]['total_struktural'] =   $result['total_struktural'][15] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5011001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5011001]['total_jft'] =   $result['total_jft'][15] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5011001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5011001]['total_pelaksana'] =  $result['total_pelaksana'][15] += $peg['total'];
+            }
+            }
+             else {
+            if($peg['jenis_jabatan'] == "Struktural"){
+                $result['skpd'][$peg['skpd']]['nama'] = $peg['nm_unitkerja'];
+                $result['skpd'][$peg['skpd']]['jenis_jabatan'] = $peg['jenis_jabatan'];
+                $result['skpd'][$peg['skpd']]['total_struktural'] = $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+                $result['skpd'][$peg['skpd']]['nama'] = $peg['nm_unitkerja'];
+                $result['skpd'][$peg['skpd']]['jenis_jabatan'] = $peg['jenis_jabatan'];
+                $result['skpd'][$peg['skpd']]['total_jft'] = $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+                $result['skpd'][$peg['skpd']]['nama'] = $peg['nm_unitkerja'];
+                $result['skpd'][$peg['skpd']]['jenis_jabatan'] = $peg['jenis_jabatan'];
+                $result['skpd'][$peg['skpd']]['total_pelaksana'] = $peg['total'];
+            }
+            }
+            }
+            return $result;
         }
     
 

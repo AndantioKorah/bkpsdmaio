@@ -503,7 +503,7 @@
                 }
             }
 
-            $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            $this->db->select('a.jabatan,a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
                     d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, c.jenis_jabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
@@ -575,6 +575,11 @@
                                 } else 
                                 if(stringStartWith('Guru', $d['nama_jabatan'])){
                                     $crit = 2;
+                                    $temp = $d;
+                                    $bup = 60;
+                                } 
+                                else if(in_array($d['jabatan'],  ['3010000J085','3010000J086','3010000J088','3010000J089','3010000J090'])){
+                                    $crit = 4;
                                     $temp = $d;
                                     $bup = 60;
                                 } 

@@ -22,6 +22,8 @@
 									<option value="3">Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Tingkat Pendidikan</option>
 									<option value="4">Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Tingkat Pendidikan</option>
 									<option value="5">Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado per Kecamatan</option>
+									<option value="8">Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Sesuai Jenis Jabatan Per Unit Kerja</option>
+
                 </select>
 			    </div>
 				<div class="col-md-12 col-sm-12 mt-2 ">

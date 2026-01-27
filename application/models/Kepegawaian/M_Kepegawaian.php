@@ -563,7 +563,9 @@ class M_Kepegawaian extends CI_Model
 
 
         function getDiklat($nip,$kode){
-             $this->db->select('b.id_peg,e.jenjang_diklat,c.created_date,c.keterangan,c.id,c.status,d.nm_jdiklat,c.nm_diklat,c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,c.nosttpp,c.gambarsk,c.keterangan')
+             $this->db->select('b.id_peg,e.jenjang_diklat,c.created_date,c.keterangan,c.id,c.status,d.nm_jdiklat,c.nm_diklat,
+                            c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,
+                            c.nosttpp,c.gambarsk,c.keterangan, c.flag_siasn, c.flag_sync_siasn')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegdiklat c', 'b.id_peg = c.id_pegawai')

@@ -81,6 +81,11 @@ class C_Cron extends CI_Controller
         $this->siasn->cronSyncBangkom();
     }
 
+    public function cronSyncBangkomToSiasn(){
+        $this->general->logCron('cronSyncBangkomToSiasn');
+        $this->siasn->cronSyncBangkomToSiasn();
+    }
+
     public function addDataForSyncBangkom(){
         $this->siasn->addDataForSyncBangkom();
     }

@@ -16310,12 +16310,12 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
         $this->db->select('a.skpd,b.nm_unitkerja, b.id_unitkerjamaster, c.jenis_jabatan, count(c.jenis_jabatan) as total')
             ->from('db_pegawai.pegawai a')
-                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                    ->where('a.id_m_status_pegawai', 1)
-                    // ->where('a.skpd', 4018000)
-                    ->where_not_in('c.id_unitkerja', [5, 9050030])
-                     ->group_by('a.skpd, c.jenis_jabatan');
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+            ->where('a.id_m_status_pegawai', 1)
+            // ->where('a.skpd', 4018000)
+            ->where_not_in('c.id_unitkerja', [5, 9050030])
+            ->group_by('a.skpd, c.jenis_jabatan');
         $pegawai = $this->db->get()->result_array();
 
        for($x=1;$x<=15;$x++){

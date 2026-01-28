@@ -319,8 +319,19 @@
 				</div>
 			</li> -->
 			
-			<!-- role  -->
 
+			<!-- live chat -->
+			<?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 16){ ?>
+				<li class="nav-item">
+					<div class="position-relative">
+						<a class="nav-icon" href="#" id="liveChatIcon">
+							<i class="align-middle" data-feather="message-circle"></i>
+						</a>
+					</div>
+				</li>
+			<?php } ?>
+
+			<!-- notif  -->
 			<?php // if($this->general_library->isPegawaiBkpsdm()) { ?>
 				<li class="nav-item dropdown">
 					<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
@@ -441,6 +452,8 @@
 					</div>
 				</li>
 			<?php // } ?>	
+
+			<!-- role  -->
 			<?php 
 			$cari_role = array_search("admin_aplikasi", array_column($list_role, 'role_name'));
 			if($cari_role == false){ ?>	
@@ -510,6 +523,26 @@
 	$(function(){
 
 	})
+
+	$('#liveChatIcon').on('click', function(e){
+		e.stopPropagation();
+		toggleLiveChat()
+	})
+
+	function toggleLiveChat(flag_wrapper = 0){
+		if(flag_wrapper == 1){
+			$('.div_live_chat').removeClass('div_live_chat_slide_in')
+			$('.div_live_chat').addClass('div_live_chat_slide_out')
+		} else {
+			if(!$('.div_live_chat').hasClass('div_live_chat_slide_in')){
+				$('.div_live_chat').removeClass('div_live_chat_slide_out')
+				$('.div_live_chat').addClass('div_live_chat_slide_in')
+			} else {
+				$('.div_live_chat').removeClass('div_live_chat_slide_in')
+				$('.div_live_chat').addClass('div_live_chat_slide_out')
+			}
+		}
+	}
 
 	function checkHover(id){
 		var hoverTimer;

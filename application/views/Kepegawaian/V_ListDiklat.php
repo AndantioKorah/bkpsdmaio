@@ -28,7 +28,19 @@
 
 
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?=$rs['nm_jdiklat']?></td>
+              <td class="text-left">
+                <?=$rs['nm_jdiklat']?><br>
+                <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
+                    <?php if($rs['flag_siasn'] == 1){ ?> 
+                      <span class="badge badge-info" title="Data yang disinkronisasi dari SIASN">SIASN</span><br>
+                    <?php } ?>
+                    <?php if($rs['flag_sync_siasn']){ ?> 
+                      <span class="badge badge-success" title="Data ini sudah tersinkronisasi dengan SIASN"><i class="fa fa-check"></i> Sinkron SIASN</span>
+                    <?php } else { ?>
+                      <span class="badge badge-danger" title="Data ini belum tersinkronisasi dengan SIASN"><i class="fa fa-times"></i> Belum Sinkron SIASN</span>
+                    <?php } ?>
+                <?php } ?>
+              </td>
               <td class="text-left"><?=$rs['jenjang_diklat']?></td>
               <td class="text-left"><?=$rs['nm_diklat']?></td>
               <td class="text-left"><?=$rs['tptdiklat']?></td>

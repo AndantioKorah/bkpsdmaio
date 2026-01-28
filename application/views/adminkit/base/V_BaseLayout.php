@@ -589,12 +589,35 @@
       }
 
   
+    .div_live_chat{
+      height: 100%;
+      width: 350px;
+      position: fixed;
+      right: -25vw;
+      z-index: 10;
+      /* display: none; */
+      background-color: var(--primary-color);
+    }
 
+    .div_live_chat_slide_out{
+      right: -350px;
+      transition: .4s;
+    }
+
+    .div_live_chat_slide_in{
+      right: 0;
+      transition: .4s;
+    }
 	</style>
 </head>
 
 <body>
-	<div class="wrapper">
+  <?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 16){ ?>
+    <div class="div_live_chat div_live_chat_slide_out">
+      <?php $this->load->view('user/V_LiveChat', null) ?>
+    </div>
+  <?php } ?>
+	<div class="wrapper wrapper-all">
 		<nav id="sidebar" class="sidebar js-sidebar">
 			<div class="sidebar-content js-simplebar">
 				<a class="sidebar-brand" href="<?=base_url('welcome')?>">
@@ -734,6 +757,11 @@ $(function(){
     // startRealTimeDate()
     // startCountDownExpireApp()
   })
+
+  $('.wrapper-all').on('click', function(){
+      toggleLiveChat(1)
+  })
+
    function divLoaderNavy(message = 'Loading'){
     return '<div class="col-12 text-center" style="height: 100%; id="loader"> <i style="color: #001f3f;" class="fas fa-3x fa-spin fa-sync-alt"></i> </div>'
   }

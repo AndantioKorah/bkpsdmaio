@@ -219,6 +219,10 @@ class General_library
         return $this->getActiveRoleName() == 'programmer';
     }
 
+    public function isAdminLiveChat(){
+        return $this->getActiveRoleName() == 'admin_live_chat';
+    }
+
     public function isManajemenTalenta(){
         return $this->getActiveRoleName() == 'manajemen_talenta';
     }

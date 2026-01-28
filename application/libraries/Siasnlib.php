@@ -76,6 +76,16 @@ class Siasnlib{
             0,
             1
         );
+    }
+    
+    function createBangkomStruktural($data){
+        return $this->postCurl(
+            $this->API_URL.'kursus/save',
+            json_encode($data),
+            "POST",
+            0,
+            1
+        );
     }    
 
     function getRiwayatSertifikasi($nip){

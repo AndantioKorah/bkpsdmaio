@@ -897,7 +897,15 @@
                                         'temp_count' => $l['temp_count']++,
                                         'done_date' => date('Y-m-d H:i:s'),
                                     ]);
+                        } else {
+                            $saveLog['flag_done'] = 2;
+                            $saveLog['temp_count'] = $l['temp_count']++;
+                            $saveLog['done_date'] = date('Y-m-d H:i:s');
                         }
+                    } else {
+                        $saveLog['flag_done'] = 2;
+                        $saveLog['temp_count'] = $l['temp_count']++;
+                        $saveLog['done_date'] = date('Y-m-d H:i:s');
                     }
                     
                     $saveLog['last_try_date'] = date('Y-m-d H:i:s');
@@ -951,9 +959,14 @@
                         }
 
                         if($idPnsSiasn){ // jika masih kosong, taruh di log
+                            $res = null;
                             foreach($dataDiklat as $dDik){
-                                $res = $this->syncBangkomToSiasn($dDik, $mDiklat, $idPnsSiasn);
+                                if($dDik['jenisdiklat'] != "00"){
+                                    $res = $this->syncBangkomToSiasn($dDik['id'], $mDiklat, $idPnsSiasn, 0);
+                                }
                             }
+                            $updateCron['log'] = json_encode($res);
+                            $updateCron['flag_done'] = 1;
                         }
                     } else {
                         $updateCron['flag_done'] = 2;
@@ -966,52 +979,126 @@
             }
         }
 
-        public function syncBangkomToSiasn($data, $mDiklat, $idPnsSiasn){
-            $explodeTanggal = explode("-", $data['tglsttpp']);
-            $upload = [
-                // "id": "string",
-                // "id_rumpun_jabatan": [
-                //     {
-                //     "rumpun_id": "string"
-                //     }
-                // ],
-                "instansiId" => ID_INSTANSI_SIASN,
-                "institusiPenyelenggara" => $data['penyelenggara'],
-                "jenisDiklatId" => $mDiklat[$data['jenisdiklat']]['id_diklat_siasn'],
-                "jenisKursus" => "",
-                "jenisKursusSertipikat" => $mDiklat[$data['jenisdiklat']]['jenis_kursus_sertipikat_siasn'],
-                "jumlahJam" => intval($data['jam']),
-                "lokasiId" => $data['tptdiklat'],
-                "namaKursus" => $data['nm_diklat'],
-                "nomorSertipikat" => $data['nosttpp'],
-                // "path": [
-                //     {
-                //     "dok_id": "string",
-                //     "dok_nama": "string",
-                //     "dok_uri": "string",
-                //     "object": "string",
-                //     "slug": "string"
-                //     }
-                // ],
-                "pnsOrangId" => $idPnsSiasn,
-                "tahunKursus" => intval($explodeTanggal[0]),
-                "tanggalKursus" => formatDateOnlyForEdit2($data['tglmulai']),
-                "tanggalSelesaiKursus" => formatDateOnlyForEdit2($data['tglselesai'])
-            ];
+        public function syncBangkomToSiasn($id, $mDiklat, $idPnsSiasn, $flag_update = 0){
+            $updateDataDiklat = null;
 
-            dd(json_encode($upload));
-            $uploadRwBangkom = $this->siasnlib->createBangkom($upload);
-            dd($uploadRwBangkom);
-            
-            $url = ('arsipjabatan/'.$data['gambarsk']);
-            if(file_exists($url)){
-                $request = [
-                    'id_riwayat' => $id_jabatan_siasn,
-                    'id_ref_dokumen' => 872,
-                    'file' => new CURLFile ($url)
-                ];
-                // dd($request);
-                $reqUploadDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
+            $data = $this->db->select('a.*, b.id_pns_siasn')
+                        ->from('db_pegawai.pegdiklat a')
+                        ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                        ->where('id', $id)
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+
+            if(!$mDiklat){
+                $masterDiklat = $this->db->select('a.*')
+                                    ->from('db_pegawai.diklat a')
+                                    ->get()->result_array();
+                $mDiklat = null;
+                foreach($masterDiklat as $md){
+                    $mDiklat[$md['id_diklat']] = $md;
+                }
+            }
+
+            if($data){
+                $explodeTanggal = explode("-", $data['tglsttpp']);
+                $upload = null;
+                $uploadRwBangkom = null;
+                if($data['jenisdiklat'] == "00"){
+                    $upload = [
+                        // "bobot": 0,
+                        // "id": "string",
+                        "JenisDiklatId" => $mDiklat[$data['jenisdiklat']]['id_diklat_siasn'],
+                        "institusiPenyelenggara" => $data['penyelenggara'],
+                        "jenisKompetensi" => "",
+                        "jumlahJam" => intval($data['jam']),
+                        "latihanStrukturalId" => "",
+                        "nomor" => $data['nosttpp'],
+                        "NomorSertipikat" => $data['nosttpp'],
+                        // "path": [
+                        //     {
+                        //     "dok_id": "string",
+                        //     "dok_nama": "string",
+                        //     "dok_uri": "string",
+                        //     "object": "string",
+                        //     "slug": "string"
+                        //     }
+                        // ],
+                        "pnsOrangId" => $idPnsSiasn ? $idPnsSiasn : $data['id_pns_siasn'],
+                        "Tahun" => intval($explodeTanggal[0]),
+                        "tahun" => intval($explodeTanggal[0]),
+                        "tanggal" => formatDateOnlyForEdit2($data['tglmulai']),
+                        "tanggalSelesai" => formatDateOnlyForEdit2($data['tglselesai'])
+                    ];
+                    // dd($upload);
+                    // $uploadRwBangkom = $this->siasnlib->createBangkomStruktural($upload);
+                } else {
+                    $upload = [
+                        // "id": "string",
+                        // "id_rumpun_jabatan": [
+                        //     {
+                        //     "rumpun_id": "string"
+                        //     }
+                        // ],
+                        "instansiId" => ID_INSTANSI_SIASN,
+                        "institusiPenyelenggara" => $data['penyelenggara'],
+                        "jenisDiklatId" => $mDiklat[$data['jenisdiklat']]['id_diklat_siasn'],
+                        "jenisKursus" => "",
+                        "jenisKursusSertipikat" => $mDiklat[$data['jenisdiklat']]['jenis_kursus_sertipikat_siasn'],
+                        "jumlahJam" => intval($data['jam']),
+                        "lokasiId" => $data['tptdiklat'],
+                        "namaKursus" => $data['nm_diklat'],
+                        "nomorSertipikat" => $data['nosttpp'],
+                        // "path": [
+                        //     {
+                        //     "dok_id": "string",
+                        //     "dok_nama": "string",
+                        //     "dok_uri": "string",
+                        //     "object": "string",
+                        //     "slug": "string"
+                        //     }
+                        // ],
+                        "pnsOrangId" => $idPnsSiasn ? $idPnsSiasn : $data['id_pns_siasn'],
+                        "tahunKursus" => intval($explodeTanggal[0]),
+                        "tanggalKursus" => formatDateOnlyForEdit2($data['tglmulai']),
+                        "tanggalSelesaiKursus" => formatDateOnlyForEdit2($data['tglselesai'])
+                    ];
+                    $uploadRwBangkom = $this->siasnlib->createBangkom($upload);
+                }
+
+                if($data['id_siasn']){
+                    if($flag_update == 0){ // jika sudah sinkron dan flag_update = 0, langsung return karena request bukan untuk update
+                        return $updateDataDiklat;
+                    }
+                    $uploadRwBangkom['id'] = $data['id_siasn'];
+                }
+
+                if($uploadRwBangkom){
+                    $res = json_decode($uploadRwBangkom['data'], true);
+                    if($res['success'] == true){
+                        $idDiklatSiasn = $res['mapData']['rwKursusId'];
+                        $updateDataDiklat['flag_sync_siasn'] = 1;
+                        $updateDataDiklat['id_siasn'] = $idDiklatSiasn;
+                        $updateDataDiklat['log_sync_siasn'] = json_encode($uploadRwBangkom);
+                        
+                        $url = ('arsipdiklat/'.$data['gambarsk']);
+                        if(file_exists($url)){
+                            $request = [
+                                'id_riwayat' => $idDiklatSiasn,
+                                'id_ref_dokumen' => 874,
+                                'file' => new CURLFile ($url)
+                            ];
+                            // dd($request);
+                            $reqUploadDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
+                        }
+                    }
+                }
+
+                $updateDataDiklat['sync_siasn_try_date'] = date('Y-m-d H:i:s');
+
+                $this->db->where('id', $data['id'])
+                                ->update('db_pegawai.pegdiklat', $updateDataDiklat);
+
+                return $uploadRwBangkom;
             }
         }
 

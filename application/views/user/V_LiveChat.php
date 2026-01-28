@@ -16,7 +16,7 @@
         <div class="row">
             <center><img src="<?=base_url('assets/img/icon-siladen-new.png')?>" style="width: 100px;" /></center>
             <br>
-            <button class="mt-3 btn btn-info">Mulai Percakapan</button>
+            <button class="mt-3 btn btn-info btn_konsultasi">Konsultasi</button>
             <div class="col-lg-12 div_riwayat_live_chat">
                 <div class="row">
                     <div class="col-lg-12 pt-3" style="border-bottom: 1px solid grey;">
@@ -28,3 +28,8 @@
         </div>
     </div>
 </div>
+<script>
+    $('#btn_konsultasi').on('click', function(){
+        
+    })
+</script>

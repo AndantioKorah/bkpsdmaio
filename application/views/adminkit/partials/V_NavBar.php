@@ -321,7 +321,7 @@
 			
 
 			<!-- live chat -->
-			<?php if($this->general_library->isProgrammer()){ ?>
+			<?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 16){ ?>
 				<li class="nav-item">
 					<div class="position-relative">
 						<a class="nav-icon" href="#" id="liveChatIcon">

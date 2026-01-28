@@ -15698,7 +15698,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                    ->where_in('a.statuspeg', [3])
+                    ->where_in('a.statuspeg', [3,6])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15731,7 +15731,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
          $temp_pangkat = $this->db->select('*')
                                 ->from('db_pegawai.pangkat')
-                                ->where_not_in('id_pangkat', [18,19,20,51,52,0])
+                                ->where_not_in('id_pangkat', [18,19,20,52,0])
                                 ->get()->result_array();
         foreach($temp_pangkat as $pang){
             $result['pangkat'][$pang['id_pangkat']] = $pang;

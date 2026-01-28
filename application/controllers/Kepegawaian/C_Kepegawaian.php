@@ -3839,7 +3839,7 @@ class C_Kepegawaian extends CI_Controller
 		
 		$dataNomorSurat = getNomorSuratSiladen([
                 'jenis_layanan' => 39,
-                'tahun' => 2025,
+                'tahun' => date('Y'),
                 'perihal' => "Usul DS"
             ], 0);
 		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];

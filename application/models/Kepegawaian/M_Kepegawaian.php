@@ -16548,6 +16548,43 @@ public function checkListIjazahCpns($id, $id_pegawai){
             }
             return $result;
         }
+
+        public function cekLayananSelesai(){
+        $res['code'] = 1;
+        $res['message'] = 'ok';
+        $res['layanan'] = null;
+        
+        $id_user = $this->general_library->getId();
+       
+        $this->db->trans_begin();
+            $getLayananPangkat = $this->db->select('*')
+            ->from('t_layanan a')
+            ->join('m_layanan b', 'a.id_m_layanan = b.id')
+            ->where('a.id_m_user', $id_user)
+            ->where('a.reference_id_dok is not null')
+            ->where_in('a.id_m_layanan', [6,7,8,9,29])
+            ->where('a.flag_active', 1)
+            ->order_by('a.id', 'desc')
+            ->limit(1)
+            ->get()->row_array();
+         
+            if($getLayananPangkat) {
+              $res['code'] = 1;
+              $res['message'] = 'ok';
+              $res['layanan'] = $getLayananPangkat['nama_layanan'];
+            }
+    
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+    }
     
 
 }

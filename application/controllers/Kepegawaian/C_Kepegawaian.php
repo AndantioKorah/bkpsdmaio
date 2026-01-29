@@ -657,7 +657,10 @@ class C_Kepegawaian extends CI_Controller
 		$data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
 		$data['nip'] = $this->general_library->getUserName();
 		$data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
-		
+
+		$data['layananSelesai'] = $this->kepegawaian->cekLayananSelesai();
+		// dd($data['layananSelesai']);
+		// dd(1);
 
         render('kepegawaian/V_ProfilPegawai', '', '', $data);
     }

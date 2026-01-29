@@ -13865,10 +13865,10 @@ public function getFileForVerifLayanan()
                 // Setda
                 if($this->general_library->getDataUnitKerjaPegawai()['id_unitkerjamaster'] == '1000000'){
                     if($data['status_berkala'] == ""){
-                    $this->db->where_in('f.id_unitkerjamaster', ['1000000']);
+                    $this->db->where_in('f.id_unitkerjamaster', ['1000000','2000000']);
                     $this->db->where_in('a.status', [3,5,6]);
                     } else {
-                    $this->db->where_in('f.id_unitkerjamaster', ['1000000']);
+                    $this->db->where_in('f.id_unitkerjamaster', ['1000000','2000000']);
                     $this->db->where_in('a.status', $data['status_berkala']);
                     }
                 // Pendidikan

@@ -16550,7 +16550,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         }
 
         public function cekLayananSelesai(){
-        $res['code'] = 1;
+        $res['code'] = 0;
         $res['message'] = 'ok';
         $res['layanan'] = null;
         
@@ -16576,7 +16576,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
     
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
-            $res['code'] = 1;
+            $res['code'] = 0;
             $res['message'] = 'Terjadi Kesalahan';
             $res['data'] = null;
         } else {

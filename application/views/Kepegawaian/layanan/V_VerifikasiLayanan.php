@@ -187,7 +187,7 @@ input:checked + .slider .off
               </div>
             <div class="col">
               <label>Status Pengajuan</label>
-              <select class="form-control select2-navy" style="width: 100%"
+              <select  class="form-control select2-navy" style="width: 100%"
               id="status_pengajuan" data-dropdown-css-class="select2-navy" name="status_pengajuan">
               <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16) { ?>
                 <option value="" >Semua</option>
@@ -220,9 +220,37 @@ input:checked + .slider .off
                   <option value="3" >Selesai</option>
                   <?php } ?>
                   <?php } ?>
-                 
               </select>
             </div>
+<?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16) { ?>
+        <div class="col" id="pilih_tahun" style="display:none;">
+                <label for="exampleFormControlInput1">Tahun</label>
+                <input  class="form-control yearpicker customInput" id="tahun" name="tahun" value="<?= date('Y');?>">
+              </div>
+
+
+            <div class="col" id="pilih_bulan" style="display:none;">
+                <label>Bulan</label>
+                <select class="form-control select2-navy customInput" style="width: 100%"
+                 id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
+                 <option selected value="0">- Pilih Bulan -</option>
+                 <option  value="1">Januari</option>
+                 <option  value="2">Februari</option>
+                 <option  value="3">Maret</option>
+                 <option  value="4">April</option>
+                 <option  value="5">Mei</option>
+                 <option  value="6">Juni</option>
+                 <option  value="7">Juli</option>
+                 <option  value="8">Agustus</option>
+                 <option  value="9">September</option>
+                 <option  value="10">Oktober</option>
+                 <option  value="11">November</option>
+                 <option  value="12">Desember</option>
+                 </select>
+              </div>
+
+                  <?php } ?>
+
           </div>
           <div class="row mt-3">
             <div class="col-lg-12 text-right">
@@ -262,4 +290,15 @@ input:checked + .slider .off
       }
     })
   })
+
+     $('#status_pengajuan').on('change', function(){
+      if(this.value == 6){
+       $('#pilih_tahun').show('fast')
+       $('#pilih_bulan').show('fast')
+      } else {
+      $('#pilih_tahun').hide()
+       $('#pilih_bulan').hide()
+      }
+        // $(this).val(formatRupiah(this.value));
+    });
 </script>

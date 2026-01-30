@@ -11702,6 +11702,7 @@ public function getFileForKarisKarsu()
 
 public function searchPengajuanLayanan($id_m_layanan){
     $data = $this->input->post();
+   
     $this->db->select('*, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
      (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
             ->from('t_layanan a')
@@ -11783,6 +11784,14 @@ public function searchPengajuanLayananFungsional($id_m_layanan){
                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
                     $this->db->where('g.id', $data['status_pengajuan']);
                 }
+                 if($data['bulan'] != 0){
+                    $this->db->join('db_pegawai.pegjabatan h', 'a.reference_id_dok = h.id','left');
+                    $this->db->where('month(h.tglsk)', $data['bulan']);
+                    $this->db->where('year(h.tglsk)', $data['tahun']);
+                }
+                
+
+
 
     return $this->db->get()->result_array();
 }

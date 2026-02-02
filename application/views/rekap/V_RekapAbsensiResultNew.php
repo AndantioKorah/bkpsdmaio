@@ -13,6 +13,10 @@ $list_disker = ['S', 'I', 'TK'];
                     font-size: .8rem;
                     font-weight: 600;
                 }
+
+                .badge-statuspeg{
+                    box-shadow: none !important;
+                }
             </style>
         </head>
         <?php
@@ -215,11 +219,24 @@ $list_disker = ['S', 'I', 'TK'];
                 };
                 $no = 1; foreach($data_foreach as $rs){
                         if(isset($rs['absen'])){
+                            $badge_status = 'badge-cpns';
+                            if($rs['statuspeg'] == 2){
+                                $badge_status = 'badge-pns';
+                            } else if($rs['statuspeg'] == 3){
+                                $badge_status = 'badge-pppk';
+                            } else if($rs['statuspeg'] == 6){
+                                $badge_status = 'badge-pppk-pw';
+                            }
                           $bgtr = fmod($no, 2) == 0 ? "tr_even" : "tr_odd";
                           ?>
                               <tr class="<?=$bgtr?>">
                                   <td style="text-align: center; "><?=$no++;?></td>
-                                  <td scope="row" style=" text-align: left;"><a style="font-weight: bold;"><?=$rs['nama_pegawai']?></a></td>
+                                  <td scope="row" style=" text-align: left;"><a style="font-weight: bold;"><?=$rs['nama_pegawai']?></a>
+                                    <?php if(!isset($flag_print) || (isset($flag_print) && $flag_print == 0)){ ?>
+                                        <br>
+                                        <span class="badge badge-statuspeg <?=$badge_status?>"><?=$rs['nm_statuspeg']?></span>
+                                    <?php } ?>
+                                </td>
                                   <!-- <td style=""><a><?=isset($flag_print) && $flag_print == 1 ? '`' : '';?><?=$rs['nip']?></a></td> -->
                                   <?php
                                   foreach($rs['absen'] as $a){

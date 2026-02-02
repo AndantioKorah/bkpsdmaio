@@ -1745,7 +1745,7 @@
         $raw_data_excel = json_encode($data);
         $expluk = null;
         $uksearch = null;
-        if($flag_rekap_tpp == 1){
+        // if($flag_rekap_tpp == 1){
             if(stringStartWith('sekolah_', $data['id_unitkerja'])){
                 $expluk = explode("_",$data['id_unitkerja']);
                 $uksearch = $this->db->select('*')
@@ -1758,11 +1758,10 @@
                                     ->where('id_unitkerja', $data['id_unitkerja'])
                                     ->get()->row_array();
             }         
-        }
-
+        // }
         if($flag_absen_aars == 1){
             $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
-            b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat, b.nama_jabatan,
+            b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat, b.nama_jabatan, f.nm_statuspeg,
             b.eselon, c.id_unitkerjamaster, a.kelas_jabatan_hardcode, a.id_jabatan_tambahan, a.statuspeg,
             a.pangkat, a.flag_terima_tpp, a.flag_sertifikasi, a.statuspeg, a.tmt_hitung_absen')
                             ->from('db_pegawai.pegawai a')
@@ -1770,6 +1769,7 @@
                             ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
                             ->join('m_pangkat d', 'a.pangkat = d.id_pangkat')
                             ->join('db_pegawai.jabatan e', 'a.id_jabatan_tambahan = e.id_jabatanpeg', 'left')
+                            ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
                             ->where('id_m_status_pegawai', 1)
                             ->order_by('b.eselon')
                             ->order_by('a.nama')
@@ -1795,7 +1795,7 @@
                         ->where('d.id', $data['id_m_user']);
             }
             $list_pegawai = $this->db->get()->result_array();
-
+            
             $list_pegawai = $this->getPltPlhTambahan($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
 
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
@@ -1832,6 +1832,8 @@
                 $tlp[$lpw['nip']]['nama_jabatan'] = ($lpw['nama_jabatan']);
                 $tlp[$lpw['nip']]['eselon'] = ($lpw['eselon']);
                 $tlp[$lpw['nip']]['kelas_jabatan'] = ($lpw['kelas_jabatan']);
+                $tlp[$lpw['nip']]['statuspeg'] = ($lpw['statuspeg']);
+                $tlp[$lpw['nip']]['nm_statuspeg'] = ($lpw['nm_statuspeg']);
                 // $tlp[$lpw['nip']]['golongan'] = $lpw['statuspeg'] == 1 || $lpw['statuspeg'] == 2 ? numberToRoman(substr($lpw['pangkat'], 0, 1)) : '';
                 $tlp[$lpw['nip']]['golongan'] = getGolonganByIdPangkat($lpw['id_pangkat']);
                 $tlp[$lpw['nip']]['tmt_hitung_absen'] = $lpw['tmt_hitung_absen'];

@@ -4029,5 +4029,68 @@
                             ->get()->result_array();
         }
 
+        public function cronJafungCpns(){
+            $listCpns = $this->db->select('*')
+                            ->from('db_pegawai.pegawai')
+                            ->where('statuspeg', 1)
+                            ->where('id_jafung_cpns IS NULL')
+                            ->where('id_m_status_pegawai', 1)
+                            ->limit(10)
+                            ->get()->result_array();
+
+            $jabatan = null;
+            $listJabatan = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->where('jenis_jabatan', "JFT")
+                                ->get()->result_array();
+
+            foreach($listJabatan as $lj){
+                $jabatan[$lj['id_jabatan_siasn']] = $lj;
+            }
+
+            if($listCpns){
+                foreach($listCpns as $lc){
+                    $res = $this->siasnlib->getDataUtamaPnsByNip($lc['nipbaru_ws']);
+                    if($res && $res['code'] == 0){
+                        $data = json_decode($res['data'], true);
+                        if($data['data']){
+                            $update = null;
+                            if(!$lc['id_pns_siasn']){
+                                $update['id_pns_siasn'] = $data['data']['id'];
+                            }
+                            if($data['data']['jenisJabatan'] == "FUNGSIONAL_TERTENTU"){
+                                $idJabPeg = null;
+                                if(isset($jabatan[$data['data']['jabatanFungsionalId']])){ // jika ada, ambil id_jabatanpeg
+                                    $idJabPeg = $jabatan[$data['data']['jabatanFungsionalId']]['id_jabatanpeg'];
+                                }
+                                // else { // jika tidak ada, tambahkan di db_pegawai.jabatan
+                                //     $idJabPeg = $data['data']['jabatanFungsionalId'];
+                                //     $this->db->insert('db_pegawai.jabatan', [
+                                //         'id_jabatanpeg' => $idJabPeg,
+                                //         'id_unitkerja' => "9999000",
+                                //         'id_jabatan_siasn' => $idJabPeg,
+                                //         'nama_jabatan' => $data['data']['jabatanNama'],
+                                //         'nama_jabatan_pendek' => $data['data']['jabatanNama'],
+                                //         'eselon' => "Non Eselon",
+                                //         'jenis_jabatan' => "JFT",
+                                //     ]);
+                                // }
+
+                                if($idJabPeg){
+                                    $update['id_jafung_cpns'] = $idJabPeg;
+                                } else {
+                                    $update['id_jafung_cpns'] = 0;
+                                }
+                            }
+
+                            if($update){
+                                $this->db->where('nipbaru_ws', $lc['nipbaru_ws'])
+                                    ->update('db_pegawai.pegawai', $update);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 	}
 ?>

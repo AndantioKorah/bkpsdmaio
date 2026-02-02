@@ -657,7 +657,10 @@ class C_Kepegawaian extends CI_Controller
 		$data['bidang'] = $this->kepegawaian->getBidang($this->general_library->getId());
 		$data['nip'] = $this->general_library->getUserName();
 		$data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
-		
+
+		$data['layananSelesai'] = $this->kepegawaian->cekLayananSelesai();
+		// dd($data['layananSelesai']);
+		// dd(1);
 
         render('kepegawaian/V_ProfilPegawai', '', '', $data);
     }
@@ -3839,7 +3842,7 @@ class C_Kepegawaian extends CI_Controller
 		
 		$dataNomorSurat = getNomorSuratSiladen([
                 'jenis_layanan' => 39,
-                'tahun' => 2025,
+                'tahun' => date('Y'),
                 'perihal' => "Usul DS"
             ], 0);
 		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];

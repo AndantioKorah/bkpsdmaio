@@ -166,7 +166,7 @@
          $gol_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">24</td>
+ 										<td style="color:#fff;">25</td>
  										<td>Total</td>
  										<td><?=$gol_total_laki;?></td>
  										<td><?=$gol_total_perempuan;?></td>

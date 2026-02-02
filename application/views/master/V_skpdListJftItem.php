@@ -27,7 +27,7 @@
                                 </tbody>
                             </table>
                             <?php } else { ?>
-                            <h5>Belum ada data kebutuhan</h5>
+                            <h5>Belum ada data </h5>
                             <?php } ?>
     </div>
 </div>

@@ -11702,6 +11702,7 @@ public function getFileForKarisKarsu()
 
 public function searchPengajuanLayanan($id_m_layanan){
     $data = $this->input->post();
+   
     $this->db->select('*, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
      (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
             ->from('t_layanan a')
@@ -11783,6 +11784,14 @@ public function searchPengajuanLayananFungsional($id_m_layanan){
                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
                     $this->db->where('g.id', $data['status_pengajuan']);
                 }
+                 if($data['bulan'] != 0){
+                    $this->db->join('db_pegawai.pegjabatan h', 'a.reference_id_dok = h.id','left');
+                    $this->db->where('month(h.tglsk)', $data['bulan']);
+                    $this->db->where('year(h.tglsk)', $data['tahun']);
+                }
+                
+
+
 
     return $this->db->get()->result_array();
 }
@@ -13865,10 +13874,10 @@ public function getFileForVerifLayanan()
                 // Setda
                 if($this->general_library->getDataUnitKerjaPegawai()['id_unitkerjamaster'] == '1000000'){
                     if($data['status_berkala'] == ""){
-                    $this->db->where_in('f.id_unitkerjamaster', ['1000000']);
+                    $this->db->where_in('f.id_unitkerjamaster', ['1000000','2000000']);
                     $this->db->where_in('a.status', [3,5,6]);
                     } else {
-                    $this->db->where_in('f.id_unitkerjamaster', ['1000000']);
+                    $this->db->where_in('f.id_unitkerjamaster', ['1000000','2000000']);
                     $this->db->where_in('a.status', $data['status_berkala']);
                     }
                 // Pendidikan
@@ -15700,7 +15709,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                    ->where_in('a.statuspeg', [3])
+                    ->where_in('a.statuspeg', [3,6])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15733,7 +15742,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
          $temp_pangkat = $this->db->select('*')
                                 ->from('db_pegawai.pangkat')
-                                ->where_not_in('id_pangkat', [18,19,20,51,52,0])
+                                ->where_not_in('id_pangkat', [18,19,20,52,0])
                                 ->get()->result_array();
         foreach($temp_pangkat as $pang){
             $result['pangkat'][$pang['id_pangkat']] = $pang;
@@ -16548,6 +16557,43 @@ public function checkListIjazahCpns($id, $id_pegawai){
             }
             return $result;
         }
+
+        public function cekLayananSelesai(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['layanan'] = null;
+        
+        $id_user = $this->general_library->getId();
+       
+        $this->db->trans_begin();
+            $getLayananPangkat = $this->db->select('*')
+            ->from('t_layanan a')
+            ->join('m_layanan b', 'a.id_m_layanan = b.id')
+            ->where('a.id_m_user', $id_user)
+            ->where('a.reference_id_dok is not null')
+            ->where_in('a.id_m_layanan', [6,7,8,9,29])
+            ->where('a.flag_active', 1)
+            ->order_by('a.id', 'desc')
+            ->limit(1)
+            ->get()->row_array();
+         
+            if($getLayananPangkat) {
+              $res['code'] = 1;
+              $res['message'] = 'ok';
+              $res['layanan'] = $getLayananPangkat['nama_layanan'];
+            }
+    
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 0;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+    }
     
 
 }

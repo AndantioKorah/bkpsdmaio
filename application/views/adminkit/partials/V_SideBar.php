@@ -401,12 +401,14 @@
 			</a>
 		</li>
 
+		<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || 
+	             $this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')){ ?>
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('kepegawaian/C_Kepegawaian/kebutuhanJf')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">Admin JFT</span>
 			</a>
 		</li>
-
+		<?php } ?>
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/jft')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">List JFT</span>

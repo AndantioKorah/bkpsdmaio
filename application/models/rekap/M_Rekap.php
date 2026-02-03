@@ -1778,7 +1778,7 @@
                             ->order_by('a.nama')
                             ->group_by('a.nipbaru_ws');
             if($flag_alpha == 0 && $flag_rekap_personal == 0){
-                if(($flag_rekap_tpp == 1 && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW)) || ($flag_rekap_tpp == 0 && $flag_absen_aars == 1)){
+                if((($flag_rekap_tpp == 1 || ($flag_rekap_tpp == 0 && $flag_absen_aars == 1)) && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW))){
                     $this->db->where('c.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
                 } else if(stringStartWith('sekolah_', $data['id_unitkerja'])){
                     $this->db->where('c.id_unitkerjamaster_kecamatan', $uksearch['id_unitkerjamaster_kecamatan']);

@@ -676,4 +676,22 @@ class C_User extends CI_Controller
 		// dd($this->input->post('gambar'));
         
     }
+
+    public function loadRiwayatKonsultasi(){
+        $data['result'] = $this->user->loadRiwayatKonsultasi();
+        $this->load->view('user/V_LiveChatRiwayatKonsultasi', $data);
+    }
+
+    public function startKonsultasi(){
+        echo json_encode($this->user->startKonsultasi());
+    }
+
+    public function openKonsultasiDetail($id){
+        $data['result'] = $this->user->openKonsultasiDetail($id);
+        $this->load->view('user/V_LiveChatKonsultasi', $data);
+    }
+
+    public function sendMessageKonsultasi(){
+
+    }
 }

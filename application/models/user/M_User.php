@@ -4092,5 +4092,86 @@
                 }
             }
         }
+
+        public function startKonsultasi(){
+            $rs = [
+                'code' => 0,
+                'message' => null
+            ];
+            $exists = $this->db->select('*')
+                        ->from('t_live_chat')
+                        ->where('flag_active', 1)
+                        ->where('id_m_user', $this->general_library->getId())
+                        ->where('flag_done', 0)
+                        ->get()->row_array();
+            if($exists){
+                $rs['code'] = 1;
+                $rs['message'] = "Tidak dapat memulai Sesi Konsultasi baru jika masih ada Sesi Konsultasi yang sedang berlangsung.";
+            } else {
+                $this->db->insert('t_live_chat', [
+                    'id_m_user' => $this->general_library->getId(),
+                    'chat_id' => generateRandomString(7)
+                ]);
+                $rs['id'] = $this->db->insert_id();
+            }
+
+            return $rs;
+        }
+
+        public function loadRiwayatKonsultasi(){
+            $listChat = null;
+            $chat = $this->db->select('*')
+                            ->from('t_live_chat')
+                            ->where('id_m_user', $this->general_library->getId())
+                            ->where('flag_active', 1)
+                            ->order_by('created_date', 'desc')
+                            ->group_by('id')
+                            ->get()->result_array();
+            if($chat){
+                foreach($chat as $c){
+                    $listChat[$c['id']] = $c;
+                    $listChat[$c['id']]['last'] = null;
+                }
+            }
+                    
+            $detail = $this->db->select('a.*')
+                            ->from('t_live_chat_detail a')
+                            ->join('t_live_chat b', 'b.id = a.id_t_live_chat')
+                            ->where('a.flag_active', 1)
+                            ->where('b.id_m_user', $this->general_library->getId())
+                            ->order_by('created_date', 'desc')
+                            ->group_by('a.id')
+                            ->get()->result_array();
+
+            if($detail){
+                foreach($detail as $d){
+                    if(isset($listChat[$d['id_t_live_chat']])){
+                        $listChat[$d['id_t_live_chat']]['last'] = $d;
+                    }
+                }
+            }
+
+            return $listChat;
+        }       
+
+        public function openKonsultasiDetail($id){
+            $chat = $this->db->select('*')
+                            ->from('t_live_chat a')
+                            ->where('id', $id)
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+
+            $detail = $this->db->select('*')
+                            ->from('t_live_chat_detail')
+                            ->where('flag_active', 1)
+                            ->where('id_t_live_chat', $id)
+                            ->order_by('created_date', 'asc')
+                            ->get()->result_array();
+
+            return [
+                'chat' => $chat,
+                'detail' => $detail
+            ];
+        }
 	}
 ?>

@@ -1245,20 +1245,27 @@ function isSuratCutiTahunan($array){
     ];
 }
 
-function formatDateNotifikasi($date){
+function formatDateNotifikasi($date, $flag_hide_yang_lalu = 0){
     $now = date('Y-m-d');
     $expl = explode(" ", $date);
+    $res = null;
     if($now != $expl[0]){
         return formatDateNamaBulan($expl[0])." ".formatTimeAbsen($expl[1]);
     } else {
         $now = date('Y-m-d H:i:s');
         $diffJam = countDiffDateLengkap($date, $now, ['jam']);
         if($diffJam < 1){
-            return countDiffDateLengkap($date, $now, ['menit']).' yang lalu';
+            $res = countDiffDateLengkap($date, $now, ['menit']);
         } else {
-            return $diffJam.' yang lalu';
+            $res = $diffJam;
         }
     }
+
+    if($res == "Hari Ini"){
+        $res = "1 menit";
+    }
+
+    return $flag_hide_yang_lalu == 0 ? $res : $res.' yang lalu';
 }
 
 function countDiffDateLengkap($date1, $date2, $params = '')

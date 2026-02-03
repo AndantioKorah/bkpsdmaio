@@ -296,8 +296,8 @@ $(function(){
      $('.yearpicker').change(function() {
         // Code to run when the value changes
         var selectedValue = $(this).val(); // Get the new value
-        if(selectedValue == 2024){
-          errortoast("Untuk SKP 2024 silahkan lakukan Sinkron SIASN")
+        if(selectedValue == 2024 || selectedValue == 2025){
+          errortoast("Untuk SKP "+selectedValue+" silahkan lakukan Sinkron SIASN")
           $('.yearpicker').datepicker('setDate', null);
         } 
     });
@@ -321,7 +321,7 @@ $(function(){
     viewMode: "years", 
     minViewMode: "years",
     orientation: 'bottom',
-    // endDate: end,
+    endDate: end,
     autoclose: true
     });
     }

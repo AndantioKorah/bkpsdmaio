@@ -3308,7 +3308,7 @@ class C_Kepegawaian extends CI_Controller
 		if($this->input->post('edit_gb_no_sk') == "" || $this->input->post('edit_gb_no_sk') == null){
 		$dataNomorSurat = getNomorSuratSiladen([
                 'jenis_layanan' => 64,
-                'tahun' => 2025,
+                'tahun' => date('Y'),
                 'perihal' => "usul DS"
             ], 0);
 		$data['nosk'] = $dataNomorSurat['data']['nomor_surat'];

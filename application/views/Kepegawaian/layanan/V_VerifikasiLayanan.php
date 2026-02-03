@@ -224,13 +224,13 @@ input:checked + .slider .off
             </div>
 <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16) { ?>
         <div class="col" id="pilih_tahun" style="display:none;">
-                <label for="exampleFormControlInput1">Tahun</label>
+                <label for="exampleFormControlInput1">Tahun SK</label>
                 <input  class="form-control yearpicker customInput" id="tahun" name="tahun" value="<?= date('Y');?>">
               </div>
 
 
             <div class="col" id="pilih_bulan" style="display:none;">
-                <label>Bulan</label>
+                <label>Bulan SK</label>
                 <select class="form-control select2-navy customInput" style="width: 100%"
                  id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
                  <option selected value="0">- Pilih Bulan -</option>

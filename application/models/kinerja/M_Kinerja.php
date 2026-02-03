@@ -219,7 +219,8 @@
                 //     break;
                 //   }
     
-                $tanggal = new DateTime($this->input->post('tanggal_kegiatan'));
+                $tanggal = new DateTime($this->input->post('tanggal_absensi'));
+                // dd($this->input->post('tanggal_absensi'));
                 $tahun = $tanggal->format("Y");
                 $bulan = $tanggal->format("m");
                 if (!is_dir('./assets/peninjauan_absen/'.$tahun.'/'.$bulan)) {

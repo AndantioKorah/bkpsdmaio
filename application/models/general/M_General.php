@@ -2454,22 +2454,22 @@
                                 'keterangan_sistem' => $ds['keterangan']
                             ];
 
-                            $cronWa[] = [
-                                'sendTo' => convertPhoneNumber($ds['handphone']),
-                                'message' => "*[SIDAK]*\n\nSelamat ".greeting()." ".$ds['nama_pegawai'].", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($ds['tanggal']).", Anda dikenakan pelanggaran *SIDAK* dengan keterangan: *".$ds['keterangan']."*",
-                                'flag_prioritas' => 0,
-                                'type' => 'text'
-                            ];
+                            // $cronWa[] = [
+                            //     'sendTo' => convertPhoneNumber($ds['handphone']),
+                            //     'message' => "*[SIDAK]*\n\nSelamat ".greeting()." ".$ds['nama_pegawai'].", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($ds['tanggal']).", Anda dikenakan pelanggaran *SIDAK* dengan keterangan: *".$ds['keterangan']."*",
+                            //     'flag_prioritas' => 0,
+                            //     'type' => 'text'
+                            // ];
                         }
                         if($dokpenSidak){
                             $this->db->insert_batch('t_dokumen_pendukung', $dokpenSidak);
                             echo "done insert: ".count($dokpenSidak)."\n";
                         }
 
-                        if($cronWa){
-                            $this->db->insert_batch('t_cron_wa', $cronWa);
-                            echo "done insert: ".count($cronWa);
-                        }
+                        // if($cronWa){
+                        //     $this->db->insert_batch('t_cron_wa', $cronWa);
+                        //     echo "done insert: ".count($cronWa);
+                        // }
                     }
                 }
             }

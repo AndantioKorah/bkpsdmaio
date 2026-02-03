@@ -67,6 +67,12 @@ class C_Cron extends CI_Controller
 
     public function cronCheckVerifCuti(){
         $this->general->cronCheckVerifCuti();
+        $this->cronJafungCpns();
+    }
+
+    public function cronJafungCpns(){
+        $this->user->cronJafungCpns();
+        $this->general->logCron('cronJafungCpns');
     }
 
     public function cronSyncSkpSiasn(){

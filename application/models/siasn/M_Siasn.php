@@ -870,6 +870,14 @@
                                         }
                                     }
 
+                                    if($sia['path'] && isset($sia['path'][881])){
+                                        $file = $this->siasnlib->downloadDokumen($sia['path'][881]['dok_uri']);
+                                        if($file['code'] == 0){
+                                            $fileName = 'DIKLAT_'.$sia['id'].'_'.date('ymdhis').'.pdf';
+                                            file_put_contents('arsipdiklat/'.$fileName, $file['data']);
+                                        }
+                                    }
+
                                     $this->db->insert('db_pegawai.pegdiklat', [
                                         'id_pegawai' => $l['id_peg'],
                                         'jenisdiklat' => isset($mDiklatp[$sia['jenisDiklatId']]) ? $mDiklatp[$sia['jenisDiklatId']]['id_diklat'] : "50", // 50 => seminar
@@ -1003,6 +1011,7 @@
                 $explodeTanggal = explode("-", $data['tglsttpp']);
                 $upload = null;
                 $uploadRwBangkom = null;
+                $idRefDokumen = 881;
                 if($data['jenisdiklat'] == "00"){
                     $upload = [
                         // "bobot": 0,
@@ -1063,6 +1072,7 @@
                         "tanggalSelesaiKursus" => formatDateOnlyForEdit2($data['tglselesai'])
                     ];
                     $uploadRwBangkom = $this->siasnlib->createBangkom($upload);
+                    $idRefDokumen = 881;
                 }
 
                 if($data['id_siasn']){
@@ -1084,7 +1094,7 @@
                         if(file_exists($url)){
                             $request = [
                                 'id_riwayat' => $idDiklatSiasn,
-                                'id_ref_dokumen' => 874,
+                                'id_ref_dokumen' => $idRefDokumen,
                                 'file' => new CURLFile ($url)
                             ];
                             // dd($request);

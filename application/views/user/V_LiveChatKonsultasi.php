@@ -60,77 +60,63 @@
     padding-top: 10px;
     padding-bottom: 10px;
 ">  
-    <div class="row">
-        <?php if($result['detail']){ ?>
-            <?php foreach($result['detail'] as $rd){ ?>
-                <div class="col-lg-12 pt-2">
-                    <?php
-                        $divChat = "div_chat_admin"; 
-                        $spJam = "sp_jam_pesan_chatkonsul_admin"; 
-                        if($rd['is_sender_admin'] == 0){ 
-                            $divChat = "div_chat_pegawai"; 
-                            $spJam = "sp_jam_pesan_chatkonsul_pegawai"; 
-                        }
-                    ?>
-                    <div class="<?=$divChat?> div_chat">
-                        <div class="col-lg-12">
-                            <span class="sp_chat_pesan_chatkonsul"><?=$rd['pesan']?></span><br>
-                        </div>
-                        <div class="col-lg-12">
-                            <span class="sp_jam_pesan_chatkonsul <?=$spJam?>"><?=trim(formatDateNotifikasi($rd['created_date']), 0)?></span>
-                        </div>
-                    </div>
-                </div>
-            <?php } ?>
-        <?php } ?>
+    <div class="row" id="live_chat_container">
+        
     </div>
 </div>
-<div class="col-lg-12 mt-2" style="
-    width: 100%;
-">
-    <div class="row"
-        style="
-            display: flex;
-            align-items: center;
-            background-color: white;
-            border-radius: 50px;
-            padding: 5px 10px 5px 0px;
-        "
-    >
-        <div class="col-lg-10">
-            <textarea style="
-                resize: none;
-                width: 100%;
-                height: 40px;
-                margin-top: 5px;
+<form id="form_send_message">
+    <div class="col-lg-12 mt-2" style="
+        width: 100%;
+    ">
+        <div class="row"
+            style="
+                display: flex;
+                align-items: center;
                 background-color: #f9fafb;
-                overflow: hidden;
-                padding: 10px 0px 5px 0px;
-                outline: none;
-                font-size: 1rem;
-                border: 0;
+                border-radius: 50px;
+                padding: 5px 10px 5px 0px;
             "
-                placeholder="Tulis pesan disini..."></textarea>
-        </div>
-        <div class="col-lg-2">
-            <button id="btn_send_message" type="button" style="
-                width: 40px;
-                height: 40px;
-            "
-            class="btn btn-success rounded-circle p-2">
-                <i class="fa fa-paper-plane"></i>
-            </button>
-            <button id="btn_send_message_loading" type="button" style="
-                width: 40px;
-                height: 40px;
-            "
-            class="btn btn-success rounded-circle p-2">
-                <i class="fa fa-spin fa-spinner"></i>
-            </button>
+        >
+            <div class="col-lg-10">
+                <textarea name="pesan" id="pesan" style="
+                    resize: none;
+                    width: 100%;
+                    height: 40px;
+                    margin-top: 5px;
+                    background-color: #f9fafb;
+                    overflow: hidden;
+                    padding: 10px 0px 5px 0px;
+                    outline: none;
+                    font-size: 1rem;
+                    border: 0;
+                "
+                    placeholder="Tulis pesan disini..."></textarea>
+            </div>
+            <div class="col-lg-2">
+                <button id="btn_send_message" type="submit" style="
+                    width: 40px;
+                    height: 40px;
+                "
+                class="btn btn-success rounded-circle p-2">
+                    <i class="fa fa-paper-plane"></i>
+                </button>
+                <button id="btn_send_message_loading" type="button" djsabled style="
+                    width: 40px;
+                    height: 40px;
+                    display: none;
+                "
+                class="btn btn-success rounded-circle p-2">
+                    <i class="fa fa-spin fa-spinner"></i>
+                </button>
+            </div>
         </div>
     </div>
-</div>
+</form>
 <script>
+    $(function(){
+        reloadLiveChatContainer('<?=$result['chat']['id']?>')
+    })
+
     $('.btn_back_chatkonsul').on('click', function(){
         $('#div_start_konsultasi').show()
         $('#div_chat_konsultasi').html('')
@@ -138,21 +124,49 @@
         loadRiwayatChat()
     })
 
+    $('#form_send_message').on('submit', function(e){
+        e.preventDefault()
+        $('#btn_send_message').click()
+    })
+
+    function reloadLiveChatContainer(id){
+        // $('#live_chat_container').html('')
+        $('#live_chat_container').load('<?=base_url('user/C_User/reloadChatContainer/')?>'+id)
+    }
+
+    $('#pesan').on('keydown', function(e){
+        if (e.key === 'Enter' && e.shiftKey) {
+            console.log('asdasdsad')
+            e.preventDefault(); // Mencegah perilaku default
+            const cursorPosition = this.selectionStart;
+            const text = this.value;
+            // Menambahkan baris baru pada posisi kursor
+            this.value = text.substring(0, cursorPosition) + "\n" + text.substring(this.selectionEnd);
+            this.selectionStart = this.selectionEnd = cursorPosition + 1;
+        } else if(e.key === "Enter"){
+            e.preventDefault()
+            $('#form_send_message').submit()
+        }
+    })
+
     $('#btn_send_message').on('click', function(){
-        $(this).hide()
-        $('#btn_send_message_loading').show()
+        // $(this).hide()
+        // $('#btn_send_message_loading').show()
         $.ajax({
-            url: '<?=base_url("user/C_User/sendMessageKonsultasi/")?>',
+            url: '<?=base_url("user/C_User/sendMessageKonsultasi")?>',
             method: 'post',
-            data: [
-                
-            ],
+            data: {
+                'id' : '<?=$result['chat']['id']?>',
+                'pesan' : $('#pesan').val(),
+                'id_m_user_sender' : '<?=$this->general_library->getId()?>'
+            },
             success: function(data){
                 let rs = JSON.parse(data)
                 if(rs.code == 1){
                     errortoast(rs.message)
                 } else {
-                    
+                    reloadLiveChatContainer('<?=$result['chat']['id']?>')
+                    $('#pesan').val('')
                 }
                 $(this).show()
                 $('#btn_send_message_loading').hide()

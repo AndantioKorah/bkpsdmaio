@@ -1596,7 +1596,7 @@
             }
         }
 
-        $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft,
+        $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, i.nm_statuspeg,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, d.nipbaru_ws as nip, h.id as id_m_user, f.nm_unitkerja,
             a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun, b.flag_override_tpp, d.tmt_hitung_absen')
@@ -1607,6 +1607,7 @@
                                 ->join('db_pegawai.unitkerja f', 'a.id_unitkerja = f.id_unitkerja')
                                 ->join('m_pangkat g', 'd.pangkat = g.id_pangkat')
                                 ->join('m_user h', 'a.nip = h.username')
+                                ->join('db_pegawai.statuspeg i', 'd.statuspeg = i.id_statuspeg')
                                 // ->where('a.bulan <=', floatval($bulan))
                                 // ->where('a.tahun <=', floatval($tahun))
                                 // ->where('a.id_unitkerja', $id_unitkerja)
@@ -1671,7 +1672,7 @@
                                     ->get()->row_array();
         
         $result = null;
-        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp, d.kelas_jabatan_hardcode,
+        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp, d.kelas_jabatan_hardcode, h.nm_statuspeg,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user, d.id_jabatan_tambahan,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs, f.nm_unitkerja, d.tmt_hitung_absen,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat, b.flag_override_tpp, a.flag_use_presentase_tpp_plt')
@@ -1682,6 +1683,7 @@
                                 ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
                                 ->join('db_pegawai.unitkerja f', 'a.id_unitkerja = f.id_unitkerja')
                                 ->join('m_pangkat g', 'd.pangkat = g.id_pangkat')
+                                ->join('db_pegawai.statuspeg h', 'd.statuspeg = h.id_statuspeg')
                                 // ->where('a.id_unitkerja', $id_unitkerja)
                                 ->where('a.flag_active', 1);
                                 // ->get()->result_array();

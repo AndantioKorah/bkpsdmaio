@@ -4154,7 +4154,7 @@
             return $listChat;
         }       
 
-        public function openKonsultasiDetail($id){
+        public function reloadChatContainer($id){
             $chat = $this->db->select('*')
                             ->from('t_live_chat a')
                             ->where('id', $id)
@@ -4172,6 +4172,40 @@
                 'chat' => $chat,
                 'detail' => $detail
             ];
+        }
+
+        public function openKonsultasiDetail($id){
+            $chat = $this->db->select('*')
+                            ->from('t_live_chat a')
+                            ->where('id', $id)
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            return [
+                'chat' => $chat,
+            ];
+        }
+
+        public function sendMessageKonsultasi($data){
+            $rs = [
+                'code' => 0,
+                'message' => null
+            ];
+
+            $this->db->trans_begin();
+            
+            $data['id_t_live_chat'] = $data['id'];
+            unset($data['id']);
+            $this->db->insert('t_live_chat_detail', $data);
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $rs;
         }
 	}
 ?>

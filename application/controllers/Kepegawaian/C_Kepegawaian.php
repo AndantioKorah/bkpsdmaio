@@ -3311,6 +3311,7 @@ class C_Kepegawaian extends CI_Controller
                 'tahun' => date('Y'),
                 'perihal' => "usul DS"
             ], 0);
+	
 		$data['nosk'] = $dataNomorSurat['data']['nomor_surat'];
 		} else {
 		$data['nosk'] = $this->input->post('edit_gb_no_sk');

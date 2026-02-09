@@ -60,6 +60,8 @@
                 <td style="font-weight: bold; text-align: center; width: 20%;">Jumlah Anak</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Nama Pasangan</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Alamat</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">NPWP</td>
+
                 
 
 
@@ -113,6 +115,9 @@
                                 Sulawesi Utara, <?=$rs['nama_kabupaten_kota']?>, Kec. <?=$rs['nama_kecamatan']?>, Kel. <?=$rs['nama_kelurahan']?></td>
                                 <?php } ?>    
                       </td>
+                        <td style="padding: 10px; text-align: left;"><?='`'.($rs['npwp'])?></td>
+
+                      
 
 
 

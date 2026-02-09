@@ -169,12 +169,12 @@
 
 
 	<p class="justify" >
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adalah Benar Pegawai Negeri Sipil Kota Manadi dan saat ini tidak sedang menjalani 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adalah Benar Pegawai Negeri Sipil Kota Manado dan saat ini tidak sedang menjalani 
         Tugas Belajar/Ikatan Dinas di Pemerintah Kota Manado.</p>
 
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian surat keterangan dibuat untuk kelengkapan berkas 
-    Pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>.
-    <!-- inpassing Jabatan Fungsional Penata Kelola Penanaman Modal -->
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian surat keterangan dibuat untuk kelengkapan administrasi 
+    <!-- Pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>. -->
+    penyesuaian/inpassing.
 
      </p>
 

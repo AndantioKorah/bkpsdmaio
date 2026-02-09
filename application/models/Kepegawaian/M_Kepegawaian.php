@@ -15433,13 +15433,13 @@ public function checkListIjazahCpns($id, $id_pegawai){
         //         ->update('t_usul_ds', $dataUpdateDS);
 
 
-        //  $dataLayanan = $this->db->select('c.*,a.*,c.id as id_m_user')
-        //         ->from('t_gajiberkala a')
-        //         ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
-        //         ->join('m_user c', 'b.nipbaru_ws = c.username')
-        //         ->where('a.id', $id_usul)
-        //         ->where('c.flag_active', 1)
-        //         ->get()->row_array();
+         $dataLayanan = $this->db->select('c.*,a.*,c.id as id_m_user')
+                ->from('t_gajiberkala a')
+                ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
+                ->join('m_user c', 'b.nipbaru_ws = c.username')
+                ->where('a.id', $id_usul)
+                ->where('c.flag_active', 1)
+                ->get()->row_array();
         
         //     $pegawai = $this->kinerja->getAtasanPegawai(0, $this->general_library->getId(), 1);
         //     $sekbkpsdm = $this->layanan->getPegawaiByIdJabatan(ID_JABATAN_SEKBAN_BKPSDM);
@@ -15493,7 +15493,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         //     $this->db->where('id', $id_usul)
         //         ->update('t_gajiberkala', $dataUpdate);
 
-        //     $perihal = "SK KENAIKAN GAJI BERKALA a.n.".getNamaPegawaiFull($dataLayanan);
+            $perihal = "SK KENAIKAN GAJI BERKALA a.n.".getNamaPegawaiFull($dataLayanan);
 
             $counter = qounterNomorSurat($tahun);
             $this->db->insert('t_nomor_surat', [

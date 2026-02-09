@@ -699,4 +699,17 @@ class C_User extends CI_Controller
     public function sendMessageKonsultasi(){
         echo json_encode($this->user->sendMessageKonsultasi($this->input->post()));
     }
+
+    public function endKonsultasi($id){
+        echo json_encode($this->user->endKonsultasi($id));
+    }
+
+    public function ratingKonsultasi($id){
+        $data['result'] = $this->general->getOne('t_live_chat', 'id', $id);
+        $this->load->view('user/V_LiveChatRatingKonsultasi', $data);
+    }
+
+    public function submitRatingKonsultasi($id){
+        echo json_encode($this->user->submitRatingKonsultasi($id));
+    }
 }

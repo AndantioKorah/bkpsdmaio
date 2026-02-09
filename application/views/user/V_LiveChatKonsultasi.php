@@ -47,11 +47,23 @@
         float: right;
     }
 </style>
-<div class="col-lg-12 text-left">
+<div class="col-lg-8 text-left">
     <span style="cursor:pointer;" class="sp_chat_id_chatkonsul btn_back_chatkonsul"><i class="fa fa-chevron-left"></i></span>
-    <span class="sp_chat_id_chatkonsul">&nbsp;&nbsp;&nbsp;&nbsp;#<?=$result['chat']['chat_id']?></span>
+    <span class="sp_chat_id_chatkonsul">&nbsp;&nbsp;#<?=$result['chat']['chat_id']?></span>
 </div>
-<div class="col-lg-12" style="
+<div class="col-lg-4 text-right">
+    <div class="btn-group" role="group">
+        <button id="btn-group-konsultasi" type="button" class="btn btn-outline-warning dropdown-toggle"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Pilihan
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btn-group-konsultasi">
+            <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')" >Akhiri Konsultasi</a>
+            <!-- <a class="dropdown-item" href="#">Dropdown link</a> -->
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 mt-2" style="
     background-color: #f9fbf9;
     height: 75vh;
     overflow-y: auto;
@@ -116,12 +128,42 @@
     $(function(){
         reloadLiveChatContainer('<?=$result['chat']['id']?>')
     })
+    
+    function endKonsultasi(id){
+        if(confirm('Apakah Anda yakin?')){
+            // $.ajax({
+            //     url: '<?=base_url("user/C_User/endKonsultasi/")?>'+id,
+            //     method: 'post',
+            //     success: function(data){
+            //         let rs = JSON.parse(data)
+            //         if(rs.code == 1){
+            //             errortoast(rs.message)
+            //         } else {
+            //             backToStartView()
+            //         }
+            //     }, error: function(e){
+            //         errortoast('Terjadi Kesalahan')
+            //     }
+            // })
+            $('#div_start_konsultasi').hide()
+            $('#div_chat_konsultasi').show()
+            $('#div_chat_konsultasi').html('')
+            $('#div_chat_konsultasi').append(divLoaderNavy)
+            $('#div_chat_konsultasi').load('<?=base_url('user/C_User/ratingKonsultasi/')?>'+id, function(){
+                $('#loader').hide()
+            })
+        }
+    }
 
-    $('.btn_back_chatkonsul').on('click', function(){
+    function backToStartView(){
         $('#div_start_konsultasi').show()
         $('#div_chat_konsultasi').html('')
         $('#div_chat_konsultasi').hide()
         loadRiwayatChat()
+    }
+
+    $('.btn_back_chatkonsul').on('click', function(){
+        backToStartView()
     })
 
     $('#form_send_message').on('submit', function(e){

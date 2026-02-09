@@ -1,8 +1,11 @@
 <?php if($result){ ?>
+
+
+
   <table class="table table-hover data_table">
     <thead>
       <th class="text-center">No</th>
-      <th class="text-center">NIP</th>
+      <th class="text-center" style="width:25%;">NIP</th>
       <th class="text-center">Nama</th>
       <th class="text-center">Unit Kerja</th>
       <th class="text-center">Tgl. Usul</th>
@@ -11,11 +14,25 @@
     </thead>
     <tbody>
       <?php $no=1; foreach($result as $rs){ ?>
+       <?php
+                $badge_status = 'badge-cpns';
+                if($rs['statuspeg'] == 2){
+                  $badge_status = 'badge-pns';
+                } else if($rs['statuspeg'] == 3){
+                  $badge_status = 'badge-pppk';
+                } else if($rs['statuspeg'] == 6){
+                  $badge_status = 'badge-pppk-pw';
+                }
+   ?>
+
         <tr style="<?php if($rs['flag_terima_tpp'] == 1) echo 'background-color:#88eda6'; ?>">
         
           <td class="text-center"><?=$no++;?></td>
           <td class="text-center"><?=formatNip($rs['nipbaru_ws'])?></td>
-          <td class="text-center"><?=getNamaPegawaiFull($rs)?></td>
+          <td class="text-left">
+          <?=getNamaPegawaiFull($rs)?><br>
+          <span class="badge <?=$badge_status?>"> <?php  if($rs['statuspeg'] == 1) echo "CPNS"; else if($rs['statuspeg'] == 2) echo "PNS"; else if($rs['statuspeg'] == 3) echo "PPPK"; else echo "PPPK Paruh Waktu";?> </span>
+        </td>
           <td class="text-center"><?=($rs['nm_unitkerja'])?></td>
           <td class="text-center"><?=formatDateNamaBulan($rs['tgl_usul'])?></td>
           <td class="text-center">

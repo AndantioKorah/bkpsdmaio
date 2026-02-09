@@ -487,10 +487,30 @@
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
 
+           <label>Jenis Surat</label>
+          <select onchange="myFunction()" class="form-control select2"  type="text" id="jenis_surat" name="jenis_surat" autocomplete="off"  required>
+          <option selected disabled value="">Pilih Item</option>
+          <option value="1">Pindah Tugas</option>
+          <option value="2">Inpassing</option>           
+          </select>
+
+            <script>
+              function myFunction(val) {
+              var val = $('#jenis_surat').val()
+              if(val == 1){
+              $('#tujuan').show('fast')
+              } else {
+                $('#tujuan').hide('fast')
+              }
+              }
+            </script>
+
           <!-- <label for="exampleInputEmail1">Nomor Surat</label>
           <input type="text" class="form-control" id="nomor_surat" name="nomor_surat"> -->
+          <div style="display:none" id="tujuan">
           <label for="exampleInputEmail1">Instansi Tujuan</label>
           <input type="text" class="form-control" id="instansi_tujuan" name="instansi_tujuan">
+          </div>
           </div> 
           <button id="" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
 

@@ -1237,8 +1237,15 @@
         </div>
       </div>
       <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button> -->
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        <div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+  <label class="form-check-label" for="inlineCheckbox1">Telah Mengisi Survei</label>
+</div>
+
+<div class="form-check form-check-inline">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Oke</button>
+</div>
       </div>
     </div>
   </div>
@@ -1444,7 +1451,7 @@
   // $('#btnstatic').click()  
   // }
 
-      <?php if($layananSelesai['code'] == 1){ ?>
+      <?php if(isset($layananSelesai['code']) == 1){ ?>
       $('#btnmodalsurvei').click()
       // $('#modal-survei').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
     <?php } ?>

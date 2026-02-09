@@ -173,8 +173,13 @@
         Tugas Belajar/Ikatan Dinas di Pemerintah Kota Manado.</p>
 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian surat keterangan dibuat untuk kelengkapan administrasi 
-    <!-- Pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>. -->
-    penyesuaian/inpassing.
+    <?php if($jenis_surat == 1){ ?>
+		pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>.
+	<?php } else { ?>
+        penyesuaian/inpassing.
+	<?php }  ?>
+
+	
 
      </p>
 

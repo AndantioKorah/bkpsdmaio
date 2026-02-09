@@ -558,15 +558,15 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                         
                         // //   tutup assesment
 
-                    $total_kinerja = 0;
+                       $total_kinerja = 0;
                        $kriteria1 = $this->getPenilaianKinerja($rs['id_pegawai'],$previous1Year,1); 
                        $kriteria2 = $this->getPenilaianKinerja($rs['id_pegawai'],$previous2Year,2); 
                        $kriteria3 = $this->getInovasiPegawai($rs['id_pegawai']); 
                        $kriteria4 = $this->getPengalamanTimPegawai($rs['id_pegawai']); 
                        $kriteria5 = $this->getPenugasanPengawai($rs['id_pegawai']); 
 
-                    //   if($rs['id_pegawai'] == 'PEG0000000eh992'){
-                    //     dd($kriteria4);
+                    //   if($rs['id_pegawai'] == 'PEG0000000eh335'){
+                    //     dd($kriteria2);
                     //    }
 
 
@@ -1315,30 +1315,30 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
         }
 
         function getPenghargaan($id){
-            $this->db->select('a.pemberi')
+            $this->db->select('a.lingkup_penghargaan')
                 ->from('db_pegawai.pegpenghargaan a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.status', 2)
                 ->where('a.flag_active', 1);
             $penghargaan =  $this->db->get()->result_array();
 
-            $id_penghargaan = null;
+            $id_penghargaan = 147;
             $qty1 = 0;
             $qty2 = 0;
             $qty3 = 0;
             $qty4 = 0;
          
             foreach ($penghargaan as $peng) {
-               if($peng['pemberi'] == 1 ){ 
+               if($peng['lingkup_penghargaan'] == 1 ){ 
                 $qty1++;
                } 
-               if($peng['pemberi'] == 2 ){ 
+               if($peng['lingkup_penghargaan'] == 2 ){ 
                 $qty2++;
                } 
-               if($peng['pemberi'] == 3 ){ 
+               if($peng['lingkup_penghargaan'] == 3 ){ 
                 $qty3++;
                } 
-               if($peng['pemberi'] == 4 ){ 
+               if($peng['lingkup_penghargaan'] == 4 ){ 
                 $qty4++;
                } 
             }
@@ -1352,7 +1352,6 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             } else if($qty4 != 0) {
                 $id_penghargaan = 114;
             }
-
             return $id_penghargaan;
         }
 
@@ -1926,32 +1925,65 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 }
 
     function getHukdisPengawai($id){
-        $this->db->select('a.tglsurat')
+
+        $this->db->select('a.hd')
             ->from('db_pegawai.pegdisiplin a')
             ->where('a.id_pegawai', $id)
             ->where('a.flag_active', 1);
         $hukdis = $this->db->get()->row_array();
-       
         $id_hukdis = null;
+
+     
+
         if($hukdis){
-            $yearHukdis = date('Y', strtotime($hukdis['tglsurat']));
-            $currentYear = date('Y-m-d'); 
-            $sdate = $hukdis['tglsurat'];
-            $edate = date('Y-m-d');
-            $date_diff = abs(strtotime($edate) - strtotime($sdate));
-            $years = floor($date_diff / (365*60*60*24));
-            $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
-            $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-//  dd($years);
-            if($years > 10){
-                $id_hukdis = 115;
-            } else if($years >= 10){
-                $id_hukdis = 116;
-            } else if($years > 5){
-                $id_hukdis = 117;
-            } else if($years > 2){
-                $id_hukdis = 118;
+
+         $qty1 = 0;
+         $qty2 = 0;
+         $qty3 = 0;
+         $qty4 = 0;
+         
+            foreach ($hukdis as $hd) {
+               if($hd == 30 ){ 
+                $qty1++;
+               } 
+               if($hd == 20 ){ 
+                $qty2++;
+               } 
+               if($hd == 10 ){ 
+                $qty3++;
+               } 
+           
             }
+           
+            if($qty1 != 0){
+                $id_hukdis = 118; 
+            } else if($qty2 != 0) {
+                $id_hukdis = 117;
+            } else if($qty3 != 0) {
+                $id_hukdis = 116;
+            } else if($qty4 != 0) {
+                $id_hukdis = 148;
+            }
+            
+
+//             $yearHukdis = date('Y', strtotime($hukdis['tglsurat']));
+//             $currentYear = date('Y-m-d'); 
+//             $sdate = $hukdis['tglsurat'];
+//             $edate = date('Y-m-d');
+//             $date_diff = abs(strtotime($edate) - strtotime($sdate));
+//             $years = floor($date_diff / (365*60*60*24));
+//             $months = floor(($date_diff - $years * 365*60*60*24) / (30*60*60*24));
+//             $days = floor(($date_diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+// //  dd($years);
+//             if($hukdis['hd'] == 30){
+//                 $id_hukdis = 118;
+//             } else if($years >= 10){
+//                 $id_hukdis = 116;
+//             } else if($years > 5){
+//                 $id_hukdis = 117;
+//             } else if($years > 2){
+//                 $id_hukdis = 118;
+//             }
         } else {
         $id_hukdis = 115;
         }

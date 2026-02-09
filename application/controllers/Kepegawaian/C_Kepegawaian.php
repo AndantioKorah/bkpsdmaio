@@ -3662,6 +3662,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
 		$data['nomor_surat'] = $this->input->post('nomor_surat');
 		$data['instansi_tujuan'] = $this->input->post('instansi_tujuan');
+		$data['jenis_surat'] = $this->input->post('jenis_surat');
 		$mpdf = new \Mpdf\Mpdf();
 			$mpdf->AddPage(
             'P', // L - landscape, P - portrait

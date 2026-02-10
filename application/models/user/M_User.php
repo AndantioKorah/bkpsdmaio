@@ -4120,36 +4120,14 @@
 
         public function loadRiwayatKonsultasi(){
             $listChat = null;
-            $chat = $this->db->select('*')
-                            ->from('t_live_chat')
-                            ->where('id_m_user', $this->general_library->getId())
-                            ->where('flag_active', 1)
-                            ->order_by('created_date', 'desc')
-                            ->group_by('id')
-                            ->get()->result_array();
-            if($chat){
-                foreach($chat as $c){
-                    $listChat[$c['id']] = $c;
-                    $listChat[$c['id']]['last'] = null;
-                }
-            }
-                    
-            $detail = $this->db->select('a.*')
-                            ->from('t_live_chat_detail a')
-                            ->join('t_live_chat b', 'b.id = a.id_t_live_chat')
+            $listChat = $this->db->select('a.*, b.created_date as last_message_date, b.pesan')
+                            ->from('t_live_chat a')
+                            ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                            ->where('a.id_m_user', $this->general_library->getId())
                             ->where('a.flag_active', 1)
-                            ->where('b.id_m_user', $this->general_library->getId())
-                            ->order_by('created_date', 'desc')
+                            ->order_by('a.created_date', 'desc')
                             ->group_by('a.id')
                             ->get()->result_array();
-
-            if($detail){
-                foreach($detail as $d){
-                    if(isset($listChat[$d['id_t_live_chat']])){
-                        $listChat[$d['id_t_live_chat']]['last'] = $d;
-                    }
-                }
-            }
 
             return $listChat;
         }       
@@ -4180,6 +4158,41 @@
                             ->where('id', $id)
                             ->where('flag_active', 1)
                             ->get()->row_array();
+
+            if($chat){
+                if($chat['id_m_user'] == $this->general_library->getId() && $chat['flag_read_pegawai'] == 0){
+                    // jika pegawai yang buka chat, ubah flag_read_pegawai jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
+                    $this->db->where('id', $chat['id'])
+                        ->update('t_live_chat', [
+                            'flag_read_pegawai' => 1,
+                        ]);
+
+                    $this->db->where('id_t_live_chat', $chat['id'])
+                            ->where('read_date', null)
+                            ->where('id_m_user_sender !=', $this->general_library->getId())
+                            ->update('t_live_chat_detail',[
+                                'read_date' => date('Y-m-d H:i:s'),
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+
+                } else if($chat['id_m_user'] != $this->general_library->getId() && $chat['flag_read_admin'] == 0){
+                    // jika admin yang buka chat, ubah flag_read_admin jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
+                    $this->db->where('id', $chat['id'])
+                        ->update('t_live_chat', [
+                            'flag_read_admin' => 1,
+                        ]);
+
+                    $this->db->where('id_t_live_chat', $chat['id'])
+                            ->where('read_date', null)
+                            ->where('id_m_user_sender', $chat['id']['id_m_user'])
+                            ->update('t_live_chat_detail',[
+                                'read_date' => date('Y-m-d H:i:s'),
+                                'updated_by' => $this->general_library->getId(),
+                                'admin_read_by' => $this->general_library->getId()
+                            ]);
+                }
+            }
+
             return [
                 'chat' => $chat,
             ];
@@ -4196,6 +4209,12 @@
             $data['id_t_live_chat'] = $data['id'];
             unset($data['id']);
             $this->db->insert('t_live_chat_detail', $data);
+            
+            $last_id = $this->db->insert_id();
+            $this->db->where('id', $data['id_t_live_chat'])
+                    ->update('t_live_chat', [
+                        'last_id_t_live_chat_detail' => $last_id
+                    ]);
 
             if($this->db->trans_status() == FALSE){
                 $this->db->trans_rollback();
@@ -4241,8 +4260,16 @@
             ];
 
             $this->db->trans_begin();
-            
-            dd($this->input->post());
+
+            $data = $this->input->post();
+            $data['flag_rating'] = 1;
+            $data['date_rating'] = date('Y-m-d H:i:s');
+            $data['flag_done'] = 1;
+            $data['done_date'] = date('Y-m-d H:i:s');
+            $data['updated_by'] = $this->general_library->getId();
+
+            $this->db->where('id', $id)
+                    ->update('t_live_chat', $data);
 
             if($this->db->trans_status() == FALSE){
                 $this->db->trans_rollback();

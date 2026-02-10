@@ -46,6 +46,18 @@
         background-color: #e6e6e6;
         float: right;
     }
+
+    .lbl_rating_nm{
+        font-size: .75rem;
+        color: grey;
+        font-weight: bold;
+    }
+
+    .lbl_rating_val{
+        font-size: .9rem;
+        color: black;
+        font-weight: bold;
+    }
 </style>
 <div class="col-lg-8 text-left">
     <span style="cursor:pointer;" class="sp_chat_id_chatkonsul btn_back_chatkonsul"><i class="fa fa-chevron-left"></i></span>
@@ -58,14 +70,23 @@
                 Pilihan
         </button>
         <div class="dropdown-menu" aria-labelledby="btn-group-konsultasi">
-            <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')" >Akhiri Konsultasi</a>
-            <!-- <a class="dropdown-item" href="#">Dropdown link</a> -->
+            <?php if($result['chat']['flag_done'] == 0){ ?>
+                <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')" >Akhiri Konsultasi</a>
+            <?php } else { ?>
+                <!-- <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')" >Akhiri Konsultasi</a> -->
+            <?php } ?>
         </div>
     </div>
 </div>
+<?php
+    $heightChatContainer = "75vh";
+    if($result['chat']['flag_done'] == 1){
+        $heightChatContainer = "65vh";
+    }
+?>
 <div class="col-lg-12 mt-2" style="
     background-color: #f9fbf9;
-    height: 75vh;
+    height: <?=$heightChatContainer?>;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
@@ -76,54 +97,88 @@
         
     </div>
 </div>
-<form id="form_send_message">
-    <div class="col-lg-12 mt-2" style="
-        width: 100%;
-    ">
-        <div class="row"
-            style="
-                display: flex;
-                align-items: center;
-                background-color: #f9fafb;
-                border-radius: 50px;
-                padding: 5px 10px 5px 0px;
-            "
-        >
-            <div class="col-lg-10">
-                <textarea name="pesan" id="pesan" style="
-                    resize: none;
-                    width: 100%;
-                    height: 40px;
-                    margin-top: 5px;
+<?php if($result['chat']['flag_done'] == 0){ ?>
+    <form id="form_send_message">
+        <div class="col-lg-12 mt-2" style="
+            width: 100%;
+        ">
+            <div class="row"
+                style="
+                    display: flex;
+                    align-items: center;
                     background-color: #f9fafb;
-                    overflow: hidden;
-                    padding: 10px 0px 5px 0px;
-                    outline: none;
-                    font-size: 1rem;
-                    border: 0;
+                    border-radius: 50px;
+                    padding: 5px 10px 5px 0px;
                 "
-                    placeholder="Tulis pesan disini..."></textarea>
+            >
+                <div class="col-lg-10">
+                    <textarea name="pesan" id="pesan" style="
+                        resize: none;
+                        width: 100%;
+                        height: 40px;
+                        margin-top: 5px;
+                        background-color: #f9fafb;
+                        overflow: hidden;
+                        padding: 10px 0px 5px 0px;
+                        outline: none;
+                        font-size: 1rem;
+                        border: 0;
+                    "
+                        placeholder="Tulis pesan disini..."></textarea>
+                </div>
+                <div class="col-lg-2">
+                    <button id="btn_send_message" type="submit" style="
+                        width: 40px;
+                        height: 40px;
+                    "
+                    class="btn btn-success rounded-circle p-2">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                    <button id="btn_send_message_loading" type="button" djsabled style="
+                        width: 40px;
+                        height: 40px;
+                        display: none;
+                    "
+                    class="btn btn-success rounded-circle p-2">
+                        <i class="fa fa-spin fa-spinner"></i>
+                    </button>
+                </div>
             </div>
-            <div class="col-lg-2">
-                <button id="btn_send_message" type="submit" style="
-                    width: 40px;
-                    height: 40px;
-                "
-                class="btn btn-success rounded-circle p-2">
-                    <i class="fa fa-paper-plane"></i>
-                </button>
-                <button id="btn_send_message_loading" type="button" djsabled style="
-                    width: 40px;
-                    height: 40px;
-                    display: none;
-                "
-                class="btn btn-success rounded-circle p-2">
-                    <i class="fa fa-spin fa-spinner"></i>
-                </button>
+        </div>
+    </form>
+<?php } else { ?>
+    <div class="col-lg-12 mt-3" style="
+            width: 100%;
+            max-height: 25vh;
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        ">
+        <div class="row">
+            <div class="col-lg-6 text-left">
+                <span class="lbl_rating_nm">Waktu Respon</span><br>
+                <?php for($i = 1; $i <= $result['chat']['rating_kecepatan']; $i++){ ?>
+                    <i class="text-warning fa fa-star"></i>
+                <?php } ?>
+            </div>
+            <div class="col-lg-6 text-left">
+                <span class="lbl_rating_nm">Ketepatan Informasi</span><br>
+                <?php for($i = 1; $i <= $result['chat']['rating_ketepatan']; $i++){ ?>
+                    <i class="text-warning fa fa-star fa-2x"></i>
+                <?php } ?>
+            </div>
+            <div class="col-lg-12 mt-3 text-left">
+                <span class="lbl_rating_nm">Kritik dan Saran</span><br>
+                <span class="lbl_rating_val"><?=$result['chat']['kritik_saran']?></span><br>
+            </div>
+            <div class="col-lg-12 mt-1 text-right">
+                <span class="lbl_rating_nm"><?=formatDateNamaBulanWT($result['chat']['date_rating'])?></span><br>
             </div>
         </div>
     </div>
-</form>
+<?php } ?>
 <script>
     $(function(){
         reloadLiveChatContainer('<?=$result['chat']['id']?>')

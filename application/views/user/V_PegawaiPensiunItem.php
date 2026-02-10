@@ -22,12 +22,10 @@
     <div class="row p-3">
         <div class="col-lg-12 pb-3 text-right float-right">
             <!-- <button class="btn btn-sm btn-navy" id="dl-png" data-toggle="modal" data-target="#exampleModalx">PNG</button> -->
-           <?php if($this->general_library->getUserName() != '198401082003121004') { ?>
             <form target="_blank" action="<?=base_url('user/C_User/cetakPensiun')?>">
                 <button type='submit' class="btn btn-sm btn-navy"><i class="fa fa-download"></i> Download File</button>
                 <!-- <button type='button' onclick="cetak()" class="btn btn-sm btn-navy"><i class="fa fa-print"></i> Cetak</button> -->
             </form>
-            <?php } ?>
         </div>
         <div class="col-lg-12 table-responsive" id="example">
             <table border=1 id="table_result" class="table datatable">

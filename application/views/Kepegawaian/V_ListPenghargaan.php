@@ -8,7 +8,7 @@
           <th class="text-left">No. SK</th>
           <th class="text-left">Tgl SK</th>
           <th class="text-left">Tahun</th>
-          <th class="text-left">Asal Perolehan</th>
+          <th class="text-left">Lingkup Penghargaan</th>
           <th></th>
           <th></th>
           <?php if($kode == 2) { ?>
@@ -27,7 +27,16 @@
               <td class="text-left"><?=$rs['nosk']?></td>
               <td class="text-left"><?=formatDateNamaBulan($rs['tglsk'])?></td>
               <td class="text-left"><?=$rs['tahun_penghargaan']?></td>
-              <td class="text-left"><?=$rs['nm_pemberipenghargaan']?></td>
+              <td class="text-left">
+
+                <?php if($rs['lingkup_penghargaan'] == 1) echo "Penghargaan di lingkup Internasional";
+                else if($rs['lingkup_penghargaan'] == 2) echo "Penghargaan di lingkup Nasional";
+                else if($rs['lingkup_penghargaan'] == 3) echo "Penghargaan di lingkup lintas Instansi";
+                else if($rs['lingkup_penghargaan'] == 4) echo "Penghargaan di lingkup Instansi";
+                else echo "-";
+                ?>
+              
+              </td>
               <td>
               <?php if($rs['gambarsk'] != "") { ?>
                 <button href="#modal_view_file_penghargaan" onclick="openFilePenghargaan('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">

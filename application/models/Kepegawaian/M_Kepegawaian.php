@@ -1246,7 +1246,7 @@ class M_Kepegawaian extends CI_Model
             
             $dataInsert['id_pegawai']      = $id_peg;
             $dataInsert['id_m_satyalencana']      = $this->input->post('pegpenghargaan');
-          
+            $dataInsert['lingkup_penghargaan'] =  $this->input->post('pegpenghargaan');
             $dataInsert['nosk']      = $this->input->post('nosk');
             $dataInsert['tglsk']      = $this->input->post('tglsk');
             $dataInsert['tahun_penghargaan']      = $this->input->post('tahun_penghargaan');
@@ -15826,7 +15826,231 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
-                    // ->where_in('a.statuspeg', [1,2,3])
+                    ->where_in('a.statuspeg', [1,2,3])
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+        foreach($pegawai1 as $peg){
+        if($peg['eselon'] == "II A" || $peg['eselon'] == "II B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][3]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][3]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "III A" || $peg['eselon'] == "III B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][4]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][4]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "IV A" || $peg['eselon'] == "IV B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][5]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][5]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "V" || $peg['eselon'] == "V") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][6]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][6]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "8010000" || $peg['id_unitkerjamaster'] == "8020000" || $peg['id_unitkerjamaster'] == "8000000") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][7]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][7]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "6000000" || $peg['id_unitkerjamaster'] == "7005000" ) {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][8]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][8]['perempuan']++;
+        } 
+        } else if(!in_array($peg['id_unitkerjamaster'], $gurunakes)) { 
+        if($peg['jenis_jabatan'] == "JFT"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][9]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][9]['perempuan']++;
+        } 
+        } else {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][10]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][10]['perempuan']++;
+        } 
+        }
+        } 
+
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutJabatanPns(){
+
+            $result['jabatan'][1]['nama'] = 'Jabatan Pimpinan Tinggi Utama';
+            $result['jabatan'][1]['laki'] = 0;
+            $result['jabatan'][1]['perempuan'] = 0;
+
+
+            $result['jabatan'][2]['nama'] = 'Jabatan Pimpinan Tinggi Madya';
+            $result['jabatan'][2]['laki'] = 0;
+            $result['jabatan'][2]['perempuan'] = 0;
+
+            $result['jabatan'][3]['nama'] = 'Jabatan Pimpinan Tinggi Pratama';
+            $result['jabatan'][3]['laki'] = 0;
+            $result['jabatan'][3]['perempuan'] = 0;
+
+            $result['jabatan'][4]['nama'] = 'Administrator';
+            $result['jabatan'][4]['laki'] = 0;
+            $result['jabatan'][4]['perempuan'] = 0;
+
+            $result['jabatan'][5]['nama'] = 'Pengawas';
+            $result['jabatan'][5]['laki'] = 0;
+            $result['jabatan'][5]['perempuan'] = 0;
+
+            $result['jabatan'][6]['nama'] = 'Eselon V';
+            $result['jabatan'][6]['laki'] = 0;
+            $result['jabatan'][6]['perempuan'] = 0;
+
+            $result['jabatan'][7]['nama'] = 'Jabatan Fungsional Guru ';
+            $result['jabatan'][7]['laki'] = 0;
+            $result['jabatan'][7]['perempuan'] = 0;
+
+            $result['jabatan'][8]['nama'] = 'Jabatan Fungsional Medis';
+            $result['jabatan'][8]['laki'] = 0;
+            $result['jabatan'][8]['perempuan'] = 0;
+
+            $result['jabatan'][9]['nama'] = 'Jabatan Fungsional Teknis';
+            $result['jabatan'][9]['laki'] = 0;
+            $result['jabatan'][9]['perempuan'] = 0;
+
+            $result['jabatan'][10]['nama'] = 'Jabatan Fungsional Umum';
+            $result['jabatan'][10]['laki'] = 0;
+            $result['jabatan'][10]['perempuan'] = 0;
+            $gurunakes = array("6000000","7005000","8010000","8020000","8000000");
+
+
+        $this->db->select('a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
+                    ->where_in('a.statuspeg', [1,2])
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+        foreach($pegawai1 as $peg){
+        if($peg['eselon'] == "II A" || $peg['eselon'] == "II B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][3]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][3]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "III A" || $peg['eselon'] == "III B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][4]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][4]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "IV A" || $peg['eselon'] == "IV B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][5]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][5]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "V" || $peg['eselon'] == "V") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][6]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][6]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "8010000" || $peg['id_unitkerjamaster'] == "8020000" || $peg['id_unitkerjamaster'] == "8000000") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][7]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][7]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "6000000" || $peg['id_unitkerjamaster'] == "7005000" ) {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][8]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][8]['perempuan']++;
+        } 
+        } else if(!in_array($peg['id_unitkerjamaster'], $gurunakes)) { 
+        if($peg['jenis_jabatan'] == "JFT"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][9]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][9]['perempuan']++;
+        } 
+        } else {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][10]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][10]['perempuan']++;
+        } 
+        }
+        } 
+
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutJabatanPppk(){
+
+            $result['jabatan'][1]['nama'] = 'Jabatan Pimpinan Tinggi Utama';
+            $result['jabatan'][1]['laki'] = 0;
+            $result['jabatan'][1]['perempuan'] = 0;
+
+
+            $result['jabatan'][2]['nama'] = 'Jabatan Pimpinan Tinggi Madya';
+            $result['jabatan'][2]['laki'] = 0;
+            $result['jabatan'][2]['perempuan'] = 0;
+
+            $result['jabatan'][3]['nama'] = 'Jabatan Pimpinan Tinggi Pratama';
+            $result['jabatan'][3]['laki'] = 0;
+            $result['jabatan'][3]['perempuan'] = 0;
+
+            $result['jabatan'][4]['nama'] = 'Administrator';
+            $result['jabatan'][4]['laki'] = 0;
+            $result['jabatan'][4]['perempuan'] = 0;
+
+            $result['jabatan'][5]['nama'] = 'Pengawas';
+            $result['jabatan'][5]['laki'] = 0;
+            $result['jabatan'][5]['perempuan'] = 0;
+
+            $result['jabatan'][6]['nama'] = 'Eselon V';
+            $result['jabatan'][6]['laki'] = 0;
+            $result['jabatan'][6]['perempuan'] = 0;
+
+            $result['jabatan'][7]['nama'] = 'Jabatan Fungsional Guru ';
+            $result['jabatan'][7]['laki'] = 0;
+            $result['jabatan'][7]['perempuan'] = 0;
+
+            $result['jabatan'][8]['nama'] = 'Jabatan Fungsional Medis';
+            $result['jabatan'][8]['laki'] = 0;
+            $result['jabatan'][8]['perempuan'] = 0;
+
+            $result['jabatan'][9]['nama'] = 'Jabatan Fungsional Teknis';
+            $result['jabatan'][9]['laki'] = 0;
+            $result['jabatan'][9]['perempuan'] = 0;
+
+            $result['jabatan'][10]['nama'] = 'Jabatan Fungsional Umum';
+            $result['jabatan'][10]['laki'] = 0;
+            $result['jabatan'][10]['perempuan'] = 0;
+            $gurunakes = array("6000000","7005000","8010000","8020000","8000000");
+
+
+        $this->db->select('a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
+                    ->where_in('a.statuspeg', [3])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15974,7 +16198,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                    //  ->where_in('a.statuspeg', [1,2,3])
+                     ->where_in('a.statuspeg', [1,2,3])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
         $pegawai1 = $this->db->get()->result_array();

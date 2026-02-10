@@ -2177,83 +2177,66 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 $this->db->where_in('b.jenis_jabatan', ["JFU"]);
             }
 
-            
-            
-
+           
 
 
         $jabatan = $this->db->get()->result_array();
-        
+         
         $bulan = $jabatan[0]['masa_kerja'];
         $years = $bulan / 12;
        
-        
          if(in_array($eselonpegawai, $eselon)){
               
            if($eselonpegawai == "II B" || $eselonpegawai == "II A" AND  $jenis_pengisian == 3){
-            if($years > 5){
+            if($years >= 5){
                 $id_masakerja = 101;
-            } else if($years >= 3 AND $years <= 5){
+            } else if($years >= 3 AND $years < 5){
                 $id_masakerja = 102;
-            } else if($years >= 2){
+            } else if($years <= 2){
                 $id_masakerja = 103;
-            } else if($years < 2){
-                $id_masakerja = 104;
-            }
+            } 
            } else if($eselonpegawai == "III B" || $eselonpegawai == "III A" AND  $jenis_pengisian == 3){
-            if($years > 5){
-                $id_masakerja = 129;
-            } else if($years >= 3 AND $years <= 5){
-                $id_masakerja = 130;
-            } else if($years >= 2){
-                $id_masakerja = 131;
-            } else if($years < 2){
-                $id_masakerja = 132;
-            }
+            if($years >= 5){
+                $id_masakerja = 101;
+            } else if($years >= 3 AND $years < 5){
+                $id_masakerja = 102;
+            } else if($years <= 2){
+                $id_masakerja = 103;
+            } 
            } else if($eselonpegawai == "III B" || $eselonpegawai == "III A" AND  $jenis_pengisian == 2){
-            if($years > 5){
+            if($years >= 5){
                 $id_masakerja = 101;
-            } else if($years >= 3 AND $years <= 5){
+            } else if($years >= 3 AND $years < 5){
                 $id_masakerja = 102;
-            } else if($years >= 2){
+            } else if($years <= 2){
                 $id_masakerja = 103;
-            } else if($years < 2){
-                $id_masakerja = 104;
-            }
+            } 
            } else if($eselonpegawai == "IV A" || $eselonpegawai == "IV B" AND  $jenis_pengisian == 2){
-            // dd($years);
-            if($years > 5){
-                $id_masakerja = 129;
-            } else if($years >= 3 AND $years <= 5){
-                $id_masakerja = 130;
-            } else if($years >= 2){
-                $id_masakerja = 131;
-            } else if($years < 2){
-                $id_masakerja = 132;
-            }
-           } else if($eselonpegawai == "IV A" || $eselonpegawai == "IV B" AND  $jenis_pengisian == 1){
-            // dd($years);
-            if($years > 5){
+             if($years >= 5){
                 $id_masakerja = 101;
-            } else if($years >= 3 AND $years <= 5){
+            } else if($years >= 3 AND $years < 5){
                 $id_masakerja = 102;
-            } else if($years >= 2){
+            } else if($years <= 2){
                 $id_masakerja = 103;
-            } else if($years < 2){
-                $id_masakerja = 104;
-            }
+            } 
+           } else if($eselonpegawai == "IV A" || $eselonpegawai == "IV B" AND  $jenis_pengisian == 1){
+            if($years >= 5){
+                $id_masakerja = 101;
+            } else if($years >= 3 AND $years < 5){
+                $id_masakerja = 102;
+            } else if($years <= 2){
+                $id_masakerja = 103;
+            } 
            }
 
          } else {
-            if($years > 5){
-                $id_masakerja = 129;
-            } else if($years >= 3 AND $years <= 5){
-                $id_masakerja = 130;
-            } else if($years == 2){
-                $id_masakerja = 131;
-            } else if($years < 2){
-                $id_masakerja = 132;
-            }
+            if($years >= 5){
+                $id_masakerja = 101;
+            } else if($years >= 3 AND $years < 5){
+                $id_masakerja = 102;
+            } else if($years <= 2){
+                $id_masakerja = 103;
+            } 
          } 
         //  dd($id_masakerja);
         //  $id_masakerja = null;

@@ -152,7 +152,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <input  class="form-control yearpicker" autocomplete="off"   id="tahun_penghargaan" name="tahun_penghargaan" required/>
   </div>
 
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label>Asal Perolehan</label>
     <select class="form-control select2" data-dropdown-parent="#modalPenghargaan" data-dropdown-css-class="select2-navy" name="pemberi" id="pemberi" required>
                     <option value="" disabled selected>Pilih Item</option>
@@ -160,7 +160,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                         <option value="<?=$r['id']?>"><?=$r['nm_pemberipenghargaan']?></option>
                     <?php } } ?>
     </select>
-  </div>
+  </div> -->
 
 
   <div class="form-group">

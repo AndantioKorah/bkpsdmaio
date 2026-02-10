@@ -130,6 +130,114 @@
  <?php } ?>
 
 
+ <?php if(isset($jabatan_pns)) { ?>
+ <div class="row">
+ 	<div class="col-lg-12">
+ 		<div class="card card-default">
+ 			<div class="row p-3">
+ 				<div class="col-md-12 col-sm-12">
+ 					<h3>Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Jabatan</h3>
+ 					<div class="row">
+ 						<div class="col-lg-12 table-responsive">
+ 						 	<table class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 								<thead>
+ 									<th class="text-left">No</th>
+ 									<th class="text-left">Jabatan</th>
+ 									<th class="text-left">Laki-laki</th>
+ 									<th class="text-left">Perempuan</th>
+ 									<th class="text-left">Total</th>
+ 								</thead>
+ 								<tbody>
+ 									<?php $no = 1;  
+            $jab_total_perempuan = 0; 
+            $jab_total_laki = 0; 
+             $jab_belum_terdata_laki =0;
+            foreach($jabatan_pns['jabatan'] as $rs){ ?>
+ 									<?php if(isset($rs['nama'])){ ?>
+ 									<tr>
+ 										<td class="text-left"><?=$no++;?></td>
+ 										<td class="text-left"><?=$rs['nama']?></td>
+ 										<td class="text-left"><?=$rs['laki']?></td>
+ 										<td class="text-left"><?=$rs['perempuan']?></td>
+ 										<td class="text-left"><?=$rs['laki']+$rs['perempuan']?></td>
+ 									</tr>
+ 									<?php 
+         $jab_total_laki += $rs['laki']; 
+         $jab_total_perempuan += $rs['perempuan'];
+         } } ?>
+		 <tr>
+ 										<td style="color:#fff;">23</td>
+ 										<td>Total</td>
+ 										<td><?=$jab_total_laki;?></td>
+ 										<td><?=$jab_total_perempuan;?></td>
+ 										<td><?=$jab_total_laki+$jab_total_perempuan;?></td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
+
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+ <?php } ?>
+
+ <?php if(isset($jabatan_pppk)) { ?>
+ <div class="row">
+ 	<div class="col-lg-12">
+ 		<div class="card card-default">
+ 			<div class="row p-3">
+ 				<div class="col-md-12 col-sm-12">
+ 					<h3>Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Jabatan</h3>
+ 					<div class="row">
+ 						<div class="col-lg-12 table-responsive">
+ 						 	<table class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 								<thead>
+ 									<th class="text-left">No</th>
+ 									<th class="text-left">Jabatan</th>
+ 									<th class="text-left">Laki-laki</th>
+ 									<th class="text-left">Perempuan</th>
+ 									<th class="text-left">Total</th>
+ 								</thead>
+ 								<tbody>
+ 									<?php $no = 1;  
+            $jab_total_perempuan = 0; 
+            $jab_total_laki = 0; 
+             $jab_belum_terdata_laki =0;
+            foreach($jabatan_pppk['jabatan'] as $rs){ ?>
+ 									<?php if(isset($rs['nama'])){ ?>
+ 									<tr>
+ 										<td class="text-left"><?=$no++;?></td>
+ 										<td class="text-left"><?=$rs['nama']?></td>
+ 										<td class="text-left"><?=$rs['laki']?></td>
+ 										<td class="text-left"><?=$rs['perempuan']?></td>
+ 										<td class="text-left"><?=$rs['laki']+$rs['perempuan']?></td>
+ 									</tr>
+ 									<?php 
+         $jab_total_laki += $rs['laki']; 
+         $jab_total_perempuan += $rs['perempuan'];
+         } } ?>
+		 <tr>
+ 										<td style="color:#fff;">23</td>
+ 										<td>Total</td>
+ 										<td><?=$jab_total_laki;?></td>
+ 										<td><?=$jab_total_perempuan;?></td>
+ 										<td><?=$jab_total_laki+$jab_total_perempuan;?></td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
+
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+ <?php } ?>
+
 <?php if(isset($pangkat)) { ?>
  <div class="row">
  	<div class="col-lg-12">

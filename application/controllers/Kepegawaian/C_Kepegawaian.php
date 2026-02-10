@@ -3998,6 +3998,10 @@ class C_Kepegawaian extends CI_Controller
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
 		} else if($this->input->post('jenis_laporan') == "8") {
 		$data['result'] = $this->kepegawaian->rincianAsn($this->general_library->getUnitKerjaPegawai());
+		} else if($this->input->post('jenis_laporan') == "9") {
+		$data['jabatan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPns();
+		} else if($this->input->post('jenis_laporan') == "10") {
+		$data['jabatan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPppk();
 		}
 
 		if($this->input->post('jenis_laporan') == "8") {

@@ -1246,7 +1246,7 @@ class M_Kepegawaian extends CI_Model
             
             $dataInsert['id_pegawai']      = $id_peg;
             $dataInsert['id_m_satyalencana']      = $this->input->post('pegpenghargaan');
-          
+            $dataInsert['lingkup_penghargaan'] =  $this->input->post('pegpenghargaan');
             $dataInsert['nosk']      = $this->input->post('nosk');
             $dataInsert['tglsk']      = $this->input->post('tglsk');
             $dataInsert['tahun_penghargaan']      = $this->input->post('tahun_penghargaan');

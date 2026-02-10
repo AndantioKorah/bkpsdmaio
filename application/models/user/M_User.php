@@ -4207,5 +4207,52 @@
 
             return $rs;
         }
+
+        public function endKonsultasi($id){
+            $rs = [
+                'code' => 0,
+                'message' => null
+            ];
+
+            $this->db->trans_begin();
+            
+            $this->db->where('id', $id)
+                    ->update('t_live_chat', [
+                        'flag_done' => 1,
+                        'done_date' => date('Y-m-d H:i:s'),
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $rs;
+        }
+
+        public function submitRatingKonsultasi($id){
+            $rs = [
+                'code' => 0,
+                'message' => null
+            ];
+
+            $this->db->trans_begin();
+            
+            dd($this->input->post());
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $rs;
+        }
 	}
 ?>

@@ -4,7 +4,6 @@
             font-size: 1.1rem;
             color: black;
             font-weight: bold;
-            font-style: italic;
         }
 
         .sp_last_chat_rw_konsul{
@@ -38,16 +37,27 @@
             <div class="div_chat_konsul_item pt-2" onclick="openKonsultasiDetail('<?=$rs['id']?>')">
                 <div class="col-lg-12 text-left">
                     <?php if($rs['flag_done'] == 0){ ?>
-                        <span><i style="color: green;" class="fa fa-circle"></i></span>
+                        <span><i style="font-size: .75rem; color: green;" class="fa fa-circle"></i></span>
                     <?php } ?>
                     <span class="sp_chat_id_rw_konsul">#<?=$rs['chat_id']?></span>
                 </div>
-                <?php if($rs['last']){ ?>
-                    <div class="col-lg-12 text-left">
-                        <span class="sp_last_chat_rw_konsul"><?=$rs['last']['pesan']?></span>
+                <?php if($rs['pesan']){ ?>
+                    <div class="col-lg-12 text-left" style="display: flex; align-items: center; gap: 5px;">
+                        <?php 
+                            $flagRead = 0; 
+                            if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+                                $flagRead = $rs['flag_read_admin'];
+                            } else {
+                                $flagRead = $rs['flag_read_pegawai'];
+                            }
+                        ?>
+                        <i style="display: <?=$flagRead == 1 ? 'none' : 'block'?>; font-size: .75rem; color: lightblue;" class="fa fa-circle"></i>
+                        <label class="sp_last_chat_rw_konsul">
+                            <?=$rs['pesan']?>
+                        </label>
                     </div>
                     <div class="col-lg-12 text-right">
-                        <span class="sp_last_chat_date_rw_konsul"><?=formatDateNotifikasi($rs['last']['created_date'], 0)?></span>
+                        <span class="sp_last_chat_date_rw_konsul"><?=formatDateNotifikasi($rs['last_message_date'], 0)?></span>
                     </div>
                 <?php } else { ?>
                     <div class="col-lg-12 text-right">

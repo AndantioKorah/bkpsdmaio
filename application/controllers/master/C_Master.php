@@ -695,4 +695,7 @@ class C_Master extends CI_Controller
         echo json_encode($this->master->deleteHardcodeNominatif($id));
     }
 
+ 
+
+
 }

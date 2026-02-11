@@ -237,7 +237,7 @@
 
 <?php if(isset($jabatan_pns)) { ?>
 <br>
-<span style='font-family:"Arial",sans-serif;'><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
+<span style='font-family:"Arial",sans-serif;'><b>Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Jabatan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
 <table style="border-collapse: collapse; border: none; width: 100%;border: 1pt solid black;" class="fr-table-selection-hover">
     <tbody>
         <tr style="">
@@ -308,7 +308,7 @@
 
 <?php if(isset($jabatan_pppk)) { ?>
 <br>
-<span style='font-family:"Arial",sans-serif;'><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
+<span style='font-family:"Arial",sans-serif;'><b>Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Jabatan Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
 <table style="border-collapse: collapse; border: none; width: 100%;border: 1pt solid black;" class="fr-table-selection-hover">
     <tbody>
         <tr style="">

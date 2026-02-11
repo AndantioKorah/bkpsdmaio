@@ -4051,6 +4051,12 @@ class C_Kepegawaian extends CI_Controller
 		} else if($this->input->post('jenis_laporan') == "8") {
 		$nama_file = "Jumlah ASN Kota Manado Menurut Jenis Jabatan Per Unit Kerja";
 		$data['result'] = $this->kepegawaian->rincianAsn($this->general_library->getUnitKerjaPegawai());
+		} else if($this->input->post('jenis_laporan') == "9") {
+		$nama_file = "Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Unit Kerja";
+		$data['jabatan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPns();
+		} else if($this->input->post('jenis_laporan') == "10") {
+		$nama_file = "Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Unit Kerja";
+		$data['jabatan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPppk();
 		}
 		// render('kepegawaian/laporan/V_laporanDetailPdf', null, null, $data);
 		// $this->load->view('kepegawaian/laporan/V_laporanDetailPdf', $data);
@@ -4144,6 +4150,28 @@ class C_Kepegawaian extends CI_Controller
 	public function editKebutuhanJf($id)
     {
         echo json_encode($this->kepegawaian->editKebutuhanJf($id));
+    }
+
+	  public function openListUploadBangkomSkpd(){
+        $data['unitkerja'] = $this->master->getAllSkpd();
+        
+        // dd($data['result']);
+        // $this->load->view('master/V_skpdListJft', $data);
+        render('kepegawaian/laporan/V_ListSkpdUploadBangkom', '', '', $data);
+    }
+
+	public function openListUploadBangkomSkpdItem(){
+        $data['result'] = $this->kepegawaian->getListUploadBangkomSkpd();
+        $data['bulan'] = $this->input->post('bulan');
+        $data['tahun'] = $this->input->post('tahun');
+        $this->load->view('kepegawaian/laporan/V_skpdUploadBangkomItem', $data);
+    }
+
+    public function openListUploadBangkomSkpdItemExcel(){
+        $data['result'] = $this->kepegawaian->getListUploadBangkomSkpd();
+        $data['bulan'] = $this->input->post('bulan');
+        $data['tahun'] = $this->input->post('tahun');
+        $this->load->view('kepegawaian/laporan/V_skpdUploadBangkomItemExcel', $data);
     }
 
 

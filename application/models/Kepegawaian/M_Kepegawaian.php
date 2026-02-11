@@ -15826,7 +15826,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
-                    ->where_in('a.statuspeg', [1,2,3])
+                    // ->where_in('a.statuspeg', [1,2,3])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -16198,7 +16198,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                     ->where_in('a.statuspeg', [1,2,3])
+                    //  ->where_in('a.statuspeg', [1,2,3])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
         $pegawai1 = $this->db->get()->result_array();
@@ -16818,6 +16818,24 @@ public function checkListIjazahCpns($id, $id_pegawai){
     
         return $res;
     }
+
+          public function getListUploadBangkomSkpd(){
+            $bulan = $this->input->post('bulan');
+            $tahun = $this->input->post('tahun');
+            
+            $result = $this->db->select('a.nama, a.gelar1, a.gelar2, b.nm_unitkerja, c.id, c.status, sum(c.jam) as total_jp')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                                ->join('db_pegawai.pegdiklat c', '(a.id_peg = c.id_pegawai AND MONTH(c.tglsttpp) = "'.$bulan.'" and YEAR(c.tglsttpp) = "'.$tahun.'")', 'left')
+                                // ->where('a.skpd', $id_unitkerja)
+                                ->where('id_m_status_pegawai', 1)
+                                ->where_not_in('b.id_unitkerja', [5, 9050030])
+                                ->order_by('b.nm_unitkerja')
+                                ->group_by('a.id_peg')
+                                ->get()->result_array();
+
+            return $result;
+        }
     
 
 }

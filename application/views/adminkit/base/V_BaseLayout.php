@@ -597,6 +597,8 @@
       z-index: 10;
       /* display: none; */
       background-color: var(--primary-color);
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .div_live_chat_slide_out{
@@ -607,12 +609,15 @@
     .div_live_chat_slide_in{
       right: 0;
       transition: .4s;
+      box-shadow: -3px 2px 18px 6px rgba(124,124,124,1);
+      -webkit-box-shadow: -3px 2px 18px 6px rgba(124,124,124,1);
+      -moz-box-shadow: -3px 2px 18px 6px rgba(124,124,124,1);
     }
 	</style>
 </head>
 
 <body>
-  <?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 16){ ?>
+  <?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 87){ ?>
     <div class="div_live_chat div_live_chat_slide_out">
       <?php $this->load->view('user/V_LiveChat', null) ?>
     </div>

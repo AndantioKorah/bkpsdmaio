@@ -807,6 +807,16 @@ function getNamaPegawaiFull($pegawai, $flag_capital_nama = 0)
     return trim(trim($pegawai['gelar1']).' '.ucwords(trim($nama_pegawai)).' '.trim($pegawai['gelar2']));
 }
 
+function formatNamaPegawaiLiveChat($pegawai){
+    $expl = explode(" ", trim($pegawai['nama']));
+    $rs = $expl[0];
+    if(count($expl) > 1){
+        $rs .= " ".$expl[count($expl) - 1];
+    }
+    // return clearString($rs);
+    return preg_replace('/[^a-zA-Z0-9 ]/s', '', $rs);
+}
+
 function sortArrayObjectValue($object1, $object2, $value)
 {
     return $object1->$value > $object2->$value;

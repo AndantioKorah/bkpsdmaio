@@ -330,10 +330,12 @@ $(function(){
           $(this).val('');
         }
 
-        if (fileSize > MaxSize ){
+        <?php if(!($this->general_library->isProgrammer())){ ?>
+        if ((fileSize > MaxSize) ){
           errortoast("Maksimal Ukuran File 2 MB")
           $(this).val('');
         }
+        <?php } ?>
 
         });
 

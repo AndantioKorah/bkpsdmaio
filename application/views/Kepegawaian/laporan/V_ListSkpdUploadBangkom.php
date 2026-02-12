@@ -8,6 +8,24 @@
     <div class="card-body" >
         <form id="form_search" class="mt-4">
             <div class="row">
+
+              <div class="col-lg-12">
+                            <label class="label-filter">Unit Kerja</label>
+                            <div class="">
+                                <select class="form-control select2-navy" 
+                                    id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
+                                    <option value="0" selected>Semua</option>
+                                    <?php foreach($unitkerja as $u){ ?>
+                                        <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
+                                    <?php } ?>
+                                    <option value="990" >Semua TK</option>
+                                    <option value="991" >Semua SD</option>
+                                    <option value="992" >Semua SMP</option>
+                                    <option value="993" >Semua UPTD Dinas kesehatan</option>
+                                </select>
+                            </div>
+                        </div>
+
                <div class="form-group" >
     <label for="exampleFormControlInput1">Tahun</label>
     <input  class="form-control yearpicker customInput" id="tahun" name="tahun" value="<?= date('Y');?>">
@@ -60,6 +78,7 @@
             // orientation: 'bottom',
             autoclose: true
         });
+           $('.select2-navy').select2()
         // $('#form_search').submit()
         // $("#sidebar_toggle" ).trigger( "click" );
     })

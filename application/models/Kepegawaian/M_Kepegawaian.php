@@ -16823,7 +16823,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $bulan = $this->input->post('bulan');
             $tahun = $this->input->post('tahun');
             
-            $result = $this->db->select('a.nama, a.gelar1, a.gelar2, b.nm_unitkerja, c.id, c.status, sum(c.jam) as total_jp')
+            $this->db->select('a.nama, a.gelar1, a.gelar2, b.nm_unitkerja, c.id, c.status, sum(c.jam) as total_jp')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                                 ->join('db_pegawai.pegdiklat c', '(a.id_peg = c.id_pegawai AND MONTH(c.tglsttpp) = "'.$bulan.'" and YEAR(c.tglsttpp) = "'.$tahun.'")', 'left')
@@ -16831,8 +16831,24 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                 ->where('id_m_status_pegawai', 1)
                                 ->where_not_in('b.id_unitkerja', [5, 9050030])
                                 ->order_by('b.nm_unitkerja')
-                                ->group_by('a.id_peg')
-                                ->get()->result_array();
+                                ->group_by('a.id_peg');
+
+                                if($this->input->post('unitkerja') != 0){
+                                if($this->input->post('unitkerja') == 991){
+                                    $this->db->where('b.id_unitkerjamaster', '8010000');
+                                } else if($this->input->post('unitkerja') == 992){
+                                    $this->db->where('b.id_unitkerjamaster', '8020000');
+                                } else if($this->input->post('unitkerja') == 990){
+                                    $this->db->where('b.id_unitkerjamaster', '8000000');
+                                } else if($this->input->post('unitkerja') == 993){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['6000000','7005000']);
+                                } else if($this->input->post('unitkerja') == 994){
+                                    $this->db->where_not_in('b.id_unitkerjamaster', ['6000000','7005000','8010000','8020000','8000000']);
+                                }   else {
+                                    $this->db->where('a.skpd', $this->input->post('unitkerja'));
+                                }
+                                }
+                                $result = $this->db->get()->result_array();
 
             return $result;
         }

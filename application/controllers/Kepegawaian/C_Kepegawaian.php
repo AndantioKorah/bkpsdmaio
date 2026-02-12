@@ -4153,7 +4153,9 @@ class C_Kepegawaian extends CI_Controller
     }
 
 	  public function openListUploadBangkomSkpd(){
-        $data['unitkerja'] = $this->master->getAllSkpd();
+        // $data['unitkerja'] = $this->master->getAllSkpd();
+        $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+
         
         // dd($data['result']);
         // $this->load->view('master/V_skpdListJft', $data);

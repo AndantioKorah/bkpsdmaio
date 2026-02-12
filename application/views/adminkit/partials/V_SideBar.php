@@ -415,6 +415,12 @@
 			</a>
 		</li>
 
+		<li class="sidebar-item">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Rekap Bangkom</span>
+			</a>
+		</li>
+
 		<?php if(!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item">
 			<a title="Nomor Surat" class="sidebar-link" href="<?=base_url('kepegawaian/nomor-surat')?>">

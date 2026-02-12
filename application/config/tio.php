@@ -24,6 +24,8 @@ $route['master/hardcode-nominatif'] = 'master/C_Master/hardCodeNominatif';
 $route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
 $route['master/perangkat-daerah/jft'] = 'master/C_Master/openListPegawaiDetailSkpdMenu';
 $route['notifikasi-pegawai'] = 'user/C_User/notifikasiPegawai';
+$route['master/perangkat-daerah/bangkom'] = 'kepegawaian/C_Kepegawaian/openListUploadBangkomSkpd';
+
 
 
 //event

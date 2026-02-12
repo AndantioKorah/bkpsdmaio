@@ -1547,6 +1547,8 @@
                         ->get()->result_array();
         }
 
+  
+
         public function inputHardcodeNominatif($data){
             $rs['code'] = 0;
             $rs['message'] = "";

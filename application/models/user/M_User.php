@@ -4120,23 +4120,39 @@
 
         public function loadRiwayatKonsultasi(){
             $listChat = null;
-            $listChat = $this->db->select('a.*, b.created_date as last_message_date, b.pesan')
-                            ->from('t_live_chat a')
-                            ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
-                            ->where('a.id_m_user', $this->general_library->getId())
-                            ->where('a.flag_active', 1)
-                            ->order_by('a.created_date', 'desc')
-                            ->group_by('a.id')
-                            ->get()->result_array();
+            
+            $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
+                        d.nipbaru_ws')
+                        ->from('t_live_chat a')
+                        ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                        ->join('m_user c', 'a.id_m_user = c.id')
+                        ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                        ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                        ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                        // ->where('a.id_m_user', $this->general_library->getId())
+                        ->where('a.flag_active', 1)
+                        ->where('c.flag_active', 1)
+                        ->order_by('a.created_date', 'desc')
+                        ->group_by('a.id');
+                        
+            if(!$this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+                $this->db->where('a.id_m_user', $this->general_library->getId());
+            }
+
+            $listChat = $this->db->get()->result_array();
 
             return $listChat;
         }       
 
         public function reloadChatContainer($id){
-            $chat = $this->db->select('*')
+            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws')
                             ->from('t_live_chat a')
-                            ->where('id', $id)
-                            ->where('flag_active', 1)
+                            ->join('m_user c', 'a.id_m_user = c.id')
+                            ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                            ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
                             ->get()->row_array();
 
             $detail = $this->db->select('*')
@@ -4153,14 +4169,18 @@
         }
 
         public function openKonsultasiDetail($id){
-            $chat = $this->db->select('*')
+            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws')
                             ->from('t_live_chat a')
-                            ->where('id', $id)
-                            ->where('flag_active', 1)
+                            ->join('m_user c', 'a.id_m_user = c.id')
+                            ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                            ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
                             ->get()->row_array();
 
             if($chat){
-                if($chat['id_m_user'] == $this->general_library->getId() && $chat['flag_read_pegawai'] == 0){
+                if(!$this->general_library->isHakAkses('admin_live_chat_konsultasi') && $chat['flag_read_pegawai'] == 0){
                     // jika pegawai yang buka chat, ubah flag_read_pegawai jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
                     $this->db->where('id', $chat['id'])
                         ->update('t_live_chat', [
@@ -4175,7 +4195,7 @@
                                 'updated_by' => $this->general_library->getId()
                             ]);
 
-                } else if($chat['id_m_user'] != $this->general_library->getId() && $chat['flag_read_admin'] == 0){
+                } else if($this->general_library->isHakAkses('admin_live_chat_konsultasi') && $chat['flag_read_admin'] == 0){
                     // jika admin yang buka chat, ubah flag_read_admin jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
                     $this->db->where('id', $chat['id'])
                         ->update('t_live_chat', [
@@ -4184,7 +4204,7 @@
 
                     $this->db->where('id_t_live_chat', $chat['id'])
                             ->where('read_date', null)
-                            ->where('id_m_user_sender', $chat['id']['id_m_user'])
+                            ->where('id_m_user_sender', $chat['id_m_user'])
                             ->update('t_live_chat_detail',[
                                 'read_date' => date('Y-m-d H:i:s'),
                                 'updated_by' => $this->general_library->getId(),
@@ -4208,13 +4228,21 @@
             
             $data['id_t_live_chat'] = $data['id'];
             unset($data['id']);
-            $this->db->insert('t_live_chat_detail', $data);
             
+            $updateChat = null;
+            if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+                $data['is_sender_admin'] = 1;
+                $updateChat['flag_read_pegawai'] = 0;
+            } else {
+                $updateChat['flag_read_admin'] = 0;
+            }
+
+            $this->db->insert('t_live_chat_detail', $data);
             $last_id = $this->db->insert_id();
+            $updateChat['last_id_t_live_chat_detail'] = $last_id;
+            
             $this->db->where('id', $data['id_t_live_chat'])
-                    ->update('t_live_chat', [
-                        'last_id_t_live_chat_detail' => $last_id
-                    ]);
+                    ->update('t_live_chat', $updateChat);
 
             if($this->db->trans_status() == FALSE){
                 $this->db->trans_rollback();

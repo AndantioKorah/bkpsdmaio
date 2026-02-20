@@ -21,11 +21,11 @@
         /* float: right; */
     }
 
-    .sp_jam_pesan_chatkonsul_admin{
+    .sp_jam_pesan_chatkonsul_left{
         float: right;
     }
 
-    .sp_jam_pesan_chatkonsul_pegawai{
+    .sp_jam_pesan_chatkonsul_right{
         float: right;
     }
 
@@ -37,12 +37,12 @@
         bottom: 10px; */
     }
 
-    .div_chat_admin{
+    .div_chat_left{
         background-color: #99efe8;
         float: left;
     }
 
-    .div_chat_pegawai{
+    .div_chat_right{
         background-color: #e6e6e6;
         float: right;
     }
@@ -59,11 +59,11 @@
         font-weight: bold;
     }
 </style>
-<div class="col-lg-8 text-left">
+<div class="col-lg-8 col-md-8 col-sm-8 text-left">
     <span style="cursor:pointer;" class="sp_chat_id_chatkonsul btn_back_chatkonsul"><i class="fa fa-chevron-left"></i></span>
     <span class="sp_chat_id_chatkonsul">&nbsp;&nbsp;#<?=$result['chat']['chat_id']?></span>
 </div>
-<div class="col-lg-4 text-right">
+<div class="col-lg-4 col-md-4 col-sm-4 text-right">
     <div class="btn-group" role="group">
         <button id="btn-group-konsultasi" type="button" class="btn btn-outline-warning dropdown-toggle"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -90,7 +90,6 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
-    padding-top: 10px;
     padding-bottom: 10px;
 ">  
     <div class="row" id="live_chat_container">
@@ -186,20 +185,6 @@
     
     function endKonsultasi(id){
         if(confirm('Apakah Anda yakin?')){
-            // $.ajax({
-            //     url: '<?=base_url("user/C_User/endKonsultasi/")?>'+id,
-            //     method: 'post',
-            //     success: function(data){
-            //         let rs = JSON.parse(data)
-            //         if(rs.code == 1){
-            //             errortoast(rs.message)
-            //         } else {
-            //             backToStartView()
-            //         }
-            //     }, error: function(e){
-            //         errortoast('Terjadi Kesalahan')
-            //     }
-            // })
             $('#div_start_konsultasi').hide()
             $('#div_chat_konsultasi').show()
             $('#div_chat_konsultasi').html('')

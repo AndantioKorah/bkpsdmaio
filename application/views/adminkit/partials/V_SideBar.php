@@ -414,12 +414,17 @@
 				<i class="fa fa-database"></i> <span class="align-middle">List JFT</span>
 			</a>
 		</li>
-
+		<?php if($this->general_library->isProgrammer() 
+			|| $this->general_library->isAdminAplikasi() 
+		    || $this->general_library->isHakAkses('rekap_bangkom')
+			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
+			){ ?>
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">Rekap Bangkom</span>
 			</a>
 		</li>
+		<?php } ?>
 
 		<?php if(!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item">
@@ -443,6 +448,17 @@
 				<i class="fas fa-fw fas fa-tachometer-alt"></i> <span class="align-middle">Dashboard PDM</span>
 			</a>
 		</li>
+				<?php if($this->general_library->isHakAkses('rekap_bangkom')
+			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
+			){ ?>
+		<li class="sidebar-item">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Rekap Bangkom</span>
+			</a>
+		</li>
+		<?php
+		}
+	?>
 	<?php
 		}
 	?>

@@ -7,8 +7,20 @@
     </div>
     <div class="card-body" >
         <form id="form_search" class="mt-4">
+        <?php if(isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())) { ?> 
+         <div class="row">
+                  <div class="col-lg-12">
+                                <label>Pilih Unit Kerja</label>
+                                <select class="form-control select2-navy" 
+                                    id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
+                                    <?php $i = 0; foreach($unitkerja as $u){ $i++; ?>
+                                        <option <?=$u['id_unitkerja'] == $this->general_library->getUnitKerjaPegawai() ? 'selected' : ''?>
+                                        value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+        <?php } else { ?>
             <div class="row">
-
               <div class="col-lg-12">
                             <label class="label-filter">Unit Kerja</label>
                             <div class="">
@@ -25,6 +37,7 @@
                                 </select>
                             </div>
                         </div>
+            <?php } ?>
 
                <div class="form-group" >
     <label for="exampleFormControlInput1">Tahun</label>

@@ -987,6 +987,48 @@
             }
         }
 
+        public function cronSyncBangkomPerDataDownload(){
+            $data = $this->db->select('a.*')
+                    ->from('db_pegawai.pegdiklat a')
+                    ->where('a.id_pegawai', 'PEG0000000ei447')
+                    ->where('a.flag_active', 1)
+                    ->where('a.status', 2)
+                    ->where('a.id_siasn IS NOT NULL')
+                    ->where('a.gambarsk', "")
+                    // ->where("a.gambarsk == '' OR a.gambarsk IS NULL")
+                    ->limit(10)
+                    ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $ws = $this->siasnlib->getDataBangkom($d['id_siasn']);
+                    dd($ws);
+                }
+            }
+        }
+
+        public function cronSyncBangkomPerData(){
+            $data = $this->db->select('a.*')
+                    ->from('db_pegawai.pegdiklat a')
+                    // ->where('a.id_pegawai', 'PEG0000000ei447')
+                    ->where('a.flag_active', 1)
+                    ->where('a.status', 2)
+                    ->where('id_siasn IS NULL')
+                    ->where('jenisdiklat !=', "00")
+                    ->limit(10)
+                    ->where('temp_count < 3')
+                    ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $this->syncBangkomToSiasn($d['id'], null, null, 1);
+
+                    $this->db->where('id', $d['id'])
+                            ->update('db_pegawai.pegdiklat', [
+                                'temp_count' => $d['temp_count'] += 1
+                            ]);
+                }
+            }
+        }
+
         public function syncBangkomToSiasn($id, $mDiklat, $idPnsSiasn, $flag_update = 0){
             $updateDataDiklat = null;
 
@@ -1009,6 +1051,11 @@
 
             if($data){
                 $explodeTanggal = explode("-", $data['tglsttpp']);
+                $explodeTanggalSelesai = explode("-", $data['tglselesai']);
+                $tahunSttpl = $explodeTanggal[0];
+                if($tahunSttpl == "" || $tahunSttpl == 0){
+                    $tahunSttpl = $explodeTanggalSelesai[0];
+                }
                 $upload = null;
                 $uploadRwBangkom = null;
                 $idRefDokumen = 881;
@@ -1067,7 +1114,7 @@
                         //     }
                         // ],
                         "pnsOrangId" => $idPnsSiasn ? $idPnsSiasn : $data['id_pns_siasn'],
-                        "tahunKursus" => intval($explodeTanggal[0]),
+                        "tahunKursus" => intval($tahunSttpl),
                         "tanggalKursus" => formatDateOnlyForEdit2($data['tglmulai']),
                         "tanggalSelesaiKursus" => formatDateOnlyForEdit2($data['tglselesai'])
                     ];
@@ -1083,8 +1130,9 @@
                 }
 
                 if($uploadRwBangkom){
+                    dd($uploadRwBangkom);
                     $res = json_decode($uploadRwBangkom['data'], true);
-                    if($res['success'] == true){
+                    if($res && $res['success'] == true){
                         $idDiklatSiasn = $res['mapData']['rwKursusId'];
                         $updateDataDiklat['flag_sync_siasn'] = 1;
                         $updateDataDiklat['id_siasn'] = $idDiklatSiasn;

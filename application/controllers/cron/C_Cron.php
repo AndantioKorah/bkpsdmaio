@@ -35,8 +35,9 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSendWa(){
-        $this->general->logCron('cronSendWa');
-        $this->general->cronSendWa();
+        $this->cronSyncBangkomPerData();
+        // $this->general->logCron('cronSendWa');
+        // $this->general->cronSendWa();
         // dd('asdd');
         // echo date('d-m-Y H:i:s')." asd \n";
     }
@@ -66,6 +67,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronCheckVerifCuti(){
+        // $this->cronSyncBangkomPerData();
         $this->general->cronCheckVerifCuti();
         $this->cronJafungCpns();
     }
@@ -75,7 +77,23 @@ class C_Cron extends CI_Controller
         $this->general->logCron('cronJafungCpns');
     }
 
+    public function cronHashFileBangkom(){
+        $this->user->cronHashFileBangkom();
+        $this->general->logCron('cronHashFileBangkom');
+    }
+
+    public function cronSyncBangkomPerDataDownload(){
+        $this->siasn->cronSyncBangkomPerDataDownload();
+        $this->general->logCron('cronSyncBangkomPerDataDownload');
+    }
+
+    public function cronSyncBangkomPerData(){
+        $this->siasn->cronSyncBangkomPerData();
+        $this->general->logCron('cronSyncBangkomPerData');
+    }
+
     public function cronSyncSkpSiasn(){
+        $this->cronHashFileBangkom();
         $this->cronSyncBangkom();
         // $this->general->logCron('cronSyncSkpSiasn');
         // $this->siasn->cronRiwayatSkpSiasn();

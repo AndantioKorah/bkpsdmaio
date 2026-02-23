@@ -187,12 +187,12 @@
 	<a class="sidebar-toggle js-sidebar-toggle">
 		<button style="border: 1px solid #f5f7fb;background-color: transparent;" id="sidebar_toggle"> <i class="hamburger align-self-center"></i></button>
 	</a>
-	<?php if(!$this->general_library->isGuest()) { ?>
 	<?php if($this->general_library->getRole() == 'programmer' 
 	|| $this->general_library->getRole() == 'admin_aplikasi' 
 	|| $this->general_library->isHakAkses('akses_profil_pegawai') 
 	|| $this->general_library->isKasubagKepegawaianDiknas()
 	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
+	|| $this->general_library->isGuest()
 	|| $this->general_library->getRole() == 'walikota') { ?>
 		<?php
 			// $number = excelRoundDown(30665.78, 5);
@@ -215,7 +215,6 @@
 			<div class="row" id="div_search_result">
 			</div>
 		</form>
-	<?php } ?>
 	<?php } ?>
 	<span style="font-weight: bold; color: var(--primary-color);" id="live_date_time"></span>
 	<div class="navbar-collapse collapse">

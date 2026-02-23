@@ -16826,7 +16826,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $this->db->select('a.nama, a.gelar1, a.gelar2, b.nm_unitkerja, c.id, c.status, sum(c.jam) as total_jp')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-                                ->join('db_pegawai.pegdiklat c', '(a.id_peg = c.id_pegawai AND MONTH(c.tglsttpp) = "'.$bulan.'" and YEAR(c.tglsttpp) = "'.$tahun.'")', 'left')
+                                ->join('db_pegawai.pegdiklat c', '(a.id_peg = c.id_pegawai AND MONTH(c.tglsttpp) = "'.$bulan.'" and YEAR(c.tglsttpp) = "'.$tahun.'" and c.status = 2 and c.flag_active = 1)', 'left')
                                 // ->where('a.skpd', $id_unitkerja)
                                 ->where('id_m_status_pegawai', 1)
                                 ->where_not_in('b.id_unitkerja', [5, 9050030])

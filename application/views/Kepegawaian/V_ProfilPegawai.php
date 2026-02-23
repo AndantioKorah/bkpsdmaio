@@ -854,7 +854,7 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-arsip-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
               </li>
-              <?php if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isHakAkses('akses_presensi_profil_pegawai') || $this->general_library->getUserName() == $nip || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){ ?>
+              <?php if($this->general_library->isGuest() || $this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isHakAkses('akses_presensi_profil_pegawai') || $this->general_library->getUserName() == $nip || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){ ?>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
               </li>
@@ -1389,6 +1389,8 @@
   var nip = "<?= trim($nip);?>"; 
   var page = "<?= $page;?>"
   $(function(){
+      
+
     window.bLazy = new Blazy({
       container: '.container',
       success: function(element){
@@ -1450,8 +1452,7 @@
   // if(bidang == ""){
   // $('#btnstatic').click()  
   // }
-
-      <?php if(isset($layananSelesai['code']) == 1){ ?>
+      <?php if(isset($layananSelesai['code']) AND ($layananSelesai['code'] == 1)){ ?>
       $('#btnmodalsurvei').click()
       // $('#modal-survei').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
     <?php } ?>

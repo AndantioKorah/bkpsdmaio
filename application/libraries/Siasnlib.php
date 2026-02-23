@@ -86,7 +86,17 @@ class Siasnlib{
             0,
             1
         );
-    }    
+    }
+    
+    function getDataBangkom($id){
+        return $this->postCurl(
+            $this->API_URL.'kursus/id/'.$id,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
 
     function getRiwayatSertifikasi($nip){
         return $this->postCurl(

@@ -4309,5 +4309,35 @@
 
             return $rs;
         }
+        
+        public function cronHashFileBangkom(){
+            $data = $this->db->select('*')
+                            ->from('db_pegawai.pegdiklat')
+                            ->where('status !=', 3)
+                            ->where('hash_file IS NULL')
+                            ->where('flag_active', 1)
+                            ->where('gambarsk IS NOT NULL')
+                            ->where('gambarsk !=', "")
+                            // ->where('id_pegawai', 'PEG0000000ei447')
+                            ->limit(1000)
+                            ->order_by('created_date', 'desc')
+                            ->get()->result_array();
+
+            if($data){
+                foreach($data as $d){
+                    $urlFile = 'arsipdiklat/'.$d['gambarsk'];
+                    $md = null;
+                    if(file_exists($urlFile)){
+                        $md = md5_file($urlFile);
+                    } else {
+                        $md = 'file is not exists, please upload file again.';
+                    }
+                    $this->db->where('id', $d['id'])
+                            ->update('db_pegawai.pegdiklat', [
+                                'hash_file' => $md
+                            ]);
+                }
+            }
+        }
 	}
 ?>

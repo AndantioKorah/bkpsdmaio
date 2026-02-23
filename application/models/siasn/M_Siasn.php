@@ -1130,7 +1130,6 @@
                 }
 
                 if($uploadRwBangkom){
-                    dd($uploadRwBangkom);
                     $res = json_decode($uploadRwBangkom['data'], true);
                     if($res && $res['success'] == true){
                         $idDiklatSiasn = $res['mapData']['rwKursusId'];
@@ -1152,6 +1151,7 @@
                 }
 
                 $updateDataDiklat['sync_siasn_try_date'] = date('Y-m-d H:i:s');
+                $updateDataDiklat['log_sync_siasn'] = json_encode($uploadRwBangkom);
 
                 $this->db->where('id', $data['id'])
                                 ->update('db_pegawai.pegdiklat', $updateDataDiklat);

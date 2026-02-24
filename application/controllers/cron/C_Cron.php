@@ -62,14 +62,18 @@ class C_Cron extends CI_Controller
         $this->siasn->cronSyncJabatanSiasn();
     }
 
+    public function cronCheckBangkom(){
+        $this->general->cronCheckBangkom();
+        $this->general->logCron('cronCheckBangkom');
+    }
+
     public function removeLog($batasHari = 30){
         $this->general->removeLog($batasHari);
     }
 
     public function cronCheckVerifCuti(){
-        // $this->cronSyncBangkomPerData();
-        $this->general->cronCheckVerifCuti();
-        $this->cronJafungCpns();
+        $this->cronCheckBangkom();
+        // $this->general->cronCheckVerifCuti();
     }
 
     public function cronJafungCpns(){

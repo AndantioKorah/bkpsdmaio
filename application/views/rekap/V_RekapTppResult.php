@@ -145,10 +145,26 @@
             // })
 
             function loadViewByJenisFile(){
+                // $('#result_rekap_div').html('')
+                // $('#result_rekap_div').append(divLoaderNavy)
+                // $('#result_rekap_div').load('<?=base_url("rekap/C_Rekap/loadViewByJenisFile/")?>'+$('#jenis_file').val(), function(){
+                //     $('#loader').hide()
+                // })
                 $('#result_rekap_div').html('')
                 $('#result_rekap_div').append(divLoaderNavy)
-                $('#result_rekap_div').load('<?=base_url("rekap/C_Rekap/loadViewByJenisFile/")?>'+$('#jenis_file').val(), function(){
-                    $('#loader').hide()
+                $.ajax({
+                    url: '<?=base_url("rekap/C_Rekap/loadViewByJenisFile/")?>'+$('#jenis_file').val(),
+                    method: 'post',
+                    data: $(this).serialize(),
+                    success: function(data){
+                        $('#result_rekap_div').html('')
+                        $('#result_rekap_div').append(data)
+                        // $('#result_rekap_div').load('<?=base_url("rekap/C_Rekap/loadViewByJenisFile/")?>'+$('#jenis_file').val(), function(){
+                        //     $('#loader').hide()
+                        // })
+                    }, error: function(e){
+                        errortoast('Terjadi Kesalahan')
+                    }
                 })
             }
         </script>

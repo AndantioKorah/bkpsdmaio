@@ -220,7 +220,6 @@
                 //   }
     
                 $tanggal = new DateTime($this->input->post('tanggal_absensi'));
-                // dd($this->input->post('tanggal_absensi'));
                 $tahun = $tanggal->format("Y");
                 $bulan = $tanggal->format("m");
                 if (!is_dir('./assets/peninjauan_absen/'.$tahun.'/'.$bulan)) {
@@ -3723,6 +3722,7 @@
                         // ->where('a.skpd', $data['id_unitkerja'])
                         ->order_by('c.eselon')
                         ->where('f.flag_active', 1)
+                        // ->where('a.flag_terima_tpp', 1)
                         ->where('id_m_status_pegawai', 1);
                         // ->get()->result_array();
             if($flag_profil == 1){
@@ -3863,7 +3863,7 @@
                     }
                 } else if($p['jenis_jabatan'] == 'Struktural'){ // jika struktural
                     $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
-                }  else if($p['jenis_jabatan'] == 'JFU'){ // jika JFU
+                } else if($p['jenis_jabatan'] == 'JFU'){ // jika JFU
                     if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_jfu'];
                     }
@@ -3877,9 +3877,11 @@
                     $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan_hardcode'];
                 }
 
-                $result[$p['id_m_user']]['prestasi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];
-                $result[$p['id_m_user']]['beban_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['beban_kerja'];
-                $result[$p['id_m_user']]['kondisi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['kondisi_kerja'];
+                if($result[$p['id_m_user']]['kelas_jabatan'] != 0){
+                    $result[$p['id_m_user']]['prestasi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];
+                    $result[$p['id_m_user']]['beban_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['beban_kerja'];
+                    $result[$p['id_m_user']]['kondisi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['kondisi_kerja'];
+                }
 
                 if($data['id_unitkerja'] == 4026000){ // jika BKAD
                     if($p['jenis_jabatan'] == 'JFT'){
@@ -3967,8 +3969,12 @@
                 / 100;
                 
                 // dd($result[$p['id_m_user']]);
-
-                $result[$p['id_m_user']]['pagu_tpp'] = floatval($pagu_tpp[$result[$p['id_m_user']]['kelas_jabatan']]) * floatval($total_beban_prestasi);
+                
+                if($result[$p['id_m_user']]['kelas_jabatan'] != 0){
+                    $result[$p['id_m_user']]['pagu_tpp'] = floatval($pagu_tpp[$result[$p['id_m_user']]['kelas_jabatan']]) * floatval($total_beban_prestasi);
+                } else {
+                    $result[$p['id_m_user']]['pagu_tpp'] = 0;
+                }
                 $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
                 
                 if(isset($p['presentasi_tpp']) || ($temp_plt && in_array($p['id_m_user'], $temp_plt))){

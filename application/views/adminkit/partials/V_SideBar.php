@@ -423,6 +423,7 @@
 		<?php if($this->general_library->isProgrammer() 
 			|| $this->general_library->isAdminAplikasi() 
 		    || $this->general_library->isHakAkses('rekap_bangkom')
+			||  $this->general_library->isPegawaiBkpsdm()
 			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
 			){ ?>
 		<li class="sidebar-item">

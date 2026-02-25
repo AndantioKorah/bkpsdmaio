@@ -2504,5 +2504,55 @@
 
             return $notif;
         }
+
+        public function cronCheckBangkom($bulan = 0, $tahun = 0){
+            if($bulan == 0){
+                $bulan = date('m');
+            }
+
+            if($tahun == 0){
+                $tahun = date('Y');
+            }
+            $pegawai = $this->db->select('a.nipbaru_ws, c.id as id_t_cek_bangkom,
+                                sum(b.jam) as total_jp
+                            ')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.pegdiklat b', 'a.id_peg = b.id_pegawai')
+                            ->join('t_cek_bangkom c', 'a.nipbaru_ws = c.nip AND c.flag_active = 1', 'left')
+                            ->where('a.id_m_status_pegawai', 1)
+                            // ->where("a.nipbaru_ws NOT IN (
+                            //     SELECT aa.nip
+                            //     FROM t_cek_bangkom aa
+                            //     WHERE aa.bulan = '".$bulan."'
+                            //     AND aa.tahun = '".$tahun."'
+                            //     AND aa.flag_active = 1
+                            // )")
+                            ->where('b.flag_active', 1)
+                            ->where('b.status', 2)
+                            ->where('MONTH(b.tglsttpp)', $bulan)
+                            ->where('YEAR(b.tglsttpp)', $tahun)
+                            // ->limit(1000)
+                            ->group_by('a.nipbaru_ws')
+                            ->get()->result_array();
+            if($pegawai){
+                foreach($pegawai as $p){
+                    $updateData['jumlah_jp'] = $p['total_jp'];
+                    $updateData['nip'] = $p['nipbaru_ws'];
+                    $updateData['bulan'] = $bulan;
+                    $updateData['tahun'] = $tahun;
+
+                    $updateData['flag_terpenuhi'] = 0;
+                    if($p['total_jp'] >= 3){
+                        $updateData['flag_terpenuhi'] = 1;
+                    }
+                    if($p['id_t_cek_bangkom']){
+                        $this->db->where('id', $p['id_t_cek_bangkom'])
+                                ->update('t_cek_bangkom', $updateData);
+                    } else {
+                        $this->db->insert('t_cek_bangkom', $updateData);
+                    }
+                }
+            }
+        }
 	}
 ?>

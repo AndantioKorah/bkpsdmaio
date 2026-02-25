@@ -1736,6 +1736,12 @@
         return $list_pegawai;
     }
 
+    public function cekBangkomBulanan($param, $unitkerja = 0, $list_pegawai = null){
+        if($list_pegawai){
+            dd($list_pegawai);
+        }
+    }
+
     public function buildDataAbsensi($data, $flag_absen_aars = 0, $flag_alpha = 0, $flag_rekap_personal = 0, $flag_rekap_tpp = 0, $flag_penerima_tpp = 1){
         // if($this->general_library->isProgrammer()){
         //     dd($flag_absen_aars.$flag_penerima_tpp);
@@ -1805,6 +1811,13 @@
 
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
+
+        if($flag_rekap_tpp == 1 && $this->general_library->isProgrammer()){
+            if($data['tahun'].'-'.$data['bulan'].'01' >= '2026-02-01'){
+                $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+            }
+        }
+
         $list_tanggal_exclude = null;
         $temp_list_nip = null;
         if($flag_absen_aars == 1){
@@ -2623,13 +2636,8 @@
         $param['bulan'] = $data['bulan'];
         $param['tahun'] = $data['tahun'];
         $param['skpd'] = $skpd[0];
-        // dd($data);
-        // $temp = $this->readAbsensiFromDb($param);
         $temp = $this->readAbsensiAars($data, $flag_alpha = 0, 1, $flag_penerima_tpp);
-        // dd($temp['temp_list_nip']);
-        // if($this->general_library->getId() == 16){
-        //     dd($temp);
-        // }
+
         if($temp){
             $result['skpd'] = $temp['skpd'];
             $result['periode'] = $temp['periode'];

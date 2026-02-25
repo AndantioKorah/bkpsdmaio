@@ -111,7 +111,7 @@
 	<li class="sidebar-header">
 		Main
 	</li>
-	<?php } ?>
+
 	<!-- <li class="sidebar-item">
 		<a class="sidebar-link" href="#">
 			<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
@@ -164,7 +164,6 @@
 	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
 	$this->general_library->isAdminAplikasi() &&
 	!$this->general_library->isWalikota()){ ?>
-	<?php if(!$this->general_library->isGuest()) { ?>
 		<li class="sidebar-item ">
 			<a title="Master" data-bs-target="#master" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa-database"></i> 
@@ -177,7 +176,6 @@
 						margin-top: .35rem;"></i>
 				</span>
 			</a>
-			<?php } ?>
 			<ul id="master" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				<?php if($this->general_library->isHakAkses('akses_profil_pegawai') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
 				<li class="sidebar-item ">
@@ -383,9 +381,7 @@
 	<?php if($this->general_library->isProgrammer() 
 	|| $this->general_library->isAdminAplikasi() 
 	// || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-	|| $this->general_library->isPegawaiBkpsdm() 
-	|| $this->general_library->isWalikota()
-	|| $this->general_library->isGuest()
+	|| $this->general_library->isPegawaiBkpsdm() || $this->general_library->isWalikota()
 	){ ?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>database">
@@ -413,18 +409,12 @@
 			</a>
 		</li>
 		<?php } ?>
-		<?php if(!$this->general_library->isGuest()) { ?>
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/jft')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">List JFT</span>
 			</a>
 		</li>
-		<?php } ?>
-		<?php if($this->general_library->isProgrammer() 
-			|| $this->general_library->isAdminAplikasi() 
-		    || $this->general_library->isHakAkses('rekap_bangkom')
-			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
-			){ ?>
+		<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('rekap_bangkom')){ ?>
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">Rekap Bangkom</span>
@@ -432,7 +422,7 @@
 		</li>
 		<?php } ?>
 
-		<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
+		<?php if(!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item">
 			<a title="Nomor Surat" class="sidebar-link" href="<?=base_url('kepegawaian/nomor-surat')?>">
 				<i class="fa fa-file-alt"></i> <span class="align-middle">Nomor Surat</span>
@@ -454,21 +444,10 @@
 				<i class="fas fa-fw fas fa-tachometer-alt"></i> <span class="align-middle">Dashboard PDM</span>
 			</a>
 		</li>
-				<?php if($this->general_library->isHakAkses('rekap_bangkom')
-			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
-			){ ?>
-		<li class="sidebar-item">
-			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
-				<i class="fa fa-database"></i> <span class="align-middle">Rekap Bangkom</span>
-			</a>
-		</li>
-		<?php
-		}
-	?>
 	<?php
 		}
 	?>
-	<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
+	<?php if(!$this->general_library->isWalikota()){ ?>
 
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
@@ -669,7 +648,6 @@
 	$this->general_library->isVerifPermohonanCuti() ||
 	$this->general_library->isHakAkses('admin_pengajuan_cuti') ||
 	$this->general_library->isKepalaSkpdHardcode() ||
-	$this->general_library->isPegawaiBkpsdm() ||
 	stringStartWith('Asisten', $this->general_library->getNamaJabatan()) ||
 	stringStartWith('Inspektur Pembantu', $this->general_library->getNamaJabatan()) ||
 	(stringStartWith('Sekretaris', $this->general_library->getNamaJabatan())) ||
@@ -704,7 +682,7 @@
 						</a>
 					</li>
 				<?php } ?>
-				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isPegawaiBkpsdm()){ ?>
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>
 					<li class="sidebar-item ">
 						<a title="Pendataan Data Mandiri" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/dokumen/verifikasi')?>">
 							<i class="align-middle me-2 far fa-circle"></i>Pendataan Data Mandiri
@@ -916,7 +894,6 @@
 				// || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 				|| $this->general_library->isHakAkses('rekap_absensi_aars') 
 				|| $this->general_library->isWalikota()
-				|| $this->general_library->isGuest()
 				|| $this->general_library->isHakAksesRekapAbsen()
 				){
 			?>
@@ -973,7 +950,7 @@
 				</a>
 			</li>
 			<?php } ?>
-			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
+			<?php if(!$this->general_library->isWalikota()){ ?>
 			<li class="sidebar-item ">
 				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Presensi
@@ -1003,12 +980,12 @@
 			<?php } ?>
 		</ul>
 	</li>
-<?php if(!$this->general_library->isGuest()) { ?>
+
 	<li class="sidebar-header">
 		<!-- Kinerja -->
 		 BIDIK ASN JUARA
 	</li>
-<?php } ?>
+
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>		
 	<li class="sidebar-item ">
 			<a title="Verifikasi" href="<?=base_url();?>dashboard" class="sidebar-link">
@@ -1019,7 +996,7 @@
 			</a>	
 		</li>
 		<?php } ?>
-		<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
+		<?php if(!$this->general_library->isWalikota()){ ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#ketpresensi" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
@@ -1078,7 +1055,7 @@
 			</ul>
 		</li>
 		<?php } ?>
-		<?php if(!$this->general_library->isGuest()) { ?>
+		
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#skbp" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-folder"></i> 
@@ -1091,7 +1068,6 @@
 						margin-top: .35rem;"></i>
 				</span>
 			</a>
-			<?php } ?>
 			<ul id="skbp" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				<?php if(!$this->general_library->isWalikota()){ ?>
 				
@@ -1187,14 +1163,13 @@
 					<?php } ?>
 		<?php } ?>
 	</li> -->
+	<?php } ?>
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
-		<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
+	
     <li class="sidebar-header">
 		<!-- Manajemen Talenta -->
 		 SIPANTAS
 	</li>
-					<?php } ?>
-
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
 		<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
 	<li class="sidebar-item ">
@@ -1242,7 +1217,6 @@
 		</li>
 			<?php } ?>
 	
-		<?php if(!$this->general_library->isGuest()) { ?>
 
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#datapkinerja" data-bs-toggle="collapse" class="sidebar-link">
@@ -1256,7 +1230,6 @@
 						margin-top: .35rem;"></i>
 				</span>
 			</a>
-			
 			<ul id="datapkinerja" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 				
 				<!-- <li class="sidebar-item ">
@@ -1464,8 +1437,6 @@
 			</a>	
 		</li>
 		<?php } ?>
-			<?php } ?>
-
 		<?php
 				if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
@@ -1474,7 +1445,6 @@
 				|| $this->general_library->isWalikota()
 				|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 				|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
-				AND !$this->general_library->isGuest()
 				){ ?>
 
 			<li class="sidebar-item ">
@@ -1492,7 +1462,7 @@
 			<?php if($this->general_library->isHakAkses('manajemen_talenta'))
 			// { 
 			?>
-			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()) { ?>
+			<?php if(!$this->general_library->isWalikota()) { ?>
 			<li class="sidebar-item ">
 				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
@@ -1505,7 +1475,6 @@
 		    // }
 		    ?>
 			<?php } ?>	
-			
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))
 			{ 
 			?>	

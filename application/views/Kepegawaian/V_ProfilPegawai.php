@@ -1453,7 +1453,7 @@
   // $('#btnstatic').click()  
   // }
       <?php if(isset($layananSelesai['code']) AND ($layananSelesai['code'] == 1)){ ?>
-      $('#btnmodalsurvei').click()
+      // $('#btnmodalsurvei').click()
       // $('#modal-survei').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
     <?php } ?>
 

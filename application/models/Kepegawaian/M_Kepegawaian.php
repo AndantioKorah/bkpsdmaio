@@ -1418,6 +1418,18 @@ class M_Kepegawaian extends CI_Model
         //         return $res;
 		// }
 
+        if($this->input->post('id_dokumen') == 20){
+        $cekNomorSttp = $this->db->select('*')
+                                        ->from('db_pegawai.pegdiklat a')
+                                        ->where('a.flag_active', 1)
+                                        ->where('id_pegawai', $this->input->post('id_pegawai'))
+                                        ->where('nosttpp', $this->input->post('diklat_no_sttpp'))
+                                        ->get()->result_array();
+        if($cekNomorSttp){
+         $res = array('msg' => 'Nomor Sertifikat sudah pernah diinput', 'success' => false);
+         return $res;
+        } 
+        }
        
 
         $target_dir = null;

@@ -1738,7 +1738,13 @@
 
     public function cekBangkomBulanan($param, $unitkerja = 0, $list_pegawai = null){
         if($list_pegawai){
-            dd($list_pegawai);
+            $nip = null;
+            foreach($list_pegawai as $lp){
+                $nip[] = $lp['nip'];
+            }
+            
+            // buat cron 1 lagi untuk mengecek flag_terpenuhi
+            // cek tiap pegawai, tambah flag_cek_bangkom = 0, id_m_status_pegawai = 1. jika semua sudah 1, reset kembali jadi 0, dan cek kembali semua
         }
     }
 

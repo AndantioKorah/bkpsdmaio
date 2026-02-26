@@ -4368,25 +4368,17 @@
         }
 
         public function inputSertiBkpsdmBacirita(){
-            $noSttpp = '800.1.13/B.04/BKPSDM/238/2026';
+            $noSttpp = "800.1.13/B.04/BKPSDM/238/2026";
             $data = $this->db->select('b.id_peg, b.nipbaru_ws, c.id as id_pegdiklat')
                             ->from('t_temp_bkpsdm_bacirita a')
                             ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
-                            ->join("db_pegawai.pegdiklat c", "b.id_pegawai = b.id_peg AND c.flag_active = 1 AND c.nosttpp = $noSttpp", "left")
+                            ->join("db_pegawai.pegdiklat c", "c.id_pegawai = b.id_peg AND c.flag_active = 1 AND c.nosttpp = '".$noSttpp."'", "left")
                             ->where('b.id_m_status_pegawai', 1)
                             // ->where('b.nipbaru_ws', '199502182020121013')
                             ->get()->result_array();
-
             if($data){
                 foreach($data as $d){
-                    $exists = $this->db->select('*')
-                                    ->from('db_pegawai.pegdiklat')
-                                    ->where('id_pegawai', $d['id_peg'])
-                                    ->where('nosttpp', $noSttpp)
-                                    ->where('flag_active', 1)
-                                    ->get()->row_array();
-
-                    if(!$exists){
+                    if(!$d['id_pegdiklat']){
                         $this->db->insert('db_pegawai.pegdiklat', [
                             'id_pegawai' => $d['id_peg'],
                             'jenisdiklat' => 50,
@@ -4400,7 +4392,7 @@
                             'nosttpp' => $noSttpp,
                             'tglsttpp' => '2026-02-24',
                             'status' => 2,
-                            'gambarsk' => $d['nipbaru_ws']."_Serti_BKPSDMBacirita_Feb_26.pdf",
+                            'gambarsk' => $d['nipbaru_ws']."_Serti_BKPSDMBacirita_Feb_26_sign.pdf",
                         ]);
                         echo "inserting for ".$d['nipbaru_ws']."\n";
                     } else {

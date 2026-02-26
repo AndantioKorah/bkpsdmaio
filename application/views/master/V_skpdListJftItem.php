@@ -2,15 +2,15 @@
     <div class="card-header" style="margin-bottom:-40px">
         <!-- <h4>Jabatan Fungsional</h4> -->
     </div>
-    <div class="card-body" >
+    <div class="card-body table-responsive" >
 <?php if($result) { ?>
-         <table class="table table-sm" style="border: 0px black solid;" border-collapse="collapse">
+         <table class="table table-sm datatable" style="border: 0px black solid;" border-collapse="collapse">
                                 <thead>
                                     <th class="text-center">No</th>
                                     <th class="text-left">Nama Jabatan</th>
                                     <!-- <th class="text-center">Kelas Jabatan</th> -->
                                     <th class="text-center">Jumlah Pemangku</th>
-                                    <th class="text-center">Kebutuhan Tersedia</th>
+                                    <th class="text-center">Persetujuan Kebutuhan</th>
 
                                 </thead>
                                 <tbody>
@@ -36,3 +36,11 @@
     
 </div>
 
+<script>
+ $(function(){
+   $('.datatable').dataTable({
+			"pageLength": 50
+		}) 
+  })
+
+</script>

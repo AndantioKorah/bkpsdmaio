@@ -172,6 +172,11 @@ class C_Cron extends CI_Controller
         // return $this->user->cekKenegaraanCustom();
     }
 
+    public function inputSertiBkpsdmBacirita(){
+        return $this->user->inputSertiBkpsdmBacirita();
+        // return $this->user->cekKenegaraanCustom();
+    }
+
     public function cekProgressCuti($nip, $flagFixProgress = 0){
         $insert_id = 0;
         $peg = $this->general->getOne('m_user', 'username', $nip, 1);

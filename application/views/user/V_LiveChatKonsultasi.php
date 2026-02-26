@@ -71,7 +71,13 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="btn-group-konsultasi">
             <?php if($result['chat']['flag_done'] == 0){ ?>
-                <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')" >Akhiri Konsultasi</a>
+                <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){ ?>
+                    <?php if(!$result['chat']['id_m_user_assigned']){ //jika belum ada yang di assign ?>
+                        <a class="dropdown-item" onclick="pilihTeknisLayanan('<?=$result['chat']['id']?>')">Assign Operator</a>
+                    <?php } else { //jika sudah di assign ?>
+                    <?php } ?>
+                <?php } ?>
+                <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')">Akhiri Konsultasi</a>
             <?php } else { ?>
                 <!-- <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')" >Akhiri Konsultasi</a> -->
             <?php } ?>
@@ -84,7 +90,7 @@
         $heightChatContainer = "65vh";
     }
 ?>
-<div class="col-lg-12 mt-2" style="
+<div id="div_live_chat_container" class="col-lg-12 mt-2" style="
     background-color: #f9fbf9;
     height: <?=$heightChatContainer?>;
     overflow-y: auto;
@@ -93,7 +99,15 @@
     padding-bottom: 10px;
 ">  
     <div class="row" id="live_chat_container">
-        
+    </div>
+</div>
+
+<div class="col-lg-12 mt-2" id="div_assign_operator" style="
+        display: none;
+        background-color: #f9fbf9;
+        height: <?=$heightChatContainer?>;
+    ">
+    <div class="row p-3" id="assign_operator_container">
     </div>
 </div>
 <?php if($result['chat']['flag_done'] == 0){ ?>
@@ -133,7 +147,7 @@
                     class="btn btn-success rounded-circle p-2">
                         <i class="fa fa-paper-plane"></i>
                     </button>
-                    <button id="btn_send_message_loading" type="button" djsabled style="
+                    <button id="btn_send_message_loading" type="button" disabled style="
                         width: 40px;
                         height: 40px;
                         display: none;
@@ -182,6 +196,16 @@
     $(function(){
         reloadLiveChatContainer('<?=$result['chat']['id']?>')
     })
+
+    function pilihTeknisLayanan(id){
+        $('#div_live_chat_container').hide()
+        $('#div_assign_operator').show()
+        $('#assign_operator_container').html('')
+        $('#assign_operator_container').append(divLoaderNavy)
+        $('#assign_operator_container').load('<?=base_url("user/C_User/assignOperatorKonsultasi/")?>'+id, function(){
+            $('#loader').hide()
+        })
+    }
     
     function endKonsultasi(id){
         if(confirm('Apakah Anda yakin?')){
@@ -218,7 +242,6 @@
 
     $('#pesan').on('keydown', function(e){
         if (e.key === 'Enter' && e.shiftKey) {
-            console.log('asdasdsad')
             e.preventDefault(); // Mencegah perilaku default
             const cursorPosition = this.selectionStart;
             const text = this.value;

@@ -712,4 +712,20 @@ class C_User extends CI_Controller
     public function submitRatingKonsultasi($id){
         echo json_encode($this->user->submitRatingKonsultasi($id));
     }
+
+    public function assignOperatorKonsultasi($id){
+        $data['list_operator'] = $this->user->getOperatorKonsultasi();
+        $data['id'] = $id;
+        $this->load->view('user/V_LiveChatAssignOperator', $data);
+    }
+
+    public function searchListOperator(){
+        $data = $this->input->post();
+        if($data['search'] != ""){
+            $data['all_list'] = $this->user->getOperatorKonsultasi($data['search']);
+        } else {
+            $data['all_list'] = json_decode($data['all_list'], true);
+        }
+        $this->load->view('user/V_LiveChatAssignOperatorItem', $data);
+    }
 }

@@ -11,6 +11,10 @@
     .profile_live_chat_container:hover{
         background-color: #cacaca !important;
     }
+
+    .margin-admin{
+        margin-top: 80px;
+    }
 </style>
 <div class="profile_live_chat_container" style="
     background-color: #f9fbf9;
@@ -91,9 +95,9 @@
     })
 </script>
 <?php } ?>
-<?php if($result['detail']){ ?>
+<?php if($result['detail']){ $i = 1; ?>
     <?php foreach($result['detail'] as $rd){ ?>
-        <div class="col-lg-12 pt-2">
+        <div class="col-lg-12 pt-2 <?=$this->general_library->isHakAkses('admin_live_chat_konsultasi') && $i==1 ? "margin-admin" : ""?>">
             <?php
                 $divChat = "div_chat_left"; 
                 $spJam = "sp_jam_pesan_chatkonsul_left"; 
@@ -106,6 +110,9 @@
                     if($rd['is_sender_admin'] == 1){ 
                         $divChat = "div_chat_right"; 
                         $spJam = "sp_jam_pesan_chatkonsul_right"; 
+                        if($i == 1){
+                            $divChat.=" margin-admin";
+                        }
                     } else {
                         $divChat = "div_chat_left";
                         $spJam = "sp_jam_pesan_chatkonsul_left";
@@ -121,5 +128,5 @@
                 </div>
             </div>
         </div>
-    <?php } ?>
+    <?php $i++; } ?>
 <?php } ?>

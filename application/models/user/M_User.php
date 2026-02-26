@@ -4309,6 +4309,33 @@
 
             return $rs;
         }
+
+        public function getOperatorKonsultasi($param = ""){
+            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+                        d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
+                        a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk, e.id as id_m_user,
+                        a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                ->join('m_user e', 'a.nipbaru_ws = e.username')
+                ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+                ->where('a.skpd', ID_UNITKERJA_BKPSDM)
+                ->where('id_m_status_pegawai', 1)
+                ->where('e.flag_active', 1)
+                ->order_by('c.eselon ASC')
+                ->order_by('f.urutan ASC')
+                ->order_by('c.jenis_jabatan ASC')
+                ->order_by('d.urutan DESC')
+                ->order_by('a.tmtcpns');
+
+            if($param != ""){
+                $this->db->like('a.nama', $param);
+            }
+
+            return $this->db->get()->result_array();
+        }
         
         public function cronHashFileBangkom(){
             $data = $this->db->select('*')
@@ -4336,6 +4363,49 @@
                             ->update('db_pegawai.pegdiklat', [
                                 'hash_file' => $md
                             ]);
+                }
+            }
+        }
+
+        public function inputSertiBkpsdmBacirita(){
+            $noSttpp = '800.1.13/B.04/BKPSDM/238/2026';
+            $data = $this->db->select('b.id_peg, b.nipbaru_ws, c.id as id_pegdiklat')
+                            ->from('t_temp_bkpsdm_bacirita a')
+                            ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                            ->join("db_pegawai.pegdiklat c", "b.id_pegawai = b.id_peg AND c.flag_active = 1 AND c.nosttpp = $noSttpp", "left")
+                            ->where('b.id_m_status_pegawai', 1)
+                            // ->where('b.nipbaru_ws', '199502182020121013')
+                            ->get()->result_array();
+
+            if($data){
+                foreach($data as $d){
+                    $exists = $this->db->select('*')
+                                    ->from('db_pegawai.pegdiklat')
+                                    ->where('id_pegawai', $d['id_peg'])
+                                    ->where('nosttpp', $noSttpp)
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+
+                    if(!$exists){
+                        $this->db->insert('db_pegawai.pegdiklat', [
+                            'id_pegawai' => $d['id_peg'],
+                            'jenisdiklat' => 50,
+                            'nm_diklat' => 'AKSELERASI MANAJEMEN TALENTA DI LINGKUNGAN PEMERINTAH KOTA MANADO',
+                            'tptdiklat' => 'Zoom & Youtube',
+                            'penyelenggara' => 'BKPSDM Kota Manado',
+                            'angkatan' => '-',
+                            'jam' => 2,
+                            'tglmulai' => '2026-02-24',
+                            'tglselesai' => '2026-02-24',
+                            'nosttpp' => $noSttpp,
+                            'tglsttpp' => '2026-02-24',
+                            'status' => 2,
+                            'gambarsk' => $d['nipbaru_ws']."_Serti_BKPSDMBacirita_Feb_26.pdf",
+                        ]);
+                        echo "inserting for ".$d['nipbaru_ws']."\n";
+                    } else {
+                        echo "skipping cause exist ".$d['nipbaru_ws']."\n";
+                    }
                 }
             }
         }

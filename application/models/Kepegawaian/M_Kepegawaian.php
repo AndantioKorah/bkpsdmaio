@@ -283,7 +283,39 @@ class M_Kepegawaian extends CI_Model
             if($data['unitkerja'] != '0'){
                 if($data['unitkerja'] == '3010000'){
                 $this->db->where_in('c.id_unitkerjamaster', ['8000000','8010000','8020000']);
-                } else {
+                } else if($data['unitkerja'] == 991){
+                    $this->db->where('c.id_unitkerjamaster', '8010000');
+                } else if($data['unitkerja'] == 992){
+                    $this->db->where('c.id_unitkerjamaster', '8020000');
+                } else if($data['unitkerja'] == 990){
+                    $this->db->where('c.id_unitkerjamaster', '8000000');
+                } else if($data['unitkerja'] == 993){
+                    $this->db->where_in('c.id_unitkerjamaster', ['6000000','7005000']);
+                } else if($data['unitkerja'] == 994){
+                    $this->db->where_not_in('c.id_unitkerjamaster', ['6000000','7005000','8010000','8020000','8000000']);
+                } else if($data['unitkerja'] == '5001001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5001000']);
+                } else if($data['unitkerja'] == '5002001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5002000']);
+                } else if($data['unitkerja'] == '5003001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5003000']);
+                } else if($data['unitkerja'] == '5004001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5004000']);
+                } else if($data['unitkerja'] == '5005001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5005000']);
+                } else if($data['unitkerja'] == '5006001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5006000']);
+                } else if($data['unitkerja'] == '5007001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5007000']);
+                }else if($data['unitkerja'] == '5008001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5008000']);
+                } else if($data['unitkerja'] == '5009001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5009000']);
+                } else if($data['unitkerja'] == '5010001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5010001']);
+                } else if($data['unitkerja'] == '5011001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5011001']);
+                }  else {
                 $this->db->where('b.skpd', $data['unitkerja']);
                 }
             }
@@ -3126,7 +3158,6 @@ public function submitVerifikasiDokumen(){
     $res['message'] = 'ok';
     $res['data'] = null;
     $datapost = $this->input->post();
-   
     $this->db->trans_begin();
     $id = $datapost['id'];
     $id_peg = $datapost["id_pegawai"];
@@ -3304,7 +3335,7 @@ public function submitVerifikasiDokumen(){
         $this->updateBerkala($id_peg);
     }
 
-
+  if($datapost['jenis_dokumen'] != "diklat") {
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           
     if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
     $id = 1; 
@@ -3318,6 +3349,8 @@ public function submitVerifikasiDokumen(){
     $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
     $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
     }
+  }
+
 
 
     return $res;

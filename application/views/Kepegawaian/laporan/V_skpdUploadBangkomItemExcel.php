@@ -12,7 +12,7 @@
                                     <th class="text-center">Tahun</th>
                                     <th class="text-center">Bulan</th>
                                     <th class="text-center">Data Bangkom</th>
-                                    <!-- <th class="text-center">Total JP</th> -->
+                                    <th class="text-center">Total JP</th>
                                     <!-- <th class="text-center">Status</th> -->
 
                                     
@@ -27,7 +27,7 @@
                                             <td class="text-center"><?=$tahun?></td>
                                             <td class="text-center"><?= getNamaBulan($bulan)?></td>
                                             <td class="text-center"><?php if($lj['id'] == null) echo "-"; else echo "Ada";?></td>
-                                            <!-- <td class="text-center"><?=$lj['total_jp']?></td> -->
+                                            <td class="text-center"><?=$lj['total_jp']?></td>
                                             <!-- <td class="text-center">
                                                 <?php if($lj['status'] == null) echo "-"; else if($lj['status'] == 2) echo "Sudah Verif"; else echo "Belum Verif";?>
                                             </td> -->

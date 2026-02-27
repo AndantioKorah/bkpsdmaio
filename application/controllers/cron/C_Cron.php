@@ -43,9 +43,10 @@ class C_Cron extends CI_Controller
     }
 
     public function cronDsBulkTte(){
-        $this->general->logCron('cronDsBulkTte');
-		// $this->kepegawaian->cronDsBulkTte();
-		$this->layanan->cronBulkDs();
+        $this->cronCheckDataBangkom();
+
+        // $this->general->logCron('cronDsBulkTte');
+		// $this->layanan->cronBulkDs();
 	}
 
     public function updateSisaCuti($id, $operand){
@@ -67,8 +68,8 @@ class C_Cron extends CI_Controller
         $this->general->logCron('cronCheckBangkom');
     }
 
-    public function cronCheckDataBangkom(){
-        $this->general->cronCheckDataBangkom();
+    public function cronCheckDataBangkom($nip = ""){
+        $this->general->cronCheckDataBangkom($nip);
         $this->general->logCron('cronCheckDataBangkom');
     }
 

@@ -1803,9 +1803,9 @@
                 $this->db->where('c.id_unitkerjamaster', 8010000);
             }
 
-            if($flag_penerima_tpp == 1){
-                $this->db->where('a.flag_terima_tpp', 1);
-            }
+            // if($flag_penerima_tpp == 1){
+            //     $this->db->where('a.flag_terima_tpp', 1);
+            // }
 
             if($flag_rekap_personal == 1){
                 $this->db->join('m_user d', 'a.nipbaru_ws = d.username')
@@ -1821,6 +1821,7 @@
         if($flag_rekap_tpp == 1 && $this->general_library->isProgrammer()){
             if($data['tahun'].'-'.$data['bulan'].'01' >= '2026-02-01'){
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+                // keluarkan yang flag_terima_tpp = 1
             }
         }
 

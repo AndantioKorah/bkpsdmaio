@@ -430,6 +430,41 @@ function getListDateByMonth($month, $year){
     return $list;
 }
 
+// function getMonthsBetweenDate($startDate, $endDate, $format = 'F Y') {
+//     $dates = [];
+//     $start = new DateTime($startDate);
+//     $end = new DateTime($endDate);
+//     // Add one month to the end date so the end month is included in the period
+//     $end->modify('+1 month'); 
+//     $interval = new DateInterval('P1M'); // Period 1 Month
+//     $period = new DatePeriod($start, $interval, $end);
+
+//     foreach ($period as $date) {
+//         $dates[] = $date->format($format);
+//     }
+//     return $dates;
+// }
+
+function getMonthsBetweenDate($startDate, $endDate) {
+    $between = getDateBetweenDates($startDate, $endDate);
+    $rs = null;
+    $temp = null;
+    if($between){
+        foreach($between as $b){
+            $explode = explode("-", $b);
+            $temp[$explode[1].'-'.$explode[0]] = $explode[1]."-".$explode[0];
+        }
+    }
+
+    if($temp){
+        foreach($temp as $t){
+            $rs[] = $t;
+        }
+    }
+
+    return $rs;
+}
+
 function getDateBetweenDates($startDate, $endDate)
 {
     $rangArray = [];
@@ -1276,6 +1311,13 @@ function formatDateNotifikasi($date, $flag_hide_yang_lalu = 0){
     }
 
     return $flag_hide_yang_lalu == 0 ? $res : $res.' yang lalu';
+}
+
+function getMonthBetweenDate($date1, $date2){
+    $dateAwal = new DateTime($date1);
+    $dateAkhir = new DateTime($date2);
+    $interval = $date1->diff($date2);
+    return ($interval->y * 12) + $interval->m;
 }
 
 function countDiffDateLengkap($date1, $date2, $params = '')

@@ -728,4 +728,9 @@ class C_User extends CI_Controller
         }
         $this->load->view('user/V_LiveChatAssignOperatorItem', $data);
     }
+
+     public function inputSertiBkpsdmBacirita(){
+        echo json_encode($this->user->inputSertiBkpsdmBacirita());
+    }
+
 }

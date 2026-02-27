@@ -3166,7 +3166,6 @@ public function submitVerifikasiDokumen(){
     $data["keterangan"] = $datapost["keterangan"];
     $data["tanggal_verif"] = date('Y-m-d h:i:s');
     $data["id_m_user_verif"] = $this->general_library->getId();
-
     // if($this->general_library->isProgrammer()){
         // dd(base_url($datapost['file_path']));
         $base64 = convertToBase64(($datapost['file_path']));
@@ -3286,9 +3285,13 @@ public function submitVerifikasiDokumen(){
     if(trim($datapost["jenis_dokumen"]) == "skp"){
         $data["predikat"] = $datapost["edit_predikat"];
     }
-     
+
     $this->db->where('id', $id)
     ->update('db_pegawai.'.$datapost['db_dokumen'], $data);
+
+    if($datapost['jenis_dokumen'] == "diklat") {
+     $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+    }
     
     // if(trim($datapost["jenis_dokumen"]) == "pangkat"){
     //     $this->db->where('id', $id)
@@ -3374,6 +3377,8 @@ public function batalSubmitVerifikasiDokumen(){
     $this->db->where('id', $id)
     ->update('db_pegawai.'.$datapost['db_dokumen_batal'], $data);
 
+    
+
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();
         $res['code'] = 1;
@@ -3394,6 +3399,19 @@ public function batalSubmitVerifikasiDokumen(){
     if(trim($datapost["jenis_dokumen_batal"]) == "gajiberkala"){
         $this->updateBerkala($id_peg);
     }
+
+    $peg = $this->db->select('b.id as id_m_user, a.*')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_user b', 'a.nipbaru_ws = b.username')
+                        ->where('b.flag_active', 1)
+                        ->where('a.id_peg', $datapost['id_pegawai_batal'])
+                        ->get()->row_array();
+
+    if($datapost['jenis_dokumen_batal'] == "diklat") {
+     $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+    }
+
+ 
 
 
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           

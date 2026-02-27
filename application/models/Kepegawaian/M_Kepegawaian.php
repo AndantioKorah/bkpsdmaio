@@ -3289,6 +3289,18 @@ public function submitVerifikasiDokumen(){
     $this->db->where('id', $id)
     ->update('db_pegawai.'.$datapost['db_dokumen'], $data);
 
+    // $message = "*[VERIFIKASI BANGKOM]*\n\nSelamat";
+
+    // $this->db->insert('t_notifikasi', [
+    //                         'id_m_user' => '78',
+    //                         'jenis_notifikasi' => 'verifikasi_bangkom',
+    //                         'judul_notifikasi' => 'Verifikasi Bangkom',
+    //                         'pesan' => $message,
+    //                         'link_href' => 'kepegawaian/profil',
+    //                         'fa_icon' => "fa fa-times",
+    //                         'icon_color' => "red"
+    //                     ]);
+
     if($datapost['jenis_dokumen'] == "diklat") {
      $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
     }

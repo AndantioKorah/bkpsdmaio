@@ -1753,19 +1753,20 @@
             'id_unitkerja' => $param['id_unitkerja']
         ];
         
-        $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja')
-                ->from('db_pegawai.pegawai a')
-                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-                ->where('id_m_status_pegawai', 1);
+        if(in_array($param['id_unitkerja'], [3010000, 3012000])){
+            $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->where('id_m_status_pegawai', 1);
 
-        if($param['id_unitkerja'] == "3010000"){ // jika diknas, ambil semua sekolah
-            $this->db->where("b.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR b.id_unitkerja = '3010000'");
-        } else if($param['id_unitkerja'] == "3012000"){ // jika puskes
-            $this->db->where("b.id_unitkerjamaster = '6000000' OR b.id_unitkerja = '3012000'");
-            // $this->db->where_in('b.id_unitkerjamaster', 6000000);
+            if($param['id_unitkerja'] == "3010000"){ // jika diknas, ambil semua sekolah
+                $this->db->where("b.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR b.id_unitkerja = '3010000'");
+            } else if($param['id_unitkerja'] == "3012000"){ // jika puskes
+                $this->db->where("b.id_unitkerjamaster = '6000000' OR b.id_unitkerja = '3012000'");
+                // $this->db->where_in('b.id_unitkerjamaster', 6000000);
+            }
+            $list_pegawai = $this->db->get()->result_array();
         }
-        $list_pegawai = $this->db->get()->result_array();
-
         if($list_pegawai){
             $nip = null;
             foreach($list_pegawai as $lp){

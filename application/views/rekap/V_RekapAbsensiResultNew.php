@@ -37,7 +37,7 @@
                                                 <td><?=$lp['nm_unitkerja']?></td>
                                             <?php } ?>
                                         </tr>
-                                    <?php $no++; } } ?>
+                                    <?php } } ?>
                                 </tbody>
                             </table>
                         </div>

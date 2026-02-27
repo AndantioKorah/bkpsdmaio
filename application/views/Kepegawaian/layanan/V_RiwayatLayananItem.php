@@ -28,6 +28,9 @@
            <?php if($m_layanan == 25 || $m_layanan == 26) { ?>
           <th class="text-left">Surat Pernyataan tidak sedang Cuti Luar Tanggungan Negara</th>
           <?php } ?>
+            <?php if($m_layanan == 34) { ?>
+          <th class="text-left">Formulir Cuti</th>
+          <?php } ?>
           <th style="width:40%;"></th>
         </thead>
         <tbody>
@@ -85,9 +88,15 @@
           <i class="fa fa-file-pdf"></i></button>
           </td>
           <?php } ?>
+            <?php if($m_layanan == 34) { ?>
+          <td class="text-left">
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          </td>
+          <?php } ?>
               <td>
               <?php if($rs['status'] == 0 AND $rs['keterangan'] == "") { ?>
-              <button title="Hapus" onclick="deleteData('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+              <button title="Hapus" onclick="deleteData('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i></button> 
               <?php } ?>
               <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16 || $rs['id_m_layanan'] == 30 || $rs['id_m_layanan'] == 31) { ?>
                
@@ -300,8 +309,11 @@
                                  if(id_layanan == 27){
                                 loadListRiwayatSuratMasukPt()
                                }
-                                  if(id_layanan == 25 || id_layanan == 26){
+                                if(id_layanan == 25 || id_layanan == 26){
                                 loadListRiwayatTugasBelajar()
+                               }
+                                if(id_layanan == 34){
+                                loadListRiwayatCutiBesar()
                                }
                                
                                
@@ -344,6 +356,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || i
   $link = "<?=base_url();?>dokumen_layanan/mutasi_pindah_masuk/"+filename+"?v="+number;
 } else if(id_layanan == 32){
   $link = "<?=base_url();?>dokumen_layanan/peninjauan_masa_kerja/"+filename+"?v="+number;
+} else if(id_layanan == 34){
+  $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)
@@ -367,7 +381,9 @@ if(id_layanan == 12 || id_layanan == 13){
   $link = "<?=base_url();?>dokumen_layanan/tugasbelajarmandiri/"+filename+"?v="+number;
 } else if(id_layanan == 28){
   $link = "<?=base_url();?>dokumen_layanan/mutasi_pindah_masuk/"+filename+"?v="+number;
-}   else {
+} else if(id_layanan == 34){
+  $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
+}  else {
   $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
 }
 
@@ -429,6 +445,12 @@ function ajukanKembali(id){
                                if(id_layanan == 28){
                                 loadListRiwayatMutasiPidahMasuk()
                                }
+                                if(id_layanan == 34){
+                                  alert()
+                                loadListRiwayatCutiBesar()
+                               }
+
+                               
                            }, error: function(e){
                                errortoast('Terjadi Kesalahan')
                            }

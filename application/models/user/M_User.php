@@ -2498,7 +2498,7 @@
             // dd($data);
             $result = null;
             $flag_use_masa_kerja = 0;
-            $this->db->select('m.nama_kelurahan,n.nama_kecamatan,o.nama_kabupaten_kota,a.tptlahir,nm_sk,k.nm_tktpendidikan,a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
+            $this->db->select('a.npwp,m.nama_kelurahan,n.nama_kecamatan,o.nama_kabupaten_kota,a.tptlahir,nm_sk,k.nm_tktpendidikan,a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai, k.jenis as jenis_plt_plh, k.id_jabatan as id_jabatan_plt_plh, a.jabatan,
                     h.nama_status_pegawai, f.nm_statuspeg')
                     ->from('db_pegawai.pegawai a')
@@ -2520,7 +2520,11 @@
                     ->where('i.flag_active', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030])
                     ->group_by('a.nipbaru_ws')
-                    ->order_by('c.eselon, a.nama');
+                    // ->order_by('c.eselon, a.nama');
+                    // ->order_by('c.eselon, a.nama')
+                    ->order_by('b.nm_unitkerja');
+
+
             if($data['nama_pegawai'] != "" || $data['nama_pegawai'] != null){
                 $this->db->like('a.nama', $data['nama_pegawai']);
             }
@@ -4000,5 +4004,405 @@
             }
         }
 
+        public function changeNotifStatus($id){
+            $this->db->where('id', $id)
+                    ->update('t_notifikasi', [
+                        'flag_read' => 1,
+                        'read_date' => date('Y-m-d H:i:s'),
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        public function loadAllNotifikasi(){
+            $this->db->where('id_m_user', $this->general_library->getId())
+                    ->update('t_notifikasi', [
+                        'flag_read' => 1,
+                        'read_date' => date('Y-m-d H:i:s'),
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            return $this->db->select('*')
+                            ->from('t_notifikasi')
+                            ->where('id_m_user', $this->general_library->getId())
+                            ->where('flag_active', 1)
+                            ->order_by('created_date', 'desc')
+                            ->get()->result_array();
+        }
+
+        public function cronJafungCpns(){
+            $listCpns = $this->db->select('*')
+                            ->from('db_pegawai.pegawai')
+                            ->where('statuspeg', 1)
+                            ->where('id_jafung_cpns IS NULL')
+                            ->where('id_m_status_pegawai', 1)
+                            ->limit(10)
+                            ->get()->result_array();
+
+            $jabatan = null;
+            $listJabatan = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->where('jenis_jabatan', "JFT")
+                                ->get()->result_array();
+
+            foreach($listJabatan as $lj){
+                $jabatan[$lj['id_jabatan_siasn']] = $lj;
+            }
+
+            if($listCpns){
+                foreach($listCpns as $lc){
+                    $res = $this->siasnlib->getDataUtamaPnsByNip($lc['nipbaru_ws']);
+                    if($res && $res['code'] == 0){
+                        $data = json_decode($res['data'], true);
+                        if($data['data']){
+                            $update = null;
+                            if(!$lc['id_pns_siasn']){
+                                $update['id_pns_siasn'] = $data['data']['id'];
+                            }
+                            if($data['data']['jenisJabatan'] == "FUNGSIONAL_TERTENTU"){
+                                $idJabPeg = null;
+                                if(isset($jabatan[$data['data']['jabatanFungsionalId']])){ // jika ada, ambil id_jabatanpeg
+                                    $idJabPeg = $jabatan[$data['data']['jabatanFungsionalId']]['id_jabatanpeg'];
+                                }
+                                // else { // jika tidak ada, tambahkan di db_pegawai.jabatan
+                                //     $idJabPeg = $data['data']['jabatanFungsionalId'];
+                                //     $this->db->insert('db_pegawai.jabatan', [
+                                //         'id_jabatanpeg' => $idJabPeg,
+                                //         'id_unitkerja' => "9999000",
+                                //         'id_jabatan_siasn' => $idJabPeg,
+                                //         'nama_jabatan' => $data['data']['jabatanNama'],
+                                //         'nama_jabatan_pendek' => $data['data']['jabatanNama'],
+                                //         'eselon' => "Non Eselon",
+                                //         'jenis_jabatan' => "JFT",
+                                //     ]);
+                                // }
+
+                                if($idJabPeg){
+                                    $update['id_jafung_cpns'] = $idJabPeg;
+                                } else {
+                                    $update['id_jafung_cpns'] = 0;
+                                }
+                            }
+
+                            if($update){
+                                $this->db->where('nipbaru_ws', $lc['nipbaru_ws'])
+                                    ->update('db_pegawai.pegawai', $update);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public function startKonsultasi(){
+            $rs = [
+                'code' => 0,
+                'message' => null
+            ];
+            $exists = $this->db->select('*')
+                        ->from('t_live_chat')
+                        ->where('flag_active', 1)
+                        ->where('id_m_user', $this->general_library->getId())
+                        ->where('flag_done', 0)
+                        ->get()->row_array();
+            if($exists){
+                $rs['code'] = 1;
+                $rs['message'] = "Tidak dapat memulai Sesi Konsultasi baru jika masih ada Sesi Konsultasi yang sedang berlangsung.";
+            } else {
+                $this->db->insert('t_live_chat', [
+                    'id_m_user' => $this->general_library->getId(),
+                    'chat_id' => generateRandomString(7)
+                ]);
+                $rs['id'] = $this->db->insert_id();
+            }
+
+            return $rs;
+        }
+
+        public function loadRiwayatKonsultasi(){
+            $listChat = null;
+            
+            $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
+                        d.nipbaru_ws')
+                        ->from('t_live_chat a')
+                        ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                        ->join('m_user c', 'a.id_m_user = c.id')
+                        ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                        ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                        ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                        // ->where('a.id_m_user', $this->general_library->getId())
+                        ->where('a.flag_active', 1)
+                        ->where('c.flag_active', 1)
+                        ->order_by('a.created_date', 'desc')
+                        ->group_by('a.id');
+                        
+            if(!$this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+                $this->db->where('a.id_m_user', $this->general_library->getId());
+            }
+
+            $listChat = $this->db->get()->result_array();
+
+            return $listChat;
+        }       
+
+        public function reloadChatContainer($id){
+            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws')
+                            ->from('t_live_chat a')
+                            ->join('m_user c', 'a.id_m_user = c.id')
+                            ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                            ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+
+            $detail = $this->db->select('*')
+                            ->from('t_live_chat_detail')
+                            ->where('flag_active', 1)
+                            ->where('id_t_live_chat', $id)
+                            ->order_by('created_date', 'asc')
+                            ->get()->result_array();
+
+            return [
+                'chat' => $chat,
+                'detail' => $detail
+            ];
+        }
+
+        public function openKonsultasiDetail($id){
+            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws')
+                            ->from('t_live_chat a')
+                            ->join('m_user c', 'a.id_m_user = c.id')
+                            ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                            ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+
+            if($chat){
+                if(!$this->general_library->isHakAkses('admin_live_chat_konsultasi') && $chat['flag_read_pegawai'] == 0){
+                    // jika pegawai yang buka chat, ubah flag_read_pegawai jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
+                    $this->db->where('id', $chat['id'])
+                        ->update('t_live_chat', [
+                            'flag_read_pegawai' => 1,
+                        ]);
+
+                    $this->db->where('id_t_live_chat', $chat['id'])
+                            ->where('read_date', null)
+                            ->where('id_m_user_sender !=', $this->general_library->getId())
+                            ->update('t_live_chat_detail',[
+                                'read_date' => date('Y-m-d H:i:s'),
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+
+                } else if($this->general_library->isHakAkses('admin_live_chat_konsultasi') && $chat['flag_read_admin'] == 0){
+                    // jika admin yang buka chat, ubah flag_read_admin jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
+                    $this->db->where('id', $chat['id'])
+                        ->update('t_live_chat', [
+                            'flag_read_admin' => 1,
+                        ]);
+
+                    $this->db->where('id_t_live_chat', $chat['id'])
+                            ->where('read_date', null)
+                            ->where('id_m_user_sender', $chat['id_m_user'])
+                            ->update('t_live_chat_detail',[
+                                'read_date' => date('Y-m-d H:i:s'),
+                                'updated_by' => $this->general_library->getId(),
+                                'admin_read_by' => $this->general_library->getId()
+                            ]);
+                }
+            }
+
+            return [
+                'chat' => $chat,
+            ];
+        }
+
+        public function sendMessageKonsultasi($data){
+            $rs = [
+                'code' => 0,
+                'message' => null
+            ];
+
+            $this->db->trans_begin();
+            
+            $data['id_t_live_chat'] = $data['id'];
+            unset($data['id']);
+            
+            $updateChat = null;
+            if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+                $data['is_sender_admin'] = 1;
+                $updateChat['flag_read_pegawai'] = 0;
+            } else {
+                $updateChat['flag_read_admin'] = 0;
+            }
+
+            $this->db->insert('t_live_chat_detail', $data);
+            $last_id = $this->db->insert_id();
+            $updateChat['last_id_t_live_chat_detail'] = $last_id;
+            
+            $this->db->where('id', $data['id_t_live_chat'])
+                    ->update('t_live_chat', $updateChat);
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $rs;
+        }
+
+        public function endKonsultasi($id){
+            $rs = [
+                'code' => 0,
+                'message' => null
+            ];
+
+            $this->db->trans_begin();
+            
+            $this->db->where('id', $id)
+                    ->update('t_live_chat', [
+                        'flag_done' => 1,
+                        'done_date' => date('Y-m-d H:i:s'),
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $rs;
+        }
+
+        public function submitRatingKonsultasi($id){
+            $rs = [
+                'code' => 0,
+                'message' => null
+            ];
+
+            $this->db->trans_begin();
+
+            $data = $this->input->post();
+            $data['flag_rating'] = 1;
+            $data['date_rating'] = date('Y-m-d H:i:s');
+            $data['flag_done'] = 1;
+            $data['done_date'] = date('Y-m-d H:i:s');
+            $data['updated_by'] = $this->general_library->getId();
+
+            $this->db->where('id', $id)
+                    ->update('t_live_chat', $data);
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $rs;
+        }
+
+        public function getOperatorKonsultasi($param = ""){
+            $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+                        d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
+                        a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk, e.id as id_m_user,
+                        a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                ->join('m_user e', 'a.nipbaru_ws = e.username')
+                ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+                ->where('a.skpd', ID_UNITKERJA_BKPSDM)
+                ->where('id_m_status_pegawai', 1)
+                ->where('e.flag_active', 1)
+                ->order_by('c.eselon ASC')
+                ->order_by('f.urutan ASC')
+                ->order_by('c.jenis_jabatan ASC')
+                ->order_by('d.urutan DESC')
+                ->order_by('a.tmtcpns');
+
+            if($param != ""){
+                $this->db->like('a.nama', $param);
+            }
+
+            return $this->db->get()->result_array();
+        }
+        
+        public function cronHashFileBangkom(){
+            $data = $this->db->select('*')
+                            ->from('db_pegawai.pegdiklat')
+                            ->where('status !=', 3)
+                            ->where('hash_file IS NULL')
+                            ->where('flag_active', 1)
+                            ->where('gambarsk IS NOT NULL')
+                            ->where('gambarsk !=', "")
+                            // ->where('id_pegawai', 'PEG0000000ei447')
+                            ->limit(1000)
+                            ->order_by('created_date', 'desc')
+                            ->get()->result_array();
+
+            if($data){
+                foreach($data as $d){
+                    $urlFile = 'arsipdiklat/'.$d['gambarsk'];
+                    $md = null;
+                    if(file_exists($urlFile)){
+                        $md = md5_file($urlFile);
+                    } else {
+                        $md = 'file is not exists, please upload file again.';
+                    }
+                    $this->db->where('id', $d['id'])
+                            ->update('db_pegawai.pegdiklat', [
+                                'hash_file' => $md
+                            ]);
+                }
+            }
+        }
+
+        public function inputSertiBkpsdmBacirita(){
+            $noSttpp = "800.1.13/B.04/BKPSDM/238/2026";
+            $data = $this->db->select('b.id_peg, b.nipbaru_ws, c.id as id_pegdiklat')
+                            ->from('t_temp_bkpsdm_bacirita a')
+                            ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                            ->join("db_pegawai.pegdiklat c", "c.id_pegawai = b.id_peg AND c.flag_active = 1 AND c.nosttpp = '".$noSttpp."'", "left")
+                            ->where('b.id_m_status_pegawai', 1)
+                            ->where('a.flag_active', 1)
+
+                            // ->where('b.nipbaru_ws', '199502182020121013')
+                            ->get()->result_array();
+            // dd($data);
+            if($data){
+                foreach($data as $d){
+                    if(!$d['id_pegdiklat']){
+                        $this->db->insert('db_pegawai.pegdiklat', [
+                            'id_pegawai' => $d['id_peg'],
+                            'jenisdiklat' => 50,
+                            'nm_diklat' => 'AKSELERASI MANAJEMEN TALENTA DI LINGKUNGAN PEMERINTAH KOTA MANADO',
+                            'tptdiklat' => 'Zoom & Youtube',
+                            'penyelenggara' => 'BKPSDM Kota Manado',
+                            'angkatan' => '-',
+                            'jam' => 2,
+                            'tglmulai' => '2026-02-24',
+                            'tglselesai' => '2026-02-24',
+                            'nosttpp' => $noSttpp,
+                            'tglsttpp' => '2026-02-24',
+                            'status' => 2,
+                            'gambarsk' => $d['nipbaru_ws']."_Serti_BKPSDMBacirita_Feb_26_sign.pdf",
+                        ]);
+                        echo "inserting for ".$d['nipbaru_ws']."\n";
+                    } else {
+                        echo "skipping cause exist ".$d['nipbaru_ws']."\n";
+                    }
+                }
+            }
+        }
 	}
 ?>

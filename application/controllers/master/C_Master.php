@@ -33,6 +33,13 @@ class C_Master extends CI_Controller
         $this->load->view('master/V_MasterSkpdPegawaiItem', $data);
     }
 
+      public function loadSkpdDetailPegawaiMenu(){
+        $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
+        // $this->session->set_userdata('list_pegawai_detail_skpd', null);
+        render('master/V_MasterSkpdPegawaiItem', '', '', $data);
+
+    }
+
     public function refactorIdJabatanToMasterBidang(){
         $this->master->refactorIdJabatanToMasterBidang();
     }
@@ -41,6 +48,17 @@ class C_Master extends CI_Controller
         $data['result'] = $this->master->loadStrukturOrganisasiSkpd($id_unitkerja);
         // dd(json_encode($data['result']));
         $this->load->view('master/V_MasterSkpdStrukturOrganisasi', $data);
+        // render('master/V_MasterSkpdStrukturOrganisasi', '', '', $data);
+
+    }
+
+      public function openStrukturOrganisasiSkpdMenu($id_unitkerja){
+        $data['result'] = $this->master->loadStrukturOrganisasiSkpd($id_unitkerja);
+        // dd($data);
+        // dd(json_encode($data['result']));
+        // $this->load->view('master/V_MasterSkpdStrukturOrganisasi', $data);
+        render('master/V_MasterSkpdStrukturOrganisasi', '', '', $data);
+
     }
 
     public function searchPegawaiSkpdByFilter(){
@@ -51,6 +69,25 @@ class C_Master extends CI_Controller
     public function openListPegawaiDetailSkpd(){
         $data['result'] = $this->session->userdata('list_pegawai_detail_skpd');
         $this->load->view('master/V_MasterSkpdDetailPegawai', $data);
+        
+    }
+
+     public function openListPegawaiDetailSkpdMenu(){
+        $data['unitkerja'] = $this->master->getAllSkpd();
+        $data['result'] = $this->master->getDetailMasterSkpd($this->general_library->getUnitKerjaPegawai());
+        // dd($data['result']);
+        // $this->load->view('master/V_skpdListJft', $data);
+        render('master/V_skpdListJft', '', '', $data);
+    }
+
+     public function openListPegawaiDetailSkpdMenuItem(){
+        if($this->input->post('id_unitkerja') == null){
+        $data['result'] = $this->master->listJftItem($this->general_library->getUnitKerjaPegawai());
+        } else {
+        $data['result'] = $this->master->listJftItem($this->input->post('id_unitkerja'));
+        }
+        $this->load->view('master/V_skpdListJftItem', $data);
+        
     }
 
     public function loadUnitKerjaByIdUnitKerjaMaster($ukmaster){
@@ -657,5 +694,8 @@ class C_Master extends CI_Controller
     public function deleteHardcodeNominatif($id){
         echo json_encode($this->master->deleteHardcodeNominatif($id));
     }
+
+ 
+
 
 }

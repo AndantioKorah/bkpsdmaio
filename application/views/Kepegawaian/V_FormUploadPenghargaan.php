@@ -113,10 +113,10 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <label>Penghargaan</label>
     <select onchange="myFunction()" class="form-control select2"  type="text" id="pegpenghargaan" name="pegpenghargaan" autocomplete="off"  required>
     <option selected disabled value="">Pilih Item</option>
-    <option value="1">Satyalancana Karya Satya 10 tahun</option>
-    <option value="2">Satyalancana Karya Satya 20 tahun</option>           
-    <option value="3">Satyalancana Karya Satya 30 tahun</option>           
-    <option value="4">Penghargaan Lainnya</option>         
+    <option value="1">Penghargaan di lingkup Internasional</option>
+    <option value="2">Penghargaan di lingkup Nasional</option>           
+    <option value="3">Penghargaan di lingkup lintas Instansi </option>           
+    <option value="4">Penghargaan di lingkup Instansi</option>         
     </select>
   </div>
 
@@ -126,12 +126,12 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     if(val == 4){
     $('#nama_peg').show('fast')
     } else {
-      $('#nama_peg').hide('fast')
+      // $('#nama_peg').hide('fast')
     }
     }
   </script>
   
-  <div class="form-group" style="display:none" id="nama_peg">
+  <div class="form-group" style="display:nonex" id="nama_peg">
     <label>Nama Penghargaan</label>
     <input class="form-control customInput" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan"  />
   </div>
@@ -152,7 +152,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <input  class="form-control yearpicker" autocomplete="off"   id="tahun_penghargaan" name="tahun_penghargaan" required/>
   </div>
 
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label>Asal Perolehan</label>
     <select class="form-control select2" data-dropdown-parent="#modalPenghargaan" data-dropdown-css-class="select2-navy" name="pemberi" id="pemberi" required>
                     <option value="" disabled selected>Pilih Item</option>
@@ -160,7 +160,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
                         <option value="<?=$r['id']?>"><?=$r['nm_pemberipenghargaan']?></option>
                     <?php } } ?>
     </select>
-  </div>
+  </div> -->
 
 
   <div class="form-group">

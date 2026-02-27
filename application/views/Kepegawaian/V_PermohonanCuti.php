@@ -95,7 +95,7 @@
               <input class="lbl_jumlah_hari_cuti form-control" name="lama_cuti" readonly value="1 Hari" />
             </div>
             <div class="col-lg-12">
-              <span class="sp_catatan">*catatan: Jika cuti hanya 1 hari gunakan Tanggal Mulai dan Tanggal Akhir yang sama</span>
+              <span id="lbl_catatan_satu_hari" class="sp_catatan">*catatan: Jika cuti hanya 1 hari gunakan Tanggal Mulai dan Tanggal Akhir yang sama</span>
             </div>
           </div>
           <div class="row mt-2" id="div_cuti_option">
@@ -194,13 +194,35 @@
     })
   }
 
+  function countTanggalAkhirCutiBersalin(){
+    if($('#id_cuti').val() == "30"){
+      tglMulai = $('#tanggal_mulai').val()
+      tglAkhir = new Date(tglMulai).setMonth(new Date().getMonth() + 3)
+      tglAkhir = new Date(tglAkhir)
+
+      offset = tglAkhir.getTimezoneOffset()
+      tglAkhir = new Date(tglAkhir.getTime() - (offset*60*1000))
+      
+      $('#tanggal_akhir').val(tglAkhir.toISOString().split('T')[0])
+
+      countJumlahHariCuti()
+
+      $('#lbl_catatan_satu_hari').hide()
+    } else {
+      $('#lbl_catatan_satu_hari').show()
+    }
+  }
+
   $('#id_cuti').on('change', function(){
+    if($(this).val() == "30"){
+      // $('#tanggal_akhir').attr('disabled', true)
+      countTanggalAkhirCutiBersalin()
+    } else {
+      // $('#tanggal_akhir').attr('disabled', false)
+      $('#tanggal_akhir').val($('#tanggal_mulai').val())
+    }
+
     countJumlahHariCuti()
-    // if($(this).val() == "20" || $(this).val() == "30" || $(this).val() == "40"){
-    //   $('#div_surat_pendukung').show()
-    // } else {
-    //   $('#div_surat_pendukung').hide()
-    // }
 
     if($(this).val() == "00"){
       $('#lbl_keterangan_surat_pendukung').show()
@@ -216,6 +238,7 @@
   })
 
   $('#tanggal_mulai').on('change', function(){
+    countTanggalAkhirCutiBersalin()
     countJumlahHariCuti()
   })
 

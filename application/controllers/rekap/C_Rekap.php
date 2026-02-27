@@ -293,7 +293,16 @@ class C_Rekap extends CI_Controller
         $data['data_format_excel'] = $this->rekap->getDataLockTpp($this->input->post());
         $param_lock_tpp = ($this->general->getOne('m_parameter', 'parameter_name', 'PARAM_LOCK_TPP'));
         $data['param_lock_tpp'] = json_decode($param_lock_tpp['parameter_value'], true);
+        if($this->general_library->isProgrammer()){
+            // dd($data);
+        }
         $this->load->view('rekap/V_RekapTppResult', $data);
+    }
+
+    public function openListBangkomTpp(){
+        $data['result'] = $this->input->post('list_pegawai');
+        
+        // $data['result'] = $this->rekap->getListBangkomTpp($data['list_pegawai']);
     }
 
     public function downloadBerkasTpp($id_m_tpp_tambahan = 0, $flag_excel = 0){
@@ -558,7 +567,7 @@ class C_Rekap extends CI_Controller
                 $data = null;
                 $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null, 1);
                 $data['flag_print'] = 0;
-                if($data['result']){
+                if($data['result'] && !isset($data['result']['code']) && $data['result']['code'] != 1){
                     $data['skpd'] = $data['result']['skpd'];
                     $data['jam_kerja'] = $data['result']['jam_kerja'];
                     $data['jam_kerja_event'] = $data['result']['jam_kerja_event'];

@@ -30,7 +30,7 @@
                             <?php
                                 } else {
                             ?>
-                                <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
+                                <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger btn_download_pdf_tpp" style="display: none;">
                                     <i class="fa fa-download"></i> Download as PDF
                                 </button>
                             <?php } ?>
@@ -96,16 +96,16 @@
                             <select class="form-control select2-navy" style="width: 100%"
                                 id="jenis_file" data-dropdown-css-class="select2-navy" name="jenis_file">
                                 <option value="absen">Rekap Absensi</option> 
-                                <option selected value="kehadiran">Rekap Kehadiran</option> <!-- belum  -->
+                                <!-- <option selected value="kehadiran">Rekap Kehadiran</option>
                                 <option value="penilaian_disiplin_kerja">Rekap Penilaian Disiplin Kerja</option>
                                 <option value="produktivitas_kerja">Rekap Produktivitas Kerja</option>
-                                <option value="daftar_penilaian_tpp">Rekap Penilaian TPP</option> <!-- belum  -->
+                                <option value="daftar_penilaian_tpp">Rekap Penilaian TPP</option>
                                 <option value="daftar_perhitungan_tpp">Daftar Perhitungan TPP</option>
                                 <option value="daftar_permintaan">Daftar Permintaan</option>
                                 <option value="daftar_permintaan_bkad">Daftar Permintaan (BKAD)</option>
                                 <option value="daftar_pembayaran">Daftar Pembayaran</option>
                                 <option value="surat_pengantar">Surat Pengantar</option>
-                                <option value="salinan_surat_pengantar">Salinan Surat Pengantar</option>
+                                <option value="salinan_surat_pengantar">Salinan Surat Pengantar</option> -->
                             </select>    
                         </td>
                     </tr>
@@ -145,10 +145,26 @@
             // })
 
             function loadViewByJenisFile(){
+                // $('#result_rekap_div').html('')
+                // $('#result_rekap_div').append(divLoaderNavy)
+                // $('#result_rekap_div').load('<?=base_url("rekap/C_Rekap/loadViewByJenisFile/")?>'+$('#jenis_file').val(), function(){
+                //     $('#loader').hide()
+                // })
                 $('#result_rekap_div').html('')
                 $('#result_rekap_div').append(divLoaderNavy)
-                $('#result_rekap_div').load('<?=base_url("rekap/C_Rekap/loadViewByJenisFile/")?>'+$('#jenis_file').val(), function(){
-                    $('#loader').hide()
+                $.ajax({
+                    url: '<?=base_url("rekap/C_Rekap/loadViewByJenisFile/")?>'+$('#jenis_file').val(),
+                    method: 'post',
+                    data: $(this).serialize(),
+                    success: function(data){
+                        $('#result_rekap_div').html('')
+                        $('#result_rekap_div').append(data)
+                        // $('#result_rekap_div').load('<?=base_url("rekap/C_Rekap/loadViewByJenisFile/")?>'+$('#jenis_file').val(), function(){
+                        //     $('#loader').hide()
+                        // })
+                    }, error: function(e){
+                        errortoast('Terjadi Kesalahan')
+                    }
                 })
             }
         </script>

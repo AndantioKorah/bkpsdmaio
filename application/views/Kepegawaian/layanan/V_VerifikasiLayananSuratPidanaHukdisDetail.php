@@ -480,7 +480,7 @@
           <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
           
           </div> 
-          <button id="btn_dwnload" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
+          <button id="btn_dwnload" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download x</button>
         </form>
          <!-- <form method="post" id="form_usul_ds" enctype="multipart/form-data"  >
            <button id="btn_usul_ds"  class="btn btn-sm btn-info float-right mr-2 mt-2"><i class="fa fa-file-pdf"></i> Usul DS</button>

@@ -640,6 +640,24 @@ class C_User extends CI_Controller
         echo json_encode($result);
     }
 
+    public function changeNotifStatus($id){
+        $this->user->changeNotifStatus($id);
+    }
+
+    public function notifikasiPegawai(){
+        render('user/V_NotifikasiPegawai', '', '', null);
+    }
+
+    public function loadAllNotifikasi(){
+        $data['result'] = $this->user->loadAllNotifikasi();
+        $this->load->view('user/V_NotifikasiPegawaiList', $data);
+    }
+
+    public function loadDetailNotif($id){
+        $data['result'] = $this->general->getOne('t_notifikasi', 'id', $id, 1);
+        $this->load->view('user/V_NotifikasiPegawaiDetail', $data);
+    }
+
     public function tess()
     {
         $x= 1;
@@ -658,4 +676,61 @@ class C_User extends CI_Controller
 		// dd($this->input->post('gambar'));
         
     }
+
+    public function loadRiwayatKonsultasi(){
+        $data['result'] = $this->user->loadRiwayatKonsultasi();
+        $this->load->view('user/V_LiveChatRiwayatKonsultasi', $data);
+    }
+
+    public function startKonsultasi(){
+        echo json_encode($this->user->startKonsultasi());
+    }
+
+    public function reloadChatContainer($id){
+        $data['result'] = $this->user->reloadChatContainer($id);
+        $this->load->view('user/V_LiveChatContainer', $data);
+    }
+
+    public function openKonsultasiDetail($id){
+        $data['result'] = $this->user->openKonsultasiDetail($id);
+        $this->load->view('user/V_LiveChatKonsultasi', $data);
+    }
+
+    public function sendMessageKonsultasi(){
+        echo json_encode($this->user->sendMessageKonsultasi($this->input->post()));
+    }
+
+    public function endKonsultasi($id){
+        echo json_encode($this->user->endKonsultasi($id));
+    }
+
+    public function ratingKonsultasi($id){
+        $data['result'] = $this->general->getOne('t_live_chat', 'id', $id);
+        $this->load->view('user/V_LiveChatRatingKonsultasi', $data);
+    }
+
+    public function submitRatingKonsultasi($id){
+        echo json_encode($this->user->submitRatingKonsultasi($id));
+    }
+
+    public function assignOperatorKonsultasi($id){
+        $data['list_operator'] = $this->user->getOperatorKonsultasi();
+        $data['id'] = $id;
+        $this->load->view('user/V_LiveChatAssignOperator', $data);
+    }
+
+    public function searchListOperator(){
+        $data = $this->input->post();
+        if($data['search'] != ""){
+            $data['all_list'] = $this->user->getOperatorKonsultasi($data['search']);
+        } else {
+            $data['all_list'] = json_decode($data['all_list'], true);
+        }
+        $this->load->view('user/V_LiveChatAssignOperatorItem', $data);
+    }
+
+     public function inputSertiBkpsdmBacirita(){
+        echo json_encode($this->user->inputSertiBkpsdmBacirita());
+    }
+
 }

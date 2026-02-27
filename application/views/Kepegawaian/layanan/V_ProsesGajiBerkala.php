@@ -124,7 +124,7 @@
        <button onclick="kirimBerkalaBkad('<?=$result[0]['id'];?>',3)" id="btn_lihat_file" class="btn btn-sm btn-navy-outline ml-1">
        Teruskan ke BKAD <i class="fa fa-arrow-right"></i></button>
        <?php } ?>
-       <?php if($result[0]['status'] == 3){ ?>
+       <?php if($result[0]['status'] == 3 || $result[0]['status'] == 6){ ?>
         <button id="btn_lihat_file" href="#modal_view_file" onclick="openFileKgb('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> File SK Kenaikan Berkala</button>
         <!-- <button onclick="kirimBerkalaBkad('<?=$result[0]['id'];?>',2)" id="btn_lihat_file" class="btn btn-sm btn-outline-danger ml-1">
@@ -793,7 +793,7 @@
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$profil_pegawai['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$profil_pegawai['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="id" name="id" value="<?=$result[0]['id'];?>" readonly>
-          <input type="text" class="form-control" id="tmt_cpns" name="tmt_cpns" value="<?=$profil_pegawai['tmtcpns'];?>" readonly>
+          <input type="hidden" class="form-control" id="tmt_cpns" name="tmt_cpns" value="<?=$profil_pegawai['tmtcpns'];?>" readonly>
 
           
           <label for="exampleInputEmail1">Nama Lengkap</label>

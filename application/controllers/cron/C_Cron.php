@@ -35,16 +35,18 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSendWa(){
-        $this->general->logCron('cronSendWa');
-        $this->general->cronSendWa();
+        $this->cronSyncBangkomPerData();
+        // $this->general->logCron('cronSendWa');
+        // $this->general->cronSendWa();
         // dd('asdd');
         // echo date('d-m-Y H:i:s')." asd \n";
     }
 
     public function cronDsBulkTte(){
-        $this->general->logCron('cronDsBulkTte');
-		// $this->kepegawaian->cronDsBulkTte();
-		$this->layanan->cronBulkDs();
+        // $this->cronCheckDataBangkom();
+
+        // $this->general->logCron('cronDsBulkTte');
+		// $this->layanan->cronBulkDs();
 	}
 
     public function updateSisaCuti($id, $operand){
@@ -61,22 +63,71 @@ class C_Cron extends CI_Controller
         $this->siasn->cronSyncJabatanSiasn();
     }
 
+    public function cronCheckBangkom(){
+        $this->general->cronCheckBangkom();
+        $this->general->logCron('cronCheckBangkom');
+    }
+
+    public function cronCheckDataBangkom($nip = ""){
+        $this->general->cronCheckDataBangkom($nip);
+        $this->general->logCron('cronCheckDataBangkom');
+    }
+
     public function removeLog($batasHari = 30){
         $this->general->removeLog($batasHari);
     }
 
     public function cronCheckVerifCuti(){
-        $this->general->cronCheckVerifCuti();
+        $this->cronCheckBangkom();
+        // $this->general->cronCheckVerifCuti();
+    }
+
+    public function cronJafungCpns(){
+        $this->user->cronJafungCpns();
+        $this->general->logCron('cronJafungCpns');
+    }
+
+    public function cronHashFileBangkom(){
+        $this->user->cronHashFileBangkom();
+        $this->general->logCron('cronHashFileBangkom');
+    }
+
+    public function cronSyncBangkomPerDataDownload(){
+        $this->siasn->cronSyncBangkomPerDataDownload();
+        $this->general->logCron('cronSyncBangkomPerDataDownload');
+    }
+
+    public function cronSyncBangkomPerData(){
+        $this->siasn->cronSyncBangkomPerData();
+        $this->general->logCron('cronSyncBangkomPerData');
     }
 
     public function cronSyncSkpSiasn(){
-        $this->general->logCron('cronSyncSkpSiasn');
-        $this->siasn->cronRiwayatSkpSiasn();
+        $this->cronHashFileBangkom();
+        $this->cronSyncBangkom();
+        // $this->general->logCron('cronSyncSkpSiasn');
+        // $this->siasn->cronRiwayatSkpSiasn();
+    }
+
+    public function cronSyncBangkom(){
+        $this->general->logCron('cronSyncBangkom');
+        $this->siasn->cronSyncBangkom();
+    }
+
+    public function cronSyncBangkomToSiasn(){
+        $this->general->logCron('cronSyncBangkomToSiasn');
+        $this->siasn->cronSyncBangkomToSiasn();
+    }
+
+    public function addDataForSyncBangkom(){
+        $this->siasn->addDataForSyncBangkom();
     }
 
     public function cronUpdateGajiBkad(){
         $this->general->logCron('cronUpdateGajiBkad');
         $this->rekap->cronUpdateGajiBkad();
+
+        $this->cronSyncBangkomToSiasn();
     }
 
     public function cronAsync(){
@@ -124,6 +175,11 @@ class C_Cron extends CI_Controller
 
     public function cekSidak(){
         return $this->general->cekSidak();
+        // return $this->user->cekKenegaraanCustom();
+    }
+
+    public function inputSertiBkpsdmBacirita(){
+        return $this->user->inputSertiBkpsdmBacirita();
         // return $this->user->cekKenegaraanCustom();
     }
 
@@ -235,6 +291,7 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
+        phpinfo();
         $this->user->rekapCutiDesember();
 
         // $this->kepegawaian->cekErrorCuti();

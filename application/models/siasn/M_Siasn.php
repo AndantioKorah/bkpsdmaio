@@ -760,6 +760,406 @@
 
             return $rs;
         }
+
+        public function addDataForSyncBangkom(){
+            $data = $this->db->select('nipbaru_ws as nip')
+                            ->from('db_pegawai.pegawai')
+                            ->where('id_m_status_pegawai', 1)
+                            ->get()->result_array();
+
+            foreach($data as $d){
+                $this->db->insert('t_cron_sync_bangkom_siasn', [
+                    'nip' => $d['nip'],
+                    'temp_count' => 0,
+                ]);
+            }
+        }
+
+        public function cronSyncBangkom(){
+            $list = $this->db->select('a.*, b.id_peg')
+                            ->from('t_cron_sync_bangkom_siasn a')
+                            ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                            ->where('a.flag_active', 1)
+                            ->where('a.temp_count < 3')
+                            ->where('a.flag_done', 0)
+                            // ->where('nip', '199502182020121013')
+                            ->limit(3)
+                            ->get()->result_array();
+
+            if($list){
+                foreach($list as $l){
+                    $saveLog = null;
+                    $rwSerti = $this->siasnlib->getRiwayatKursus($l['nip']);
+                    if($rwSerti['code'] == 0){
+                        $rs = json_decode($rwSerti['data'], true);
+                        if($rs['data']){
+                            // dd($rs['data']);
+                            // set data diklat dari siasn
+                            $siasn = null;
+                            foreach($rs['data'] as $dSiasn){
+                                $siasn[$dSiasn['noSertipikat']] = $dSiasn;
+                                $siasn[$dSiasn['noSertipikat']]['flag_synced'] = 0;
+                            }
+
+                            $mDiklat = null;
+                            $masterDiklat = $this->db->select('*')
+                                                ->from('db_pegawai.diklat')
+                                                ->get()->result_array();
+                            foreach($masterDiklat as $mDik){
+                                $mDiklat[$mDik['id_diklat_siasn']] = $mDik;
+                            }
+
+                            // set data diklat dari siladen
+                            $diklat = null;
+                            $pegdiklat = $this->db->select('a.*, b.id_diklat_siasn')
+                                                ->from('db_pegawai.pegdiklat a')
+                                                ->join('db_pegawai.diklat b', 'a.jenisdiklat = b.id_diklat')
+                                                ->where('a.id_pegawai', $l['id_peg'])
+                                                ->where('a.flag_active', 1)
+                                                ->where('a.status != 3')
+                                                ->get()->result_array();
+                            if($pegdiklat){
+                                foreach($pegdiklat as $dPegdiklat){
+                                    $diklat[$dPegdiklat['nosttpp']] = $dPegdiklat;
+                                }
+                            }
+
+                            $uploadToSiasn = null;
+                            // jika ada data diklat dari siladen, cek yang sama dengan di siasn
+                            if($diklat){
+                                $syncedSiasn = null;
+                                foreach($diklat as $dik){
+                                    if(isset($siasn[$dik['nosttpp']])){
+                                        $syncedSiasn[$dik['nosttp']] = $dik;
+
+                                        $this->db->where('id', $dik['id'])
+                                                ->update('db_pegawai.pegdiklat', [
+                                                    'flag_sync_siasn' => 1,
+                                                    'id_siasn' => $siasn[$dik['nosttpp']]['id']
+                                                ]);
+
+                                        $siasn[$dik['nosttpp']]['flag_synced'] = 1;
+                                        unset($siasn[$dik['nosttpp']]);
+                                    } else {
+                                        // jika tidak ada di siasn, masukkan di sini untuk diupload
+                                        $uploadToSiasn[] = $dik;
+                                    }
+                                }
+                                // jika tidak ada di siasn, masukkan di tabel untuk sync ke SIASN
+                                if($uploadToSiasn){
+                                    $this->db->insert('t_cron_sync_bangkom_to_siasn', [
+                                        'nip' => $l['nip'],
+                                        'data' => json_encode($uploadToSiasn)
+                                    ]);
+                                }
+                            }
+
+                            // semua data dari SIASN yang flag_synced = 0, inputkan ke siladen
+                            foreach($siasn as $sia){
+                                if($sia['flag_synced'] == 0){
+                                    $tanggalMulaiExpl = explode("-", $sia['tanggalKursus']);
+                                    $tanggalAkhirExpl = explode("-", $sia['tanggalSelesaiKursus']);
+                                    $tanggaKursusExpl = explode("-", $sia['tanggalKursus']);
+
+                                    $fileName = null;
+                                    if($sia['path'] && isset($sia['path'][874])){
+                                        $file = $this->siasnlib->downloadDokumen($sia['path'][874]['dok_uri']);
+                                        if($file['code'] == 0){
+                                            $fileName = 'DIKLAT_'.$sia['id'].'_'.date('ymdhis').'.pdf';
+                                            file_put_contents('arsipdiklat/'.$fileName, $file['data']);
+                                        }
+                                    }
+
+                                    if($sia['path'] && isset($sia['path'][881])){
+                                        $file = $this->siasnlib->downloadDokumen($sia['path'][881]['dok_uri']);
+                                        if($file['code'] == 0){
+                                            $fileName = 'DIKLAT_'.$sia['id'].'_'.date('ymdhis').'.pdf';
+                                            file_put_contents('arsipdiklat/'.$fileName, $file['data']);
+                                        }
+                                    }
+
+                                    $this->db->insert('db_pegawai.pegdiklat', [
+                                        'id_pegawai' => $l['id_peg'],
+                                        'jenisdiklat' => isset($mDiklatp[$sia['jenisDiklatId']]) ? $mDiklatp[$sia['jenisDiklatId']]['id_diklat'] : "50", // 50 => seminar
+                                        'nm_diklat' => $sia['namaKursus'],
+                                        'tptdiklat' => 'Tatap Muka dan / atau Online',
+                                        'penyelenggara' => $sia['institusiPenyelenggara'],
+                                        'angkatan' => "",
+                                        'jam' => $sia['jumlahJam'],
+                                        'tglmulai' => $tanggalMulaiExpl[2].'-'.$tanggalMulaiExpl[1].'-'.$tanggalMulaiExpl[0],
+                                        'tglselesai' => $tanggalAkhirExpl[2].'-'.$tanggalAkhirExpl[1].'-'.$tanggalAkhirExpl[0],
+                                        'nosttpp' => $sia['noSertipikat'],
+                                        'tglsttpp' => $tanggaKursusExpl[2].'-'.$tanggaKursusExpl[1].'-'.$tanggaKursusExpl[0],
+                                        'gambarsk' => $fileName ? $fileName : '',
+                                        'status' => 2,
+                                        'flag_siasn' => 1,
+                                        'flag_sync_siasn' => 1,
+                                        'id_siasn' => $sia['id']
+                                    ]);
+                                }
+                            }
+
+                            $this->db->where('nip', $l['nip'])
+                                    ->update('t_cron_sync_bangkom_siasn', [
+                                        'flag_done' => 1,
+                                        'temp_count' => $l['temp_count']++,
+                                        'done_date' => date('Y-m-d H:i:s'),
+                                    ]);
+                        } else {
+                            $saveLog['flag_done'] = 2;
+                            $saveLog['temp_count'] = $l['temp_count']++;
+                            $saveLog['done_date'] = date('Y-m-d H:i:s');
+                        }
+                    } else {
+                        $saveLog['flag_done'] = 2;
+                        $saveLog['temp_count'] = $l['temp_count']++;
+                        $saveLog['done_date'] = date('Y-m-d H:i:s');
+                    }
+                    
+                    $saveLog['last_try_date'] = date('Y-m-d H:i:s');
+                    $saveLog['temp_count'] = $l['temp_count']++;
+                    $saveLog['log'] = json_encode($rwSerti);
+
+                    $this->db->where('nip', $l['nip'])
+                            ->update('t_cron_sync_bangkom_siasn', $saveLog);
+                }
+            }
+        }
+
+        public function cronSyncBangkomToSiasn(){
+            $masterDiklat = $this->db->select('a.*')
+                                    ->from('db_pegawai.diklat a')
+                                    ->get()->result_array();
+            $mDiklat = null;
+            foreach($masterDiklat as $md){
+                $mDiklat[$md['id_diklat']] = $md;
+            }
+
+            $list = $this->db->select('a.*, b.id_pns_siasn')
+                            ->from('t_cron_sync_bangkom_to_siasn a')
+                            ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                            ->where('a.flag_done', 0)
+                            ->where('a.temp_count < 3')
+                            ->where('a.flag_active', 1)
+                            ->limit(3)
+                            ->get()->result_array();
+
+            if($list){
+                foreach($list as $l){
+                    $updateCron['temp_count'] = $l['temp_count']++;
+                    $updateCron['last_try_date'] = date('Y-m-d H:i:s');
+                    $dataDiklat = json_decode($l['data'], true);
+                    if($dataDiklat){
+                        $idPnsSiasn = $l['id_pns_siasn'];
+                        if(!$idPnsSiasn){
+                            $dataPegawaiSiasn = $this->siasnlib->getDataUtamaPnsByNip($l['nip']);
+                            if($dataPegawaiSiasn && $dataPegawaiSiasn['code'] == 0){
+                                $decData = json_decode($dataPegawaiSiasn['data'], true);
+                                $idPnsSiasn = $decData['data']['id'];
+                                $this->db->where('nipbaru_ws', $l['nip'], [
+                                    'id_pns_siasn' => $idPnsSiasn
+                                ]);
+                            } else {
+                                $updateCron['flag_done'] = 2;
+                                $updateCron['done_date'] = date('Y-m-d H:i:s');
+                                $updateCron['log'] = json_encode($dataPegawaiSiasn);
+                            }
+                        }
+
+                        if($idPnsSiasn){ // jika masih kosong, taruh di log
+                            $res = null;
+                            foreach($dataDiklat as $dDik){
+                                if($dDik['jenisdiklat'] != "00"){
+                                    $res = $this->syncBangkomToSiasn($dDik['id'], $mDiklat, $idPnsSiasn, 0);
+                                }
+                            }
+                            $updateCron['log'] = json_encode($res);
+                            $updateCron['flag_done'] = 1;
+                        }
+                    } else {
+                        $updateCron['flag_done'] = 2;
+                        $updateCron['log'] = "data tidak bisa didecode";
+                    }
+
+                    $this->db->where('id', $l['id'])
+                            ->update('t_cron_sync_bangkom_to_siasn', $updateCron);
+                }
+            }
+        }
+
+        public function cronSyncBangkomPerDataDownload(){
+            $data = $this->db->select('a.*')
+                    ->from('db_pegawai.pegdiklat a')
+                    ->where('a.id_pegawai', 'PEG0000000ei447')
+                    ->where('a.flag_active', 1)
+                    ->where('a.status', 2)
+                    ->where('a.id_siasn IS NOT NULL')
+                    ->where('a.gambarsk', "")
+                    // ->where("a.gambarsk == '' OR a.gambarsk IS NULL")
+                    ->limit(10)
+                    ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $ws = $this->siasnlib->getDataBangkom($d['id_siasn']);
+                    dd($ws);
+                }
+            }
+        }
+
+        public function cronSyncBangkomPerData(){
+            $data = $this->db->select('a.*')
+                    ->from('db_pegawai.pegdiklat a')
+                    // ->where('a.id_pegawai', 'PEG0000000ei447')
+                    ->where('a.flag_active', 1)
+                    ->where('a.status', 2)
+                    ->where('id_siasn IS NULL')
+                    ->where('jenisdiklat !=', "00")
+                    ->limit(10)
+                    ->where('temp_count < 3')
+                    ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $this->syncBangkomToSiasn($d['id'], null, null, 1);
+
+                    $this->db->where('id', $d['id'])
+                            ->update('db_pegawai.pegdiklat', [
+                                'temp_count' => $d['temp_count'] += 1
+                            ]);
+                }
+            }
+        }
+
+        public function syncBangkomToSiasn($id, $mDiklat, $idPnsSiasn, $flag_update = 0){
+            $updateDataDiklat = null;
+
+            $data = $this->db->select('a.*, b.id_pns_siasn')
+                        ->from('db_pegawai.pegdiklat a')
+                        ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
+                        ->where('id', $id)
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+
+            if(!$mDiklat){
+                $masterDiklat = $this->db->select('a.*')
+                                    ->from('db_pegawai.diklat a')
+                                    ->get()->result_array();
+                $mDiklat = null;
+                foreach($masterDiklat as $md){
+                    $mDiklat[$md['id_diklat']] = $md;
+                }
+            }
+
+            if($data){
+                $explodeTanggal = explode("-", $data['tglsttpp']);
+                $explodeTanggalSelesai = explode("-", $data['tglselesai']);
+                $tahunSttpl = $explodeTanggal[0];
+                if($tahunSttpl == "" || $tahunSttpl == 0){
+                    $tahunSttpl = $explodeTanggalSelesai[0];
+                }
+                $upload = null;
+                $uploadRwBangkom = null;
+                $idRefDokumen = 881;
+                if($data['jenisdiklat'] == "00"){
+                    $upload = [
+                        // "bobot": 0,
+                        // "id": "string",
+                        "JenisDiklatId" => $mDiklat[$data['jenisdiklat']]['id_diklat_siasn'],
+                        "institusiPenyelenggara" => $data['penyelenggara'],
+                        "jenisKompetensi" => "",
+                        "jumlahJam" => intval($data['jam']),
+                        "latihanStrukturalId" => "",
+                        "nomor" => $data['nosttpp'],
+                        "NomorSertipikat" => $data['nosttpp'],
+                        // "path": [
+                        //     {
+                        //     "dok_id": "string",
+                        //     "dok_nama": "string",
+                        //     "dok_uri": "string",
+                        //     "object": "string",
+                        //     "slug": "string"
+                        //     }
+                        // ],
+                        "pnsOrangId" => $idPnsSiasn ? $idPnsSiasn : $data['id_pns_siasn'],
+                        "Tahun" => intval($explodeTanggal[0]),
+                        "tahun" => intval($explodeTanggal[0]),
+                        "tanggal" => formatDateOnlyForEdit2($data['tglmulai']),
+                        "tanggalSelesai" => formatDateOnlyForEdit2($data['tglselesai'])
+                    ];
+                    // dd($upload);
+                    // $uploadRwBangkom = $this->siasnlib->createBangkomStruktural($upload);
+                } else {
+                    $upload = [
+                        // "id": "string",
+                        // "id_rumpun_jabatan": [
+                        //     {
+                        //     "rumpun_id": "string"
+                        //     }
+                        // ],
+                        "instansiId" => ID_INSTANSI_SIASN,
+                        "institusiPenyelenggara" => $data['penyelenggara'],
+                        "jenisDiklatId" => $mDiklat[$data['jenisdiklat']]['id_diklat_siasn'],
+                        "jenisKursus" => "",
+                        "jenisKursusSertipikat" => $mDiklat[$data['jenisdiklat']]['jenis_kursus_sertipikat_siasn'],
+                        "jumlahJam" => intval($data['jam']),
+                        "lokasiId" => $data['tptdiklat'],
+                        "namaKursus" => $data['nm_diklat'],
+                        "nomorSertipikat" => $data['nosttpp'],
+                        // "path": [
+                        //     {
+                        //     "dok_id": "string",
+                        //     "dok_nama": "string",
+                        //     "dok_uri": "string",
+                        //     "object": "string",
+                        //     "slug": "string"
+                        //     }
+                        // ],
+                        "pnsOrangId" => $idPnsSiasn ? $idPnsSiasn : $data['id_pns_siasn'],
+                        "tahunKursus" => intval($tahunSttpl),
+                        "tanggalKursus" => formatDateOnlyForEdit2($data['tglmulai']),
+                        "tanggalSelesaiKursus" => formatDateOnlyForEdit2($data['tglselesai'])
+                    ];
+                    $uploadRwBangkom = $this->siasnlib->createBangkom($upload);
+                    $idRefDokumen = 881;
+                }
+
+                if($data['id_siasn']){
+                    if($flag_update == 0){ // jika sudah sinkron dan flag_update = 0, langsung return karena request bukan untuk update
+                        return $updateDataDiklat;
+                    }
+                    $uploadRwBangkom['id'] = $data['id_siasn'];
+                }
+
+                if($uploadRwBangkom){
+                    $res = json_decode($uploadRwBangkom['data'], true);
+                    if($res && $res['success'] == true){
+                        $idDiklatSiasn = $res['mapData']['rwKursusId'];
+                        $updateDataDiklat['flag_sync_siasn'] = 1;
+                        $updateDataDiklat['id_siasn'] = $idDiklatSiasn;
+                        $updateDataDiklat['log_sync_siasn'] = json_encode($uploadRwBangkom);
+                        
+                        $url = ('arsipdiklat/'.$data['gambarsk']);
+                        if(file_exists($url)){
+                            $request = [
+                                'id_riwayat' => $idDiklatSiasn,
+                                'id_ref_dokumen' => $idRefDokumen,
+                                'file' => new CURLFile ($url)
+                            ];
+                            // dd($request);
+                            $reqUploadDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
+                        }
+                    }
+                }
+
+                $updateDataDiklat['sync_siasn_try_date'] = date('Y-m-d H:i:s');
+                $updateDataDiklat['log_sync_siasn'] = json_encode($uploadRwBangkom);
+
+                $this->db->where('id', $data['id'])
+                                ->update('db_pegawai.pegdiklat', $updateDataDiklat);
+
+                return $uploadRwBangkom;
+            }
+        }
+
     }
 
 ?>

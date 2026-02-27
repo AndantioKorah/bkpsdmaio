@@ -279,10 +279,10 @@
     </select>
       </div>
 
-      <div class="col-lg-2">
+      <div class="col-lg-2 " <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
         <label for="inputPassword6" class="col-form-label"> Pangkat/ Gol. Ruang </label>
       </div>
-      <div class="col-lg-10">
+      <div class="col-lg-10" <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo ""; else echo "style='display:none;'" ?>>
       <select class="form-control select2" data-dropdown-css-class="" name="edit_pangkat" id="edit_pangkat" required>
                     <option value="" disabled selected>Pilih Pangkat</option>
                     <?php if($pangkat){ foreach($pangkat as $r){ ?>

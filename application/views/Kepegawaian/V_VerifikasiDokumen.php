@@ -27,6 +27,10 @@
                  
                     <option value="<?=$skpd['id_unitkerja']?>"><?=$skpd['nm_unitkerja']?></option>
                 <?php } ?>
+                  <option value="990" >Semua TK</option>
+                  <option value="991" >Semua SD</option>
+                   <option value="992" >Semua SMP</option>
+                   <option value="993" >Semua UPTD Dinas kesehatan</option>
             </select>
           </div>
           <div class="col-lg-6" >

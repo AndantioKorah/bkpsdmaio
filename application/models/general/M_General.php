@@ -503,7 +503,7 @@
                 }
             }
 
-            $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            $this->db->select('a.jabatan,a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
                     d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, c.jenis_jabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
@@ -574,6 +574,11 @@
                                     $bup = 60;
                                 } else 
                                 if(stringStartWith('Guru', $d['nama_jabatan'])){
+                                    $crit = 2;
+                                    $temp = $d;
+                                    $bup = 60;
+                                } 
+                                else if(in_array($d['jabatan'],  ['3010000J085','3010000J086','3010000J088','3010000J089','3010000J090'])){
                                     $crit = 2;
                                     $temp = $d;
                                     $bup = 60;
@@ -2449,22 +2454,22 @@
                                 'keterangan_sistem' => $ds['keterangan']
                             ];
 
-                            $cronWa[] = [
-                                'sendTo' => convertPhoneNumber($ds['handphone']),
-                                'message' => "*[SIDAK]*\n\nSelamat ".greeting()." ".$ds['nama_pegawai'].", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($ds['tanggal']).", Anda dikenakan pelanggaran *SIDAK* dengan keterangan: *".$ds['keterangan']."*",
-                                'flag_prioritas' => 0,
-                                'type' => 'text'
-                            ];
+                            // $cronWa[] = [
+                            //     'sendTo' => convertPhoneNumber($ds['handphone']),
+                            //     'message' => "*[SIDAK]*\n\nSelamat ".greeting()." ".$ds['nama_pegawai'].", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($ds['tanggal']).", Anda dikenakan pelanggaran *SIDAK* dengan keterangan: *".$ds['keterangan']."*",
+                            //     'flag_prioritas' => 0,
+                            //     'type' => 'text'
+                            // ];
                         }
                         if($dokpenSidak){
                             $this->db->insert_batch('t_dokumen_pendukung', $dokpenSidak);
                             echo "done insert: ".count($dokpenSidak)."\n";
                         }
 
-                        if($cronWa){
-                            $this->db->insert_batch('t_cron_wa', $cronWa);
-                            echo "done insert: ".count($cronWa);
-                        }
+                        // if($cronWa){
+                        //     $this->db->insert_batch('t_cron_wa', $cronWa);
+                        //     echo "done insert: ".count($cronWa);
+                        // }
                     }
                 }
             }
@@ -2472,6 +2477,159 @@
                 $this->db->trans_rollback();
             } else {
                 $this->db->trans_commit();
+            }
+        }
+
+        public function getNotifikasiPegawai(){
+            $data = $this->db->select('*')
+                        ->from('t_notifikasi')
+                        ->where('id_m_user', $this->general_library->getId())
+                        ->where('flag_active', 1)
+                        ->order_by('created_date', 'desc')
+                        ->get()->result_array();
+
+            $notif['show'] = null;
+            $notif['read'] = null;
+            $notif['total'] = 0;
+            if($data){
+                $notif['total'] = count($data);
+                foreach($data as $d){
+                    if($d['flag_read'] == 0){
+                        $notif['show'][] = $d;
+                    } else {
+                        $notif['read'][] = $d;
+                    }
+                }
+            }
+
+            return $notif;
+        }
+
+        public function cronCheckDataBangkom($nip = ""){
+            $this->db->select('nipbaru_ws')
+                    ->from('db_pegawai.pegawai')
+                    ->where('id_m_status_pegawai', 1);
+                    // ->where('flag_cek_bangkom', 0);
+
+            if($nip != ""){
+                $this->db->where('nipbaru_ws', $nip);
+            } else {
+                $this->db->where('flag_cek_bangkom', 0)
+                        ->limit(50);
+            }
+            $pegawai = $this->db->get()->result_array();
+
+            if($pegawai){
+                $minDatePengecekan = "2026-02-28";
+                
+                $dateNow = date('Y-m-d');
+                $listDate = getMonthsBetweenDate($minDatePengecekan, $dateNow);
+
+                $dataCekBangkom = $this->db->select('*')
+                                ->from('t_cek_bangkom')
+                                ->where('flag_active', 1)
+                                ->where('flag_exception', 0)
+                                ->order_by('bulan_tahun', 'asc');
+                if($nip != ""){
+                    $this->db->where('nip', $nip);
+                }
+                $dataCekBangkom = $this->db->get()->result_array();
+
+                if($dataCekBangkom){
+                    $dataPerPegawai = null;
+                    $wajibCapaiJumlahJp = 3;
+                    foreach($dataCekBangkom as $dc){
+                        if(!isset($dataPerPegawai[$dc['nip']])){ // jika belum ada maka set data
+                            $dataPerPegawai[$dc['nip']] = $dc;
+                            $dataPerPegawai[$dc['nip']]['utang'] = 0;
+                            $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 1;
+
+                            $dataPerPegawai[$dc['nip']]['utang'] = $dc['jumlah_jp'] - $wajibCapaiJumlahJp;
+                            if($dataPerPegawai[$dc['nip']]['utang'] > 0){
+                                $dataPerPegawai[$dc['nip']]['utang'] = 0;
+                                $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 1;
+                            } else {
+                                $dataPerPegawai[$dc['nip']]['utang'] *= -1;
+                                $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 0;
+                            }
+                        } else { // jika sudah ada maka cek utang
+                            $dataPerPegawai[$dc['nip']]['utang'] += $wajibCapaiJumlahJp;
+                            $perhitunganJp = $dc['jumlah_jp'] - $dataPerPegawai[$dc['nip']]['utang'];
+                            if($perhitunganJp >= 0){
+                                $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 1;
+                                $dataPerPegawai[$dc['nip']]['utang'] = 0;
+                            } else {
+                                $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 0;
+                            }
+                        }
+                    }
+                    
+                    if($dataPerPegawai){
+                        foreach($dataPerPegawai as $dpp){
+                            $this->db->where('nipbaru_ws', $dpp['nip'])
+                                    ->update('db_pegawai.pegawai', [
+                                        'flag_cek_bangkom' => 1,
+                                        'flag_bangkom_terpenuhi' => $dpp['flag_terpenuhi_bangkom']
+                                    ]);
+                        }                        
+                    }                    
+                }
+            } else { // jika semua sudah dicek, reset jadi 0 lagi
+                $this->db->where('id_m_status_pegawai', 1)
+                        ->update('db_pegawai.pegawai', [
+                            'flag_cek_bangkom' => 0
+                        ]);
+            }
+        }
+
+        public function cronCheckBangkom($bulan = 0, $tahun = 0){
+            if($bulan == 0){
+                $bulan = date('m');
+            }
+
+            if($tahun == 0){
+                $tahun = date('Y');
+            }
+            $pegawai = $this->db->select('a.nipbaru_ws, c.id as id_t_cek_bangkom,
+                                sum(b.jam) as total_jp
+                            ')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.pegdiklat b', 'a.id_peg = b.id_pegawai')
+                            ->join('t_cek_bangkom c', 'a.nipbaru_ws = c.nip AND c.flag_active = 1', 'left')
+                            ->where('a.id_m_status_pegawai', 1)
+                            // ->where("a.nipbaru_ws NOT IN (
+                            //     SELECT aa.nip
+                            //     FROM t_cek_bangkom aa
+                            //     WHERE aa.bulan = '".$bulan."'
+                            //     AND aa.tahun = '".$tahun."'
+                            //     AND aa.flag_active = 1
+                            // )")
+                            ->where('b.flag_active', 1)
+                            ->where('b.status', 2)
+                            ->where('MONTH(b.tglsttpp)', $bulan)
+                            ->where('YEAR(b.tglsttpp)', $tahun)
+                            // ->limit(1000)
+                            ->group_by('a.nipbaru_ws')
+                            ->get()->result_array();
+            if($pegawai){
+                foreach($pegawai as $p){
+                    $updateData['jumlah_jp'] = $p['total_jp'];
+                    $updateData['nip'] = $p['nipbaru_ws'];
+                    $updateData['bulan'] = $bulan;
+                    $updateData['tahun'] = $tahun;
+                    $updateData['bulan_tahun'] = $tahun."-".$bulan."-01";
+
+                    $updateData['flag_terpenuhi'] = 0;
+                    if($p['total_jp'] >= 3){
+                        $updateData['flag_terpenuhi'] = 1;
+                    }
+                    if($p['id_t_cek_bangkom']){
+                        $this->db->where('id', $p['id_t_cek_bangkom'])
+                                ->update('t_cek_bangkom', $updateData);
+                    } else {
+                        $this->db->insert('t_cek_bangkom', $updateData);
+                    }
+                }
             }
         }
 	}

@@ -283,7 +283,39 @@ class M_Kepegawaian extends CI_Model
             if($data['unitkerja'] != '0'){
                 if($data['unitkerja'] == '3010000'){
                 $this->db->where_in('c.id_unitkerjamaster', ['8000000','8010000','8020000']);
-                } else {
+                } else if($data['unitkerja'] == 991){
+                    $this->db->where('c.id_unitkerjamaster', '8010000');
+                } else if($data['unitkerja'] == 992){
+                    $this->db->where('c.id_unitkerjamaster', '8020000');
+                } else if($data['unitkerja'] == 990){
+                    $this->db->where('c.id_unitkerjamaster', '8000000');
+                } else if($data['unitkerja'] == 993){
+                    $this->db->where_in('c.id_unitkerjamaster', ['6000000','7005000']);
+                } else if($data['unitkerja'] == 994){
+                    $this->db->where_not_in('c.id_unitkerjamaster', ['6000000','7005000','8010000','8020000','8000000']);
+                } else if($data['unitkerja'] == '5001001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5001000']);
+                } else if($data['unitkerja'] == '5002001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5002000']);
+                } else if($data['unitkerja'] == '5003001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5003000']);
+                } else if($data['unitkerja'] == '5004001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5004000']);
+                } else if($data['unitkerja'] == '5005001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5005000']);
+                } else if($data['unitkerja'] == '5006001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5006000']);
+                } else if($data['unitkerja'] == '5007001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5007000']);
+                }else if($data['unitkerja'] == '5008001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5008000']);
+                } else if($data['unitkerja'] == '5009001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5009000']);
+                } else if($data['unitkerja'] == '5010001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5010001']);
+                } else if($data['unitkerja'] == '5011001'){
+                    $this->db->where_in('c.id_unitkerjamaster', ['5011001']);
+                }  else {
                 $this->db->where('b.skpd', $data['unitkerja']);
                 }
             }
@@ -563,7 +595,9 @@ class M_Kepegawaian extends CI_Model
 
 
         function getDiklat($nip,$kode){
-             $this->db->select('b.id_peg,e.jenjang_diklat,c.created_date,c.keterangan,c.id,c.status,d.nm_jdiklat,c.nm_diklat,c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,c.nosttpp,c.gambarsk,c.keterangan')
+             $this->db->select('b.id_peg,e.jenjang_diklat,c.created_date,c.keterangan,c.id,c.status,d.nm_jdiklat,c.nm_diklat,
+                            c.tptdiklat,c.penyelenggara,c.angkatan,c.jam,c.tglmulai,c.tglselesai,c.tglsttpp,
+                            c.nosttpp,c.gambarsk,c.keterangan, c.flag_siasn, c.flag_sync_siasn')
                             ->from('m_user a')
                             ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                             ->join('db_pegawai.pegdiklat c', 'b.id_peg = c.id_pegawai')
@@ -1244,7 +1278,7 @@ class M_Kepegawaian extends CI_Model
             
             $dataInsert['id_pegawai']      = $id_peg;
             $dataInsert['id_m_satyalencana']      = $this->input->post('pegpenghargaan');
-          
+            $dataInsert['lingkup_penghargaan'] =  $this->input->post('pegpenghargaan');
             $dataInsert['nosk']      = $this->input->post('nosk');
             $dataInsert['tglsk']      = $this->input->post('tglsk');
             $dataInsert['tahun_penghargaan']      = $this->input->post('tahun_penghargaan');
@@ -1416,6 +1450,19 @@ class M_Kepegawaian extends CI_Model
         //         return $res;
 		// }
 
+        if($this->input->post('id_dokumen') == 20){
+        $cekNomorSttp = $this->db->select('*')
+                                        ->from('db_pegawai.pegdiklat a')
+                                        ->where('a.flag_active', 1)
+                                        ->where('a.status', 2)
+                                        ->where('id_pegawai', $this->input->post('id_pegawai'))
+                                        ->where('nosttpp', $this->input->post('diklat_no_sttpp'))
+                                        ->get()->result_array();
+        if($cekNomorSttp){
+         $res = array('msg' => 'Nomor Sertifikat sudah pernah diinput', 'success' => false);
+         return $res;
+        } 
+        }
        
 
         $target_dir = null;
@@ -2932,6 +2979,16 @@ function getNamaJabatan(){
     return $this->db->get()->result_array(); 
 }
 
+function getNamaJabatanFungsional(){
+    $this->db->select('*')
+    ->where_not_in('id_jabatanpeg', ['0000005J001','0000005J002'])
+    ->where('flag_active', 1)
+     ->where('jenis_jabatan', "JFT")
+    ->group_by('a.nama_jabatan')
+    ->from('db_pegawai.jabatan a');
+    return $this->db->get()->result_array(); 
+}
+
 function getJenisJabatan(){
     $this->db->select('*')
     ->where_in('id_jenisjab', ['00','10'])
@@ -3102,7 +3159,6 @@ public function submitVerifikasiDokumen(){
     $res['message'] = 'ok';
     $res['data'] = null;
     $datapost = $this->input->post();
-   
     $this->db->trans_begin();
     $id = $datapost['id'];
     $id_peg = $datapost["id_pegawai"];
@@ -3110,7 +3166,6 @@ public function submitVerifikasiDokumen(){
     $data["keterangan"] = $datapost["keterangan"];
     $data["tanggal_verif"] = date('Y-m-d h:i:s');
     $data["id_m_user_verif"] = $this->general_library->getId();
-
     // if($this->general_library->isProgrammer()){
         // dd(base_url($datapost['file_path']));
         $base64 = convertToBase64(($datapost['file_path']));
@@ -3230,9 +3285,13 @@ public function submitVerifikasiDokumen(){
     if(trim($datapost["jenis_dokumen"]) == "skp"){
         $data["predikat"] = $datapost["edit_predikat"];
     }
-     
+
     $this->db->where('id', $id)
     ->update('db_pegawai.'.$datapost['db_dokumen'], $data);
+
+    if($datapost['jenis_dokumen'] == "diklat") {
+     $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+    }
     
     // if(trim($datapost["jenis_dokumen"]) == "pangkat"){
     //     $this->db->where('id', $id)
@@ -3280,7 +3339,7 @@ public function submitVerifikasiDokumen(){
         $this->updateBerkala($id_peg);
     }
 
-
+  if($datapost['jenis_dokumen'] != "diklat") {
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           
     if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
     $id = 1; 
@@ -3294,6 +3353,8 @@ public function submitVerifikasiDokumen(){
     $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,2,$id);
     $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,1,$id);
     }
+  }
+
 
 
     return $res;
@@ -3316,6 +3377,8 @@ public function batalSubmitVerifikasiDokumen(){
     $this->db->where('id', $id)
     ->update('db_pegawai.'.$datapost['db_dokumen_batal'], $data);
 
+    
+
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();
         $res['code'] = 1;
@@ -3336,6 +3399,19 @@ public function batalSubmitVerifikasiDokumen(){
     if(trim($datapost["jenis_dokumen_batal"]) == "gajiberkala"){
         $this->updateBerkala($id_peg);
     }
+
+    $peg = $this->db->select('b.id as id_m_user, a.*')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('m_user b', 'a.nipbaru_ws = b.username')
+                        ->where('b.flag_active', 1)
+                        ->where('a.id_peg', $datapost['id_pegawai_batal'])
+                        ->get()->row_array();
+
+    if($datapost['jenis_dokumen_batal'] == "diklat") {
+     $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+    }
+
+ 
 
 
     $eselonPeg = $this->general_library->getEselonPegawai($id_peg);           
@@ -5875,6 +5951,9 @@ public function submitEditJabatan(){
             $id_layanan[] = 1;
         }
 
+        if($this->general_library->isHakAkses('admin_pengajuan_cuti')){
+            $id_layanan[] = 34;
+        }
    
         $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')
             ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')
@@ -6835,7 +6914,8 @@ public function submitEditJabatan(){
                             ->where('b.flag_active', 1)
                             ->get()->row_array();
 
-            if(($dataPegawai['statuspeg'] == 3 || $dataPegawai['statuspeg'] == 1) && $data['id_cuti'] == "00"){ // jika cpns atau pppk ambil cuti tahunan
+            // if(($dataPegawai['statuspeg'] == 3 || $dataPegawai['statuspeg'] == 1) && $data['id_cuti'] == "00"){ // jika cpns atau pppk ambil cuti tahunan
+            if(($dataPegawai['statuspeg'] == 1) && $data['id_cuti'] == "00"){ // jika cpns ambil cuti tahunan
                 $diff = countDiffDateLengkap(date('Y-m-d'), $dataPegawai['tmtcpns'], ['tahun']);
                 $expl = explode(" ", trim($diff));
                 if($expl[0] < 1){
@@ -11686,6 +11766,7 @@ public function getFileForKarisKarsu()
 
 public function searchPengajuanLayanan($id_m_layanan){
     $data = $this->input->post();
+   
     $this->db->select('*, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
      (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
             ->from('t_layanan a')
@@ -11731,7 +11812,9 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 32);
             } else if($id_m_layanan == 33){ 
                 $this->db->where('a.id_m_layanan', 33);
-            }   else {
+            } else if($id_m_layanan == 34){ 
+                $this->db->where('a.id_m_layanan', 34);
+            }     else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
 
@@ -11765,6 +11848,14 @@ public function searchPengajuanLayananFungsional($id_m_layanan){
                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
                     $this->db->where('g.id', $data['status_pengajuan']);
                 }
+                 if($data['bulan'] != 0){
+                    $this->db->join('db_pegawai.pegjabatan h', 'a.reference_id_dok = h.id','left');
+                    $this->db->where('month(h.tglsk)', $data['bulan']);
+                    $this->db->where('year(h.tglsk)', $data['tahun']);
+                }
+                
+
+
 
     return $this->db->get()->result_array();
 }
@@ -11842,6 +11933,10 @@ function getPengajuanLayanan($id,$id_m_layanan){
     if($id_m_layanan == 25 || $id_m_layanan == 26){
         $this->db->join('db_pegawai.pegarsip l', 'l.id = c.reference_id_dok','left');
     }
+     if($id_m_layanan == 34){
+        $this->db->join('db_pegawai.pegcuti l', 'l.id = c.reference_id_dok','left');
+    }
+    
     
     
     return $this->db->get()->result_array();
@@ -12594,6 +12689,14 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "formulir_cuti"){
+            $this->db->select('a.surat_pernyataan_tidak_hd')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         }     else {
          return [''];
         }
@@ -12721,6 +12824,9 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         } else if($dataPengajuan[0]['id_m_layanan'] == 32){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENINJAUAN MASA KERJA]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Peninjauan Masa Kerja anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 34){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN CUTI BESAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Cuti Besar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        
@@ -13403,6 +13509,50 @@ public function getFileForVerifLayanan()
                     $this->db->insert('t_cron_wa', $cronWa);
             // JABATAN
             
+            } else  if($id_dok == 17){
+            // CUTI BESAR   
+            $dataInsert['id_pegawai']     = $id_peg;
+            $dataInsert['jeniscuti']      = $this->input->post('cuti_jenis');
+            $dataInsert['lamacuti']      = "0";
+            $dataInsert['tglmulai']      = $this->input->post('cuti_tglmulai');
+            $dataInsert['tglselesai']      = $this->input->post('cuti_tglselesai');
+            $dataInsert['nosttpp']      = $this->input->post('cuti_nosurat');
+            $dataInsert['tglsttpp']      = $this->input->post('cuti_tglsurat');
+            $dataInsert['gambarsk']      = $data['nama_file'];
+            $dataInsert['created_by']      = $this->general_library->getId();
+            $dataInsert['status']      = 2;
+            $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+            $dataInsert['id_m_user_verif']      = $this->general_library->getId();
+            // dd($dataInsert);
+            $result = $this->db->insert('db_pegawai.pegcuti', $dataInsert);
+             $id_insert_dok = $this->db->insert_id();
+
+            $dataUpdate['status'] = 3;
+            $dataUpdate['reference_id_dok'] = $id_insert_dok;
+             $url_file = "arsipcuti/".$data['nama_file'];
+            $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $dataUpdate);
+
+             $dataLayanan = $this->db->select('c.*,a.*')
+                    ->from('t_layanan a')
+                    ->join('m_user b', 'a.id_m_user = b.id')
+                    ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                    ->where('a.id', $id_usul)
+                    ->get()->row_array();
+            
+    
+            $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Cuti Besar anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nPosisi Usulan : BKAD\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+            $cronWa = [
+                        'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
+                        'message' => $caption,
+                        'filename' => "SK CUTI BESAR.pdf",
+                        'fileurl' => $url_file,
+                        'type' => 'document',
+                        'jenis_layanan' => 'Cuti'
+                    ];
+                    $this->db->insert('t_cron_wa', $cronWa);
+            // CUTI BESAR
+            
             }
        
         return $result;
@@ -13495,6 +13645,17 @@ public function getFileForVerifLayanan()
                     ->update('db_pegawai.pegarsip', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
         }
          // SUKET TIDAK TUBEL
+        // CUTI BESAR
+        if($id_m_layanan == 34){
+        $data["status"] = 1; 
+        $data["reference_id_dok"] = null; 
+        $this->db->where('id', $id_usul)
+                    ->update('t_layanan', $data);
+                  
+        $this->db->where('id', $reference_id_dok)
+                    ->update('db_pegawai.pegcuti', ['flag_active' => 0, 'updated_by' => $this->general_library->getId() ? $this->general_library->getId() : 0]);
+        }
+            // CUTI BESAR
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;
@@ -13777,10 +13938,10 @@ public function getFileForVerifLayanan()
                 // Setda
                 if($this->general_library->getDataUnitKerjaPegawai()['id_unitkerjamaster'] == '1000000'){
                     if($data['status_berkala'] == ""){
-                    $this->db->where_in('f.id_unitkerjamaster', ['1000000']);
+                    $this->db->where_in('f.id_unitkerjamaster', ['1000000','2000000']);
                     $this->db->where_in('a.status', [3,5,6]);
                     } else {
-                    $this->db->where_in('f.id_unitkerjamaster', ['1000000']);
+                    $this->db->where_in('f.id_unitkerjamaster', ['1000000','2000000']);
                     $this->db->where_in('a.status', $data['status_berkala']);
                     }
                 // Pendidikan
@@ -14061,6 +14222,9 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 32){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/peninjauan_masa_kerja';
+            } else if($id_m_layanan == 34){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/cuti_besar';
             }  else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
@@ -14078,16 +14242,19 @@ public function getFileForVerifLayanan()
                 $filehd =  "surat_keterangan_guru_$nip"."_$random_number".".pdf";
                 } else if($id_m_layanan == 15){
                 $filehd =  "surat_pernyataan_bersedia_tidak_diangkat_jf_lagi_$nip"."_$random_number".".pdf";
+                } else if($id_m_layanan == 34){
+                $filehd =  "formulir_cuti_besar_$nip"."_$random_number".".pdf";
                 } else {
                 $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
                 }
-
                 if($id_m_layanan == 23){
                 $target_dir_hd	= './dokumen_layanan/suratpidanahukdis';
                 } else if($id_m_layanan == 28){
                 $target_dir_hd	= './dokumen_layanan/mutasi_pindah_masuk';
                 } else if($id_m_layanan == 31){
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional';
+                } else if($id_m_layanan == 34){
+                $target_dir_hd	= './dokumen_layanan/cuti_besar';
                 } else {
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
                 } 
@@ -15330,13 +15497,13 @@ public function checkListIjazahCpns($id, $id_pegawai){
         //         ->update('t_usul_ds', $dataUpdateDS);
 
 
-        //  $dataLayanan = $this->db->select('c.*,a.*,c.id as id_m_user')
-        //         ->from('t_gajiberkala a')
-        //         ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
-        //         ->join('m_user c', 'b.nipbaru_ws = c.username')
-        //         ->where('a.id', $id_usul)
-        //         ->where('c.flag_active', 1)
-        //         ->get()->row_array();
+         $dataLayanan = $this->db->select('c.*,a.*,c.id as id_m_user')
+                ->from('t_gajiberkala a')
+                ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
+                ->join('m_user c', 'b.nipbaru_ws = c.username')
+                ->where('a.id', $id_usul)
+                ->where('c.flag_active', 1)
+                ->get()->row_array();
         
         //     $pegawai = $this->kinerja->getAtasanPegawai(0, $this->general_library->getId(), 1);
         //     $sekbkpsdm = $this->layanan->getPegawaiByIdJabatan(ID_JABATAN_SEKBAN_BKPSDM);
@@ -15390,7 +15557,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         //     $this->db->where('id', $id_usul)
         //         ->update('t_gajiberkala', $dataUpdate);
 
-        //     $perihal = "SK KENAIKAN GAJI BERKALA a.n.".getNamaPegawaiFull($dataLayanan);
+            $perihal = "SK KENAIKAN GAJI BERKALA a.n.".getNamaPegawaiFull($dataLayanan);
 
             $counter = qounterNomorSurat($tahun);
             $this->db->insert('t_nomor_surat', [
@@ -15419,7 +15586,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
             // ->where('a.tmtgjberkalaberikut is null')
             ->where('a.id_m_status_pegawai', 1)
-            // ->where_in('a.statuspeg', [1,2])
+            ->where_in('a.statuspeg', [3])
             ->limit(1000);
             
         $pegawai = $this->db->get()->result_array();
@@ -15433,7 +15600,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+1 years', strtotime($peg['tmtgjberkala'])));
             }
             if($peg['pangkat'] == "57"){
-                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+3 years', strtotime($peg['tmtgjberkala'])));
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));
             }
             if($peg['pangkat'] == "59" || $peg['pangkat'] == "60"){
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));
@@ -15471,6 +15638,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             // ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
             // ->join('db_pegawai.tktpendidikan i', 'a.pendidikan = i.id_tktpendidikan')
             ->join('db_pegawai.unitkerjamaster j', 'b.id_unitkerjamaster = j.id_unitkerjamaster')
+             ->where_in('a.statuspeg', [1,2,3])
             ->where('a.id_m_status_pegawai', 1)
             ->where_not_in('b.id_unitkerja', [5, 9050030])
             ->where_in('j.id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001']);
@@ -15509,6 +15677,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    //  ->where_in('a.statuspeg', [1,2,3])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15604,7 +15773,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                    ->where_in('a.statuspeg', [3])
+                    ->where_in('a.statuspeg', [3,6])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15637,7 +15806,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
          $temp_pangkat = $this->db->select('*')
                                 ->from('db_pegawai.pangkat')
-                                ->where_not_in('id_pangkat', [18,19,20,51,52,0])
+                                ->where_not_in('id_pangkat', [18,19,20,52,0])
                                 ->get()->result_array();
         foreach($temp_pangkat as $pang){
             $result['pangkat'][$pang['id_pangkat']] = $pang;
@@ -15645,13 +15814,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $result['pangkat'][$pang['id_pangkat']]['laki'] = 0;
             $result['pangkat'][$pang['id_pangkat']]['perempuan'] = 0;
     }
+    // dd($temp_pangkat);
 
 
         $this->db->select('a.pendidikan,a.jk,a.pangkat')
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-                    // ->where_in('a.statuspeg', [3])
+                    // ->where_in('a.statuspeg', [1,2,3])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15661,9 +15831,8 @@ public function checkListIjazahCpns($id, $id_pegawai){
         foreach($pegawai1 as $peg){
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['pangkat'][$peg['pangkat']]['laki']++;
-        } else if($peg['jk'] == 'perempuan' || $peg['jk'] == null) {
+        } else if($peg['jk'] == 'Perempuan' ||  $peg['jk'] == null) {
         $result['pangkat'][$peg['pangkat']]['perempuan']++;
-
         } 
 
         }
@@ -15721,6 +15890,231 @@ public function checkListIjazahCpns($id, $id_pegawai){
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
+                    // ->where_in('a.statuspeg', [1,2,3])
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+        foreach($pegawai1 as $peg){
+        if($peg['eselon'] == "II A" || $peg['eselon'] == "II B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][3]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][3]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "III A" || $peg['eselon'] == "III B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][4]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][4]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "IV A" || $peg['eselon'] == "IV B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][5]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][5]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "V" || $peg['eselon'] == "V") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][6]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][6]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "8010000" || $peg['id_unitkerjamaster'] == "8020000" || $peg['id_unitkerjamaster'] == "8000000") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][7]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][7]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "6000000" || $peg['id_unitkerjamaster'] == "7005000" ) {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][8]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][8]['perempuan']++;
+        } 
+        } else if(!in_array($peg['id_unitkerjamaster'], $gurunakes)) { 
+        if($peg['jenis_jabatan'] == "JFT"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][9]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][9]['perempuan']++;
+        } 
+        } else {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][10]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][10]['perempuan']++;
+        } 
+        }
+        } 
+
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutJabatanPns(){
+
+            $result['jabatan'][1]['nama'] = 'Jabatan Pimpinan Tinggi Utama';
+            $result['jabatan'][1]['laki'] = 0;
+            $result['jabatan'][1]['perempuan'] = 0;
+
+
+            $result['jabatan'][2]['nama'] = 'Jabatan Pimpinan Tinggi Madya';
+            $result['jabatan'][2]['laki'] = 0;
+            $result['jabatan'][2]['perempuan'] = 0;
+
+            $result['jabatan'][3]['nama'] = 'Jabatan Pimpinan Tinggi Pratama';
+            $result['jabatan'][3]['laki'] = 0;
+            $result['jabatan'][3]['perempuan'] = 0;
+
+            $result['jabatan'][4]['nama'] = 'Administrator';
+            $result['jabatan'][4]['laki'] = 0;
+            $result['jabatan'][4]['perempuan'] = 0;
+
+            $result['jabatan'][5]['nama'] = 'Pengawas';
+            $result['jabatan'][5]['laki'] = 0;
+            $result['jabatan'][5]['perempuan'] = 0;
+
+            $result['jabatan'][6]['nama'] = 'Eselon V';
+            $result['jabatan'][6]['laki'] = 0;
+            $result['jabatan'][6]['perempuan'] = 0;
+
+            $result['jabatan'][7]['nama'] = 'Jabatan Fungsional Guru ';
+            $result['jabatan'][7]['laki'] = 0;
+            $result['jabatan'][7]['perempuan'] = 0;
+
+            $result['jabatan'][8]['nama'] = 'Jabatan Fungsional Medis';
+            $result['jabatan'][8]['laki'] = 0;
+            $result['jabatan'][8]['perempuan'] = 0;
+
+            $result['jabatan'][9]['nama'] = 'Jabatan Fungsional Teknis';
+            $result['jabatan'][9]['laki'] = 0;
+            $result['jabatan'][9]['perempuan'] = 0;
+
+            $result['jabatan'][10]['nama'] = 'Jabatan Fungsional Umum';
+            $result['jabatan'][10]['laki'] = 0;
+            $result['jabatan'][10]['perempuan'] = 0;
+            $gurunakes = array("6000000","7005000","8010000","8020000","8000000");
+
+
+        $this->db->select('a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
+                    ->where_in('a.statuspeg', [1,2])
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+                  
+        $pegawai1 = $this->db->get()->result_array();
+        foreach($pegawai1 as $peg){
+        if($peg['eselon'] == "II A" || $peg['eselon'] == "II B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][3]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][3]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "III A" || $peg['eselon'] == "III B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][4]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][4]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "IV A" || $peg['eselon'] == "IV B") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][5]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][5]['perempuan']++;
+        } 
+        } else if($peg['eselon'] == "V" || $peg['eselon'] == "V") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][6]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][6]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "8010000" || $peg['id_unitkerjamaster'] == "8020000" || $peg['id_unitkerjamaster'] == "8000000") {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][7]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][7]['perempuan']++;
+        } 
+        } else if($peg['id_unitkerjamaster'] == "6000000" || $peg['id_unitkerjamaster'] == "7005000" ) {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][8]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][8]['perempuan']++;
+        } 
+        } else if(!in_array($peg['id_unitkerjamaster'], $gurunakes)) { 
+        if($peg['jenis_jabatan'] == "JFT"){
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][9]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][9]['perempuan']++;
+        } 
+        } else {
+        if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
+        $result['jabatan'][10]['laki']++;
+        } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
+        $result['jabatan'][10]['perempuan']++;
+        } 
+        }
+        } 
+
+        }
+        return $result;
+    }
+
+    public function laporanJumlahPegawaiMenurutJabatanPppk(){
+
+            $result['jabatan'][1]['nama'] = 'Jabatan Pimpinan Tinggi Utama';
+            $result['jabatan'][1]['laki'] = 0;
+            $result['jabatan'][1]['perempuan'] = 0;
+
+
+            $result['jabatan'][2]['nama'] = 'Jabatan Pimpinan Tinggi Madya';
+            $result['jabatan'][2]['laki'] = 0;
+            $result['jabatan'][2]['perempuan'] = 0;
+
+            $result['jabatan'][3]['nama'] = 'Jabatan Pimpinan Tinggi Pratama';
+            $result['jabatan'][3]['laki'] = 0;
+            $result['jabatan'][3]['perempuan'] = 0;
+
+            $result['jabatan'][4]['nama'] = 'Administrator';
+            $result['jabatan'][4]['laki'] = 0;
+            $result['jabatan'][4]['perempuan'] = 0;
+
+            $result['jabatan'][5]['nama'] = 'Pengawas';
+            $result['jabatan'][5]['laki'] = 0;
+            $result['jabatan'][5]['perempuan'] = 0;
+
+            $result['jabatan'][6]['nama'] = 'Eselon V';
+            $result['jabatan'][6]['laki'] = 0;
+            $result['jabatan'][6]['perempuan'] = 0;
+
+            $result['jabatan'][7]['nama'] = 'Jabatan Fungsional Guru ';
+            $result['jabatan'][7]['laki'] = 0;
+            $result['jabatan'][7]['perempuan'] = 0;
+
+            $result['jabatan'][8]['nama'] = 'Jabatan Fungsional Medis';
+            $result['jabatan'][8]['laki'] = 0;
+            $result['jabatan'][8]['perempuan'] = 0;
+
+            $result['jabatan'][9]['nama'] = 'Jabatan Fungsional Teknis';
+            $result['jabatan'][9]['laki'] = 0;
+            $result['jabatan'][9]['perempuan'] = 0;
+
+            $result['jabatan'][10]['nama'] = 'Jabatan Fungsional Umum';
+            $result['jabatan'][10]['laki'] = 0;
+            $result['jabatan'][10]['perempuan'] = 0;
+            $gurunakes = array("6000000","7005000","8010000","8020000","8000000");
+
+
+        $this->db->select('a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
+                    ->where_in('a.statuspeg', [3])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
                   
@@ -15868,6 +16262,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    //  ->where_in('a.statuspeg', [1,2,3])
                     ->where('a.id_m_status_pegawai', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030]);
         $pegawai1 = $this->db->get()->result_array();
@@ -16119,6 +16514,430 @@ public function checkListIjazahCpns($id, $id_pegawai){
                        $query = $this->db->get()->result_array();
                        return $query;
    }
+
+   public function submitTambahkebutuhanJf(){
+    
+                $datapost = $this->input->post();
+                
+                $this->db->trans_begin();
+            
+                // $data["id_sub_unsur_penilaian"] = $datapost["sub_unsur_penilaian"];
+                // $data["nm_indikator"] = $datapost["indikator"];
+                // $data["bobot"] = $datapost["bobot"];
+                
+                 $this->db->select('*')
+                       ->from('t_kebutuhan_fungsional a')
+                       ->where('a.id_jabatan', $datapost["id_jabatan"])
+                       ->where('a.id_unitkerja', $datapost["id_unitkerja"])
+                       ->where('a.flag_active', 1);
+                         $cek = $this->db->get()->result_array();
+                if($cek){
+                $res = array('msg' => 'Sudah data kebutuhan', 'false' => true);
+                } else {
+                $this->db->insert('t_kebutuhan_fungsional', $datapost);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+                }
+               
+
+            
+            
+                if($this->db->trans_status() == FALSE){
+                    $this->db->trans_rollback();
+                    // $res['code'] = 1;
+                    // $res['message'] = 'Terjadi Kesalahan';
+                    // $res['data'] = null;
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+                } else {
+                    $this->db->trans_commit();
+                }
+            
+                return $res;
+            }
+
+    public function loadListkebutuhanJf(){
+                return $this->db->select('*')
+                                ->from('t_kebutuhan_fungsional a')  
+                                ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg')
+                                ->join('db_pegawai.unitkerja c', 'a.id_unitkerja = c.id_unitkerja')
+                                ->where('a.flag_active', 1)
+                                ->order_by('b.nama_jabatan', 'asc')
+                                ->get()->result_array();
+        }
+
+        public function editKebutuhanJf($id){
+            $data['kebutuhan'] = $this->input->post('kebutuhan');
+
+            $this->db->where('id', $id)
+                    ->update('t_kebutuhan_fungsional', $data);
+                    $res = array('msg' => 'Data berhasil diubah', 'success' => true);
+        return $res;
+
+        }
+
+        public function rincianAsn($id_unitkerja){
+        $result = null;
+        $temp_skpd = $this->db->select('*')
+                                ->from('db_pegawai.unitkerja a')
+                                ->join('db_pegawai.unitkerja b', 'a.id_unitkerjamaster = b.id_unitkerjamaster')
+                                ->where_not_in('b.id_unitkerjamaster', ['9050000','','0000000','6000000','8010000','8020000','8000000','5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001'])
+                                ->order_by('b.id_unitkerjamaster', 'ASC')
+                                ->order_by('b.id_unitkerja', 'ASC')
+
+                                ->get()->result_array();
+                                // dd($temp_skpd);
+        foreach($temp_skpd as $skpd){
+            $result['skpd'][$skpd['id_unitkerja']] = $skpd;
+            $result['skpd'][$skpd['id_unitkerja']]['nama'] = $skpd['nm_unitkerja'];
+        }
+
+        $result['skpd'][5001000]['nama'] = 'Kecamatan Bunaken';
+        $result['skpd'][5002000]['nama'] = 'Kecamatan Tuminting';
+        $result['skpd'][5003000]['nama'] = 'Kecamatan Singkil';
+        $result['skpd'][5004000]['nama'] = 'Kecamatan Wenang';
+        $result['skpd'][5005000]['nama'] = 'Kecamatan Tikala';
+        $result['skpd'][5006000]['nama'] = 'Kecamatan Sario';
+        $result['skpd'][5007000]['nama'] = 'Kecamatan Wanea';
+        $result['skpd'][5008000]['nama'] = 'Kecamatan Mapanget';
+        $result['skpd'][5009000]['nama'] = 'Kecamatan Malalayang';
+        $result['skpd'][5010001]['nama'] = 'Kecamatan Paal Dua';
+        $result['skpd'][5011001]['nama'] = 'Kecamatan Bunaken Kepulauan';
+        $result['skpd'][6000000]['nama'] = 'Puskesmas/Gudang Farmasi';
+        $result['skpd'][8000000]['nama'] = 'Taman Kanak-kanak';
+        $result['skpd'][8010000]['nama'] = 'Sekolah Dasar';
+        $result['skpd'][8020000]['nama'] = 'Sekolah Menengah Pertama';
+     
+
+        $this->db->select('a.skpd,b.nm_unitkerja, b.id_unitkerjamaster, c.jenis_jabatan, count(c.jenis_jabatan) as total')
+            ->from('db_pegawai.pegawai a')
+            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+            ->where('a.id_m_status_pegawai', 1)
+            // ->where('a.skpd', 4018000)
+            ->where_not_in('c.id_unitkerja', [5, 9050030])
+            ->group_by('a.skpd, c.jenis_jabatan');
+        $pegawai = $this->db->get()->result_array();
+
+       for($x=1;$x<=15;$x++){
+        $result['total_struktural'][$x] = 0; 
+        $result['total_jft'][$x] = 0; 
+        $result['total_pelaksana'][$x] = 0; 
+        }
+      
+        
+
+
+            foreach($pegawai as $peg){
+            
+            if($peg['id_unitkerjamaster'] == "6000000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][6000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][6000000]['total_struktural'] =  $result['total_struktural'][1] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][6000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][6000000]['total_jft'] =   $result['total_jft'][1] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][6000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][6000000]['total_pelaksana'] = $result['total_pelaksana'][1] += $peg['total'];
+            }
+            } 
+            else if($peg['id_unitkerjamaster'] == "8010000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][8010000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8010000]['total_struktural'] =  $result['total_struktural'][2] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][8010000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8010000]['total_jft'] =   $result['total_jft'][2] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][8010000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8010000]['total_pelaksana'] =  $result['total_pelaksana'][2] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "8020000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][8020000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8020000]['total_struktural'] =    $result['total_struktural'][3] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][8020000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8020000]['total_jft'] =    $result['total_jft'][3] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][8020000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8020000]['total_pelaksana'] =   $result['total_pelaksana'][3] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "8000000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][8000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8000000]['total_struktural'] =   $result['total_struktural'][4] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][8000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8000000]['total_jft'] =   $result['total_jft'][4] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][8000000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][8000000]['total_pelaksana'] =  $result['total_pelaksana'][4] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5001000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5001000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5001000]['total_struktural'] =   $result['total_struktural'][5] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5001000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5001000]['total_jft'] =   $result['total_jft'][5] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5001000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5001000]['total_pelaksana'] =  $result['total_pelaksana'][5] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5002000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5002000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5002000]['total_struktural'] =   $result['total_struktural'][6] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5002000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5002000]['total_jft'] =   $result['total_jft'][6] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5002000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5002000]['total_pelaksana'] =  $result['total_pelaksana'][6] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5003000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5003000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5003000]['total_struktural'] =   $result['total_struktural'][7] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5003000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5003000]['total_jft'] =   $result['total_jft'][7] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5003000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5003000]['total_pelaksana'] =  $result['total_pelaksana'][7] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5004000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5004000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5004000]['total_struktural'] =   $result['total_struktural'][8] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5004000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5004000]['total_jft'] =   $result['total_jft'][8] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5004000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5004000]['total_pelaksana'] =  $result['total_pelaksana'][8] += $peg['total'];
+            }
+            }else if($peg['id_unitkerjamaster'] == "5005000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5005000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5005000]['total_struktural'] =   $result['total_struktural'][9] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5005000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5005000]['total_jft'] =   $result['total_jft'][9] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5005000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5005000]['total_pelaksana'] =  $result['total_pelaksana'][9] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5006000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5006000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5006000]['total_struktural'] =   $result['total_struktural'][10] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5006000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5006000]['total_jft'] =   $result['total_jft'][10] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5006000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5006000]['total_pelaksana'] =  $result['total_pelaksana'][10] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5007000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5007000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5007000]['total_struktural'] =   $result['total_struktural'][11] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5007000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5007000]['total_jft'] =   $result['total_jft'][11] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5007000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5007000]['total_pelaksana'] =  $result['total_pelaksana'][11] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5008000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5008000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5008000]['total_struktural'] =   $result['total_struktural'][12] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5008000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5008000]['total_jft'] =   $result['total_jft'][12] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5008000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5008000]['total_pelaksana'] =  $result['total_pelaksana'][12] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5009000"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5009000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5009000]['total_struktural'] =   $result['total_struktural'][13] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5009000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5009000]['total_jft'] =   $result['total_jft'][13] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5009000]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5009000]['total_pelaksana'] =  $result['total_pelaksana'][13] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5010001"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5010001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5010001]['total_struktural'] =   $result['total_struktural'][14] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5010001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5010001]['total_jft'] =   $result['total_jft'][14] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5010001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5010001]['total_pelaksana'] =  $result['total_pelaksana'][14] += $peg['total'];
+            }
+            } else if($peg['id_unitkerjamaster'] == "5011001"){
+            if($peg['jenis_jabatan'] == "Struktural"){
+            $result['skpd'][5011001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5011001]['total_struktural'] =   $result['total_struktural'][15] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+            $result['skpd'][5011001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5011001]['total_jft'] =   $result['total_jft'][15] += $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+            $result['skpd'][5011001]['jenis_jabatan'] =  $peg['jenis_jabatan'];
+            $result['skpd'][5011001]['total_pelaksana'] =  $result['total_pelaksana'][15] += $peg['total'];
+            }
+            }
+             else {
+            if($peg['jenis_jabatan'] == "Struktural"){
+                $result['skpd'][$peg['skpd']]['nama'] = $peg['nm_unitkerja'];
+                $result['skpd'][$peg['skpd']]['jenis_jabatan'] = $peg['jenis_jabatan'];
+                $result['skpd'][$peg['skpd']]['total_struktural'] = $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFT"){
+                $result['skpd'][$peg['skpd']]['nama'] = $peg['nm_unitkerja'];
+                $result['skpd'][$peg['skpd']]['jenis_jabatan'] = $peg['jenis_jabatan'];
+                $result['skpd'][$peg['skpd']]['total_jft'] = $peg['total'];
+            }
+            if($peg['jenis_jabatan'] == "JFU"){
+                $result['skpd'][$peg['skpd']]['nama'] = $peg['nm_unitkerja'];
+                $result['skpd'][$peg['skpd']]['jenis_jabatan'] = $peg['jenis_jabatan'];
+                $result['skpd'][$peg['skpd']]['total_pelaksana'] = $peg['total'];
+            }
+            }
+            }
+            return $result;
+        }
+
+        public function cekLayananSelesai(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['layanan'] = null;
+        
+        $id_user = $this->general_library->getId();
+       
+        $this->db->trans_begin();
+            $getLayananPangkat = $this->db->select('*')
+            ->from('t_layanan a')
+            ->join('m_layanan b', 'a.id_m_layanan = b.id')
+            ->where('a.id_m_user', $id_user)
+            ->where('a.reference_id_dok is not null')
+            ->where_in('a.id_m_layanan', [6,7,8,9,29])
+            ->where('a.flag_active', 1)
+            ->order_by('a.id', 'desc')
+            ->limit(1)
+            ->get()->row_array();
+         
+            if($getLayananPangkat) {
+              $res['code'] = 1;
+              $res['message'] = 'ok';
+              $res['layanan'] = $getLayananPangkat['nama_layanan'];
+            }
+    
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 0;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+    }
+
+          public function getListUploadBangkomSkpd(){
+            $bulan = $this->input->post('bulan');
+            $tahun = $this->input->post('tahun');
+            
+            $this->db->select('a.statuspeg,a.nama, a.gelar1, a.gelar2, b.nm_unitkerja, c.id, c.status, sum(c.jam) as total_jp')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                                ->join('db_pegawai.pegdiklat c', '(a.id_peg = c.id_pegawai AND MONTH(c.tglsttpp) = "'.$bulan.'" and YEAR(c.tglsttpp) = "'.$tahun.'" and c.status = 2 and c.flag_active = 1)', 'left')
+                                // ->where('a.skpd', $id_unitkerja)
+                                ->where('id_m_status_pegawai', 1)
+                                ->where_not_in('b.id_unitkerja', [5, 9050030])
+                                ->order_by('b.nm_unitkerja')
+                                ->group_by('a.id_peg');
+
+                                if($this->input->post('unitkerja') != 0){
+                                if($this->input->post('unitkerja') == 991){
+                                    $this->db->where('b.id_unitkerjamaster', '8010000');
+                                } else if($this->input->post('unitkerja') == 992){
+                                    $this->db->where('b.id_unitkerjamaster', '8020000');
+                                } else if($this->input->post('unitkerja') == 990){
+                                    $this->db->where('b.id_unitkerjamaster', '8000000');
+                                } else if($this->input->post('unitkerja') == 993){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['6000000','7005000']);
+                                } else if($this->input->post('unitkerja') == 994){
+                                    $this->db->where_not_in('b.id_unitkerjamaster', ['6000000','7005000','8010000','8020000','8000000']);
+                                }  else if($this->input->post('unitkerja') == '5001001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5001000']);
+                                } else if($this->input->post('unitkerja') == '5002001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5002000']);
+                                } else if($this->input->post('unitkerja') == '5003001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5003000']);
+                                } else if($this->input->post('unitkerja') == '5004001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5004000']);
+                                } else if($this->input->post('unitkerja') == '5005001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5005000']);
+                                } else if($this->input->post('unitkerja') == '5006001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5006000']);
+                                } else if($this->input->post('unitkerja') == '5007001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5007000']);
+                                }else if($this->input->post('unitkerja') == '5008001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5008000']);
+                                } else if($this->input->post('unitkerja') == '5009001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5009000']);
+                                } else if($this->input->post('unitkerja') == '5010001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5010001']);
+                                } else if($this->input->post('unitkerja') == '5011001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5011001']);
+                                }  else {
+                                $this->db->where('a.skpd', $this->input->post('unitkerja'));
+                                }
+                                }
+                                $result = $this->db->get()->result_array();
+
+            return $result;
+        }
     
 
 }

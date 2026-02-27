@@ -639,6 +639,38 @@
                             ->get()->result_array();
         }
 
+         public function getAllSkpd(){
+            return $this->db->select('*')
+                            ->from('db_pegawai.unitkerja')
+                            // ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH)
+                            ->where_not_in('id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_EXCLUDE)
+                            ->order_by('id_unitkerjamaster', 'asc')
+                            ->get()->result_array();
+        }
+
+        public function getAllPegawaiByIdUnitKerja($id_unitkerja){
+            return $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+                                d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
+                                a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk,
+                                a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                                ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+                                ->where('a.skpd', $id_unitkerja)
+                                ->where('id_m_status_pegawai', 1)
+                                ->where('e.flag_active', 1)
+                                ->order_by('c.eselon ASC')
+                                ->order_by('f.urutan ASC')
+                                ->order_by('c.jenis_jabatan ASC')
+                                ->order_by('d.urutan ASC')
+                                ->order_by('a.tmtcpns ASC')
+                                ->group_by('a.id_peg')
+                                ->get()->result_array();
+        }
+
         public function getDetailMasterSkpd($id_unitkerja){
             $result['total'] = null;
             $result['kepala_skpd'] = null;
@@ -723,26 +755,37 @@
                 $result['statuspeg'][$sp['id_statuspeg']]['jumlah'] = 0;
             }
 
-            $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
-            d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
-            a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk,
-            a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg')
-            ->from('db_pegawai.pegawai a')
-            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
-            ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
-            ->join('m_user e', 'a.nipbaru_ws = e.username')
-            ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
-            ->where('a.skpd', $id_unitkerja)
-            ->where('id_m_status_pegawai', 1)
-            ->where('e.flag_active', 1)
-            ->order_by('c.eselon ASC')
-            ->order_by('f.urutan ASC')
-            ->order_by('c.jenis_jabatan ASC')
-            ->order_by('d.urutan ASC')
-            ->order_by('a.tmtcpns ASC')
-            ->group_by('a.id_peg')
-            ->get()->result_array();
+            $tempJabatan = null;
+            $temp_jabatan = $this->db->select('*')
+                                ->from('db_pegawai.jabatan')
+                                ->get()->result_array();
+            foreach($temp_jabatan as $jab){
+                $tempJabatan[$jab['id_jabatanpeg']] = $jab;
+                $tempJabatan[$jab['id_jabatanpeg']]['nama'] = $jab['nama_jabatan'];
+                $tempJabatan[$jab['id_jabatanpeg']]['kelas_jabatan'] = $jab['kelas_jabatan'];
+                // $tempJabatan['jabatan'][$jab['id_jabatanpeg']]['jumlah'] = 0;
+            }
+
+            $pegawai = $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan, c.kelas_jabatan,
+                                d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg, c.jenis_jabatan,
+                                a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk,
+                                a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                                ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+                                ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
+                                ->where('a.skpd', $id_unitkerja)
+                                ->where('id_m_status_pegawai', 1)
+                                ->where('e.flag_active', 1)
+                                ->order_by('c.eselon ASC')
+                                ->order_by('f.urutan ASC')
+                                ->order_by('c.jenis_jabatan ASC')
+                                ->order_by('d.urutan ASC')
+                                ->order_by('a.tmtcpns ASC')
+                                ->group_by('a.id_peg')
+                                ->get()->result_array();
 
             $result['total'] = count($pegawai);
 
@@ -776,23 +819,66 @@
                     $result['jenis_kelamin']['perempuan']['jumlah']++;
                 }
                 $result['statuspeg'][$peg['statuspeg']]['jumlah']++;
+
+                if($peg['jenis_jabatan'] == "JFT"){
+                    $result['list_jft'][$peg['id_jabatanpeg']]['nama_jabatan'] = $tempJabatan[$peg['id_jabatanpeg']]['nama'];
+                    $result['list_jft'][$peg['id_jabatanpeg']]['kelas_jabatan'] = $tempJabatan[$peg['id_jabatanpeg']]['kelas_jabatan'];
+                    $result['list_jft'][$peg['id_jabatanpeg']]['total'] = isset($result['list_jft'][$peg['id_jabatanpeg']]['total']) ? $result['list_jft'][$peg['id_jabatanpeg']]['total'] += 1 : 1;
+                }
+                
             }
             // dd($result);
             return $result;
+        }
+
+        public function listJftItem($id_unitkerja){
+        //     $list_jft = $this->db->select('*,  COUNT(a.jabatan) as total,
+        //     (select aa.kebutuhan from t_kebutuhan_fungsional as aa where a.jabatan = aa.id_jabatan and a.skpd = aa.id_unitkerja and aa.flag_active = 1) as kebutuhan')
+        //                         ->from('db_pegawai.pegawai a')
+        //                         ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+        //                         ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+        //                         ->where('a.skpd', $id_unitkerja)
+        //                          ->where('c.jenis_jabatan', "JFT")
+        //                         ->where('id_m_status_pegawai', 1)
+        //                         ->group_by('a.jabatan')
+        //                          ->order_by('a.pangkat', 'desc')
+        //                         ->get()->result_array();
+        //    return $list_jft;
+
+         $list_jft = $this->db->select('*,
+         (select count(aa.jabatan) from db_pegawai.pegawai as aa where a.id_jabatan = aa.jabatan and a.id_unitkerja = aa.skpd and aa.id_m_status_pegawai = 1) as total
+         ')
+                                ->from('t_kebutuhan_fungsional a')
+                                ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                                ->join('db_pegawai.jabatan c', 'a.id_jabatan = c.id_jabatanpeg')
+                                ->where('a.id_unitkerja', $id_unitkerja)
+                                 ->where('a.flag_active', 1)
+                                 ->order_by('c.nama_jabatan', 'asc')
+
+                                ->get()->result_array();
+           return $list_jft;
         }
 
         public function searchPegawaiSkpdByFilter($data){
             $this->db->select('a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
             d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, a.pendidikan, a.jk, a.statuspeg,
             a.agama, c.kepalaskpd, b.notelp as notelp_uk, b.alamat_unitkerja as alamat_uk, b.emailskpd as email_uk,
-            a.fotopeg, b.id_unitkerja')
+            a.fotopeg, b.id_unitkerja, a.jabatan, e.id_m_bidang, e.id_m_sub_bidang, c.jenis_jabatan, c.id_jabatanpeg')
             ->from('db_pegawai.pegawai a')
             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
             ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat')
+            ->join('m_user e', 'a.nipbaru_ws = e.username')
+            ->join('db_pegawai.statuspeg f', 'a.statuspeg = f.id_statuspeg')
             ->where('a.skpd', $data['id_unitkerja'])
             ->where('id_m_status_pegawai', 1)
-            ->order_by('c.eselon');
+            ->where('e.flag_active', 1)
+            ->order_by('c.eselon ASC')
+            ->order_by('f.urutan ASC')
+            ->order_by('c.jenis_jabatan ASC')
+            ->order_by('d.urutan ASC')
+            ->order_by('a.tmtcpns ASC')
+            ->group_by('a.id_peg');
 
             if($data['eselon'] != "0"){
                 $this->db->where('c.eselon', $data['eselon']);
@@ -804,6 +890,10 @@
 
             if($data['agama'] != "0"){
                 $this->db->where('a.agama', $data['agama']);
+            }
+
+            if($data['jenis_jabatan'] != "0"){
+                $this->db->where('c.jenis_jabatan', $data['jenis_jabatan']);
             }
 
             if($data['status_pegawai'] != "0"){
@@ -1292,9 +1382,16 @@
                         ->join('m_kabupaten_kota h', 'a.id_m_kabupaten_kota = h.id','left')
                         ->join('m_kecamatan i', 'a.id_m_kecamatan = i.id','left')
                         ->join('m_kelurahan j', 'a.id_m_kelurahan = j.id','left')
-                        ->order_by('c.eselon, a.nama')
+                        ->join('db_pegawai.statuspeg k', 'a.statuspeg = k.id_statuspeg')
+                        ->join('db_pegawai.pangkat l', 'a.pangkat = l.id_pangkat')
                         ->where('id_m_status_pegawai', 1)
-                        ->where('e.flag_active', 1);
+                        ->where('e.flag_active', 1)
+                        ->order_by('c.eselon ASC')
+                        ->order_by('k.urutan ASC')
+                        ->order_by('c.jenis_jabatan ASC')
+                        ->order_by('l.urutan ASC')
+                        ->order_by('a.tmtcpns ASC')
+                        ->group_by('a.id_peg');
                         // ->where('id_m_status_pegawai', 1)
                         // ->get()->result_array();
      
@@ -1449,6 +1546,8 @@
                         ->order_by('a.created_date', 'desc')
                         ->get()->result_array();
         }
+
+  
 
         public function inputHardcodeNominatif($data){
             $rs['code'] = 0;

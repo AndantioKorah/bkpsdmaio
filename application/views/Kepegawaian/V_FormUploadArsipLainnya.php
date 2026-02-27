@@ -114,6 +114,9 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 			<?php if($jenis_arsip){ foreach($jenis_arsip as $r){ ?>
                         <option value="<?=$r['id_dokumen']?>"><?=$r['name']?></option>
                     <?php } } ?>
+      <?php if( $this->general_library->getBidangUser() == ID_BIDANG_PEKIN) { ?>
+      <option value="105">SURAT PERNYATAAN / Surat Pernyataan</option>   
+      <?php } ?>
 		</select>
   </div>
 

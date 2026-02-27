@@ -22,6 +22,11 @@ $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterS
 $route['master/event'] = 'master/C_Master/masterEvent';
 $route['master/hardcode-nominatif'] = 'master/C_Master/hardCodeNominatif';
 $route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
+$route['master/perangkat-daerah/jft'] = 'master/C_Master/openListPegawaiDetailSkpdMenu';
+$route['notifikasi-pegawai'] = 'user/C_User/notifikasiPegawai';
+$route['master/perangkat-daerah/bangkom'] = 'kepegawaian/C_Kepegawaian/openListUploadBangkomSkpd';
+
+
 
 //event
 $route['event/surat-tugas'] = 'kepegawaian/C_Layanan/suratTugasEvent';
@@ -133,3 +138,6 @@ $route['admin/monitoring/event/absen'] = 'dashboard/C_Dashboard/dashboardWalikot
 
 //internal API
 $route['api/get-data-tpp'] = 'api/C_ApiLayanan/getDataTpp';
+
+//BKPSDM Bacirita
+$route['bkpsdm-bacirita/kegiatan'] = 'bacirita/C_Bacirita/manageKegiatan';

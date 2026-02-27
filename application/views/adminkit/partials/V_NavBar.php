@@ -131,15 +131,41 @@
 		color: #343a40;
 		transition: .2s;
 	}
+
 	.list-group{
-            overflow-y: initial !important
-        }
+		overflow-y: initial !important
+	}
+
+	.text-isi-notif{
+		display: -webkit-box; /* Required for older browser compatibility */
+		-webkit-box-orient: vertical; /* Required for older browser compatibility */
+		-webkit-line-clamp: 2; /* Limits text to 3 lines */
+		overflow: hidden;
+		text-overflow: ellipsis; /* Ensures the ellipsis appears */
+		line-height: 15px;
+		font-size: 0.85rem;
+		color: #333333;
+	}
+
+	.notif-pegawai-not-read{
+		background-color: #e6fdff;
+	}
+
+	.badge-notifikasi{
+		width: auto;
+		max-width: 1.3rem;
+		font-size: .6rem;
+		position: absolute;
+		z-index: 1;
+		right: 0;
+	}
 </style>
 
 <?php
   $list_role = $this->general_library->getListRole();
   $list_notif_layanan = $this->general_library->getListAdminLayanan();
   $list_notif_layanan_pensiun = $this->general_library->getListAdminLayananPensiun();
+  $list_notif_pegawai = $this->general_library->getNotifikasiPegawai();
 //   dd( $list_notif_layanan);
   $active_role = $this->general_library->getActiveRole();
 ?>
@@ -161,12 +187,12 @@
 	<a class="sidebar-toggle js-sidebar-toggle">
 		<button style="border: 1px solid #f5f7fb;background-color: transparent;" id="sidebar_toggle"> <i class="hamburger align-self-center"></i></button>
 	</a>
-	<?php if(!$this->general_library->isGuest()) { ?>
 	<?php if($this->general_library->getRole() == 'programmer' 
 	|| $this->general_library->getRole() == 'admin_aplikasi' 
 	|| $this->general_library->isHakAkses('akses_profil_pegawai') 
 	|| $this->general_library->isKasubagKepegawaianDiknas()
 	|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN 
+	|| $this->general_library->isGuest()
 	|| $this->general_library->getRole() == 'walikota') { ?>
 		<?php
 			// $number = excelRoundDown(30665.78, 5);
@@ -189,7 +215,6 @@
 			<div class="row" id="div_search_result">
 			</div>
 		</form>
-	<?php } ?>
 	<?php } ?>
 	<span style="font-weight: bold; color: var(--primary-color);" id="live_date_time"></span>
 	<div class="navbar-collapse collapse">
@@ -293,39 +318,59 @@
 				</div>
 			</li> -->
 			
-			<!-- role  -->
 
-			<?php if($this->general_library->isPegawaiBkpsdm()) { ?>
+			<!-- live chat -->
+			<?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 87){ ?>
+				<li class="nav-item">
+					<div class="position-relative">
+						<a class="nav-icon" href="#" id="liveChatIcon">
+							<i class="align-middle" data-feather="message-circle"></i>
+						</a>
+					</div>
+				</li>
+			<?php } ?>
+
+			<!-- notif  -->
+			<?php // if($this->general_library->isPegawaiBkpsdm()) { ?>
 				<li class="nav-item dropdown">
-				<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
-								<div class="position-relative">
-									<i class="align-middle" data-feather="bell"></i>
-									<?php 
-									$layanan = 0;
-									$layanan2 = 0;
-									if($list_notif_layanan){
-										$layanan = count($list_notif_layanan);
-									}
-									if($list_notif_layanan_pensiun){
-										$layanan2 = count($list_notif_layanan_pensiun);
-									} 
-									$total = $layanan + $layanan2;  
-									;?>
-									
-									<?php if($total > 0) { ?>
-									<span class="indicator" ><?= $total;?></span>
-									<?php } ?>
-								</div>
-							</a>
-							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">
-								<div class="dropdown-menu-header">
-									Notifikasi Baru
-								</div>
-								<div class="list-group" style="
-									width: 100%;
-									height: 400px;
-									overflow: scroll;">
-								<?php foreach($list_notif_layanan as $ly){ ?>
+					<a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
+						<div class="position-relative">
+							<i class="align-middle" data-feather="bell"></i>
+							<?php 
+							$layanan = 0;
+							$layanan2 = 0;
+							$notifPegawai = 0;
+							if($list_notif_layanan){
+								$layanan = count($list_notif_layanan);
+							}
+							if($list_notif_layanan_pensiun){
+								$layanan2 = count($list_notif_layanan_pensiun);
+							}
+							if($list_notif_pegawai && isset($list_notif_pegawai['show']) && count($list_notif_pegawai['show']) > 0){
+								$notifPegawai = count($list_notif_pegawai['show']);
+							} 
+							$total_notifikasi = $layanan + $layanan2 + $notifPegawai;  
+
+							if(!$this->general_library->isPegawaiBkpsdm()){
+								$total_notifikasi = $notifPegawai;
+							}
+							;?>
+							
+							<?php if($total_notifikasi > 0) { ?>
+								<span class="indicator" id="indikator_total_notifikasi" ><?= $total_notifikasi;?></span>
+							<?php } ?>
+						</div>
+					</a>
+					<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 tss" aria-labelledby="alertsDropdown">
+						<?php if($this->general_library->isPegawaiBkpsdm()){ ?>
+							<div class="dropdown-menu-header">
+								Administrasi Kepegawaian
+							</div>
+							<div class="list-group" style="
+								width: 100%;
+								max-height: 400px;
+								overflow: scroll;">
+								<?php if($list_notif_layanan){ foreach($list_notif_layanan as $ly){ ?>
 									<a href="<?php echo base_url('kepegawaian/verifikasi-layanan-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['id_m_layanan']?>" class="list-group-item">
 										<div class="row g-0 align-items-center">
 											<div class="col-2">
@@ -338,8 +383,8 @@
 											</div>
 										</div>
 									</a>
-									<?php } ?>
-									<?php foreach($list_notif_layanan_pensiun as $ly){ ?>
+								<?php } } ?>
+								<?php if($list_notif_layanan_pensiun){ foreach($list_notif_layanan_pensiun as $ly){ ?>
 									<a href="<?php echo base_url('kepegawaian/pensiun/kelengkapan-berkas/');?><?=$ly['username']?>" class="list-group-item">
 									<!-- <a href="<?php echo base_url('kepegawaian/verifikasi-pensiun-detail/');?><?=$ly['id_t_layanan']?>/<?=$ly['jenis_pensiun']?>" class="list-group-item"> -->
 
@@ -354,11 +399,60 @@
 											</div>
 										</div>
 									</a>
-									<?php } ?>
-								</div>
+								<?php } } ?>
 							</div>
+						<?php } ?>
+						<div class="list-group" style="
+							width: 100%;
+							max-height: 400px;
+							overflow: scroll;">
+								<?php if(isset($list_notif_pegawai['show']) || isset($list_notif_pegawai['read'])){
+									$total_notifikasi_pegawai = 0;
+									if(isset($list_notif_pegawai['read'])){
+										$total_notifikasi_pegawai += count($list_notif_pegawai['read']);
+									}
+									if(isset($list_notif_pegawai['show'])){
+										$total_notifikasi_pegawai += count($list_notif_pegawai['show']);
+									}
+								?>
+									<a href="<?=base_url('notifikasi-pegawai')?>" class="list-group-item p-0" style="padding: 5px !important;">
+										<div class="row g-0 align-items-center">
+											<div class="col-12 text-center text-dark">
+												Lihat Semua (<?=$total_notifikasi_pegawai?>)
+											</div>
+										</div>
+									</a>
+								<?php } ?>
+								<?php if($list_notif_pegawai && $list_notif_pegawai['show']) { foreach($list_notif_pegawai['show'] as $np){ ?>
+									<!-- <span id="badge_<?=$np['id']?>" class="badge badge-info badge-notifikasi">&#9679;</span> -->
+									<a href="<?=base_url($np['link_href'])?>" id="notif_pegawai_<?=$np['id']?>" onmouseover="checkHover('<?=$np['id']?>')"
+									class="list-group-item notif-pegawai-not-read p-0" style="padding: 5px !important;">
+										<div class="row g-0 align-items-center">
+											<div class="col-2 text-center">
+												<i class="<?=$np['fa_icon']?> fa-2x" style="color: <?=$np['icon_color']?>"></i>
+											</div>
+											<div class="col-10">
+												<div class="text-dark"><?=$np['judul_notifikasi']?></div>
+												<div class="text-isi-notif"><?=$np['pesan']?></div>
+												<div class="text-muted small mt-1 text-right"><?=formatDateNotifikasi($np['created_date'])?></div>
+											</div>
+										</div>
+									</a>
+								<?php } } else {?>
+									<span class="p-0" style="padding: 5px !important;">
+										<div class="row g-0 align-items-center">
+											<div class="col-12 text-center text-muted small">
+												<i>Tidak ada notifikasi baru</i>
+											</div>
+										</div>
+									</span>
+								<?php } ?>
+						</div>
+					</div>
 				</li>
-				<?php } ?>	
+			<?php // } ?>	
+
+			<!-- role  -->
 			<?php 
 			$cari_role = array_search("admin_aplikasi", array_column($list_role, 'role_name'));
 			if($cari_role == false){ ?>	
@@ -424,10 +518,70 @@
 	</div>
 </nav>
 
-<script>
+<script>	
 	$(function(){
 
 	})
+
+	$('#liveChatIcon').on('click', function(e){
+		e.stopPropagation();
+		toggleLiveChat()
+	})
+
+	function toggleLiveChat(flag_wrapper = 0){
+		if(flag_wrapper == 1){
+			$('.div_live_chat').removeClass('div_live_chat_slide_in')
+			$('.div_live_chat').addClass('div_live_chat_slide_out')
+		} else {
+			if(!$('.div_live_chat').hasClass('div_live_chat_slide_in')){
+				$('.div_live_chat').removeClass('div_live_chat_slide_out')
+				$('.div_live_chat').addClass('div_live_chat_slide_in')
+			} else {
+				$('.div_live_chat').removeClass('div_live_chat_slide_in')
+				$('.div_live_chat').addClass('div_live_chat_slide_out')
+			}
+		}
+	}
+
+	function checkHover(id){
+		var hoverTimer;
+	
+		$('#notif_pegawai_'+id).on('mouseover', function() {
+			var $this = $(this); // Cache the element reference
+			// Set a timeout to execute the action after 2000ms (2 seconds)
+			hoverTimer = setTimeout(function() {
+				// $('#notif_pegawai_'+id).fadeIn(); // Action to perform after 2 seconds
+				if($('#notif_pegawai_'+id).hasClass('notif-pegawai-not-read')){
+					$('#notif_pegawai_'+id).removeClass('notif-pegawai-not-read')
+					updateNotifStatus(id)
+				}
+			}, 1000);
+		}).on('mouseleave', function() {
+			// Clear the timeout if the mouse leaves before 2 seconds
+			// console.log(hoverTimer)
+			clearTimeout(hoverTimer);
+			// successtoast('mouse leave before 2 secs')
+			// $('#notif_pegawai_'+id).fadeOut(); // Optional: Hide the element when the mouse leaves
+		});
+	}
+
+	function updateNotifStatus(id){
+		$.ajax({
+			url : "<?php echo base_url('user/C_User/changeNotifStatus/')?>"+id,
+			method : "POST",
+			data: null,
+			success: function(data){
+				let total_notif = parseInt($('#indikator_total_notifikasi').html())
+				let new_total_notif = total_notif - 1;
+				if(new_total_notif == 0){
+					$('#indikator_total_notifikasi').fadeOut(200)
+				} else {
+					$('#indikator_total_notifikasi').html(new_total_notif)
+				}
+			}, error: function(err){
+			}
+		});
+	}
 
 	function switchToAdmin(){
 		$('#btn_switch').hide()

@@ -241,7 +241,8 @@ $(function(){
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
-    autoclose: true
+     autoclose: true,
+    todayHighlight: true,
 });
 
     
@@ -257,8 +258,8 @@ $(function(){
         return false;
         }
        
-        document.getElementById('btn_upload_diklat').disabled = true;
-        $('#btn_upload_diklat').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+        // document.getElementById('btn_upload_diklat').disabled = true;
+        // $('#btn_upload_diklat').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
       
         $.ajax({  
         url:"<?=base_url("kepegawaian/C_Kepegawaian/doUpload2")?>",
@@ -330,10 +331,12 @@ $(function(){
           $(this).val('');
         }
 
-        if (fileSize > MaxSize ){
-          errortoast("Maksimal Ukuran File 2 MB")
+        <?php if(!($this->general_library->isProgrammer())){ ?>
+        if ((fileSize > MaxSize) ){
+          errortoast("Maksimal Ukuran File 1 MB")
           $(this).val('');
         }
+        <?php } ?>
 
         });
 

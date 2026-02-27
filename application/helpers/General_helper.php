@@ -430,6 +430,41 @@ function getListDateByMonth($month, $year){
     return $list;
 }
 
+// function getMonthsBetweenDate($startDate, $endDate, $format = 'F Y') {
+//     $dates = [];
+//     $start = new DateTime($startDate);
+//     $end = new DateTime($endDate);
+//     // Add one month to the end date so the end month is included in the period
+//     $end->modify('+1 month'); 
+//     $interval = new DateInterval('P1M'); // Period 1 Month
+//     $period = new DatePeriod($start, $interval, $end);
+
+//     foreach ($period as $date) {
+//         $dates[] = $date->format($format);
+//     }
+//     return $dates;
+// }
+
+function getMonthsBetweenDate($startDate, $endDate) {
+    $between = getDateBetweenDates($startDate, $endDate);
+    $rs = null;
+    $temp = null;
+    if($between){
+        foreach($between as $b){
+            $explode = explode("-", $b);
+            $temp[$explode[1].'-'.$explode[0]] = $explode[1]."-".$explode[0];
+        }
+    }
+
+    if($temp){
+        foreach($temp as $t){
+            $rs[] = $t;
+        }
+    }
+
+    return $rs;
+}
+
 function getDateBetweenDates($startDate, $endDate)
 {
     $rangArray = [];
@@ -807,6 +842,16 @@ function getNamaPegawaiFull($pegawai, $flag_capital_nama = 0)
     return trim(trim($pegawai['gelar1']).' '.ucwords(trim($nama_pegawai)).' '.trim($pegawai['gelar2']));
 }
 
+function formatNamaPegawaiLiveChat($pegawai){
+    $expl = explode(" ", trim($pegawai['nama']));
+    $rs = $expl[0];
+    if(count($expl) > 1){
+        $rs .= " ".$expl[count($expl) - 1];
+    }
+    // return clearString($rs);
+    return preg_replace('/[^a-zA-Z0-9 ]/s', '', $rs);
+}
+
 function sortArrayObjectValue($object1, $object2, $value)
 {
     return $object1->$value > $object2->$value;
@@ -900,6 +945,14 @@ function getNamaHariFromNumber($hari)
         default:
             return 'invalid';
     }
+}
+
+function textElipsis($text, $length = 100){
+    $rs = $text;
+    if(strlen($text) > 100){
+        $rs = substr($text, 0, 100)."...";
+    }
+    return $rs;
 }
 
 function getNamaHari($date)
@@ -1235,6 +1288,36 @@ function isSuratCutiTahunan($array){
         'result' => $valid == 0 ? false : true,
         'lama_cuti' => $lama_cuti,
     ];
+}
+
+function formatDateNotifikasi($date, $flag_hide_yang_lalu = 0){
+    $now = date('Y-m-d');
+    $expl = explode(" ", $date);
+    $res = null;
+    if($now != $expl[0]){
+        return formatDateNamaBulan($expl[0])." ".formatTimeAbsen($expl[1]);
+    } else {
+        $now = date('Y-m-d H:i:s');
+        $diffJam = countDiffDateLengkap($date, $now, ['jam']);
+        if($diffJam < 1){
+            $res = countDiffDateLengkap($date, $now, ['menit']);
+        } else {
+            $res = $diffJam;
+        }
+    }
+
+    if($res == "Hari Ini"){
+        $res = "1 menit";
+    }
+
+    return $flag_hide_yang_lalu == 0 ? $res : $res.' yang lalu';
+}
+
+function getMonthBetweenDate($date1, $date2){
+    $dateAwal = new DateTime($date1);
+    $dateAkhir = new DateTime($date2);
+    $interval = $date1->diff($date2);
+    return ($interval->y * 12) + $interval->m;
 }
 
 function countDiffDateLengkap($date1, $date2, $params = '')

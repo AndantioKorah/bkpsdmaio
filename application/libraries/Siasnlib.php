@@ -58,6 +58,56 @@ class Siasnlib{
         );
     }
 
+    function getRiwayatKursus($nip){
+        return $this->postCurl(
+            $this->API_URL.'pns/rw-kursus/'.$nip,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
+    function createBangkom($data){
+        return $this->postCurl(
+            $this->API_URL.'kursus/save',
+            json_encode($data),
+            "POST",
+            0,
+            1
+        );
+    }
+    
+    function createBangkomStruktural($data){
+        return $this->postCurl(
+            $this->API_URL.'kursus/save',
+            json_encode($data),
+            "POST",
+            0,
+            1
+        );
+    }
+    
+    function getDataBangkom($id){
+        return $this->postCurl(
+            $this->API_URL.'kursus/id/'.$id,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
+    function getRiwayatSertifikasi($nip){
+        return $this->postCurl(
+            $this->API_URL.'pns/rw-sertifikasi/'.$nip,
+            null,
+            "GET",
+            0,
+            1
+        );
+    }
+
     function getDataUtamaPnsByNip($nip){
         return $this->postCurl(
             $this->API_URL.'pns/data-utama/'.$nip,
@@ -226,6 +276,9 @@ class Siasnlib{
         }
 
         $response = curl_exec($curl);
+        if($url == $this->API_URL."pns/rw-kursus/199502182020121013"){
+            // dd($response);
+        }
         $err = curl_error($curl);
 
         curl_close($curl);

@@ -1,3 +1,4 @@
+
 <?php
   if($profil_pegawai){
 ?>
@@ -155,6 +156,10 @@
   // $jenis_jabatan = $tpp[0]['jenis_jabatan'];
 ?>
 
+<!-- Button trigger modal -->
+<button style="display:none" type="button" id="btnmodalsurvei" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSurvei">
+  Launch demo modal
+</button>
 
   <div class="row">
     <div class="col-lg-12">
@@ -849,14 +854,14 @@
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormArsip()" class="nav-link nav-link-profile" id="pills-arsip-tab" data-bs-toggle="pill" data-bs-target="#pills-arsip" type="button" role="tab" aria-controls="pills-arsip" aria-selected="false">Arsip Lainnya</button>
               </li>
-              <?php if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isHakAkses('akses_presensi_profil_pegawai') || $this->general_library->getUserName() == $nip || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){ ?>
+              <?php if($this->general_library->isGuest() || $this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN || $this->general_library->isHakAkses('akses_presensi_profil_pegawai') || $this->general_library->getUserName() == $nip || isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())){ ?>
               <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="loadPresensiPegawai()" class="nav-link nav-link-profile" id="pills-presensi-tab" data-bs-toggle="pill" data-bs-target="#pills-presensi" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Presensi</button>
               </li>
               <?php } ?>
-              <li class="nav-item nav-item-profile" role="presentation">
+              <!-- <li class="nav-item nav-item-profile" role="presentation">
                 <button onclick="LoadFormKp4()" class="nav-link nav-link-profile" id="pills-kp4-tab" data-bs-toggle="pill" data-bs-target="#pills-kp4" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">KP4</button>
-              </li>
+              </li> -->
               <?php 
               // if(
                 // $this->general_library->getIdEselon() < 8 && 
@@ -868,7 +873,7 @@
               if($profil_pegawai['jenis_jabatan'] == "Struktural" || $profil_pegawai['jenis_jabatan'] == "JFU") {
               ?>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() ||  $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->getUserName() == $nip){ ?>
-              <?php if($profil_pegawai['statuspeg'] != 1) { ?>
+              <?php if($profil_pegawai['statuspeg'] == 2) { ?>
                 <li class="nav-item nav-item-profile" role="presentation"> 
                 <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>
               </li>
@@ -1199,6 +1204,54 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="modalSurvei" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <div id="modal-survei">
+         Yth. Bapak/Ibu/Saudara/i, Dokumen Layanan <?=$layananSelesai['layanan'];?> anda telah kami upload di Aplikasi Siladen dan dapat Anda lihat pada tab Pangkat.
+          <br><br>
+          Dengan hormat, kami mohon kesediaan Bapak/Ibu/Saudara/i untuk berpartisipasi sebagai 
+          responden dalam Survei. Masukan Anda sangat berarti
+          untuk peningkatan kualitas pelayanan kami. Atas perhatian dan waktunya, kami ucapkan terima kasih: 
+         <br>
+         <br>
+
+        
+          <center>
+             <span>Isi survei di sini: </span>
+            <br>
+            <br>
+            <a class="" id="link_survei" target="_blank" href="https://www.google.com/">
+            <h4>LINK</h4>
+            </a>
+          </center>       
+       <center>
+          <img  style="width: 240px; height: 240px" src="<?=base_url('assets/images/asn.png')?>" /> 
+       </center>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+        <div class="form-check form-check-inline">
+  <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+  <label class="form-check-label" for="inlineCheckbox1">Telah Mengisi Survei</label>
+</div>
+
+<div class="form-check form-check-inline">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Oke</button>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Modal Status PDM -->
 <div class="modal fade" id="pdmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPdm" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -1228,6 +1281,9 @@
 
 
 <!-- Modal -->
+
+
+
 
 <script>
     $('#form_status_berkas').on('submit', function(e){  
@@ -1333,6 +1389,8 @@
   var nip = "<?= trim($nip);?>"; 
   var page = "<?= $page;?>"
   $(function(){
+      
+
     window.bLazy = new Blazy({
       container: '.container',
       success: function(element){
@@ -1394,8 +1452,12 @@
   // if(bidang == ""){
   // $('#btnstatic').click()  
   // }
+      <?php if(isset($layananSelesai['code']) AND ($layananSelesai['code'] == 1)){ ?>
+      // $('#btnmodalsurvei').click()
+      // $('#modal-survei').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
+    <?php } ?>
 
-
+  
   })
 
 
@@ -1688,7 +1750,19 @@ $("#id_m_bidang").change(function() {
                   });
   });
 
- 
+      $('#link_survei').on('click', function(){
+        console.log("teslink")
+          // $.ajax({
+          //     url: '<?=base_url("kepegawaian/C_Kepegawaian/changeFlagSertifikasi/")?>'+$(this).is(':checked')+'/'+'<?=$profil_pegawai['nipbaru_ws']?>',
+          //     method: 'post',
+          //     data: $(this).serialize(),
+          //     success: function(data){
+          //         successtoast('Berhasil')
+          //     }, error: function(e){
+          //         errortoast('Terjadi Kesalahan')
+          //     }
+          // })
+        })
 
 
 

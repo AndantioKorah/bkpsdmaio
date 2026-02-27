@@ -92,7 +92,7 @@
               $badge_aktif = 'badge-pendidikan';
             }
             ;?>
-            <span style="margin-bottom:5px"  class="badge <?=$badge_aktif;?>"><?=$rj['nm_rumpun_jabatan'];?></span>
+            <span style="margin-bottom:5px;font-size:12px;"  class="badge badge-dark"><?=$rj['nm_rumpun_jabatan'];?></span>
             <!-- <table class="table table-hover table-striped table-bordered">
 										<tr>	
 											<td style="width:90%;"> <b><?=$rj['nm_rumpun_jabatan'];?> 

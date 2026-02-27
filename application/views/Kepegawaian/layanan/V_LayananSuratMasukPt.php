@@ -322,14 +322,14 @@ ol {
 			<ol class="rectangle-list">
             <li>
             	<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
-            		<?php if($skp1) { ?> onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',1)"
+            		<?php if($skp1) { ?> onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SKP TAHUN <?=$tahun_1_lalu;?>* <i class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
             </li>
              <li>
-            	<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
-            		<?php if($skp1) { ?> onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',1)"
+            	<a class="<?php if($skp2){ if($skp2['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
+            		<?php if($skp2) { ?> onclick="viewBerkasPangkat('<?=$skp2['gambarsk'];?>',3)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
-                     SKP TAHUN <?=$tahun_2_lalu;?>* <i class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+                     SKP TAHUN <?=$tahun_2_lalu;?>* <i class="fas fa-<?php if($skp2) echo ''; else echo '';?>"></i></a>
             </li>
              <li>
             	<a class="<?php if($sk_pangkat){ if($sk_pangkat['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"

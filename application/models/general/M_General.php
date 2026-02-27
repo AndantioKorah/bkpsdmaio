@@ -2508,13 +2508,14 @@
         public function cronCheckDataBangkom($nip = ""){
             $this->db->select('nipbaru_ws')
                     ->from('db_pegawai.pegawai')
-                    ->where('id_m_status_pegawai', 1)
-                    ->where('flag_cek_bangkom', 0);
+                    ->where('id_m_status_pegawai', 1);
+                    // ->where('flag_cek_bangkom', 0);
 
             if($nip != ""){
                 $this->db->where('nipbaru_ws', $nip);
             } else {
-                $this->db->limit(300);
+                $this->db->where('flag_cek_bangkom', 0)
+                        ->limit(50);
             }
             $pegawai = $this->db->get()->result_array();
 

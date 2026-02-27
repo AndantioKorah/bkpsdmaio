@@ -43,7 +43,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronDsBulkTte(){
-        $this->cronCheckDataBangkom();
+        // $this->cronCheckDataBangkom();
 
         // $this->general->logCron('cronDsBulkTte');
 		// $this->layanan->cronBulkDs();

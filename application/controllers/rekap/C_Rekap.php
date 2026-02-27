@@ -299,6 +299,12 @@ class C_Rekap extends CI_Controller
         $this->load->view('rekap/V_RekapTppResult', $data);
     }
 
+    public function openListBangkomTpp(){
+        $data['result'] = $this->input->post('list_pegawai');
+        
+        // $data['result'] = $this->rekap->getListBangkomTpp($data['list_pegawai']);
+    }
+
     public function downloadBerkasTpp($id_m_tpp_tambahan = 0, $flag_excel = 0){
         $param = $this->input->post();
         $param['id_m_tpp_tambahan'] = $id_m_tpp_tambahan;
@@ -561,7 +567,7 @@ class C_Rekap extends CI_Controller
                 $data = null;
                 $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null, 1);
                 $data['flag_print'] = 0;
-                if($data['result']){
+                if($data['result'] && !isset($data['result']['code']) && $data['result']['code'] != 1){
                     $data['skpd'] = $data['result']['skpd'];
                     $data['jam_kerja'] = $data['result']['jam_kerja'];
                     $data['jam_kerja_event'] = $data['result']['jam_kerja_event'];

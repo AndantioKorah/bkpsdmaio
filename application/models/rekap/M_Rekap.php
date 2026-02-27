@@ -1736,15 +1736,50 @@
         return $list_pegawai;
     }
 
+    // public function getListBangkomTpp($list_pegawai){
+    //     $pegawai = null;
+    //     foreach($list_pegawai as $lp){
+    //         if($lp['flag_bangkom_terpenuhi'] == 0){
+    //             $pegawai[] = $lp['nip'];
+    //         }
+    //     }
+    // }
+
     public function cekBangkomBulanan($param, $unitkerja = 0, $list_pegawai = null){
+        $res = [
+            'code' => 0,
+            'message' => 'ok',
+            'list_pegawai' => $list_pegawai,
+            'id_unitkerja' => $param['id_unitkerja']
+        ];
+        
+        $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja')
+                ->from('db_pegawai.pegawai a')
+                ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                ->where('id_m_status_pegawai', 1);
+
+        if($param['id_unitkerja'] == "3010000"){ // jika diknas, ambil semua sekolah
+            $this->db->where("b.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR b.id_unitkerja = '3010000'");
+        } else if($param['id_unitkerja'] == "3012000"){ // jika puskes
+            $this->db->where("b.id_unitkerjamaster = '6000000' OR b.id_unitkerja = '3012000'");
+            // $this->db->where_in('b.id_unitkerjamaster', 6000000);
+        }
+        $list_pegawai = $this->db->get()->result_array();
+
         if($list_pegawai){
             $nip = null;
             foreach($list_pegawai as $lp){
-                $nip[] = $lp['nip'];
+                if($lp['flag_bangkom_terpenuhi'] == 0){
+                    $res['code'] = 1;
+                    $res['message'] = "belum lengkap bangkom";
+                    $res['list_pegawai'] = $list_pegawai;
+                    break;
+                }
             }
-            
+            return $res;
             // buat cron 1 lagi untuk mengecek flag_terpenuhi
             // cek tiap pegawai, tambah flag_cek_bangkom = 0, id_m_status_pegawai = 1. jika semua sudah 1, reset kembali jadi 0, dan cek kembali semua
+
         }
     }
 
@@ -1778,7 +1813,7 @@
         // }
         if($flag_absen_aars == 1){
             $this->db->select('a.nipbaru_ws as nip, a.gelar1, a.gelar2, a.nama, c.nm_unitkerja, c.id_unitkerja, d.kelas_jabatan_jfu, d.kelas_jabatan_jft,
-            b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat, b.nama_jabatan, f.nm_statuspeg,
+            b.kelas_jabatan, b.jenis_jabatan, a.statuspeg, d.id_pangkat, b.nama_jabatan, f.nm_statuspeg, a.flag_bangkom_terpenuhi,
             b.eselon, c.id_unitkerjamaster, a.kelas_jabatan_hardcode, a.id_jabatan_tambahan, a.statuspeg,
             a.pangkat, a.flag_terima_tpp, a.flag_sertifikasi, a.statuspeg, a.tmt_hitung_absen')
                             ->from('db_pegawai.pegawai a')
@@ -1818,10 +1853,21 @@
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
 
-        if($flag_rekap_tpp == 1 && $this->general_library->isProgrammer()){
+        if($flag_rekap_tpp == 1){
             if($data['tahun'].'-'.$data['bulan'].'01' >= '2026-02-01'){
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
-                // keluarkan yang flag_terima_tpp = 1
+                if($rs['code'] == 1){
+                    return $rs;
+                } else {
+                    // keluarkan yang flag_terima_tpp = 1
+                    $i = 0;
+                    foreach($list_pegawai as $lp){
+                        if($lp['flag_terima_tpp'] == 0){
+                            unset($list_pegawai[$i]);
+                        }
+                        $i++;
+                    }
+                }
             }
         }
 

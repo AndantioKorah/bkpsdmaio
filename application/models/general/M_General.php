@@ -2505,6 +2505,35 @@
             return $notif;
         }
 
+        public function cronCheckDataBangkom(){
+            $pegawai = $this->db->select('nipbaru_ws')
+                            ->from('db_pegawai.pegawai')
+                            ->where('id_m_status_pegawai', 1)
+                            ->where('flag_cek_bangkom', 0)
+                            ->get()->result_array();
+
+            if($pegawai){
+                $minMonth = "02";
+                $minYear = "2026";
+                
+                $dataCek = $this->db->select('*')
+                                ->from('t_cek_bangkom')
+                                ->where('flag_active', 1)
+                                ->where('flag_exception', 0)
+                                ->where('flag_terpenuhi', 0)
+                                ->order_by('bulan', 'asc')
+                                ->order_by('tahun', 'asc')
+                                ->get()->result_array();
+
+                
+            } else { // jika semua sudah dicek, reset jadi 0 lagi
+                $this->db->where('id_m_status_pegawai', 1)
+                        ->update('db_pegawai.pegawai', [
+                            'flag_cek_bangkom' => 0
+                        ]);
+            }
+        }
+
         public function cronCheckBangkom($bulan = 0, $tahun = 0){
             if($bulan == 0){
                 $bulan = date('m');

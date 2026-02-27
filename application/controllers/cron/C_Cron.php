@@ -67,6 +67,11 @@ class C_Cron extends CI_Controller
         $this->general->logCron('cronCheckBangkom');
     }
 
+    public function cronCheckDataBangkom(){
+        $this->general->cronCheckDataBangkom();
+        $this->general->logCron('cronCheckDataBangkom');
+    }
+
     public function removeLog($batasHari = 30){
         $this->general->removeLog($batasHari);
     }
@@ -169,6 +174,11 @@ class C_Cron extends CI_Controller
 
     public function cekSidak(){
         return $this->general->cekSidak();
+        // return $this->user->cekKenegaraanCustom();
+    }
+
+    public function inputSertiBkpsdmBacirita(){
+        return $this->user->inputSertiBkpsdmBacirita();
         // return $this->user->cekKenegaraanCustom();
     }
 

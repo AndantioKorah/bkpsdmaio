@@ -4172,6 +4172,9 @@ class C_Kepegawaian extends CI_Controller
         $data['result'] = $this->kepegawaian->getListUploadBangkomSkpd();
         $data['bulan'] = $this->input->post('bulan');
         $data['tahun'] = $this->input->post('tahun');
+        $data['skpd'] = $this->input->post('unitkerja');
+
+		
         $this->load->view('kepegawaian/laporan/V_skpdUploadBangkomItem', $data);
     }
 

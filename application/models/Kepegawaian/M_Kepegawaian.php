@@ -1454,6 +1454,7 @@ class M_Kepegawaian extends CI_Model
         $cekNomorSttp = $this->db->select('*')
                                         ->from('db_pegawai.pegdiklat a')
                                         ->where('a.flag_active', 1)
+                                        ->where('a.status', 2)
                                         ->where('id_pegawai', $this->input->post('id_pegawai'))
                                         ->where('nosttpp', $this->input->post('diklat_no_sttpp'))
                                         ->get()->result_array();
@@ -16889,8 +16890,30 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                     $this->db->where_in('b.id_unitkerjamaster', ['6000000','7005000']);
                                 } else if($this->input->post('unitkerja') == 994){
                                     $this->db->where_not_in('b.id_unitkerjamaster', ['6000000','7005000','8010000','8020000','8000000']);
-                                }   else {
-                                    $this->db->where('a.skpd', $this->input->post('unitkerja'));
+                                }  else if($this->input->post('unitkerja') == '5001001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5001000']);
+                                } else if($this->input->post('unitkerja') == '5002001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5002000']);
+                                } else if($this->input->post('unitkerja') == '5003001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5003000']);
+                                } else if($this->input->post('unitkerja') == '5004001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5004000']);
+                                } else if($this->input->post('unitkerja') == '5005001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5005000']);
+                                } else if($this->input->post('unitkerja') == '5006001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5006000']);
+                                } else if($this->input->post('unitkerja') == '5007001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5007000']);
+                                }else if($this->input->post('unitkerja') == '5008001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5008000']);
+                                } else if($this->input->post('unitkerja') == '5009001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5009000']);
+                                } else if($this->input->post('unitkerja') == '5010001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5010001']);
+                                } else if($this->input->post('unitkerja') == '5011001'){
+                                    $this->db->where_in('b.id_unitkerjamaster', ['5011001']);
+                                }  else {
+                                $this->db->where('a.skpd', $this->input->post('unitkerja'));
                                 }
                                 }
                                 $result = $this->db->get()->result_array();

@@ -12,7 +12,8 @@
     <div class="card-header" style="margin-bottom:-40px">
     
  <form  method="post" enctype="multipart/form-data" class="float-right mr-1 mb-4" action="<?=base_url('kepegawaian/C_Kepegawaian/openListUploadBangkomSkpdItemExcel')?>" target="_blank">
-			<input type="hidden" name="tahun" value="<?=$tahun;?>">
+                <input type="hidden" name="unitkerja" value="<?=$skpd;?>">
+                <input type="hidden" name="tahun" value="<?=$tahun;?>">
             	<input type="hidden" name="bulan" value="<?=$bulan;?>">
                 <button type="submit" class="btn btn-success"><i class="fa fa-file"></i> Download as Excel</button>
 		</form>

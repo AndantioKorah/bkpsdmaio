@@ -4374,8 +4374,11 @@
                             ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                             ->join("db_pegawai.pegdiklat c", "c.id_pegawai = b.id_peg AND c.flag_active = 1 AND c.nosttpp = '".$noSttpp."'", "left")
                             ->where('b.id_m_status_pegawai', 1)
+                            ->where('a.flag_active', 1)
+
                             // ->where('b.nipbaru_ws', '199502182020121013')
                             ->get()->result_array();
+            // dd($data);
             if($data){
                 foreach($data as $d){
                     if(!$d['id_pegdiklat']){

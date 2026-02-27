@@ -241,7 +241,8 @@ $(function(){
     // viewMode: "years", 
     // minViewMode: "years",
     // orientation: 'bottom',
-    autoclose: true
+     autoclose: true,
+    todayHighlight: true,
 });
 
     

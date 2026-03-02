@@ -63,8 +63,8 @@ class C_Cron extends CI_Controller
         $this->siasn->cronSyncJabatanSiasn();
     }
 
-    public function cronCheckBangkom(){
-        $this->general->cronCheckBangkom();
+    public function cronCheckBangkom($bulan = 0, $tahun = 0, $nip = "", $id_unitkerja = 0){
+        $this->general->cronCheckBangkom($bulan, $tahun, $nip, $id_unitkerja);
         $this->general->logCron('cronCheckBangkom');
     }
 
@@ -78,7 +78,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronCheckVerifCuti(){
-        $this->cronCheckBangkom();
+        $this->cronCheckBangkom($bulan = 0, $tahun = 0, $nip = "", $id_unitkerja = 0);
         // $this->general->cronCheckVerifCuti();
     }
 

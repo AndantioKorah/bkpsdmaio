@@ -1769,14 +1769,33 @@
         }
         if($list_pegawai){
             $nip = null;
+            $pegawai = null;
             foreach($list_pegawai as $lp){
-                if($lp['flag_bangkom_terpenuhi'] == 0){
-                    $res['code'] = 1;
-                    $res['message'] = "belum lengkap bangkom";
-                    $res['list_pegawai'] = $list_pegawai;
-                    break;
-                }
+                $pegawai[] = $lp['nip'];
             }
+
+            $cekBangkom = $this->db->select('a.*, b.gelar1, b.nama, b.gelar2')
+                                ->from('t_cek_bangkom a')
+                                ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                                ->where('a.flag_ditebus', 0)
+                                ->where('a.flag_terpenuhi', 0)
+                                ->where('bulan_tahun', $param['tahun']."-".$param['bulan']."-01")
+                                ->where_in('b.nipbaru_ws', $pegawai)
+                                ->get()->result_array();
+            if($cekBangkom){
+                // dd($cekBangkom);
+                $res['code'] = 1;
+                $res['message'] = "belum lengkap bangkom";
+                $res['list_pegawai'] = $cekBangkom;
+            }
+            // foreach($list_pegawai as $lp){
+            //     if($lp['flag_bangkom_terpenuhi'] == 0){
+            //         $res['code'] = 1;
+            //         $res['message'] = "belum lengkap bangkom";
+            //         $res['list_pegawai'] = $list_pegawai;
+            //         break;
+            //     }
+            // }
             return $res;
             // buat cron 1 lagi untuk mengecek flag_terpenuhi
             // cek tiap pegawai, tambah flag_cek_bangkom = 0, id_m_status_pegawai = 1. jika semua sudah 1, reset kembali jadi 0, dan cek kembali semua

@@ -2514,7 +2514,7 @@
                 $this->db->where('nipbaru_ws', $nip);
             } else {
                 $this->db->where('flag_cek_bangkom', 0)
-                        ->limit(300);
+                        ->limit(1000);
             }
             $pegawai = $this->db->get()->result_array();
 
@@ -2546,38 +2546,29 @@
                     foreach($dataCekBangkom as $dc){
                         if(!isset($dataPerPegawai[$dc['nip']])){ // jika belum ada maka set data
                             $dataPerPegawai[$dc['nip']] = $dc;
-                            $dataPerPegawai[$dc['nip']]['utang'] = 0;
-                            $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 1;
-
-                            $dataPerPegawai[$dc['nip']]['utang'] = $dc['jumlah_jp'] - $wajibCapaiJumlahJp;
+                            $dataPerPegawai[$dc['nip']]['utang'] = $wajibCapaiJumlahJp - $dc['jumlah_jp'];
+                            $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'] = null;
                             if($dataPerPegawai[$dc['nip']]['utang'] > 0){
-                                $dataPerPegawai[$dc['nip']]['utang'] = 0;
-                                $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 1;
-                            } else {
-                                $dataPerPegawai[$dc['nip']]['utang'] *= -1;
-                                $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 0;
+                                $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'][] = $dc['id'];
                             }
                         } else { // jika sudah ada maka cek utang
                             $dataPerPegawai[$dc['nip']]['utang'] += $wajibCapaiJumlahJp;
                             $perhitunganJp = $dc['jumlah_jp'] - $dataPerPegawai[$dc['nip']]['utang'];
                             if($perhitunganJp >= 0){
-                                $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 1;
-                                $dataPerPegawai[$dc['nip']]['utang'] = 0;
+                                $this->db->where_in('id', $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'])
+                                        ->update('t_cek_bangkom', [
+                                            'flag_ditebus' => 1
+                                        ]);
+                                $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'] = null;
                             } else {
-                                $dataPerPegawai[$dc['nip']]['flag_terpenuhi_bangkom'] = 0;
+                                $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'][] = $dc['id'];
                             }
                         }
                     }
-                    
-                    if($dataPerPegawai){
-                        foreach($dataPerPegawai as $dpp){
-                            $this->db->where('nipbaru_ws', $dpp['nip'])
-                                    ->update('db_pegawai.pegawai', [
-                                        'flag_cek_bangkom' => 1,
-                                        'flag_bangkom_terpenuhi' => $dpp['flag_terpenuhi_bangkom']
-                                    ]);
-                        }                        
-                    }                    
+                    $this->db->where_in('nipbaru_ws', $listNipPegawai)
+                            ->update('db_pegawai.pegawai', [
+                                'flag_cek_bangkom' => 1
+                            ]);
                 } else {
                     $this->db->where_in('nipbaru_ws', $listNipPegawai)
                             ->update('db_pegawai.pegawai', [
@@ -2585,15 +2576,15 @@
                             ]);
                 }
             } else { // jika semua sudah dicek, reset jadi 0 lagi
-                dd("all done");
-                // $this->db->where('id_m_status_pegawai', 1)
-                //         ->update('db_pegawai.pegawai', [
-                //             'flag_cek_bangkom' => 0
-                //         ]);
+                // dd("all done");
+                $this->db->where('id_m_status_pegawai', 1)
+                        ->update('db_pegawai.pegawai', [
+                            'flag_cek_bangkom' => 0
+                        ]);
             }
         }
 
-        public function cronCheckBangkom($bulan = 0, $tahun = 0, $nip = ""){
+        public function cronCheckBangkom($bulan = 0, $tahun = 0, $nip = "", $id_unitkerja = 0){
             if($bulan == 0){
                 $bulan = date('m');
             }
@@ -2626,8 +2617,12 @@
                 $this->db->where('a.nipbaru_ws', $nip);
             }
 
+            if($id_unitkerja != 0){
+                $this->db->where('a.skpd', $id_unitkerja);
+            }
+
             $pegawai = $this->db->get()->result_array();
-            
+
             if($pegawai){
                 foreach($pegawai as $p){
                     $updateData['jumlah_jp'] = $p['total_jp'];
@@ -2640,6 +2635,7 @@
                     if($p['total_jp'] >= 3){
                         $updateData['flag_terpenuhi'] = 1;
                     }
+                    // dd($updateData);
                     if($p['id_t_cek_bangkom']){
                         $this->db->where('id', $p['id_t_cek_bangkom'])
                                 ->update('t_cek_bangkom', $updateData);

@@ -29,7 +29,7 @@
                                     <?php } ?>
                                 </thead>
                                 <tbody>
-                                    <?php $no = 1; foreach($result['list_pegawai'] as $lp){ if($lp['flag_bangkom_terpenuhi'] == 0){ ?>
+                                    <?php $no = 1; foreach($result['list_pegawai'] as $lp){?>
                                         <tr>
                                             <td class="text-center"><?=$no++;?></td>
                                             <td class="text-left"><?=getNamaPegawaiFull($lp)?></td>
@@ -37,7 +37,7 @@
                                                 <td><?=$lp['nm_unitkerja']?></td>
                                             <?php } ?>
                                         </tr>
-                                    <?php } } ?>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>

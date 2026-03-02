@@ -1454,7 +1454,7 @@ class M_Kepegawaian extends CI_Model
         $cekNomorSttp = $this->db->select('*')
                                         ->from('db_pegawai.pegdiklat a')
                                         ->where('a.flag_active', 1)
-                                        ->where('a.status', 2)
+                                        ->where_in('a.status', [1,2])
                                         ->where('id_pegawai', $this->input->post('id_pegawai'))
                                         ->where('nosttpp', $this->input->post('diklat_no_sttpp'))
                                         ->get()->result_array();

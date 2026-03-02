@@ -414,6 +414,14 @@
 		</li>
 		<?php } ?>
 		<?php if(!$this->general_library->isGuest()) { ?>
+
+		<li class="sidebar-item">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('bacirita/C_Bacirita/daftarKegiatan')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">BKPSDM Bacirita</span>
+			</a>
+		</li>
+
+
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/jft')?>">
 				<i class="fa fa-database"></i> <span class="align-middle">List JFT</span>

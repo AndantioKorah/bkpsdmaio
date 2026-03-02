@@ -556,6 +556,10 @@ function ajukanKembali(id){
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatMutasiPidahMasuk, 2000);
              }
+             if(id_layanan == 23){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatSuratPidana, 2000);
+             }
 
            } else {
              errortoast(result.msg)
@@ -612,6 +616,13 @@ function ajukanKembali(id){
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 setTimeout(function() {$("#modalUbahSuket").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatLayananJabfung, 2000);
+             }
+
+             alert(id_layanan)
+              if(id_layanan == 23){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#modalUbahSuket").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatSuratPidana, 2000);
              }
 
            } else {

@@ -52,6 +52,10 @@ class M_Bacirita extends CI_Model
             $res['message'] = "Jam Batas Absensi belum diinput";
         }
 
+        if(!$data['jam_buka_absensi']){
+            $res['message'] = "Jam Buka Absensi belum diinput";
+        }
+
         if(!$data['jam_batas_pendaftaran']){
             $res['message'] = "Jam Batas Pendaftaran belum diinput";
         }

@@ -5048,9 +5048,12 @@
             ->from('db_pegawai.unitkerja')
             ->where('id_unitkerja', $skpd[0])
             ->get()->row_array();
-            
-            $tanggal = $data['tahun'].'-'.$data['bulan'].'-30';
 
+            $tgl = $data['tahun'].'-'.$data['bulan'].'-01';
+            $date = new DateTime($tgl);
+            $date->modify('last day of this month');
+            $tanggal = $date->format('Y-m-d');
+            
             $this->db->select('a.statuspeg,b.username as nip, a.nama, a.gelar1, a.gelar2, b.id, c.nama_jabatan, c.eselon, c.kelas_jabatan')
             ->from('db_pegawai.pegawai a')
             ->join('m_user b', 'a.nipbaru_ws = b.username')

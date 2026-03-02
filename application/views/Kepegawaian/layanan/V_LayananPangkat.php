@@ -362,12 +362,12 @@ ol {
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Pangkat Akhir* <i
 											class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
 							</li>
-                <li>
+                <!-- <li>
 								<a class="<?php if($skp3 && $skp3['gambarsk'] != null){ if($skp3['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp3 && $skp3['gambarsk'] != null) { ?>
 									onclick="viewBerkasPangkat('<?=$skp3['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
 									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$currentYear;?><i
 											class="fas fa-<?php if($skp3) echo ''; else echo '';?>"></i></a>
-							</li>
+							</li> -->
                 <li>
 								<a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
 									onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"

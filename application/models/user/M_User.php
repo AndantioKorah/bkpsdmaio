@@ -4368,7 +4368,7 @@
         }
 
         public function inputSertiBkpsdmBacirita(){
-            $noSttpp = "800.1.13/B.04/BKPSDM/238/2026";
+            $noSttpp = "800.1.13.1/B.04/BKPSDM/247/2026";
             $data = $this->db->select('b.id_peg, b.nipbaru_ws, c.id as id_pegdiklat')
                             ->from('t_temp_bkpsdm_bacirita a')
                             ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
@@ -4385,17 +4385,17 @@
                         $this->db->insert('db_pegawai.pegdiklat', [
                             'id_pegawai' => $d['id_peg'],
                             'jenisdiklat' => 50,
-                            'nm_diklat' => 'AKSELERASI MANAJEMEN TALENTA DI LINGKUNGAN PEMERINTAH KOTA MANADO',
+                            'nm_diklat' => 'PERAN ASN DALAM MENDUKUNG PRODUK IKM LOKAL BERBASIS DIGITAL',
                             'tptdiklat' => 'Zoom & Youtube',
                             'penyelenggara' => 'BKPSDM Kota Manado',
                             'angkatan' => '-',
-                            'jam' => 2,
-                            'tglmulai' => '2026-02-24',
-                            'tglselesai' => '2026-02-24',
+                            'jam' => 3,
+                            'tglmulai' => '2026-02-26',
+                            'tglselesai' => '2026-02-26',
                             'nosttpp' => $noSttpp,
-                            'tglsttpp' => '2026-02-24',
+                            'tglsttpp' => '2026-02-26',
                             'status' => 2,
-                            'gambarsk' => $d['nipbaru_ws']."_Serti_BKPSDMBacirita_Feb_26_sign.pdf",
+                            'gambarsk' => "Serti_IKMUMKM_Feb_26_".$d['nipbaru_ws']."_sign.pdf",
                         ]);
                         echo "inserting for ".$d['nipbaru_ws']."\n";
                     } else {

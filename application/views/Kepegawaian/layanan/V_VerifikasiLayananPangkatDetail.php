@@ -201,10 +201,11 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat Akhir</button>
   <li>
-  <li>
+
+  <!-- <li>
     <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skp3')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$currentYear;?></button>
-  <li>
+  <li> -->
 
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skp1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_1_lalu;?></button>

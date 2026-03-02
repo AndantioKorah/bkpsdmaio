@@ -30,7 +30,7 @@
                             <?php
                                 } else {
                             ?>
-                                <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger">
+                                <button id="btn_download_berkas" type="submit" class="btn btn-block btn-danger btn_download_pdf_tpp" style="display: none;">
                                     <i class="fa fa-download"></i> Download as PDF
                                 </button>
                             <?php } ?>

@@ -2509,17 +2509,20 @@
             $this->db->select('nipbaru_ws')
                     ->from('db_pegawai.pegawai')
                     ->where('id_m_status_pegawai', 1);
-                    // ->where('flag_cek_bangkom', 0);
 
             if($nip != ""){
                 $this->db->where('nipbaru_ws', $nip);
             } else {
                 $this->db->where('flag_cek_bangkom', 0)
-                        ->limit(50);
+                        ->limit(300);
             }
             $pegawai = $this->db->get()->result_array();
 
             if($pegawai){
+                $listNipPegawai = null;
+                foreach($pegawai as $p){
+                    $listNipPegawai[] = $p['nipbaru_ws'];
+                }
                 $minDatePengecekan = "2026-02-28";
                 
                 $dateNow = date('Y-m-d');
@@ -2532,6 +2535,8 @@
                                 ->order_by('bulan_tahun', 'asc');
                 if($nip != ""){
                     $this->db->where('nip', $nip);
+                } else {
+                    $this->db->where_in('nip', $listNipPegawai);
                 }
                 $dataCekBangkom = $this->db->get()->result_array();
 
@@ -2573,16 +2578,22 @@
                                     ]);
                         }                        
                     }                    
+                } else {
+                    $this->db->where_in('nipbaru_ws', $listNipPegawai)
+                            ->update('db_pegawai.pegawai', [
+                                'flag_cek_bangkom' => 1
+                            ]);
                 }
             } else { // jika semua sudah dicek, reset jadi 0 lagi
-                $this->db->where('id_m_status_pegawai', 1)
-                        ->update('db_pegawai.pegawai', [
-                            'flag_cek_bangkom' => 0
-                        ]);
+                dd("all done");
+                // $this->db->where('id_m_status_pegawai', 1)
+                //         ->update('db_pegawai.pegawai', [
+                //             'flag_cek_bangkom' => 0
+                //         ]);
             }
         }
 
-        public function cronCheckBangkom($bulan = 0, $tahun = 0){
+        public function cronCheckBangkom($bulan = 0, $tahun = 0, $nip = ""){
             if($bulan == 0){
                 $bulan = date('m');
             }
@@ -2590,7 +2601,7 @@
             if($tahun == 0){
                 $tahun = date('Y');
             }
-            $pegawai = $this->db->select('a.nipbaru_ws, c.id as id_t_cek_bangkom,
+            $this->db->select('a.nipbaru_ws, c.id as id_t_cek_bangkom,
                                 sum(b.jam) as total_jp
                             ')
                             ->from('db_pegawai.pegawai a')
@@ -2609,8 +2620,14 @@
                             ->where('MONTH(b.tglsttpp)', $bulan)
                             ->where('YEAR(b.tglsttpp)', $tahun)
                             // ->limit(1000)
-                            ->group_by('a.nipbaru_ws')
-                            ->get()->result_array();
+                            ->group_by('a.nipbaru_ws');
+                            // ->get()->result_array();
+            if($nip != ""){
+                $this->db->where('a.nipbaru_ws', $nip);
+            }
+
+            $pegawai = $this->db->get()->result_array();
+            
             if($pegawai){
                 foreach($pegawai as $p){
                     $updateData['jumlah_jp'] = $p['total_jp'];

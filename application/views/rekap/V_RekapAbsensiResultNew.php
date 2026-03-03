@@ -406,6 +406,11 @@
                                     </center>
             </body>
         </html>
+        <script>
+            $(function(){
+                $('.btn_download_pdf_tpp').show()
+            })
+        </script>
     <?php } else { ?>
         <div class="row">
             <div class="col-lg-12 text-center">Data Tidak Ditemukan <i class="fa fa-exclamation"></i></div>

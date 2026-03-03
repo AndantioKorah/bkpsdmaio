@@ -15636,7 +15636,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->limit(1000);
             
         $pegawai = $this->db->get()->result_array();
-        dd($pegawai);
+       
         foreach ($pegawai as $peg) {  
           if($peg['statuspeg'] == "1" || $peg['statuspeg'] == "2"){
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));

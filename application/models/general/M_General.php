@@ -1,7 +1,5 @@
 <?php
-    require FCPATH . '/vendor/autoload.php';
-
-    class M_General extends CI_Model
+	class M_General extends CI_Model
 	{
         public $bios_serial_num;
 
@@ -2646,74 +2644,6 @@
                     }
                 }
             }
-        }
-
-        public function editPdf(){
-            ob_start();
-
-            $inputFile = 'test_sertifikat.png';
-            $outputFile = 'test_sertifikat_edited.pdf';
-
-            $randomString = generateRandomString(30, 1, 't_file_ds'); 
-            $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
-            // dd($contentQr);
-    		$res['qr'] = generateQr($contentQr);
-
-            $data['result'] = [
-                'url_template' => $inputFile,
-                'nomor_surat' => [
-                    'content' => "800.1.13.1/BKPSDM/SLDN.3213/2026",
-                    'margin-top' => "800px",
-                    'margin-left' => "0px",
-                    'font-size' => "3rem",
-                ],
-                'nama_lengkap' => [
-                    'content' => "Youri J. B. Toreh, ST.",
-                    'margin-top' => "550px",
-                    'margin-left' => "0px",
-                    'font-size' => "8rem",
-                ],
-                'qr' => [
-                    'src' => $res['qr'],
-                    'margin-top' => "900px",
-                    'margin-left' => "0px",
-                    'width' => 200,
-                ],
-            ];
-            
-            $html = $this->load->view('user/V_TemplateSertifikatBkpsdmBacirita', $data, true);
-            $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
-            // $this->stylesheet = file_get_contents('css/style.css');
-            $this->mpdf->AddPage(
-                'L', // L - landscape, P - portrait
-                '',
-                '',
-                '',
-                '',
-                0, // margin_left
-                0, // margin right
-                0, // margin top
-                0, // margin bottom
-                0, // margin header
-                12
-            ); 
-
-            $this->mpdf->WriteHTML($html);
-            // dd($html);
-            // $this->mpdf->writeText(50, 50, "asdsadasdsdasd");
-            $this->mpdf->showImageErrors = true;
-            $this->mpdf->Output($outputFile, 'I');
-
-            // $this->db->insert('t_file_ds', [
-            //     'url' => $outputFile,
-            //     'random_string' => $randomString,
-            //      'flag_bkpsdm_bacirita' => 1,
-            //     'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
-            // ]);
-
-            // Output a success message (optional)
-            echo "<iframe src='".$outputFile."' style='width: 100vw;'></iframe>";
-            // echo "Text replaced and new PDF saved to $outputFile";
         }
 	}
 ?>

@@ -2541,21 +2541,33 @@
                     $this->db->where_in('nip', $listNipPegawai);
                 }
                 $dataCekBangkom = $this->db->get()->result_array();
-
                 if($dataCekBangkom){
                     $dataPerPegawai = null;
                     $wajibCapaiJumlahJp = 3;
                     foreach($dataCekBangkom as $dc){
+                        $jumlah_jp = $dc['jumlah_jp'] ? $dc['jumlah_jp'] : 0;
                         if(!isset($dataPerPegawai[$dc['nip']])){ // jika belum ada maka set data
                             $dataPerPegawai[$dc['nip']] = $dc;
-                            $dataPerPegawai[$dc['nip']]['utang'] = $wajibCapaiJumlahJp - $dc['jumlah_jp'];
+                            $dataPerPegawai[$dc['nip']]['utang'] = $wajibCapaiJumlahJp - $jumlah_jp;
                             $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'] = null;
                             if($dataPerPegawai[$dc['nip']]['utang'] > 0){
                                 $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'][] = $dc['id'];
+                            } else {
+                                $dataPerPegawai[$dc['nip']]['utang'] = 0;
                             }
+                            // dd($dataCekBangkom);
                         } else { // jika sudah ada maka cek utang
+                            $dataPerPegawai[$dc['nip']]['bulan'] = $dc['bulan'];
+                            $dataPerPegawai[$dc['nip']]['tahun'] = $dc['tahun'];
+                            $dataPerPegawai[$dc['nip']]['bulan_tahun'] = $dc['bulan_tahun'];
+                            $dataPerPegawai[$dc['nip']]['jumlah_jp'] = $dc['jumlah_jp'];
+                            $dataPerPegawai[$dc['nip']]['flag_terpenuhi'] = $dc['flag_terpenuhi'];
+                            $dataPerPegawai[$dc['nip']]['flag_ditebus'] = $dc['flag_ditebus'];
+
+                            $jumlah_jp = $dc['jumlah_jp'] ? $dc['jumlah_jp'] : 0;
+
                             $dataPerPegawai[$dc['nip']]['utang'] += $wajibCapaiJumlahJp;
-                            $perhitunganJp = $dc['jumlah_jp'] - $dataPerPegawai[$dc['nip']]['utang'];
+                            $perhitunganJp = $jumlah_jp - $dataPerPegawai[$dc['nip']]['utang'];
                             if($perhitunganJp >= 0){
                                 $this->db->where_in('id', $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'])
                                         ->update('t_cek_bangkom', [
@@ -2598,8 +2610,8 @@
                                 sum(b.jam) as total_jp
                             ')
                             ->from('db_pegawai.pegawai a')
-                            ->join('db_pegawai.pegdiklat b', 'a.id_peg = b.id_pegawai')
-                            ->join('t_cek_bangkom c', 'a.nipbaru_ws = c.nip AND c.flag_active = 1', 'left')
+                            ->join("db_pegawai.pegdiklat b", "a.id_peg = b.id_pegawai AND b.flag_active = 1 AND b.status = 2 AND MONTH(b.tglsttpp) ='".$bulan."' AND YEAR(b.tglsttpp) = '".$tahun."'", "left")
+                            ->join("t_cek_bangkom c", "a.nipbaru_ws = c.nip AND c.flag_active = 1 AND c.bulan = '".$bulan."' AND c.tahun = '".$tahun."'", "left")
                             ->where('a.id_m_status_pegawai', 1)
                             // ->where("a.nipbaru_ws NOT IN (
                             //     SELECT aa.nip
@@ -2608,10 +2620,10 @@
                             //     AND aa.tahun = '".$tahun."'
                             //     AND aa.flag_active = 1
                             // )")
-                            ->where('b.flag_active', 1)
-                            ->where('b.status', 2)
-                            ->where('MONTH(b.tglsttpp)', $bulan)
-                            ->where('YEAR(b.tglsttpp)', $tahun)
+                            // ->where('b.flag_active', 1)
+                            // ->where('b.status', 2)
+                            // ->where('MONTH(b.tglsttpp)', $bulan)
+                            // ->where('YEAR(b.tglsttpp)', $tahun)
                             // ->limit(1000)
                             ->group_by('a.nipbaru_ws');
                             // ->get()->result_array();
@@ -2624,17 +2636,17 @@
             }
 
             $pegawai = $this->db->get()->result_array();
-
+            // dd($pegawai);
             if($pegawai){
                 foreach($pegawai as $p){
-                    $updateData['jumlah_jp'] = $p['total_jp'];
+                    $updateData['jumlah_jp'] = $p['total_jp'] ? $p['total_jp'] : 0;
                     $updateData['nip'] = $p['nipbaru_ws'];
-                    $updateData['bulan'] = $bulan;
+                    $updateData['bulan'] = $bulan < 10 ? "0".$bulan : $bulan;
                     $updateData['tahun'] = $tahun;
-                    $updateData['bulan_tahun'] = $tahun."-".$bulan."-01";
+                    $updateData['bulan_tahun'] = $tahun."-".$updateData['bulan']."-01";
 
                     $updateData['flag_terpenuhi'] = 0;
-                    if($p['total_jp'] >= 3){
+                    if(intval($p['total_jp']) >= 3){
                         $updateData['flag_terpenuhi'] = 1;
                     }
                     // dd($updateData);

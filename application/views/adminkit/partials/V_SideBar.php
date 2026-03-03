@@ -473,14 +473,6 @@
 		}
 	?>
 	<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
-
-		<li class="sidebar-item">
-			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('bacirita/list-webinar')?>">
-				<i class="fa fa-microphone"></i> <span class="align-middle">BKPSDM Bacirita</span>
-			</a>
-		</li>
-
-		
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
 		<a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link">
@@ -1554,37 +1546,25 @@
 						</span>
 					</a>	
 				</li>
-			<?php } ?>
+		<?php } ?>
+			<li class="sidebar-header">
+				BKPSDM Bacirita
+			</li>
 			<?php if($this->general_library->isHakAkses('admin_bkpsdm_bacirita') || $this->general_library->isProgrammer()){?>
-				<li class="sidebar-header">
-					BKPSDM Bacirita
-				</li>
 				<li class="sidebar-item">
-					<a title="Kegiatan" href="<?=base_url();?>bkpsdm-bacirita/kegiatan" class="sidebar-link">
-					<i class="align-middle me-2 fa fa-fw fa fa-file"></i> 
+					<a title="Admin BKPSDM Bacirita" href="<?=base_url();?>bkpsdm-bacirita/kegiatan" class="sidebar-link">
+					<i class="align-middle me-2 fa fa-fw fa fa-user"></i> 
 						<span class="align-middle">
-							Kegiatan
+							Admin
 						</span>
 					</a>	
 				</li>
-				<!-- <li class="sidebar-item">
-					<a title="Menu BKAD" href="<?=base_url();?>bkad/upload-gaji" class="sidebar-link">
-					<i class="align-middle me-2 fa fa-fw fa fa-file-upload"></i> 
-						<span class="align-middle">
-							Upload Gaji
-						</span>
-					</a>	
-				</li> -->
 			<?php } ?>
-		
-
-		
-
-	
-
-
-			
-
+			<li class="sidebar-item">
+				<a title="Kegiatan BKPSDM Bacirita" class="sidebar-link" href="<?=base_url('bacirita/list-webinar')?>">
+					<i class="fa fa-microphone"></i> <span class="align-middle">BKPSDM Bacirita</span>
+				</a>
+			</li>
 </ul>
 <div class="mt-5">
 	<p></p>

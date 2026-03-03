@@ -48,7 +48,7 @@ class C_Rekap extends CI_Controller
     {
         $data['list_skpd'] = $this->user->getAllSkpd();
         $data['jam_kerja'] = $this->general->getAll('t_jam_kerja');
-        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas(0);
         $data['skpd_plt'] = $this->user->getSkpdPlt();
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }

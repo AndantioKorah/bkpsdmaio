@@ -1754,7 +1754,7 @@
         ];
         
         if(in_array($param['id_unitkerja'], [3010000, 3012000])){
-            $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja')
+            $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja, a.nipbaru_ws as nip')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->where('id_m_status_pegawai', 1);
@@ -1850,7 +1850,12 @@
                 if((($flag_rekap_tpp == 1 || ($flag_rekap_tpp == 0 && $flag_absen_aars == 1)) && in_array($data['id_unitkerja'], LIST_UNIT_KERJA_KECAMATAN_NEW))){
                     $this->db->where('c.id_unitkerjamaster', $uksearch['id_unitkerjamaster']);
                 } else if(stringStartWith('sekolah_', $data['id_unitkerja'])){
-                    $this->db->where('c.id_unitkerjamaster_kecamatan', $uksearch['id_unitkerjamaster_kecamatan']);
+                    if($uksearch){
+                        $this->db->where('c.id_unitkerjamaster_kecamatan', $uksearch['id_unitkerjamaster_kecamatan']);
+                    } else {
+                        $explode = explode("_", $data['id_unitkerja']);
+                        $this->db->where('c.id_unitkerja', $explode[1]);
+                    }
                 } else {
                     $this->db->where('a.skpd', $data['id_unitkerja']);
                 }

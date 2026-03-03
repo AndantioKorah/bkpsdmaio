@@ -107,7 +107,7 @@
 				$statusKegiatan = "Selesai";
 			}
 		?>
-			<div class="col-lg-4 p-3">
+			<div class="col-lg-3 p-3">
 				<div class="card card-list-kegiatan">
 					<a class="badge-kegiatan badge badge-sm <?=$badgeKegiatan?>"><?=$rs['nama_tipe_kegiatan']?></a>
 					<a class="badge-status-webinar badge badge-sm <?=$badgeStatusKegiatan?>"><?=$statusKegiatan?></a>

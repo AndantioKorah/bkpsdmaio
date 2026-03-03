@@ -30,7 +30,7 @@
                 $badgeStatusDaftar = "btn-info";
 			    $statusDaftar = "<i class='fa fa-plus'></i> Daftar Webinar";
 			    $onclick = "daftar()";
-
+                $stylePresensi = "-";
 			
 			    if($webinar['tanggal'] == date('Y-m-d')){ 
 				if(date('H:i:s') < $webinar['jam_mulai']) {
@@ -48,16 +48,44 @@
 				$badgeStatusDaftar = "btn-success";
 				$statusDaftar = "Selesai";
                 $onclick = "-";
-				}  
+				} 
+                
+                if(date('H:i:s') < $webinar['jam_buka_absensi']) {
+				$stylePresensi ="display:none;";
+				}
+
+                if(date('H:i:s') > $webinar['jam_batas_absensi']) {
+				$stylePresensi ="display:none;";
+				}
+
+
 			    }
                 if(date('Y-m-d') > $webinar['tanggal']){ 
                 $badgeStatusDaftar = "btn-success";
                 $statusDaftar = "Selesai";
                 $onclick = "-";
                 }
+
                 ?>
 
+                <?php if($webinar['id_daftar'] == null) { ?>
 				<button onclick= <?=$onclick;?>  type="button" class="btn mt-3 <?=$badgeStatusDaftar;?>"> <?=$statusDaftar;?></button>
+                <?php } else { ?>
+                <button  type="button" class="btn mt-3 btn-info"> Anda Sudah Terdaftar</button><br>
+                <?php if($webinar['tanggal'] == date('Y-m-d')){  ?>
+                  <?php if($webinar['flag_absen'] == 0) { ?>
+                <button onclick= "presensiKegiatan()" style="<?=$stylePresensi;?>"  type="button" class="btn mt-3 btn-dark"> Presensi Seminar</button>
+                <?php } else { ?>
+                <button  type="button" class="btn mt-3 btn-success"> Anda Sudah Melakukan Presensi</button>
+                <?php }?>
+                <?php }?>
+
+                <?php if(date('H:i:s') > $webinar['jam_selesai']){  ?>
+                <br>
+                <button  type="button" class="btn mt-3 btn-primary"> Download Sertifikat</button>
+                <?php } ?>
+
+                <?php } ?>
                 
                 <h4 class="mt-4">LINK</h4>
                 <hr>
@@ -132,23 +160,52 @@
 	    }
     
     function daftar(){
+        var id_webinar = "<?=$webinar['id_kegiatan'];?>"
+        var id_m_user = "<?=$this->general_library->getId();?>"
                    if(confirm('Daftar Webinar?')){
-                    //    $.ajax({
-                    //        url: '<?=base_url("kepegawaian/C_Kepegawaian/deleteData/")?>'+id+'/pegdiklat/'+file,
-                    //        method: 'post',
-                    //        data: null,
-                    //        success: function(){
-                    //            successtoast('Data sudah terhapus')
-                    //            if(kode == 1){
-                    //             loadListDiklat()
-                    //            } else {
-                    //             loadRiwayatUsulDiklat()
-                    //            }
+                       $.ajax({
+                           url: '<?=base_url("bacirita/C_Bacirita/submitDaftarKegiatan/")?>'+id_webinar+'/'+id_m_user,
+                           method: 'post',
+                           success: function(res){
+                            var result = JSON.parse(res); 
+                            console.log(result)
+                           if(result.success == true){
+                            const myTimeout = setTimeout(successtoast(result.message), 2000);
+                            setTimeout(function() {location.reload();}, 1000);
+                            } else {
+                            errortoast(result.message)
+                            return false;
+                            } 
                                
-                    //        }, error: function(e){
-                    //            errortoast('Terjadi Kesalahan')
-                    //        }
-                    //    })
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
+                   }
+               }
+
+    function presensiKegiatan(){
+        var id_webinar = "<?=$webinar['id_kegiatan'];?>"
+        var id_m_user = "<?=$this->general_library->getId();?>"
+                   if(confirm('Absen Seminar?')){
+                       $.ajax({
+                           url: '<?=base_url("bacirita/C_Bacirita/presensiKegiatan/")?>'+id_webinar+'/'+id_m_user,
+                           method: 'post',
+                           success: function(res){
+                            var result = JSON.parse(res); 
+                            console.log(result)
+                           if(result.success == true){
+                            const myTimeout = setTimeout(successtoast(result.message), 2000);
+                            setTimeout(function() {location.reload();}, 1000);
+                            } else {
+                            errortoast(result.message)
+                            return false;
+                            } 
+                               
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
                    }
                }
 </script>

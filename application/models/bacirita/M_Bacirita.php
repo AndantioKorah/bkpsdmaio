@@ -16,7 +16,7 @@ class M_Bacirita extends CI_Model
     }
 
     public function loadListKegiatan(){
-        return $this->db->select('a.*, c.nama_tipe_kegiatan')
+        return $this->db->select('a.*, c.nama_tipe_kegiatan, a.id as id_kegiatan')
                     ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
@@ -199,14 +199,65 @@ class M_Bacirita extends CI_Model
     }
 
     public function loadDetailWebinar($id){
-        return $this->db->select('a.*, c.nama_tipe_kegiatan')
+        return $this->db->select('a.*, d.flag_absen, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_daftar')
                     ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
+                    ->join('db_bacirita.t_peserta_kegiatan d', '(a.id = d.id_t_kegiatan  and d.id_m_user = "'.$this->general_library->getId().'" and d.flag_active = 1)', 'left')
                     ->order_by('a.created_date', 'desc')
                     ->where('a.flag_active', 1)
                     ->where('a.id', $id)
                     ->get()->row_array();
+    }
+
+    public function submitDaftarKegiatan($id_kegiatan,$id_m_user){
+        $res['code'] = 0;
+        $res['message'] = 'Pendaftaran Webinar Berhasil';
+        $res['success'] = true;
+
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+       
+        $data["id_t_kegiatan"] = $id_kegiatan;
+        $data["id_m_user"] = $id_m_user;
+
+        $this->insert('db_bacirita.t_peserta_kegiatan', $data);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['success'] = false;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+     public function presensiKegiatan($id_kegiatan,$id_m_user){
+        $res['code'] = 0;
+        $res['message'] = 'Presensi Webinar Berhasil';
+        $res['success'] = true;
+
+        $datapost = $this->input->post();
+        $this->db->trans_begin();
+     
+        $data["flag_absen"] = 1;
+        $this->db->where('id_t_kegiatan', $id_kegiatan)
+                 ->where('id_m_user', $id_m_user)
+                 ->update('db_bacirita.t_peserta_kegiatan', $data);
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['success'] = false;
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
     }
 
 

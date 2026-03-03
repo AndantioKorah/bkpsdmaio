@@ -473,14 +473,14 @@
 		}
 	?>
 	<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
-
+	<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('bacirita/list-webinar')?>">
 				<i class="fa fa-microphone"></i> <span class="align-middle">BKPSDM Bacirita</span>
 			</a>
 		</li>
+	<?php } ?>
 
-		
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
 		<a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link">

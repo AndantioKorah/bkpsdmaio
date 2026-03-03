@@ -15630,13 +15630,13 @@ public function checkListIjazahCpns($id, $id_pegawai){
     {
         $this->db->select('a.id_peg,a.statuspeg,a.tmtgjberkala,a.pangkat')
             ->from('db_pegawai.pegawai a')
-            // ->where('a.tmtgjberkalaberikut is null')
+            ->where('a.tmtgjberkalaberikut is null')
             ->where('a.id_m_status_pegawai', 1)
-            ->where_in('a.statuspeg', [3])
+            ->where_in('a.statuspeg', [1,2,3])
             ->limit(1000);
             
         $pegawai = $this->db->get()->result_array();
-        // dd($pegawai);
+        dd($pegawai);
         foreach ($pegawai as $peg) {  
           if($peg['statuspeg'] == "1" || $peg['statuspeg'] == "2"){
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($peg['tmtgjberkala'])));

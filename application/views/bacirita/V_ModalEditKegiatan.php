@@ -47,7 +47,11 @@
 						<input required class="form-control" name="tanggal_batas_absensi" id="tanggal_batas_absensi_edit" readonly value="<?=$rs['tanggal_batas_absensi']?>" />
 					</div>
 					<div class="col-lg-4 mt-1">
-						<label class="lbl-form-input-kegiatan">Jam Batas Absensi</label>
+						<label class="lbl-form-input-kegiatan">Jam Buka Absensi</label>
+						<input required class="form-control" type="time" name="jam_buka_absensi" id="jam_buka_absensi_edit" value="<?= substr($rs['jam_buka_absensi'], 0, 5);?>"/>
+					</div>
+					<div class="col-lg-4 mt-1">
+						<label class="lbl-form-input-kegiatan">Jam Tutup Absensi</label>
 						<input required class="form-control" type="time" name="jam_batas_absensi" id="jam_batas_absensi_edit" value="<?= substr($rs['jam_batas_absensi'], 0, 5);?>"/>
 					</div>
 					<div class="col-lg-12">

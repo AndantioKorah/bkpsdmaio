@@ -151,6 +151,12 @@ $route['kepegawaian/verifikasi-pangkat-bkad'] = 'kepegawaian/C_Kepegawaian/verif
 $route['kepegawaian/verifikasi-berkala-bkad'] = 'kepegawaian/C_Kepegawaian/verifikasiBerkalaBkad';
 
 
+$route['bacirita/list-webinar'] = 'bacirita/C_Bacirita/daftarKegiatan';
+$route['bacirita/detail-webinar/(:any)'] = 'bacirita/C_Bacirita/detailWebinar/$1';
+
+
+
+
 
 
 

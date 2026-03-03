@@ -415,12 +415,7 @@
 		<?php } ?>
 		<?php if(!$this->general_library->isGuest()) { ?>
 
-		<li class="sidebar-item">
-			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('bacirita/C_Bacirita/daftarKegiatan')?>">
-				<i class="fa fa-database"></i> <span class="align-middle">BKPSDM Bacirita</span>
-			</a>
-		</li>
-
+	
 
 		<li class="sidebar-item">
 			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/jft')?>">
@@ -479,6 +474,13 @@
 	?>
 	<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
 
+		<li class="sidebar-item">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('bacirita/list-webinar')?>">
+				<i class="fa fa-microphone"></i> <span class="align-middle">BKPSDM Bacirita</span>
+			</a>
+		</li>
+
+		
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
 		<a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link">

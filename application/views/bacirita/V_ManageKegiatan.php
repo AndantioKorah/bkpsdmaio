@@ -196,7 +196,7 @@
 			orientation: 'bottom',
 			autoclose: true,
 			// todayBtn: true,
-			endDate: $('#tanggal').val()
+			// endDate: $('#tanggal').val()
 		})
 	}
 

@@ -17,7 +17,8 @@
 	<div class="card-body">
 		<div class="row">
 			<div class="col-lg-12">
-				<h4>Daftar Webinar</h4>
+				<h4><span class="badge badge-dark">Semua Webinar</span></h4>
+				
 				<hr>
 			</div>
 			<div id="div_list_kegiatan" class="col-lg-12">

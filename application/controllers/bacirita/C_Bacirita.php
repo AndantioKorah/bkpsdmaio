@@ -40,4 +40,9 @@ class C_Bacirita extends CI_Controller
         $this->load->view('bacirita/V_ListWebinar', $data);
     }
 
+     public function detailWebinar($id){
+        $data['webinar'] = $this->bacirita->loadDetailWebinar($id);
+        render('bacirita/V_DetailWebinar', '', '', $data);
+    }
+
 }

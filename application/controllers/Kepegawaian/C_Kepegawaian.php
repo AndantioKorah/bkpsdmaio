@@ -2877,7 +2877,9 @@ class C_Kepegawaian extends CI_Controller
 		$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_peg);
 		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
 		$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','2',$id_peg);      
-		
+		if($data['sk_cpns'] = null){
+		$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','3',$id_peg);
+		}
 		if($layanan == 1){
 			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
 		} else if($layanan == 6 || $layanan == 7 || $layanan == 8 || $layanan == 9 || $layanan == 29 ){
@@ -3432,6 +3434,9 @@ class C_Kepegawaian extends CI_Controller
 
 		public function layananPeningkatanPenambahanGelar($id_layanan){
 			$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');
+			if($data['sk_cpns'] == null){
+			$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','3');
+			}
 			$data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','2');        
 			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
 			$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	

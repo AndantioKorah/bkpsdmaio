@@ -11979,15 +11979,27 @@ public function getFileForVerifLayanan()
 		$previous2Year = $currentYear - 2; 
 
         if($this->input->post('file') == "skcpns"){
-            $this->db->select('a.gambarsk')
+           $sk = $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegberkaspns as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.jenissk', 1)
                 ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
-                ->limit(1);
-                return $this->db->get()->result_array();
+                ->limit(1)
+                ->get()->result_array();
+            if($sk== null) {
+                 $sk = $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegberkaspns as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.jenissk', 3)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1)
+                ->get()->result_array();
+            }
+                return $sk;
         } else if($this->input->post('file') == "skpns"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegberkaspns as a')

@@ -54,6 +54,14 @@
 	.badge-kegiatan{
 		max-width: 100px;
 		position: absolute;
+		left: -10px;
+		top: -10px;
+		font-size: .8rem;
+	}
+
+	.badge-status-webinar{
+		max-width: 100px;
+		position: absolute;
 		right: -10px;
 		top: -10px;
 		font-size: .8rem;
@@ -76,10 +84,34 @@
 			if($rs['id_m_tipe_kegiatan'] == 2){ // jika umum
 				$badgeKegiatan = "badge-success";
 			}
+
+			$badgeStatusKegiatan = "badge-warning";
+			$statusKegiatan = "Belum dimulai";
+			
+			if($rs['tanggal'] == date('Y-m-d')){ 
+				if($rs['jam_mulai'] > date('H:i:s')) {
+				$badgeStatusKegiatan = "badge-warning";
+				$statusKegiatan = "Belum dimulai";
+				}
+				if($rs['jam_mulai'] < date('H:i:s')) {
+				$badgeStatusKegiatan = "badge-warning";
+				$statusKegiatan = "Telah dimulai";
+				} 
+				if(date('H:i:s') > $rs['jam_selesai']) {
+				$badgeStatusKegiatan = "badge-success";
+				$statusKegiatan = "Selesai";
+				}  
+			}
+			if(date('Y-m-d') > $rs['tanggal']){ 
+				$badgeStatusKegiatan = "badge-success";
+				$statusKegiatan = "Selesai";
+			}
 		?>
 			<div class="col-lg-4 p-3">
 				<div class="card card-list-kegiatan">
 					<a class="badge-kegiatan badge badge-sm <?=$badgeKegiatan?>"><?=$rs['nama_tipe_kegiatan']?></a>
+					<a class="badge-status-webinar badge badge-sm <?=$badgeStatusKegiatan?>"><?=$statusKegiatan?></a>
+
 					<img class="card-img-top img-fluid img-kegiatan" src="<?=base_url($srcImage)?>">
 					<div class="card-body">
 						<div class="row">
@@ -95,7 +127,7 @@
 										</span>
 									</div>
 									<div class="col-lg-6 text-right">
-										<a href="#modal_detail_kegiatan" data-toggle="modal" onclick="openDetailModal('<?=$rs['id']?>')"
+										<a href="<?=base_url('bacirita/detail-webinar/')?><?=$rs['id']?>" 
 										class="text-right btn btn-navy">Detail</a>
 									</div>
 								</div>

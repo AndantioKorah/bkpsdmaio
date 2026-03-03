@@ -20,7 +20,7 @@ class M_Bacirita extends CI_Model
                     ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
-                    ->order_by('a.created_date', 'desc')
+                    ->order_by('a.tanggal', 'desc')
                     ->where('a.flag_active', 1)
                     ->get()->result_array();
     }
@@ -139,6 +139,10 @@ class M_Bacirita extends CI_Model
             $res['message'] = "Jam Batas Absensi belum diinput";
         }
 
+        if(!$data['jam_buka_absensi']){
+            $res['message'] = "Jam Buka Absensi belum diinput";
+        }
+
         if(!$data['jam_batas_pendaftaran']){
             $res['message'] = "Jam Batas Pendaftaran belum diinput";
         }
@@ -193,5 +197,17 @@ class M_Bacirita extends CI_Model
         }
         return $res;
     }
+
+    public function loadDetailWebinar($id){
+        return $this->db->select('a.*, c.nama_tipe_kegiatan')
+                    ->from('db_bacirita.t_kegiatan a')
+                    ->join('m_user b', 'a.created_by = b.id')
+                    ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
+                    ->order_by('a.created_date', 'desc')
+                    ->where('a.flag_active', 1)
+                    ->where('a.id', $id)
+                    ->get()->row_array();
+    }
+
 
 }

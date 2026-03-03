@@ -48,7 +48,7 @@ class C_Rekap extends CI_Controller
     {
         $data['list_skpd'] = $this->user->getAllSkpd();
         $data['jam_kerja'] = $this->general->getAll('t_jam_kerja');
-        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas();
+        $data['skpd_diknas'] = $this->user->getUnitKerjaKecamatanDiknas(0);
         $data['skpd_plt'] = $this->user->getSkpdPlt();
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
@@ -567,7 +567,7 @@ class C_Rekap extends CI_Controller
                 $data = null;
                 $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null, 1);
                 $data['flag_print'] = 0;
-                if($data['result'] && !isset($data['result']['code']) && $data['result']['code'] != 1){
+                if($data['result'] && (!isset($data['result']['code']))){
                     $data['skpd'] = $data['result']['skpd'];
                     $data['jam_kerja'] = $data['result']['jam_kerja'];
                     $data['jam_kerja_event'] = $data['result']['jam_kerja_event'];

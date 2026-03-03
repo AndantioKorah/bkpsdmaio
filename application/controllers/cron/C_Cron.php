@@ -291,12 +291,7 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
-        phpinfo();
-        $this->user->rekapCutiDesember();
-
-        // $this->kepegawaian->cekErrorCuti();
-
-        dd($this->kepegawaian->getProgressCutiAktif(2637));
+        $this->general->editPdf();
 
         // dd($this->general_library->getDataKabanBkpsdm());
         // $randomString = generateRandomString(30, 1, 't_file_ds'); 

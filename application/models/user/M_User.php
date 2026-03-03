@@ -12,12 +12,29 @@
             $this->db->insert($tablename, $data);
         }
 
-        public function getUnitKerjaKecamatanDiknas(){
-            return $this->db->select('id_unitkerjamaster as id_unitkerja, concat("Sekolah ", nm_unitkerjamaster) as nm_unitkerja')
+        public function getUnitKerjaKecamatanDiknas($flag_rekap_tpp = 1){
+            $result = $this->db->select('id_unitkerjamaster as id_unitkerja, concat("Sekolah ", nm_unitkerjamaster) as nm_unitkerja')
                                 ->from('db_pegawai.unitkerjamaster')
                                 ->where('nm_unitkerjamaster LIKE', 'Kecamatan%')
                                 ->order_by('nm_unitkerjamaster', 'asc')
                                 ->get()->result_array();
+            if($flag_rekap_tpp == 1){
+                return $result;
+            }
+
+            $allSekolah = $this->db->select('a.id_unitkerja, a.nm_unitkerja')
+                                ->from('db_pegawai.unitkerja a')
+                                ->where_in('a.id_unitkerjamaster', LIST_UNIT_KERJA_MASTER_SEKOLAH)
+                                ->order_by('nm_unitkerja', 'asc')
+                                ->get()->result_array();
+
+            if($allSekolah){
+                foreach($allSekolah as $as){
+                    $result[] = $as;
+                }
+            }
+
+            return $result;
         }
 
         public function getAllSkpd(){

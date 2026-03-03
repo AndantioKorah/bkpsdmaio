@@ -57,6 +57,7 @@
 						<div class="col-lg-12">
 							<hr>
 						</div>
+						
 						<div class="col-lg-12">
 							<label class="lbl-form-divider">Batas Absensi</label>
 						</div>
@@ -65,7 +66,11 @@
 							<input required class="form-control" name="tanggal_batas_absensi" id="tanggal_batas_absensi" readonly value="<?=date('Y-m-d')?>" />
 						</div>
 						<div class="col-lg-4 mt-1">
-							<label class="lbl-form-input-kegiatan">Jam Batas Absensi</label>
+							<label class="lbl-form-input-kegiatan">Jam Buka Absensi</label>
+							<input required class="form-control" type="time" name="jam_buka_absensi" id="jam_buka_absensi"/>
+						</div>
+						<div class="col-lg-4 mt-1">
+							<label class="lbl-form-input-kegiatan">Jam Tutup Absensi</label>
 							<input required class="form-control" type="time" name="jam_batas_absensi" id="jam_batas_absensi"/>
 						</div>
 						<div class="col-lg-12">

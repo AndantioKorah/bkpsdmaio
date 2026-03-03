@@ -862,7 +862,12 @@
   <input type="hidden" name="jenis_dokumen" id="jenis_dokumen" value="<?= $param['jenisdokumen']['value'];?>">
   <input type="hidden" name="file_path" id="file_path" value="<?= $path?>">
   <input type="hidden" name="db_dokumen" id="db_dokumen" value="<?= $param['jenisdokumen']['db'];?>">
+
   <input type="hidden" value="<?=$result['id_pegawai']?>" name="id_pegawai" value="id_pegawai">
+
+  <?php if($param['jenisdokumen']['value'] == 'diklat') { ?>
+  <input type="hidden" value="<?=$result['tglsttpp']?>" name="tglsttpp" value="tglsttpp">
+  <?php } ?>
 
   <input type="hidden" value="<?=$result['id']?>" name="id" value="id">
   <div class="form-group">
@@ -902,6 +907,11 @@
   <input type="hidden" value="<?=$result['id']?>" name="id_batal" value="id_batal">
   <input type="hidden" name="db_dokumen_batal" id="db_dokumen_batal" value="  <?= $param['jenisdokumen']['db'];?>">
   <input type="hidden" value="<?=$result['id_pegawai']?>" name="id_pegawai_batal" value="id_pegawai_batal">
+
+  <?php if($param['jenisdokumen']['value'] == 'diklat') { ?>
+  <input type="hidden" value="<?=$result['tglsttpp']?>" name="tglsttpp_batal" value="tglsttpp_batal">
+  <?php } ?>
+
 <button class="btn btn-block btn-danger float-right"  id="btn_batal_verif_doc"> Batal Verifikasi</button>
 </form>
 </div>

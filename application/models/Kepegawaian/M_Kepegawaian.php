@@ -1454,7 +1454,7 @@ class M_Kepegawaian extends CI_Model
         $cekNomorSttp = $this->db->select('*')
                                         ->from('db_pegawai.pegdiklat a')
                                         ->where('a.flag_active', 1)
-                                        ->where('a.status', 2)
+                                        ->where_in('a.status', [1,2])
                                         ->where('id_pegawai', $this->input->post('id_pegawai'))
                                         ->where('nosttpp', $this->input->post('diklat_no_sttpp'))
                                         ->get()->result_array();
@@ -3166,6 +3166,12 @@ public function submitVerifikasiDokumen(){
     $data["keterangan"] = $datapost["keterangan"];
     $data["tanggal_verif"] = date('Y-m-d h:i:s');
     $data["id_m_user_verif"] = $this->general_library->getId();
+
+    $mydate = $datapost['tglsttpp'];
+    $timestamp = strtotime($mydate);
+    $tahun = date("Y", $timestamp);
+    $bulan = date("m", $timestamp);
+
     // if($this->general_library->isProgrammer()){
         // dd(base_url($datapost['file_path']));
         $base64 = convertToBase64(($datapost['file_path']));
@@ -3303,6 +3309,7 @@ public function submitVerifikasiDokumen(){
 
     if($datapost['jenis_dokumen'] == "diklat") {
      $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+     $this->general->cronCheckBangkom($bulan,$tahun, $peg['nipbaru_ws']);
     }
     
     // if(trim($datapost["jenis_dokumen"]) == "pangkat"){
@@ -3378,7 +3385,7 @@ public function batalSubmitVerifikasiDokumen(){
     $res['message'] = 'ok';
     $res['data'] = null;
     $datapost = $this->input->post();
-   
+    dd($datapost);
    
     $id = $datapost['id_batal'];
     $id_peg = $datapost["id_pegawai_batal"];
@@ -3420,7 +3427,15 @@ public function batalSubmitVerifikasiDokumen(){
                         ->get()->row_array();
 
     if($datapost['jenis_dokumen_batal'] == "diklat") {
+
+    $mydate = $datapost['tglsttpp_batal'];
+    $timestamp = strtotime($mydate);
+    $tahun = date("Y", $timestamp);
+    $bulan = date("m", $timestamp);
+
      $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+     $this->general->cronCheckBangkom($bulan,$tahun, $peg['nipbaru_ws']);
+
     }
 
  
@@ -14498,35 +14513,42 @@ public function getFileForVerifLayanan()
         if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
             $target_dir	= './dokumen_layanan/pangkat';
         } else if($id_m_layanan == 10){
-            $target_dir	= './dokumen_layanan/perbaikan_data';
+            $target_dir	= './dokumen_layanan/perbaikan_data/';
         } else if($id_m_layanan == 11){
-            $target_dir	= './dokumen_layanan/permohonan_salinan_sk';
+            $target_dir	= './dokumen_layanan/permohonan_salinan_sk/';
         } else if($id_m_layanan == 18){
-            $target_dir	= './dokumen_layanan/ujian_dinas';
+            $target_dir	= './dokumen_layanan/ujian_dinas/';
         } else if($id_m_layanan == 19){
-            $target_dir	= './dokumen_layanan/ujian_dinas';
+            $target_dir	= './dokumen_layanan/ujian_dinas/';
         } else if($id_m_layanan == 20){
-            $target_dir	= './dokumen_layanan/ujian_dinas';
+            $target_dir	= './dokumen_layanan/ujian_dinas/';
         } else if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30){
-            $target_dir	= './dokumen_layanan/jabatan_fungsional';
+            $target_dir	= './dokumen_layanan/jabatan_fungsional/';
         } else if($id_m_layanan == 21){
-            $target_dir	= './dokumen_layanan/peningkatan_penambahan_gelar';
+            $target_dir	= './dokumen_layanan/peningkatan_penambahan_gelar/';
         } else if($id_m_layanan == 24){
-            $target_dir	= './dokumen_layanan/suratkettidaktubel';
+            $target_dir	= './dokumen_layanan/suratkettidaktubel/';
         } else if($id_m_layanan == 25){
-            $target_dir	= './dokumen_layanan/tugasbelajar';
+            $target_dir	= './dokumen_layanan/tugasbelajar/';
         } else if($id_m_layanan == 26){
-            $target_dir	= './dokumen_layanan/tugasbelajarmandiri';
+            $target_dir	= './dokumen_layanan/tugasbelajarmandiri/';
         } else if($id_m_layanan == 27){
-            $target_dir	= './dokumen_layanan/suratrekompt';
+            $target_dir	= './dokumen_layanan/suratrekompt/';
         } else if($id_m_layanan == 28){
-            $target_dir	= './dokumen_layanan/mutasi_pindah_masuk';
+            $target_dir	= './dokumen_layanan/mutasi_pindah_masuk/';
+        } else if($id_m_layanan == 23){
+            $target_dir	= './dokumen_layanan/suratpidanahukdis/';
         }
+
+        
+        
+
 
         $this->db->trans_begin();
         $filename = str_replace(' ', '', $this->input->post('file_pengantar')); 
-    
-            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        unlink($target_dir.$filename);
+
+           $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
             $filename = $filename;
             $config['upload_path']          = $target_dir;
             $config['allowed_types']        = 'pdf';

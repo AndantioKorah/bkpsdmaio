@@ -31,4 +31,13 @@ class C_Bacirita extends CI_Controller
         echo json_encode($this->bacirita->editDataKegiatan($this->input->post()));
     }
 
+    public function daftarKegiatan(){
+        render('bacirita/V_home', null, null, null);
+    }
+
+     public function loadListWebinar(){
+        $data['result'] = $this->bacirita->loadListKegiatan();
+        $this->load->view('bacirita/V_ListWebinar', $data);
+    }
+
 }

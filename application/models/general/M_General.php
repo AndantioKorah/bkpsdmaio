@@ -2514,7 +2514,7 @@
                 $this->db->where('nipbaru_ws', $nip);
             } else {
                 $this->db->where('flag_cek_bangkom', 0)
-                        ->limit(1000);
+                        ->limit(200);
             }
             $pegawai = $this->db->get()->result_array();
 

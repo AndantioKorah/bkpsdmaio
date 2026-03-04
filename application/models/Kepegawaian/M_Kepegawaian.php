@@ -13714,7 +13714,7 @@ public function getFileForVerifLayanan()
         ->where('jenisdiklat', "00")
         ->where('jenjang_diklat', 2)
         ->where('flag_active', 1)
-        ->where('status', 1)
+        ->where_in('status', [1,2])
         ->order_by('id', 'desc')
         ->limit(1)
         ->from('db_pegawai.pegdiklat');

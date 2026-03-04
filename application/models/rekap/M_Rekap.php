@@ -1771,22 +1771,35 @@
             $nip = null;
             $pegawai = null;
             foreach($list_pegawai as $lp){
-                $pegawai[] = $lp['nip'];
+                $pegawai[$lp['nip']] = $lp['nip'];
             }
-
-            $cekBangkom = $this->db->select('a.*, b.gelar1, b.nama, b.gelar2')
+            $this->db->select('a.*, b.gelar1, b.nama, b.gelar2')
                                 ->from('t_cek_bangkom a')
                                 ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                                 ->where('a.flag_ditebus', 0)
                                 ->where('a.flag_terpenuhi', 0)
-                                ->where('bulan_tahun', $param['tahun']."-".$param['bulan']."-01")
-                                ->where_in('b.nipbaru_ws', $pegawai)
-                                ->get()->result_array();
+                                ->where('bulan_tahun <=', $param['tahun']."-".$param['bulan']."-01");
+                                // ->where_in('b.nipbaru_ws', $pegawai)
+                                // ->get()->result_array();
+            if($param['id_unitkerja'] == "3010000"){
+                $this->db->select('c.nm_unitkerja')
+                        ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                        ->where("c.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR c.id_unitkerja = '3010000'");
+            } else {
+                $this->db->where_in('b.nipbaru_ws', $pegawai);
+            }
+            $cekBangkom = $this->db->get()->result_array();
+            $listBelumLengkap = null;
             if($cekBangkom){
-                // dd($cekBangkom);
-                $res['code'] = 1;
-                $res['message'] = "belum lengkap bangkom";
-                $res['list_pegawai'] = $cekBangkom;
+                // foreach($cekBangkom as $cb){
+                    // if($cb['flag_ditebus'] == 0 && $cb['flag_terpenuhi'] == 0){
+                        $res['code'] = 1;
+                        $res['message'] = "belum lengkap bangkom";
+                        $res['list_pegawai'] = $cekBangkom;
+                    // }
+                    //jika masih ada data di $pegawai, maka itu adalah sisa yang belum ada di t_cek_bangkom dan belum upload sama sekali
+                    // unset($pegawai[$cb['nip']]);
+                // }
             }
             // foreach($list_pegawai as $lp){
             //     if($lp['flag_bangkom_terpenuhi'] == 0){

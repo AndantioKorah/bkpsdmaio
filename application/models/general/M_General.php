@@ -1,5 +1,7 @@
 <?php
-	class M_General extends CI_Model
+    require FCPATH . '/vendor/autoload.php';
+
+    class M_General extends CI_Model
 	{
         public $bios_serial_num;
 
@@ -2656,6 +2658,88 @@
                     }
                 }
             }
+        }
+
+        public function editPdf(){
+            ob_start();
+
+            $inputFile = 'test_sertifikat.png';
+            $outputFile = 'test_sertifikat_edited.pdf';
+
+            $randomString = generateRandomString(30, 1, 't_file_ds'); 
+            $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+            // dd($contentQr);
+    		$res['qr'] = generateQr($contentQr);
+
+            $data['result'] = [
+                'url_template' => $inputFile,
+                'nomor_surat' => [
+                    'urutan' => 1,
+                    'content' => "*contoh_nomor_surat*",
+                    'margin-top' => "30px",
+                    'margin-left' => "0px",
+                    'font-size' => "10rem",
+                ],
+                'nama_lengkap' => [
+                    'urutan' => 2,
+                    'content' => "*contoh_nama_pegawai*",
+                    'margin-top' => "250px",
+                    'margin-left' => "0px",
+                    'font-size' => "10rem",
+                ],
+                'jabatan' => [
+                    'urutan' => 3,
+                    'content' => "*contoh_jabatan*",
+                    'margin-top' => "360px",
+                    'margin-left' => "0px",
+                    'font-size' => "10rem",
+                ],
+                'unit_kerja' => [
+                    'urutan' => 4,
+                    'content' => "*contoh_unit_kerja*",
+                    'margin-top' => "450px",
+                    'margin-left' => "0px",
+                    'font-size' => "1rem",
+                ],
+                'qr' => [
+                    'urutan' => 5,
+                    'src' => $res['qr'],
+                    'margin-top' => "800px",
+                    'margin-left' => "0px",
+                    'width' => 200,
+                ],
+            ];
+            
+            $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
+            $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
+            $this->mpdf->AddPage(
+                'L', // L - landscape, P - portrait
+                '',
+                '',
+                '',
+                '',
+                0, // margin_left
+                0, // margin right
+                0, // margin top
+                0, // margin bottom
+                0, // margin header
+                12
+            ); 
+
+            $this->mpdf->WriteHTML($html);
+            $this->mpdf->showImageErrors = true;
+            $this->mpdf->Output($outputFile, 'I');
+
+            // $this->db->insert('t_file_ds', [
+            //     'url' => $outputFile,
+            //     'random_string' => $randomString,
+            //     'flag_bkpsdm_bacirita' => 1,
+            //     'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+            // ]);
+
+            // Output a success message (optional)
+            echo "<iframe src='".$outputFile."' style='width: 100vw;'></iframe>";
+            // echo "Text replaced and new PDF saved to $outputFile";
         }
 	}
 ?>

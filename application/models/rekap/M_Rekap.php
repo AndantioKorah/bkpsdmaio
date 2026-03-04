@@ -1164,7 +1164,7 @@
                                     ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
                                     ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
                                     ->join('m_user f', 'a.nipbaru_ws = f.username')
-                                    ->where('a.nipbaru_ws', '197403302007012022')
+                                    ->where('a.nipbaru_ws', '199401162019032009')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
 

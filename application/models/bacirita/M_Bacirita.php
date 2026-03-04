@@ -98,8 +98,117 @@ class M_Bacirita extends CI_Model
         return $res;
     }
 
+    public function inputDefaultCoordinateSertifikat($data = null, $id = null){
+        if(!$data){
+            $data = $this->db->select('*')
+                        ->from('db_bacirita.t_kegiatan')
+                        ->where('id', $id)
+                        ->get()->row_array();
+        }
+
+        if(!$data['meta_coordinate'] && $data['template_sertifikat']){
+            $contentQr = trim(base_url('login'), generateRandomString());
+    		$res['qr'] = generateQr($contentQr);
+            
+            $meta = [
+                'url_template' => base_url('arsipbkpsdmbacirita/sertifikat/'.$data['template_sertifikat']),
+                'nomor_surat' => [
+                    'urutan' => 1,
+                    'content' => "*nomor_surat*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "4",
+                ],
+                'nama_lengkap' => [
+                    'urutan' => 2,
+                    'content' => "*nama_pegawai*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "4",
+                ],
+                'nip' => [
+                    'urutan' => 3,
+                    'content' => "*nip_pegawai*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "4",
+                ],
+                'jabatan' => [
+                    'urutan' => 4,
+                    'content' => "*jabatan_pegawai*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "4",
+                ],
+                'unit_kerja' => [
+                    'urutan' => 5,
+                    'content' => "*unit_kerja_pegawai*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "4",
+                ],
+                'qr' => [
+                    'urutan' => 6,
+                    'src' => $res['qr'],
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'width' => 200,
+                ],
+            ];
+
+            $this->db->where('id', $data['id'])
+                    ->update('db_bacirita.t_kegiatan', [
+                        'meta_coordinate' => json_encode($meta)
+                    ]);
+        }
+    }
+
+    public function generatePreviewSertifikat($data = null, $id = null){
+        if(!$data){
+            $data = $this->db->select('*')
+                        ->from('db_bacirita.t_kegiatan')
+                        ->where('id', $id)
+                        ->get()->row_array();
+        }
+
+        if($data['template_sertifikat']){
+            $explode = explode(".", $data['template_sertifikat']);
+            $inputFile = $data['template_sertifikat'];
+            $previewFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+            if(file_exists(base_url($previewFile))){
+                unlink(base_url($previewFile));
+            }
+            $outputFile = $previewFile;
+            $data['meta_coordinate'] = json_decode($data['meta_coordinate'], true);
+
+            $data['meta_coordinate']['url_template'] = $inputFile;
+            $result['result'] = $data['meta_coordinate'];
+            $result['result']['url_template'] = $inputFile;
+
+            $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $result, true);
+            $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
+            $this->mpdf->AddPage(
+                'L', // L - landscape, P - portrait
+                '',
+                '',
+                '',
+                '',
+                0, // margin_left
+                0, // margin right
+                0, // margin top
+                0, // margin bottom
+                0, // margin header
+                12
+            ); 
+
+            $this->mpdf->WriteHTML($html);
+            $this->mpdf->showImageErrors = true;
+            $this->mpdf->OutputFile($outputFile);
+        }
+    }
+
     public function modalLoadDetailKegiatan($id){
-        return $this->db->select('a.*, c.nama_tipe_kegiatan')
+        $data = $this->db->select('a.*, c.nama_tipe_kegiatan')
                     ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
@@ -107,6 +216,14 @@ class M_Bacirita extends CI_Model
                     ->where('a.id', $id)
                     ->where('a.flag_active', 1)
                     ->get()->row_array();
+
+        if(!$data['meta_coordinate'] && $data['template_sertifikat']){
+            $this->inputDefaultCoordinateSertifikat($data);
+        }
+
+        $this->generatePreviewSertifikat($data);
+
+        return $data;
     }
 
 
@@ -294,5 +411,63 @@ class M_Bacirita extends CI_Model
         return $res;
     }
 
+    public function saveCoordinateSertifikat($id){
+        $data['result'] = $this->input->post();
+        $kegiatan = $this->db->select('*')
+                        ->from('db_bacirita.t_kegiatan')
+                        ->where('id', $id)
+                        ->get()->row_array();
+
+        $explode = explode(".", $kegiatan['template_sertifikat']);
+        $outputFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+        if(file_exists($outputFile)){
+            unlink($outputFile);
+        }
+
+        $meta = json_decode($kegiatan['meta_coordinate'], true);
+        
+        $temp = $meta;
+        
+        foreach($data['result'] as $k => $v){
+            if($k != "qr"){
+                $temp[$k]['margin-top'] = $data['result'][$k]['margin-top'];
+                $temp[$k]['margin-left'] = $data['result'][$k]['margin-left'];
+                $temp[$k]['font-size'] = $data['result'][$k]['font-size'];
+            } else {
+                $temp[$k]['margin-top'] = $data['result'][$k]['margin-top'];
+                $temp[$k]['margin-left'] = $data['result'][$k]['margin-left'];
+                $temp[$k]['width'] = $data['result'][$k]['width'];
+            }
+        }
+        $temp['url_template'] = $kegiatan['template_sertifikat'];
+        $data['result'] = $temp;
+
+        $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
+        $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
+        $this->mpdf->AddPage(
+            'L', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            0, // margin_left
+            0, // margin right
+            0, // margin top
+            0, // margin bottom
+            0, // margin header
+            12
+        ); 
+
+        $this->mpdf->WriteHTML($html);
+        $this->mpdf->showImageErrors = true;
+        $this->mpdf->OutputFile($outputFile);
+
+        $this->db->where('id', $id)
+                ->update('db_bacirita.t_kegiatan', [
+                    'meta_coordinate' => json_encode($data['result']) 
+                ]);
+
+        return ['code' => 0, 'message' => "", 'random_string' => generateRandomNumber(5)];
+    }
 
 }

@@ -134,9 +134,9 @@ $('#table_rencana_kinerja').DataTable({
     date.getFullYear(),
     date.getMonth(),
   );
-
+  console.log(tanggal)
   if(bulanSearch != bulanCurrent){
-    if(tanggal <= 3) {
+    if(tanggal <= 4) {
         $('.btndelete').show()
     } else {
         $('.btndelete').hide()

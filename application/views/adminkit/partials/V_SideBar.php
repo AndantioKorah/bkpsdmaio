@@ -423,18 +423,7 @@
 			</a>
 		</li>
 		<?php } ?>
-		<?php if($this->general_library->isProgrammer() 
-			|| $this->general_library->isAdminAplikasi() 
-		    || $this->general_library->isHakAkses('rekap_bangkom')
-			||  $this->general_library->isPegawaiBkpsdm()
-			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
-			){ ?>
-		<li class="sidebar-item">
-			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
-				<i class="fa fa-database"></i> <span class="align-middle">Rekap Bangkom</span>
-			</a>
-		</li>
-		<?php } ?>
+		
 
 		<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
 		<li class="sidebar-item">
@@ -461,11 +450,7 @@
 				<?php if($this->general_library->isHakAkses('rekap_bangkom')
 			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
 			){ ?>
-		<li class="sidebar-item">
-			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
-				<i class="fa fa-database"></i> <span class="align-middle">Rekap Bangkom</span>
-			</a>
-		</li>
+		
 		<?php
 		}
 	?>
@@ -473,6 +458,21 @@
 		}
 	?>
 	<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
+
+		<?php if($this->general_library->isProgrammer() 
+			|| $this->general_library->isAdminAplikasi() 
+		    || $this->general_library->isHakAkses('rekap_bangkom')
+			||  $this->general_library->isPegawaiBkpsdm()
+			|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
+			){ ?>
+		<li class="sidebar-item">
+			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
+				<i class="fa fa-database"></i> <span class="align-middle">Rekap Bangkom</span>
+			</a>
+		</li>
+		<?php } ?>
+
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
 		<a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link">
@@ -1547,24 +1547,24 @@
 					</a>	
 				</li>
 		<?php } ?>
-			<li class="sidebar-header">
+			<!-- <li class="sidebar-header">
 				BKPSDM Bacirita
-			</li>
+			</li> -->
 			<?php if($this->general_library->isHakAkses('admin_bkpsdm_bacirita') || $this->general_library->isProgrammer()){?>
-				<li class="sidebar-item">
+				<!-- <li class="sidebar-item">
 					<a title="Admin BKPSDM Bacirita" href="<?=base_url();?>bkpsdm-bacirita/kegiatan" class="sidebar-link">
 					<i class="align-middle me-2 fa fa-fw fa fa-user"></i> 
 						<span class="align-middle">
 							Admin
 						</span>
 					</a>	
-				</li>
+				</li> -->
 			<?php } ?>
-			<li class="sidebar-item">
+			<!-- <li class="sidebar-item">
 				<a title="Kegiatan BKPSDM Bacirita" class="sidebar-link" href="<?=base_url('bacirita/list-webinar')?>">
 					<i class="fa fa-microphone"></i> <span class="align-middle">BKPSDM Bacirita</span>
 				</a>
-			</li>
+			</li> -->
 </ul>
 <div class="mt-5">
 	<p></p>

@@ -7,7 +7,7 @@
     </div>
     <div class="card-body" >
         <form id="form_search" class="mt-4">
-        <?php if(isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())) { ?> 
+        <?php if(isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) || stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())) { ?> 
          <div class="row">
                   <div class="col-lg-12">
                                 <label>Pilih Unit Kerja</label>

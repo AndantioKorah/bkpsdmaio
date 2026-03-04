@@ -148,7 +148,21 @@
 					</form>
 				</div>
 				<div class="tab-pane" id="pills-sertifikat" role="tabpanel" aria-labelledby="pills-sertifikat-tab">
-					sertifikat
+					<form method="post" id="form_upload_template_sertifikat" enctype="multipart/form-data" >
+						<input type="hidden" name="id_kegiatan_template" id="id_kegiatan_template" value="<?=$rs['id']?>">
+							<div class="col-lg-12 mt-2">
+								<label class="lbl-form-divider">Template Sertifikat</label>
+							</div>
+							<div class="col-lg-12 mt-1">
+								<input class="form-control" type="file" id="template_file_edit" name="file"  />
+							</div>
+							<div class="col-lg-12 text-right">
+								<hr>
+								<button id="btn_simpan_edit" class="btn btn-navy btn-block" ><i class="fa fa-save"></i> Simpan</button>
+								<button id="btn_simpan_loading_edit" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -195,6 +209,41 @@
 
 		$.ajax({  
         url: '<?=base_url("bacirita/C_Bacirita/editDataKegiatan")?>',
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        // dataType: "json",
+           success: function(data){
+                let resp = JSON.parse(data)
+                if(resp.code == 0){
+                    $('#topik').val('')
+					$('#div_form_edit_kegiatan').hide()
+					successtoast('Data berhasil disimpan')
+					loadListKegiatan()
+                } else {
+                    errortoast(resp.message)
+                }
+				$('#btn_simpan').show()
+				$('#btn_simpan_loading').hide()
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+				$('#btn_simpan').show()
+				$('#btn_simpan_loading').hide()
+            }  
+        });
+	})
+
+	$('#form_upload_template_sertifikat').on('submit', function(e){
+		e.preventDefault()
+		// $('#btn_simpan').hide()
+		// $('#btn_simpan_loading').show()
+		var formvalue = $('#form_upload_template_sertifikat');
+		var form_data = new FormData(formvalue[0]);
+
+		$.ajax({  
+        url: '<?=base_url("bacirita/C_Bacirita/updloadTemplateSertifikat")?>',
         method:"POST",  
         data:form_data,  
         contentType: false,  

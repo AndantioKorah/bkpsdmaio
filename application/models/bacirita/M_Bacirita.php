@@ -260,5 +260,39 @@ class M_Bacirita extends CI_Model
         return $res;
     }
 
+     public function updloadTemplateSertifikat($data){
+        $res = [
+            'code' => 0,
+            'message' => null
+        ];
+
+        $id = $data['id_kegiatan_template'];
+        $target_dir = 'arsipbkpsdmbacirita/sertifikat/';
+        $nama_file = str_replace(' ', '',$_FILES['file']['name']); 
+        if($_FILES['file']['name'] != ""){
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = '*';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = $nama_file;
+
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('file')) {
+                $data['error']    = strip_tags($this->upload->display_errors());
+                $res['code'] = 1;
+                $res['message'] = "Terjadi Kesalahan";
+                return $res;
+
+            } else {
+                $dataFile 			= $this->upload->data();
+                $dataUpdate['template_sertifikat'] = $nama_file;
+                $this->db->where('id', $id)
+                    ->update('db_bacirita.t_kegiatan', $dataUpdate);
+            }
+        } 
+        return $res;
+    }
+
 
 }

@@ -55,4 +55,8 @@ class C_Bacirita extends CI_Controller
        echo json_encode($this->bacirita->presensiKegiatan($id_kegiatan,$id_m_user));
     }
 
+       public function updloadTemplateSertifikat(){
+        echo json_encode($this->bacirita->updloadTemplateSertifikat($this->input->post()));
+    }
+
 }

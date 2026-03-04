@@ -4160,10 +4160,12 @@ class C_Kepegawaian extends CI_Controller
 	  public function openListUploadBangkomSkpd(){
         // $data['unitkerja'] = $this->master->getAllSkpd();
         // $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
-
-		   if(isKasubKepegawaian($this->general_library->getNamaJabatan())){
+		
+		if(isKasubKepegawaian($this->general_library->getNamaJabatan())){
             $data['unitkerja'] = $this->m_general->getGroupUnitKerja($this->general_library->getUnitKerjaPegawai());
-        } else {
+        } else if(stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())) {
+            $data['unitkerja'] = $this->m_general->getGroupUnitKerja($this->general_library->getUnitKerjaPegawai());
+		} else {	
             $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
         }
 

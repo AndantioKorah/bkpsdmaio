@@ -293,6 +293,9 @@ class C_Kinerja extends CI_Controller
         $data['list_rencana_kinerja'] = $this->kinerja->loadRencanaKinerja($bulan, $tahun);
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
+         $date = new DateTime();
+        $date->modify("last day of previous month");
+        $data['maxDate'] = countMaxDateUpload(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'plus');
 
         $this->load->view('kinerja/V_RencanaKinerjaItem', $data);
     }

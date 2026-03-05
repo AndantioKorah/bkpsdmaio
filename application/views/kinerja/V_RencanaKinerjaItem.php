@@ -117,7 +117,7 @@ $('#table_rencana_kinerja').DataTable({
      });
     
 
-    $(function () {
+$(function () {
   $('[data-toggle="tooltip"]').tooltip()
 
    var statusLock = "<?=$status_lock[0]['status'];?>"
@@ -129,6 +129,7 @@ $('#table_rencana_kinerja').DataTable({
   var tanggal = new Date().getDate();
   var bulanCurrent = date.getMonth()+1;
   var tahun = date.getFullYear();
+  var maxDate = "<?= $maxDate['max_date'];?>";
 
   var firstDay = getFirstDayOfMonth(
     date.getFullYear(),
@@ -136,12 +137,12 @@ $('#table_rencana_kinerja').DataTable({
   );
   console.log(tanggal)
   if(bulanSearch != bulanCurrent){
-    if(tanggal <= 4) {
+    if(date('Y-m-d') <= maxDate) {
         $('.btndelete').show()
     } else {
         $('.btndelete').hide()
     }
-  } 
+   } 
    }
   
 })

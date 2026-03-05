@@ -215,9 +215,20 @@
                             <!-- <button href="#edit_realisasi_kinerja" data-toggle="tooltip" class="btn btn-sm btn-primary mr-1" data-placement="top" title="Edit" 
                              onclick="openModalEditRealisasiKinerja('<?=$lp['id']?>')"><i class="fa fa-edit"></i> </button> -->
                             </span>  
+                            <?php
+                            $mydate = $lp['tanggal_kegiatan'];
+
+                            $timestamp = strtotime($mydate);
+                            $bulankegiatan = date("m", $timestamp);
+                            // dd(date("m", $timestamp));
+                            $date = new DateTime();
+                            $date->modify('-2 months');
+                            $bulanbefor2 = $date->format('m');
+                            ?>
+                            <?php if($bulankegiatan != $bulanbefor2) { ?>
                             <button onclick="deleteKegiatan('<?=$lp['id']?>','<?=$lp['tanggal_kegiatan']?>')" class="btn btn-sm btn-danger btndelete" data-toggle="tooltip" data-placement="top" title="Hapus"><i class="fa fa-trash" ></i></button>     
-                     
-                          </div>
+                            <?php } ?>
+                            </div>
 
                       
                         </td>
@@ -319,7 +330,6 @@
 <script>
 
 $(function () {
-
   var bulanSearch = "<?=$bulan;?>"
   var date = new Date();
   var tanggal = new Date().getDate();
@@ -338,7 +348,9 @@ $(function () {
    if(statusLock == 0){
     $('.btndelete').show()
    } else {
+
     if(bulanSearch != bulanCurrent){
+      
     if(currentDate <= maxDate) {
         $('.btndelete').show()
     } else {

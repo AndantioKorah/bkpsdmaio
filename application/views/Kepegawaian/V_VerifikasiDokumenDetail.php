@@ -863,13 +863,13 @@
   <input type="hidden" name="file_path" id="file_path" value="<?= $path?>">
   <input type="hidden" name="db_dokumen" id="db_dokumen" value="<?= $param['jenisdokumen']['db'];?>">
 
-  <input type="hidden" value="<?=$result['id_pegawai']?>" name="id_pegawai" value="id_pegawai">
+  <input type="hidden" value="<?=$result['id_pegawai']?>" name="id_pegawai" id="id_pegawai">
 
   <?php if($param['jenisdokumen']['value'] == 'diklat') { ?>
-  <input type="hidden" value="<?=$result['tglsttpp']?>" name="tglsttpp" value="tglsttpp">
+  <input type="hidden" value="<?=$result['tglsttpp']?>" name="tglsttpp" id="tglsttpp">
   <?php } ?>
 
-  <input type="hidden" value="<?=$result['id']?>" name="id" value="id">
+  <input type="hidden" value="<?=$result['id']?>" name="id" id="id">
   <div class="form-group">
     <label for="exampleInputEmail1">Verifikasi</label>
     <select onchange="showKeterangan()" class="form-select" aria-label="Default select example" name="verif" id="verif">
@@ -903,9 +903,9 @@
 </div>
 <div class="col-lg-6">
 <form method="post" id="form_batal_verifikasi_dokumen" enctype="multipart/form-data" >
- <input type="hidden" name="jenis_dokumen_batal" id="jenis_dokumen_batal" value="  <?= $param['jenisdokumen']['value'];?>">
+ <input type="hidden" name="jenis_dokumen_batal" id="jenis_dokumen_batal" value="<?= $param['jenisdokumen']['value'];?>">
   <input type="hidden" value="<?=$result['id']?>" name="id_batal" value="id_batal">
-  <input type="hidden" name="db_dokumen_batal" id="db_dokumen_batal" value="  <?= $param['jenisdokumen']['db'];?>">
+  <input type="hidden" name="db_dokumen_batal" id="db_dokumen_batal" value="<?= $param['jenisdokumen']['db'];?>">
   <input type="hidden" value="<?=$result['id_pegawai']?>" name="id_pegawai_batal" value="id_pegawai_batal">
 
   <?php if($param['jenisdokumen']['value'] == 'diklat') { ?>

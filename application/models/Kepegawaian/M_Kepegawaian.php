@@ -3166,11 +3166,12 @@ public function submitVerifikasiDokumen(){
     $data["keterangan"] = $datapost["keterangan"];
     $data["tanggal_verif"] = date('Y-m-d h:i:s');
     $data["id_m_user_verif"] = $this->general_library->getId();
-
+    // dd($datapost['tglsttpp']);
     $mydate = $datapost['tglsttpp'];
     $timestamp = strtotime($mydate);
     $tahun = date("Y", $timestamp);
-    $bulan = date("m", $timestamp);
+    $bulansertifikat = date("m", $timestamp);
+
 
     // if($this->general_library->isProgrammer()){
         // dd(base_url($datapost['file_path']));
@@ -3307,10 +3308,7 @@ public function submitVerifikasiDokumen(){
     //                         'icon_color' => "red"
     //                     ]);
 
-    if($datapost['jenis_dokumen'] == "diklat") {
-     $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
-     $this->general->cronCheckBangkom($bulan,$tahun, $peg['nipbaru_ws']);
-    }
+  
     
     // if(trim($datapost["jenis_dokumen"]) == "pangkat"){
     //     $this->db->where('id', $id)
@@ -3348,6 +3346,11 @@ public function submitVerifikasiDokumen(){
         $res['data'] = null;
     } else {
         $this->db->trans_commit();
+          if($datapost['jenis_dokumen'] == "diklat") {
+            //  $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+            $this->general->cronCheckBangkom($bulansertifikat,$tahun, $peg['nipbaru_ws']);
+            }
+
     }
 
     if(trim($datapost["jenis_dokumen"]) == "pangkat"){
@@ -3385,7 +3388,6 @@ public function batalSubmitVerifikasiDokumen(){
     $res['message'] = 'ok';
     $res['data'] = null;
     $datapost = $this->input->post();
-    dd($datapost);
    
     $id = $datapost['id_batal'];
     $id_peg = $datapost["id_pegawai_batal"];
@@ -3425,15 +3427,13 @@ public function batalSubmitVerifikasiDokumen(){
                         ->where('b.flag_active', 1)
                         ->where('a.id_peg', $datapost['id_pegawai_batal'])
                         ->get()->row_array();
-
+  
     if($datapost['jenis_dokumen_batal'] == "diklat") {
-
     $mydate = $datapost['tglsttpp_batal'];
     $timestamp = strtotime($mydate);
     $tahun = date("Y", $timestamp);
     $bulan = date("m", $timestamp);
-
-     $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+     // $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
      $this->general->cronCheckBangkom($bulan,$tahun, $peg['nipbaru_ws']);
 
     }

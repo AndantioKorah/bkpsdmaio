@@ -2604,6 +2604,7 @@
             if($tahun == 0){
                 $tahun = date('Y');
             }
+            
             $this->db->select('a.nipbaru_ws, c.id as id_t_cek_bangkom,
                                 sum(b.jam) as total_jp
                             ')

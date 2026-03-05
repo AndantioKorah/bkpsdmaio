@@ -45,18 +45,20 @@ class C_Bacirita extends CI_Controller
         render('bacirita/V_DetailWebinar', '', '', $data);
     }
 
-    public function submitDaftarKegiatan($id_kegiatan,$id_m_user)
-    {
+    public function submitDaftarKegiatan($id_kegiatan,$id_m_user){
        echo json_encode($this->bacirita->submitDaftarKegiatan($id_kegiatan,$id_m_user));
     }
 
-     public function presensiKegiatan($id_kegiatan,$id_m_user)
-    {
+    public function presensiKegiatan($id_kegiatan,$id_m_user){
        echo json_encode($this->bacirita->presensiKegiatan($id_kegiatan,$id_m_user));
     }
 
-       public function updloadTemplateSertifikat(){
+    public function updloadTemplateSertifikat(){
         echo json_encode($this->bacirita->updloadTemplateSertifikat($this->input->post()));
+    }
+
+    public function saveCoordinateSertifikat($id){
+        echo json_encode($this->bacirita->saveCoordinateSertifikat($id));
     }
 
 }

@@ -18,6 +18,17 @@
 			background-color: var(--primary-color);
 			color: white;
 		}
+
+		.lbl_field_name{
+			font-weight: bold;
+			font-size: 1rem;
+		}
+
+		.lbl_field_detail{
+			font-weight: bold;
+			font-size: .7rem;
+			font-style: italic;
+		}
 	</style>
 	<div class="row p-3">
 		<div class="col-lg-12">
@@ -148,21 +159,193 @@
 					</form>
 				</div>
 				<div class="tab-pane" id="pills-sertifikat" role="tabpanel" aria-labelledby="pills-sertifikat-tab">
-					<form method="post" id="form_upload_template_sertifikat" enctype="multipart/form-data" >
-						<input type="hidden" name="id_kegiatan_template" id="id_kegiatan_template" value="<?=$rs['id']?>">
-							<div class="col-lg-12 mt-2">
-								<label class="lbl-form-divider">Template Sertifikat</label>
-							</div>
-							<div class="col-lg-12 mt-1">
-								<input class="form-control" type="file" id="template_file_edit" name="file"  />
-							</div>
-							<div class="col-lg-12 text-right">
-								<hr>
-								<button id="btn_simpan_edit" class="btn btn-navy btn-block" ><i class="fa fa-save"></i> Simpan</button>
-								<button id="btn_simpan_loading_edit" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
-							</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<form method="post" id="form_upload_template_sertifikat" enctype="multipart/form-data" >
+								<input type="hidden" name="id_kegiatan_template" id="id_kegiatan_template" value="<?=$rs['id']?>">
+									<div class="col-lg-12 mt-2">
+										<label class="lbl-form-divider">Template Sertifikat</label>
+									</div>
+									<div class="col-lg-12 mt-1">
+										<input class="form-control" type="file" id="template_file_edit" name="file"  />
+									</div>
+									<div class="col-lg-12 mt-2 text-right">
+										<button id="btn_simpan_edit" class="btn btn-navy btn-block" ><i class="fa fa-save"></i> Simpan</button>
+										<button id="btn_simpan_loading_edit" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
+										<hr>
+									</div>
+								</div>
+							</form>
 						</div>
-					</form>
+						<div class="col-lg-12 mt-2">
+							<?php
+								$srcIframe = base_url()."arsipbkpsdmbacirita/sertifikat/".$rs['template_sertifikat'];
+								if($rs['template_sertifikat']){
+									$coordinate = null;
+									if($rs['meta_coordinate']){
+										$coordinate = json_decode($rs['meta_coordinate'], true);
+									}
+									$explode = explode(".", $rs['template_sertifikat']);
+									$previewFile = base_url()."arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+									$srcIframe = $previewFile;
+							?>
+								<div class="row">
+									<div class="col-lg-8">
+										<iframe id="iframe_preview" src="<?=$srcIframe."?v=".generateRandomNumber(6)?>" style="
+											width: 100%;
+											height: 60vh;
+										"></iframe>
+									</div>
+									<div class="col-lg-4">
+										<form id="form_preview_sertifikat">
+											<div class="row">
+												<div class="col-lg-12">
+													<label class="lbl_field_name">Nomor Surat</label>
+													<div class="row">
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Urutan</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['urutan']) ? ($coordinate["nomor_surat"]['urutan']) : 0 ;?>" name="nomor_surat[urutan]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Top</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['margin-top']) ? ($coordinate["nomor_surat"]['margin-top']) : 0 ;?>" name="nomor_surat[margin-top]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Left</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['margin-left']) ? ($coordinate["nomor_surat"]['margin-left']) : 0 ;?>" name="nomor_surat[margin-left]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Size</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['font-size']) ? ($coordinate["nomor_surat"]['font-size']) : 0 ;?>" name="nomor_surat[font-size]"/>
+														</div>
+													</div>
+													<hr>
+												</div>
+												<div class="col-lg-12">
+													<label class="lbl_field_name">Nama Pegawai</label>
+													<div class="row">
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Urutan</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['urutan']) ? ($coordinate["nama_lengkap"]['urutan']) : 0 ;?>" name="nama_lengkap[urutan]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Top</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['margin-top']) ? ($coordinate["nama_lengkap"]['margin-top']) : 0 ;?>" name="nama_lengkap[margin-top]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Left</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['margin-left']) ? ($coordinate["nama_lengkap"]['margin-left']) : 0 ;?>" name="nama_lengkap[margin-left]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Size</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['font-size']) ? ($coordinate["nama_lengkap"]['font-size']) : 0 ;?>" name="nama_lengkap[font-size]"/>
+														</div>
+													</div>
+													<hr>
+												</div>
+												<div class="col-lg-12">
+													<label class="lbl_field_name">NIP</label>
+													<div class="row">
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Urutan</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['urutan']) ? ($coordinate["nip"]['urutan']) : 0 ;?>" name="nip[urutan]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Top</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['margin-top']) ? ($coordinate["nip"]['margin-top']) : 0 ;?>" name="nip[margin-top]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Left</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['margin-left']) ? ($coordinate["nip"]['margin-left']) : 0 ;?>" name="nip[margin-left]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Size</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['font-size']) ? ($coordinate["nip"]['font-size']) : 0 ;?>" name="nip[font-size]"/>
+														</div>
+													</div>
+													<hr>
+												</div>
+												<div class="col-lg-12">
+													<label class="lbl_field_name">Jabatan</label>
+													<div class="row">
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Urutan</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['urutan']) ? ($coordinate["jabatan"]['urutan']) : 0 ;?>" name="jabatan[urutan]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Top</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['margin-top']) ? ($coordinate["jabatan"]['margin-top']) : 0 ;?>" name="jabatan[margin-top]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Left</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['margin-left']) ? ($coordinate["jabatan"]['margin-left']) : 0 ;?>" name="jabatan[margin-left]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Size</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['font-size']) ? ($coordinate["jabatan"]['font-size']) : 0 ;?>" name="jabatan[font-size]"/>
+														</div>
+													</div>
+													<hr>
+												</div>
+												<div class="col-lg-12">
+													<label class="lbl_field_name">Unit Kerja</label>
+													<div class="row">
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Urutan</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['urutan']) ? ($coordinate["unit_kerja"]['urutan']) : 0 ;?>" name="unit_kerja[urutan]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Top</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['margin-top']) ? ($coordinate["unit_kerja"]['margin-top']) : 0 ;?>" name="unit_kerja[margin-top]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Left</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['margin-left']) ? ($coordinate["unit_kerja"]['margin-left']) : 0 ;?>" name="unit_kerja[margin-left]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Size</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['font-size']) ? ($coordinate["unit_kerja"]['font-size']) : 0 ;?>" name="unit_kerja[font-size]"/>
+														</div>
+													</div>
+													<hr>
+												</div>
+												<div class="col-lg-12">
+													<label class="lbl_field_name">QR</label>
+													<div class="row">
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Urutan</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr"]['urutan']) ? ($coordinate["qr"]['urutan']) : 0 ;?>" name="qr[urutan]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Top</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr"]['margin-top']) ? ($coordinate["qr"]['margin-top']) : 0 ;?>" name="qr[margin-top]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Left</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr"]['margin-left']) ? ($coordinate["qr"]['margin-left']) : 0 ;?>" name="qr[margin-left]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Size</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr['width']"]) ? ($coordinate["qr['width']"]) : 0 ;?>" name="qr[width]"/>
+														</div>
+													</div>
+													<hr>
+												</div>
+												<div class="col-lg-12 text-right">
+													<button id="btn_simpan_preview" type="submit" class="btn btn-navy btn-sm">Preview</button>
+													<button id="btn_simpan_preview_loading" style="display: none;" type="button" disabled class="btn btn-navy btn-sm"><i class="fa fa-spin fa-spinner"></i> Loading...</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							<?php } else { ?>
+								<div class="text-center">
+									<h5 style="color: red; font-style: italic;">Belum Ada Template Sertifikat <i class="fa fa-exclamation"></i></h5>
+								</div>
+							<?php } ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -200,6 +383,32 @@
 		})
 	}
 
+	$('#form_preview_sertifikat').on('submit', function(e){
+		// $('#btn_simpan_preview').hide()
+		// $('#btn_simpan_preview_loading').show()
+		e.preventDefault()
+		$.ajax({  
+		url: '<?=base_url("bacirita/C_Bacirita/saveCoordinateSertifikat/".$rs['id'])?>',
+		method:"POST",  
+		data: $(this).serialize(),  
+		success: function(data){
+				let resp = JSON.parse(data)
+				if(resp.code == 0){
+					$('#iframe_preview')[0].contentWindow.location.reload(true)
+					successtoast('Data Berhasil Disimpan')
+				} else {
+					errortoast(resp.message)
+				}
+				$('#btn_simpan_preview').show()
+				$('#btn_simpan_preview_loading').hide()
+			}, error: function(e){
+				errortoast('Terjadi Kesalahan')
+				$('#btn_simpan_preview').show()
+				$('#btn_simpan_preview_loading').hide()
+			}  
+		});
+	})
+
 	$('#form_edit_kegiatan').on('submit', function(e){
 		e.preventDefault()
 		// $('#btn_simpan').hide()
@@ -208,31 +417,31 @@
 		var form_data = new FormData(formvalue[0]);
 
 		$.ajax({  
-        url: '<?=base_url("bacirita/C_Bacirita/editDataKegiatan")?>',
-        method:"POST",  
-        data:form_data,  
-        contentType: false,  
-        cache: false,  
-        processData:false,  
-        // dataType: "json",
-           success: function(data){
-                let resp = JSON.parse(data)
-                if(resp.code == 0){
-                    $('#topik').val('')
-					$('#div_form_edit_kegiatan').hide()
-					successtoast('Data berhasil disimpan')
-					loadListKegiatan()
-                } else {
-                    errortoast(resp.message)
-                }
-				$('#btn_simpan').show()
-				$('#btn_simpan_loading').hide()
-            }, error: function(e){
-                errortoast('Terjadi Kesalahan')
-				$('#btn_simpan').show()
-				$('#btn_simpan_loading').hide()
-            }  
-        });
+			url: '<?=base_url("bacirita/C_Bacirita/editDataKegiatan")?>',
+			method:"POST",  
+			data:form_data,  
+			contentType: false,  
+			cache: false,  
+			processData:false,  
+			// dataType: "json",
+			success: function(data){
+					let resp = JSON.parse(data)
+					if(resp.code == 0){
+						$('#topik').val('')
+						$('#div_form_edit_kegiatan').hide()
+						successtoast('Data berhasil disimpan')
+						loadListKegiatan()
+					} else {
+						errortoast(resp.message)
+					}
+					$('#btn_simpan').show()
+					$('#btn_simpan_loading').hide()
+				}, error: function(e){
+					errortoast('Terjadi Kesalahan')
+					$('#btn_simpan').show()
+					$('#btn_simpan_loading').hide()
+				}  
+			});
 	})
 
 	$('#form_upload_template_sertifikat').on('submit', function(e){

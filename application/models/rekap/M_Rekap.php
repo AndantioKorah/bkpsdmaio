@@ -1768,6 +1768,9 @@
             $list_pegawai = $this->db->get()->result_array();
         }
         if($list_pegawai){
+            // if($this->general_library->isProgrammer()){
+            //     dd($param);
+            // }
             $nip = null;
             $pegawai = null;
             foreach($list_pegawai as $lp){
@@ -1778,6 +1781,7 @@
                                 ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                                 ->where('a.flag_ditebus', 0)
                                 ->where('a.flag_terpenuhi', 0)
+                                ->where('a.flag_active', 1)
                                 ->where('bulan_tahun <=', $param['tahun']."-".$param['bulan']."-01");
                                 // ->where_in('b.nipbaru_ws', $pegawai)
                                 // ->get()->result_array();

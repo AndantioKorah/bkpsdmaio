@@ -45,7 +45,7 @@
                                 <input style="display: none;" autocomplete="off" class="form-control" id="bulan" name="bulan" value="<?= $data_search['bulan']; ?>" />
                                 <?php // if($this->general_library->isProgrammer()){ ?>
                                 <?php // if($data_search['tahun'] <= 2024 || $this->general_library->isProgrammer()){ ?>
-                                    <button id="btn_download_berkas" type="submit" class="btn btn-block btn-success">
+                                    <button id="btn_download_berkas" type="submit" class="btn btn-block btn-success btn_download_pdf_tpp" style="display: none;">
                                         <i class="fa fa-download"></i> Download Format Excel
                                     </button>
                                 <?php // } else { ?>

@@ -2543,8 +2543,10 @@
                 $dataCekBangkom = $this->db->get()->result_array();
                 if($dataCekBangkom){
                     $dataPerPegawai = null;
+                    $dpp = null;
                     $wajibCapaiJumlahJp = 3;
                     foreach($dataCekBangkom as $dc){
+                        $dpp[$dc['nip']][] = $dc;
                         $jumlah_jp = $dc['jumlah_jp'] ? $dc['jumlah_jp'] : 0;
                         if(!isset($dataPerPegawai[$dc['nip']])){ // jika belum ada maka set data
                             $dataPerPegawai[$dc['nip']] = $dc;
@@ -2562,18 +2564,23 @@
                             $dataPerPegawai[$dc['nip']]['bulan_tahun'] = $dc['bulan_tahun'];
                             $dataPerPegawai[$dc['nip']]['jumlah_jp'] = $dc['jumlah_jp'];
                             $dataPerPegawai[$dc['nip']]['flag_terpenuhi'] = $dc['flag_terpenuhi'];
-                            $dataPerPegawai[$dc['nip']]['flag_ditebus'] = $dc['flag_ditebus'];
-
-                            $jumlah_jp = $dc['jumlah_jp'] ? $dc['jumlah_jp'] : 0;
-
+                            $dataPerPegawai[$dc['nip']]['flag_ditebus'] = 0;
+                            
                             $dataPerPegawai[$dc['nip']]['utang'] += $wajibCapaiJumlahJp;
-                            $perhitunganJp = $jumlah_jp - $dataPerPegawai[$dc['nip']]['utang'];
-                            if($perhitunganJp >= 0){
-                                $this->db->where_in('id', $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'])
+                            $dataPerPegawai[$dc['nip']]['utang'] -= $jumlah_jp;
+
+                            // $dataPerPegawai[$dc['nip']]['utang'] += $jumlah_jp;
+                            // $dataPerPegawai[$dc['nip']]['utang'] -= $wajibCapaiJumlahJp;
+                            // $perhitunganJp = $jumlah_jp - $dataPerPegawai[$dc['nip']]['utang'];
+                            if($dataPerPegawai[$dc['nip']]['utang'] <= 0){
+                                $dataPerPegawai[$dc['nip']]['utang'] = 0;
+                                if($dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom']){
+                                    $this->db->where_in('id', $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'])
                                         ->update('t_cek_bangkom', [
                                             'flag_ditebus' => 1
                                         ]);
-                                $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'] = null;
+                                    $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'] = null;
+                                }
                             } else {
                                 $dataPerPegawai[$dc['nip']]['list_id_t_cek_bangkom'][] = $dc['id'];
                             }
@@ -2599,6 +2606,20 @@
         }
 
         public function cronCheckBangkom($bulan = 0, $tahun = 0, $nip = "", $id_unitkerja = 0){
+            if($nip == ""){
+                $exists = $this->db->select('*')
+                                ->from('t_cek_bangkom')
+                                ->where('flag_active', 1)
+                                ->where('tahun', $tahun)
+                                ->where('bulan', $bulan)
+                                ->limit(1)
+                                ->get()->row_array();
+                if($exists){
+                    dd('exists');
+                    return;
+                }
+            }
+
             if($bulan == 0){
                 $bulan = date('m');
             }
@@ -2606,7 +2627,10 @@
             if($tahun == 0){
                 $tahun = date('Y');
             }
-            
+
+            if($tahun == null){
+                return;
+            }
             $this->db->select('a.nipbaru_ws, c.id as id_t_cek_bangkom,
                                 sum(b.jam) as total_jp
                             ')
@@ -2642,22 +2666,26 @@
                 foreach($pegawai as $p){
                     $updateData['jumlah_jp'] = $p['total_jp'] ? $p['total_jp'] : 0;
                     $updateData['nip'] = $p['nipbaru_ws'];
-                    $updateData['bulan'] = $bulan < 10 ? "0".$bulan : $bulan;
+
+                    $updateData['bulan'] = $bulan < 10 ? "0".intval($bulan) : $bulan;
                     $updateData['tahun'] = $tahun;
                     $updateData['bulan_tahun'] = $tahun."-".$updateData['bulan']."-01";
 
-                    $updateData['flag_terpenuhi'] = 0;
-                    if(intval($p['total_jp']) >= 3){
-                        $updateData['flag_terpenuhi'] = 1;
-                    }
+                    $updateData['flag_terpenuhi'] = $updateData['jumlah_jp'] >= 3 ? 1 : 0;
                     // dd($updateData);
                     if($p['id_t_cek_bangkom']){
+                        $updateData['updated_by'] = $this->general_library->getId();
                         $this->db->where('id', $p['id_t_cek_bangkom'])
                                 ->update('t_cek_bangkom', $updateData);
                     } else {
+                        $updateData['created_by'] = $this->general_library->getId();
                         $this->db->insert('t_cek_bangkom', $updateData);
                     }
                 }
+            }
+
+            if($nip != ""){
+                $this->cronCheckDataBangkom($nip);
             }
         }
 
@@ -2674,44 +2702,45 @@
 
             $data['result'] = [
                 'url_template' => $inputFile,
-                'nomor_surat' => [
-                    'urutan' => 1,
-                    'content' => "*contoh_nomor_surat*",
-                    'margin-top' => "30px",
-                    'margin-left' => "0px",
-                    'font-size' => "10rem",
-                ],
-                'nama_lengkap' => [
-                    'urutan' => 2,
-                    'content' => "*contoh_nama_pegawai*",
-                    'margin-top' => "250px",
-                    'margin-left' => "0px",
-                    'font-size' => "10rem",
-                ],
-                'jabatan' => [
-                    'urutan' => 3,
-                    'content' => "*contoh_jabatan*",
-                    'margin-top' => "360px",
-                    'margin-left' => "0px",
-                    'font-size' => "10rem",
-                ],
-                'unit_kerja' => [
-                    'urutan' => 4,
-                    'content' => "*contoh_unit_kerja*",
-                    'margin-top' => "450px",
-                    'margin-left' => "0px",
-                    'font-size' => "1rem",
-                ],
-                'qr' => [
-                    'urutan' => 5,
-                    'src' => $res['qr'],
-                    'margin-top' => "800px",
-                    'margin-left' => "0px",
-                    'width' => 200,
-                ],
+                // 'nomor_surat' => [
+                //     'urutan' => 1,
+                //     'content' => "*contoh_nomor_surat*",
+                //     'margin-top' => "0",
+                //     'margin-left' => "0",
+                //     'font-size' => "10rem",
+                // ],
+                // 'nama_lengkap' => [
+                //     'urutan' => 2,
+                //     'content' => "*contoh_nama_pegawai*",
+                //     'margin-top' => "0",
+                //     'margin-left' => "0",
+                //     'font-size' => "10rem",
+                // ],
+                // 'jabatan' => [
+                //     'urutan' => 3,
+                //     'content' => "*contoh_jabatan*",
+                //     'margin-top' => "0",
+                //     'margin-left' => "0",
+                //     'font-size' => "10rem",
+                // ],
+                // 'unit_kerja' => [
+                //     'urutan' => 4,
+                //     'content' => "*contoh_unit_kerja*",
+                //     'margin-top' => "0",
+                //     'margin-left' => "0",
+                //     'font-size' => "10rem",
+                // ],
+                // 'qr' => [
+                //     'urutan' => 5,
+                //     'src' => $res['qr'],
+                //     'margin-top' => "0",
+                //     'margin-left' => "0",
+                //     'width' => 200,
+                // ],
             ];
             
             $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
+            // dd($html);
             $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
             $this->mpdf->AddPage(
                 'L', // L - landscape, P - portrait
@@ -2728,6 +2757,7 @@
             ); 
 
             $this->mpdf->WriteHTML($html);
+            $this->mpdf->WriteFixedPosHTML('This text will appear just where I want it! ', 30, 120, 10, 10, 'auto');
             $this->mpdf->showImageErrors = true;
             $this->mpdf->Output($outputFile, 'I');
 

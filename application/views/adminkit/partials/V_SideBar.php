@@ -1547,18 +1547,18 @@
 					</a>	
 				</li>
 		<?php } ?>
-			<!-- <li class="sidebar-header">
+			<li class="sidebar-header">
 				BKPSDM Bacirita
-			</li> -->
+			</li>
 			<?php if($this->general_library->isHakAkses('admin_bkpsdm_bacirita') || $this->general_library->isProgrammer()){?>
-				<!-- <li class="sidebar-item">
+				<li class="sidebar-item">
 					<a title="Admin BKPSDM Bacirita" href="<?=base_url();?>bkpsdm-bacirita/kegiatan" class="sidebar-link">
 					<i class="align-middle me-2 fa fa-fw fa fa-user"></i> 
 						<span class="align-middle">
 							Admin
 						</span>
 					</a>	
-				</li> -->
+				</li>
 			<?php } ?>
 			<!-- <li class="sidebar-item">
 				<a title="Kegiatan BKPSDM Bacirita" class="sidebar-link" href="<?=base_url('bacirita/list-webinar')?>">

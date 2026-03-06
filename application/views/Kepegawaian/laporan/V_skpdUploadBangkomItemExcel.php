@@ -8,6 +8,7 @@
                                 <thead>
                                     <th class="text-center">No</th>
                                     <th class="text-left" style="width:10%;">Nama </th>
+                                    <th class="text-left" style="width:10%;">Status Pegawai </th>
                                     <th class="text-center">Unit Kerja</th>
                                     <th class="text-center">Tahun</th>
                                     <th class="text-center">Bulan</th>
@@ -20,9 +21,22 @@
                                 </thead>
                                 <tbody>
                                     <?php $no=1; foreach($result as $lj){ ?>
+
+                                    <?php
+                                        $badge_status = 'badge-cpns';
+                                        if($lj['statuspeg'] == 2){
+                                        $badge_status = 'badge-pns';
+                                        } else if($lj['statuspeg'] == 3){
+                                        $badge_status = 'badge-pppk';
+                                        } else if($lj['statuspeg'] == 6){
+                                        $badge_status = 'badge-pppk-pw';
+                                        }
+                                    ?>
+
                                         <tr>
                                             <td class="text-center"><?=$no++;?></td>
                                             <td class="text-left"><?= getNamaPegawaiFull($lj)?></td>
+                                            <td class="text-left"> <?php  if($lj['statuspeg'] == 1) echo "CPNS"; else if($lj['statuspeg'] == 2) echo "PNS"; else if($lj['statuspeg'] == 3) echo "PPPK"; else echo "PPPK Paruh Waktu";?></td>
                                             <td class="text-center"><?=$lj['nm_unitkerja']?></td>
                                             <td class="text-center"><?=$tahun?></td>
                                             <td class="text-center"><?= getNamaBulan($bulan)?></td>

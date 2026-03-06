@@ -61,4 +61,8 @@ class C_Bacirita extends CI_Controller
         echo json_encode($this->bacirita->saveCoordinateSertifikat($id));
     }
 
+    public function toggleFieldPreview($field, $flag_show, $id){
+        echo json_encode($this->bacirita->toggleFieldPreview($field, $flag_show, $id));
+    }
+
 }

@@ -193,28 +193,28 @@
 									<div class="col-lg-8">
 										<iframe id="iframe_preview" src="<?=$srcIframe."?v=".generateRandomNumber(6)?>" style="
 											width: 100%;
-											height: 60vh;
+											height: 80vh;
 										"></iframe>
 									</div>
 									<div class="col-lg-4">
 										<form id="form_preview_sertifikat">
 											<div class="row">
 												<div class="col-lg-12">
-													<label class="lbl_field_name">Nomor Surat</label>
+													<label class="lbl_field_name">
+														<i onclick="toggleFieldPreview('nomor_surat', 0)" id="icon_nomor_surat_show" class="fa fa-eye" style="margin-top: 4px; padding-right: 5px;float: left; color: green; cursor: pointer; display: <?=isset($coordinate['nomor_surat']) && $coordinate['nomor_surat']['flag_show'] == 1 ? 'block' : 'none';?>"></i>
+														<i onclick="toggleFieldPreview('nomor_surat', 1)" id="icon_nomor_surat_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['nomor_surat']) && $coordinate['nomor_surat']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
+														Nomor Surat 
+													</label>
 													<div class="row">
-														<div class="col-lg-3 col-md-3 col-sm-3">
-															<label class="lbl_field_detail">Urutan</label>
-															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['urutan']) ? ($coordinate["nomor_surat"]['urutan']) : 0 ;?>" name="nomor_surat[urutan]"/>
-														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['margin-top']) ? ($coordinate["nomor_surat"]['margin-top']) : 0 ;?>" name="nomor_surat[margin-top]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['margin-left']) ? ($coordinate["nomor_surat"]['margin-left']) : 0 ;?>" name="nomor_surat[margin-left]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['font-size']) ? ($coordinate["nomor_surat"]['font-size']) : 0 ;?>" name="nomor_surat[font-size]"/>
 														</div>
@@ -222,21 +222,20 @@
 													<hr>
 												</div>
 												<div class="col-lg-12">
-													<label class="lbl_field_name">Nama Pegawai</label>
+													<label class="lbl_field_name">
+														<i onclick="toggleFieldPreview('nama_lengkap', 0)" id="icon_nama_lengkap_show" class="fa fa-eye" style="margin-top: 4px; padding-right: 5px;float: left; color: green; cursor: pointer; display: <?=isset($coordinate['nama_lengkap']) && $coordinate['nama_lengkap']['flag_show'] == 1 ? 'block' : 'none';?>"></i>
+														<i onclick="toggleFieldPreview('nama_lengkap', 1)" id="icon_nama_lengkap_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['nama_lengkap']) && $coordinate['nama_lengkap']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
+														Nama Pegawai</label>
 													<div class="row">
-														<div class="col-lg-3 col-md-3 col-sm-3">
-															<label class="lbl_field_detail">Urutan</label>
-															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['urutan']) ? ($coordinate["nama_lengkap"]['urutan']) : 0 ;?>" name="nama_lengkap[urutan]"/>
-														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['margin-top']) ? ($coordinate["nama_lengkap"]['margin-top']) : 0 ;?>" name="nama_lengkap[margin-top]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['margin-left']) ? ($coordinate["nama_lengkap"]['margin-left']) : 0 ;?>" name="nama_lengkap[margin-left]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['font-size']) ? ($coordinate["nama_lengkap"]['font-size']) : 0 ;?>" name="nama_lengkap[font-size]"/>
 														</div>
@@ -244,21 +243,20 @@
 													<hr>
 												</div>
 												<div class="col-lg-12">
-													<label class="lbl_field_name">NIP</label>
+													<label class="lbl_field_name">
+														<i onclick="toggleFieldPreview('nip', 0)" id="icon_nip_show" class="fa fa-eye" style="margin-top: 4px; padding-right: 5px;float: left; color: green; cursor: pointer; display: <?=isset($coordinate['nip']) && $coordinate['nip']['flag_show'] == 1 ? 'block' : 'none';?>"></i>
+														<i onclick="toggleFieldPreview('nip', 1)" id="icon_nip_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['nip']) && $coordinate['nip']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
+														NIP</label>
 													<div class="row">
-														<div class="col-lg-3 col-md-3 col-sm-3">
-															<label class="lbl_field_detail">Urutan</label>
-															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['urutan']) ? ($coordinate["nip"]['urutan']) : 0 ;?>" name="nip[urutan]"/>
-														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['margin-top']) ? ($coordinate["nip"]['margin-top']) : 0 ;?>" name="nip[margin-top]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['margin-left']) ? ($coordinate["nip"]['margin-left']) : 0 ;?>" name="nip[margin-left]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['font-size']) ? ($coordinate["nip"]['font-size']) : 0 ;?>" name="nip[font-size]"/>
 														</div>
@@ -266,21 +264,20 @@
 													<hr>
 												</div>
 												<div class="col-lg-12">
-													<label class="lbl_field_name">Jabatan</label>
+													<label class="lbl_field_name">
+														<i onclick="toggleFieldPreview('jabatan', 0)" id="icon_jabatan_show" class="fa fa-eye" style="margin-top: 4px; padding-right: 5px;float: left; color: green; cursor: pointer; display: <?=isset($coordinate['jabatan']) && $coordinate['jabatan']['flag_show'] == 1 ? 'block' : 'none';?>"></i>
+														<i onclick="toggleFieldPreview('jabatan', 1)" id="icon_jabatan_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['jabatan']) && $coordinate['jabatan']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
+														Jabatan</label>
 													<div class="row">
-														<div class="col-lg-3 col-md-3 col-sm-3">
-															<label class="lbl_field_detail">Urutan</label>
-															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['urutan']) ? ($coordinate["jabatan"]['urutan']) : 0 ;?>" name="jabatan[urutan]"/>
-														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['margin-top']) ? ($coordinate["jabatan"]['margin-top']) : 0 ;?>" name="jabatan[margin-top]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['margin-left']) ? ($coordinate["jabatan"]['margin-left']) : 0 ;?>" name="jabatan[margin-left]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['font-size']) ? ($coordinate["jabatan"]['font-size']) : 0 ;?>" name="jabatan[font-size]"/>
 														</div>
@@ -288,21 +285,20 @@
 													<hr>
 												</div>
 												<div class="col-lg-12">
-													<label class="lbl_field_name">Unit Kerja</label>
+													<label class="lbl_field_name">
+														<i onclick="toggleFieldPreview('unit_kerja', 0)" id="icon_unit_kerja_show" class="fa fa-eye" style="margin-top: 4px; padding-right: 5px;float: left; color: green; cursor: pointer; display: <?=isset($coordinate['unit_kerja']) && $coordinate['unit_kerja']['flag_show'] == 1 ? 'block' : 'none';?>"></i>
+														<i onclick="toggleFieldPreview('unit_kerja', 1)" id="icon_unit_kerja_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['unit_kerja']) && $coordinate['unit_kerja']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
+														Unit Kerja</label>
 													<div class="row">
-														<div class="col-lg-3 col-md-3 col-sm-3">
-															<label class="lbl_field_detail">Urutan</label>
-															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['urutan']) ? ($coordinate["unit_kerja"]['urutan']) : 0 ;?>" name="unit_kerja[urutan]"/>
-														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['margin-top']) ? ($coordinate["unit_kerja"]['margin-top']) : 0 ;?>" name="unit_kerja[margin-top]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['margin-left']) ? ($coordinate["unit_kerja"]['margin-left']) : 0 ;?>" name="unit_kerja[margin-left]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['font-size']) ? ($coordinate["unit_kerja"]['font-size']) : 0 ;?>" name="unit_kerja[font-size]"/>
 														</div>
@@ -310,21 +306,20 @@
 													<hr>
 												</div>
 												<div class="col-lg-12">
-													<label class="lbl_field_name">QR</label>
+													<label class="lbl_field_name">
+														<i onclick="toggleFieldPreview('qr', 0)" id="icon_qr_show" class="fa fa-eye" style="margin-top: 4px; padding-right: 5px;float: left; color: green; cursor: pointer; display: <?=isset($coordinate['qr']) && $coordinate['qr']['flag_show'] == 1 ? 'block' : 'none';?>"></i>
+														<i onclick="toggleFieldPreview('qr', 1)" id="icon_qr_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['qr']) && $coordinate['qr']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
+														QR</label>
 													<div class="row">
-														<div class="col-lg-3 col-md-3 col-sm-3">
-															<label class="lbl_field_detail">Urutan</label>
-															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr"]['urutan']) ? ($coordinate["qr"]['urutan']) : 0 ;?>" name="qr[urutan]"/>
-														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr"]['margin-top']) ? ($coordinate["qr"]['margin-top']) : 0 ;?>" name="qr[margin-top]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr"]['margin-left']) ? ($coordinate["qr"]['margin-left']) : 0 ;?>" name="qr[margin-left]"/>
 														</div>
-														<div class="col-lg-3 col-md-3 col-sm-3">
+														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr['width']"]) ? ($coordinate["qr['width']"]) : 0 ;?>" name="qr[width]"/>
 														</div>
@@ -356,7 +351,12 @@
 		$('#tipe_kegiatan_edit').select2()
 		refreshDatePicker()
 		// loadListKegiatan()
+		refreshIframePreview()
 	})
+
+	function refreshIframePreview(){
+		$('#iframe_preview')[0].contentWindow.location.reload(true)
+	}
 
 	function refreshDatePicker(){
 		$('#tanggal_edit').datepicker({
@@ -383,6 +383,31 @@
 		})
 	}
 
+	function toggleFieldPreview(nama_field, flag_show){
+		id = '<?=$rs['id']?>'
+		$.ajax({  
+		url: '<?=base_url("bacirita/C_Bacirita/toggleFieldPreview/")?>'+nama_field+'/'+flag_show+'/'+id,
+		method:"POST",  
+		success: function(data){
+				let resp = JSON.parse(data)
+				if(resp.code == 0){
+					refreshIframePreview()
+					if(flag_show == 1){
+						$('#icon_'+nama_field+'_hide').hide()
+						$('#icon_'+nama_field+'_show').show()
+					} else {
+						$('#icon_'+nama_field+'_hide').show()
+						$('#icon_'+nama_field+'_show').hide()
+					}
+				} else {
+					errortoast(resp.message)
+				}
+			}, error: function(e){
+				errortoast('Terjadi Kesalahan')
+			}  
+		})
+	}
+
 	$('#form_preview_sertifikat').on('submit', function(e){
 		// $('#btn_simpan_preview').hide()
 		// $('#btn_simpan_preview_loading').show()
@@ -394,7 +419,7 @@
 		success: function(data){
 				let resp = JSON.parse(data)
 				if(resp.code == 0){
-					$('#iframe_preview')[0].contentWindow.location.reload(true)
+					refreshIframePreview()
 					successtoast('Data Berhasil Disimpan')
 				} else {
 					errortoast(resp.message)

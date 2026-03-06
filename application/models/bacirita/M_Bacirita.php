@@ -113,42 +113,42 @@ class M_Bacirita extends CI_Model
             $meta = [
                 'url_template' => base_url('arsipbkpsdmbacirita/sertifikat/'.$data['template_sertifikat']),
                 'nomor_surat' => [
-                    'urutan' => 1,
+                    'flag_show' => 1,
                     'content' => "*nomor_surat*",
                     'margin-top' => "0",
                     'margin-left' => "0",
                     'font-size' => "4",
                 ],
                 'nama_lengkap' => [
-                    'urutan' => 2,
+                    'flag_show' => 1,
                     'content' => "*nama_pegawai*",
                     'margin-top' => "0",
                     'margin-left' => "0",
                     'font-size' => "4",
                 ],
                 'nip' => [
-                    'urutan' => 3,
+                    'flag_show' => 1,
                     'content' => "*nip_pegawai*",
                     'margin-top' => "0",
                     'margin-left' => "0",
                     'font-size' => "4",
                 ],
                 'jabatan' => [
-                    'urutan' => 4,
+                    'flag_show' => 1,
                     'content' => "*jabatan_pegawai*",
                     'margin-top' => "0",
                     'margin-left' => "0",
                     'font-size' => "4",
                 ],
                 'unit_kerja' => [
-                    'urutan' => 5,
+                    'flag_show' => 1,
                     'content' => "*unit_kerja_pegawai*",
                     'margin-top' => "0",
                     'margin-left' => "0",
                     'font-size' => "4",
                 ],
                 'qr' => [
-                    'urutan' => 6,
+                    'flag_show' => 1,
                     'src' => $res['qr'],
                     'margin-top' => "0",
                     'margin-left' => "0",
@@ -161,6 +161,91 @@ class M_Bacirita extends CI_Model
                         'meta_coordinate' => json_encode($meta)
                     ]);
         }
+    }
+
+    public function toggleFieldPreview($field, $flag_show, $id){
+        $data = $this->db->select('*')
+                                ->from('db_bacirita.t_kegiatan')
+                                ->where('id', $id)
+                                ->get()->row_array();
+
+        $meta = json_decode($data['meta_coordinate'], true);
+        $meta[$field]['flag_show'] = $flag_show;
+
+        $this->db->where('id', $id)
+                ->update('db_bacirita.t_kegiatan', [
+                    'meta_coordinate' => json_encode($meta),
+                    'updated_by' => $this->general_library->getId()
+                ]);
+
+        $data['result'] = $meta;
+        $this->regeneratePreviewSertifikat($data);
+
+        return ['code' => 0, 'message' => 'ok'];
+    }
+
+    public function regeneratePreviewSertifikat($data, $id = ""){
+        if(!isset($data['template_sertifikat'])){
+            $res = $this->db->select('*')
+                            ->from('db_bacirita.t_kegiatan')
+                            ->where('id', $id)
+                            ->get()->row_array();
+
+            $data['template_sertifikat'] = $res['template_sertifikat'];
+        }
+        $explode = explode(".", $data['template_sertifikat']);
+        $inputFile = $data['template_sertifikat'];
+        $previewFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+        if(file_exists(base_url($previewFile))){
+            unlink(base_url($previewFile));
+        }
+        $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
+        $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
+        $this->mpdf->AddPage(
+            'L', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            0, // margin_left
+            0, // margin right
+            0, // margin top
+            0, // margin bottom
+            0, // margin header
+            12
+        ); 
+
+        $this->mpdf->WriteHTML($html);
+        foreach($data['result'] as $k => $v){
+            if($k != "url_template"){
+                if($v['flag_show'] == 1){
+                    $this->mpdf->setY($v['margin-top']);
+                    if($k != "qr"){
+                        if($v['margin-left'] == 0){
+                            $this->mpdf->writeHtml("<p style='
+                                font-family: Tahoma;
+                                text-align: center;
+                                font-size: ".$v['font-size'].";
+                            '>".$v['content']."</p>");
+                        } else {
+                            $this->mpdf->setX($v['margin-left']);
+                            $this->mpdf->writeHtml("<p style='
+                                font-family: Tahoma;
+                                font-size: ".$v['font-size'].";
+                            '>".$v['content']."</p>");
+                        }
+                    } else {
+                        $this->mpdf->writeHtml(
+                            "<p style='text-align: center;'><img style='
+                                width: ".$v['width']."px;
+                            ' src='".$v['src']."' /></p>"
+                        );
+                    }
+                }
+            }
+        }
+        $this->mpdf->showImageErrors = true;
+        $this->mpdf->OutputFile($previewFile);
     }
 
     public function generatePreviewSertifikat($data = null, $id = null){
@@ -202,6 +287,27 @@ class M_Bacirita extends CI_Model
             ); 
 
             $this->mpdf->WriteHTML($html);
+            foreach($result['result'] as $k => $v){
+                if($k != "url_template"){
+                    if($v['flag_show'] == 1){
+                        $this->mpdf->setX($v['margin-left']);
+                        $this->mpdf->setY($v['margin-top']);
+                        if($k != "qr"){
+                            $this->mpdf->writeHtml("<p style='
+                                font-family: Tahoma;
+                                text-align: center;
+                                font-size: ".$v['font-size'].";
+                            '>".$v['content']."</p>");
+                        } else {
+                            $this->mpdf->writeHtml(
+                                "<p style='text-align: center;'><img style='
+                                    width: ".$v['width']."px;
+                                ' src='".$v['src']."' /></p>"
+                            );
+                        }
+                    }
+                }
+            }
             $this->mpdf->showImageErrors = true;
             $this->mpdf->OutputFile($outputFile);
         }
@@ -219,10 +325,8 @@ class M_Bacirita extends CI_Model
 
         if(!$data['meta_coordinate'] && $data['template_sertifikat']){
             $this->inputDefaultCoordinateSertifikat($data);
+            $this->generatePreviewSertifikat($data);
         }
-
-        $this->generatePreviewSertifikat($data);
-
         return $data;
     }
 
@@ -442,25 +546,7 @@ class M_Bacirita extends CI_Model
         $temp['url_template'] = $kegiatan['template_sertifikat'];
         $data['result'] = $temp;
 
-        $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
-        $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
-        $this->mpdf->AddPage(
-            'L', // L - landscape, P - portrait
-            '',
-            '',
-            '',
-            '',
-            0, // margin_left
-            0, // margin right
-            0, // margin top
-            0, // margin bottom
-            0, // margin header
-            12
-        ); 
-
-        $this->mpdf->WriteHTML($html);
-        $this->mpdf->showImageErrors = true;
-        $this->mpdf->OutputFile($outputFile);
+        $this->regeneratePreviewSertifikat($data, $id);
 
         $this->db->where('id', $id)
                 ->update('db_bacirita.t_kegiatan', [

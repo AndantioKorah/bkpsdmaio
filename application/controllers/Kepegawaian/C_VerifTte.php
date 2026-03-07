@@ -8,6 +8,7 @@ class C_VerifTte extends CI_Controller
 		$this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 		$this->load->model('general/M_General', 'general');
 		$this->load->model('layanan/M_Layanan', 'layanan');
+		$this->load->model('bacirita/M_Bacirita', 'bacirita');
 		// if (!$this->general_library->isNotMenu()) {
 		// 	redirect('logout');
 		// };
@@ -57,5 +58,10 @@ class C_VerifTte extends CI_Controller
 		}
 
 		$this->load->view('kepegawaian/verif_pdf/V_VerifByFilePathResult', $data);
+	}
+
+	public function verifSertiBkpsdmBacirita($randomString){
+		$data['result'] = $this->bacirita->verifSertiBkpsdmBacirita($randomString);
+		renderVerifWhatsapp('bacirita/V_VerifSertifikat', null, null, $data);
 	}
 }

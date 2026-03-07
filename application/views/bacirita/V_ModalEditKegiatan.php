@@ -191,6 +191,10 @@
 							?>
 								<div class="row">
 									<div class="col-lg-8">
+										<div class="form-check form-switch">
+											<input style="cursor: pointer;" class="form-check-input" type="checkbox" role="switch" <?=$rs['flag_download_sertifikat'] == 1 ? 'checked' : ''?> id="flag_download_sertifikat">
+											<label class="form-check-label" for="flag_download_sertifikat">Download Sertifikat</label>
+										</div>
 										<iframe id="iframe_preview" src="<?=$srcIframe."?v=".generateRandomNumber(6)?>" style="
 											width: 100%;
 											height: 80vh;
@@ -321,7 +325,7 @@
 														</div>
 														<div class="col-lg-4 col-md-4 col-sm-4">
 															<label class="lbl_field_detail">Size</label>
-															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr['width']"]) ? ($coordinate["qr['width']"]) : 0 ;?>" name="qr[width]"/>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["qr"]['width']) ? ($coordinate["qr"]['width']) : 0 ;?>" name="qr[width]"/>
 														</div>
 													</div>
 													<hr>
@@ -357,6 +361,28 @@
 	function refreshIframePreview(){
 		$('#iframe_preview')[0].contentWindow.location.reload(true)
 	}
+
+	$('#flag_download_sertifikat').on('change', function(){
+		id = '<?=$rs['id']?>'
+		state_download_sertifikat = 0
+		if($('#flag_download_sertifikat').is(':checked')){
+			state_download_sertifikat = 1
+		}
+		$.ajax({  
+		url: '<?=base_url("bacirita/C_Bacirita/toggleDownloadSertifikat/")?>'+id+'/'+state_download_sertifikat,
+		method:"POST",  
+		success: function(data){
+				let resp = JSON.parse(data)
+				if(resp.code == 0){
+					successtoast('Berhasil disimpan')
+				} else {
+					errortoast(resp.message)
+				}
+			}, error: function(e){
+				errortoast('Terjadi Kesalahan')
+			}  
+		})
+	})
 
 	function refreshDatePicker(){
 		$('#tanggal_edit').datepicker({

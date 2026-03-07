@@ -196,9 +196,13 @@ class M_Bacirita extends CI_Model
         $explode = explode(".", $data['template_sertifikat']);
         $inputFile = $data['template_sertifikat'];
         $previewFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+        if(isset($data['previewFile'])){
+            $previewFile = $data['previewFile'];
+        }
         if(file_exists(base_url($previewFile))){
             unlink(base_url($previewFile));
         }
+
         $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
         $this->mpdf->AddPage(
@@ -220,6 +224,7 @@ class M_Bacirita extends CI_Model
             if($k != "url_template"){
                 if($v['flag_show'] == 1){
                     $this->mpdf->setY($v['margin-top']);
+                    $this->mpdf->setX(0);
                     if($k != "qr"){
                         if($v['margin-left'] == 0){
                             $this->mpdf->writeHtml("<p style='
@@ -231,15 +236,26 @@ class M_Bacirita extends CI_Model
                             $this->mpdf->setX($v['margin-left']);
                             $this->mpdf->writeHtml("<p style='
                                 font-family: Tahoma;
+                                margin-left: ".$v['margin-left']."px;
                                 font-size: ".$v['font-size'].";
                             '>".$v['content']."</p>");
                         }
                     } else {
-                        $this->mpdf->writeHtml(
-                            "<p style='text-align: center;'><img style='
-                                width: ".$v['width']."px;
-                            ' src='".$v['src']."' /></p>"
-                        );
+                        if($v['margin-left'] == 0){
+                            $this->mpdf->writeHtml(
+                                "<p style='text-align: center;'><img style='
+                                    width: ".$v['width']."px;
+                                ' src='".$v['src']."' /></p>"
+                            );
+                        } else {
+                            $this->mpdf->writeHtml(
+                                "<p style='
+                                    margin-left: ".$v['margin-left']."px;
+                                '><img style='
+                                    width: ".$v['width']."px;
+                                ' src='".$v['src']."' /></p>"
+                            );
+                        }
                     }
                 }
             }
@@ -420,7 +436,8 @@ class M_Bacirita extends CI_Model
     }
 
     public function loadDetailWebinar($id){
-        return $this->db->select('a.*, d.flag_absen, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_daftar')
+        return $this->db->select('a.*, d.flag_absen, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_daftar, d.flag_generate_sertifikat,
+                    d.url_sertifikat as url_sertifikat_peserta')
                     ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
@@ -441,8 +458,21 @@ class M_Bacirita extends CI_Model
        
         $data["id_t_kegiatan"] = $id_kegiatan;
         $data["id_m_user"] = $id_m_user;
+        $data["created_by"] = $this->general_library->getId();
 
-        $this->insert('db_bacirita.t_peserta_kegiatan', $data);
+        $exists = $this->db->select('*')
+                        ->from('db_bacirita.t_peserta_kegiatan')
+                        ->where('flag_active', 1)
+                        ->where('id_t_kegiatan', $id_kegiatan)
+                        ->where('id_m_user', $id_m_user)
+                        ->get()->row_array();
+        if($exists){
+            $res['code'] = 1;
+            $res['message'] = 'Mohon maaf, Anda sudah terdaftar untuk kegiatan ini sebelumnya.';
+            $res['success'] = false;
+        } else {
+            $this->insert('db_bacirita.t_peserta_kegiatan', $data);
+        }
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -465,6 +495,9 @@ class M_Bacirita extends CI_Model
         $this->db->trans_begin();
      
         $data["flag_absen"] = 1;
+        $data["date_absen"] = date('Y-m-d H:i:s');
+        $data["updated_by"] = $this->general_library->getId();
+
         $this->db->where('id_t_kegiatan', $id_kegiatan)
                  ->where('id_m_user', $id_m_user)
                  ->update('db_bacirita.t_peserta_kegiatan', $data);
@@ -476,6 +509,177 @@ class M_Bacirita extends CI_Model
             $res['success'] = false;
         } else {
             $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function checkActivity($id_t_kegiatan, $id_m_user, $activity){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+
+        $kegiatan = $this->db->select('*')
+                        ->from('db_bacirita.t_kegiatan')
+                        ->where('id', $id_t_kegiatan)
+                        ->get()->row_array();
+
+        $peserta = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2, c.nipbaru_ws, d.nama_jabatan, e.nm_unitkerja, c.id_peg')
+                                ->from('db_bacirita.t_peserta_kegiatan a')
+                                ->join('m_user b', 'a.id_m_user = b.id')
+                                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                                ->join('db_pegawai.jabatan d', 'c.jabatan = d.id_jabatanpeg')
+                                ->join('db_pegawai.unitkerja e', 'c.skpd = e.id_unitkerja')
+                                ->where('a.id_m_user', $id_m_user)
+                                ->where('a.id_t_kegiatan', $id_t_kegiatan)
+                                ->where('a.flag_active', 1)
+                                ->where('b.flag_active', 1)
+                                ->get()->row_array();
+
+        if($activity == "generate_sertifikat"){
+            if($kegiatan['flag_download_sertifikat'] == 0){
+                $res['code'] = 1;
+                $res['message'] = 'Sertifikat belum bisa didownload.';
+                return $res;
+            }
+
+            if(!$peserta){
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, Anda tidak terdaftar sebagai peserta.';
+                return $res;
+            }
+
+            if($peserta['url_sertifikat']){
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, sertifikat sudah digenerate sebelumnya.';
+                return $res;
+            }
+        }
+
+        $res['data']['kegiatan'] = $kegiatan;
+        $res['data']['peserta'] = $peserta;
+        return $res;
+    }
+
+    public function generateSertifikat(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+
+        $this->db->trans_begin();
+     
+        $data = $this->input->post();
+        $check = $this->checkActivity($data['id_t_kegiatan'], $data['id_m_user'], "generate_sertifikat");
+        if($check['code'] == 0){
+            $serti = $check['data']['kegiatan'];
+            $meta = json_decode($serti['meta_coordinate'], true);
+            unset($serti['meta_coordinate']);
+            $fileName = "Sertifikat_BBCRT_".$serti['id']."_".$check['data']['peserta']['nipbaru_ws'].".pdf";
+            $serti['previewFile'] = "arsipbkpsdmbacirita/sertifikat/".$fileName;
+
+            $perihal = "Sertifikat BKPSDM Bacirita: ".trim($serti['topik'])." a.n. ".getNamaPegawaiFull($check['data']['peserta']);
+            $ns = getNomorSuratSiladen([
+                'jenis_layanan' => 75,
+                'tahun' => date('Y'),
+                'perihal' => $perihal
+            ], 1); //nomor surat
+            
+            $randomString = generateRandomString(30, 1, 't_file_ds'); 
+            // jika nanti go public, ganti url sertifikat ke bkpsdmweb
+            $contentQr = trim(base_url('sertifikat-bkpsdm-bacirita/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
+            $qr['qr'] = generateQr($contentQr);
+
+            $meta['nomor_surat']['content'] = $ns['data']['nomor_surat'];
+            $meta['nama_lengkap']['content'] = getNamaPegawaiFull($check['data']['peserta']);
+            $meta['nip']['content'] = ($check['data']['peserta']['nipbaru_ws']);
+            $meta['jabatan']['content'] = ($check['data']['peserta']['nama_jabatan']);
+            $meta['unit_kerja']['content'] = ($check['data']['peserta']['nm_unitkerja']);
+            $meta['qr']['src'] = ($qr['qr']);
+            $serti['result'] = $meta;
+
+            $this->regeneratePreviewSertifikat($serti);
+
+            $newDestFile = "arsipdiklat/".$fileName;
+            copy($serti['previewFile'], $newDestFile);
+            unlink($serti['previewFile']);
+
+            //insert di t_file_ds
+            $this->db->insert('t_file_ds', [
+                'url' => $newDestFile,
+                'random_string' => $randomString,
+                'ref_id' => $check['data']['peserta']['id'],
+                'table_ref' => 'db_bacirita.t_peserta_kegiatan',
+                'created_by' => $this->general_library->getId() ? $this->general_library->getId() : 0
+            ]);
+
+            //insert di pegdiklat
+            $this->db->insert('db_pegawai.pegdiklat', [
+                'id_pegawai' => $check['data']['peserta']['id_peg'],
+                'jenisdiklat' => 50,
+                'nm_diklat' => $serti['topik'],
+                'tptdiklat' => 'Manado',
+                'penyelenggara' => 'Badan Kepegawaian dan Pengembangan Sumber Daya Kota Manado',
+                'angkatan' => '-',
+                'jam' => $serti['jumlah_jp'],
+                'tglmulai' => $serti['tanggal'],
+                'tglselesai' => $serti['tanggal'],
+                'nosttpp' => $ns['data']['nomor_surat'],
+                'tglsttpp' => $serti['tanggal'],
+                'gambarsk' => $fileName,
+                'status' => 2,
+                'created_by' => $this->general_library->getId()
+            ]);
+            $idPegDiklat = $this->db->insert_id();
+
+            //update data peserta kegiatan
+            $this->db->where('id', $check['data']['peserta']['id'])
+                    ->update('db_bacirita.t_peserta_kegiatan', [
+                        'flag_generate_sertifikat' => 1,
+                        'date_generate_sertifikat' => date('Y-m-d H:i:s'),
+                        'url_sertifikat' => $newDestFile,
+                        'id_pegdiklat' => $idPegDiklat,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            if($ns['code'] != 0){
+                $this->db->trans_rollback();
+                $res = $ns;
+                return $res;
+            }
+
+
+
+        } else {
+            $this->db->trans_rollback();
+            return $check;
+        }
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+        } else {
+            $this->db->trans_commit();
+        }
+
+        return $res;
+    }
+
+    public function verifSertiBkpsdmBacirita($randomString){
+        $res = null;
+
+        $fileDs = $this->db->select('*')
+                        ->from('t_file_ds')
+                        ->where('random_string', $randomString)
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
+        if($fileDs){
+            $res = $this->db->select('a.*, b.*, d.gelar1, d.nama, d.gelar2, d.nipbaru_ws')
+                        ->from('db_bacirita.t_peserta_kegiatan a')
+                        ->join('db_pegawai.pegdiklat b', 'a.id_pegdiklat = b.id')
+                        ->join('m_user c', 'a.id_m_user = c.id')
+                        ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                        ->where('a.id', $fileDs['ref_id'])
+                        ->get()->row_array();
         }
 
         return $res;
@@ -556,4 +760,13 @@ class M_Bacirita extends CI_Model
         return ['code' => 0, 'message' => "", 'random_string' => generateRandomNumber(5)];
     }
 
+    public function toggleDownloadSertifikat($id, $state){
+        $this->db->where('id', $id)
+                ->update('db_bacirita.t_kegiatan', [
+                    'flag_download_sertifikat' => $state,
+                    'updated_by' => $this->general_library->getid()
+                ]);
+
+        return ['code' => 0, 'message' => ""];
+    }
 }

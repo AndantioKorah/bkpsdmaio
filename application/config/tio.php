@@ -141,3 +141,4 @@ $route['api/get-data-tpp'] = 'api/C_ApiLayanan/getDataTpp';
 
 //BKPSDM Bacirita
 $route['bkpsdm-bacirita/kegiatan'] = 'bacirita/C_Bacirita/manageKegiatan';
+$route['bkpsdm-bacirita/sertifikat/(:any)'] = 'kepegawaian/C_VerifTte/verifSertiBkpsdmBacirita/$1';

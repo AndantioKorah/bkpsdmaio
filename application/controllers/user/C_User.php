@@ -14,7 +14,7 @@ class C_User extends CI_Controller
         };
         if($this->general_library->cekKinerja() == null) {
             redirect('kinerja/realisasi');
-          }
+        }
     }
 
     public function roles(){

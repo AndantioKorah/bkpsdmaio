@@ -90,21 +90,21 @@
 			
 			if($rs['tanggal'] == date('Y-m-d')){ 
 				if($rs['jam_mulai'] > date('H:i:s')) {
-				$badgeStatusKegiatan = "badge-warning";
-				$statusKegiatan = "Belum dimulai";
+					$badgeStatusKegiatan = "badge-warning";
+					$statusKegiatan = "Belum dimulai";
 				}
 				if($rs['jam_mulai'] < date('H:i:s')) {
-				$badgeStatusKegiatan = "badge-warning";
-				$statusKegiatan = "Telah dimulai";
+					$badgeStatusKegiatan = "badge-warning";
+					$statusKegiatan = "Telah dimulai";
 				} 
 				if(date('H:i:s') > $rs['jam_selesai']) {
-				$badgeStatusKegiatan = "badge-success";
-				$statusKegiatan = "Selesai";
+					$badgeStatusKegiatan = "badge-success";
+					$statusKegiatan = "Selesai";
 				}  
 			}
 			if(date('Y-m-d') > $rs['tanggal']){ 
-				$badgeStatusKegiatan = "badge-success";
-				$statusKegiatan = "Selesai";
+					$badgeStatusKegiatan = "badge-success";
+					$statusKegiatan = "Selesai";
 			}
 		?>
 			<div class="col-lg-3 p-3">

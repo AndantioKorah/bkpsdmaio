@@ -73,7 +73,7 @@
                 ?>
 
                 <?php if($webinar['id_daftar'] == null) { ?>
-                    <button onclick= <?=$onclick;?>  type="button" class="btn mt-3 <?=$badgeStatusDaftar;?>"> <?=$statusDaftar;?></button>
+                    <button id="btn_daftar" onclick= <?=$onclick;?>  type="button" class="btn mt-3 <?=$badgeStatusDaftar;?>"> <?=$statusDaftar;?></button>
                 <?php } else { ?>
                     <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda sudah terdaftar</span><br>
                     <!-- <button type="button" class="btn mt-3 btn-info"> Anda Sudah Terdaftar</button><br> -->
@@ -204,6 +204,9 @@
     })
 
     function daftar(){
+        document.getElementById('btn_daftar').disabled = true;
+        $('#btn_daftar').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+
         var id_webinar = "<?=$webinar['id_kegiatan'];?>"
         var id_m_user = "<?=$this->general_library->getId();?>"
                    if(confirm('Daftar Webinar?')){

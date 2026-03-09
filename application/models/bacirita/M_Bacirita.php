@@ -495,7 +495,7 @@ class M_Bacirita extends CI_Model
         $this->db->trans_begin();
 
 
-        $getJamPresensi =  $this->db->select('*')
+        $getJamPresensi =  $this->db->select('flag_buka_absen')
                         ->from('db_bacirita.t_kegiatan')
                         ->where('flag_active', 1)
                         ->where('id', $id_kegiatan)

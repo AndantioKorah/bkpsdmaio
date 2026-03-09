@@ -7,6 +7,12 @@ class C_Bacirita extends CI_Controller
         parent::__construct();
         $this->load->model('general/M_General', 'general');
         $this->load->model('bacirita/M_Bacirita', 'bacirita');
+        if(!$this->general_library->isNotMenu()){
+            redirect('logout');
+        };
+        if($this->general_library->cekKinerja() == null) {
+            redirect('kinerja/realisasi');
+        }
     }
 
     public function manageKegiatan(){
@@ -59,6 +65,23 @@ class C_Bacirita extends CI_Controller
 
     public function saveCoordinateSertifikat($id){
         echo json_encode($this->bacirita->saveCoordinateSertifikat($id));
+    }
+
+    public function toggleFieldPreview($field, $flag_show, $id){
+        echo json_encode($this->bacirita->toggleFieldPreview($field, $flag_show, $id));
+    }
+
+    public function toggleDownloadSertifikat($id, $state){
+        echo json_encode($this->bacirita->toggleDownloadSertifikat($id, $state));
+    }
+
+    public function generateSertifikat(){
+        echo json_encode($this->bacirita->generateSertifikat());
+    }
+
+    public function verifSertifikat($randomString){
+        $data['result'] = $this->bacirita->verifSertifikat($randomString);
+        render('bacirita/V_DetailWebinar', '', '', $data);
     }
 
 }

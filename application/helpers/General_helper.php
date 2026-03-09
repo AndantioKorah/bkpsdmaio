@@ -1459,8 +1459,10 @@ function getNomorSuratSiladen($data = null, $flag_save = 0){
             'nomor_surat' => $rs['data']['nomor_surat'],
             'counter' => $rs['data']['counter'],
             'perihal' => $dataInsert['perihal'],
-            'created_by' => $rs['data']['counter'],
-            'flag_nomor_surat_otomatis' => 1
+            'created_by' => $CI->general_library->getId() ? $CI->general_library->getId() : 0,
+            'flag_nomor_surat_otomatis' => 1,
+            'id_m_jenis_layanan' => $layanan ? $layanan['id'] : 0,
+            'tanggal_surat' => date('Y-m-d H:i:s')
         ]);
     }
 

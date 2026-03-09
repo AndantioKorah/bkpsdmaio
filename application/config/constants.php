@@ -209,6 +209,10 @@ define('ALAMAT_BKPSDM', 'Jalan Balai Kota No. 1, Manado, 95124');
 define('WEBSITE_BKPSDM', 'bkd.manadokota.go.id');
 define('EMAIL_BKPSDM', 'bkpsdm@manadokota.go.id');
 
+define('BKPSDM_BACIRITA_PUBLIC_KEY', 'SERTIFIKAT_BKPSDM_BACIRITA_0028312');
+define('BKPSDM_BACIRITA_SECRET_KEY', '1n0GCWrssiDqYce');
+
+
 define('EXCLUDE_NIP_SWITCH_ACCOUNT', [
     '199502182020121013', // tio
     '199401042020121011', // youri

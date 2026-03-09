@@ -2702,41 +2702,42 @@
 
             $data['result'] = [
                 'url_template' => $inputFile,
-                // 'nomor_surat' => [
-                //     'urutan' => 1,
-                //     'content' => "*contoh_nomor_surat*",
-                //     'margin-top' => "0",
-                //     'margin-left' => "0",
-                //     'font-size' => "10rem",
-                // ],
-                // 'nama_lengkap' => [
-                //     'urutan' => 2,
-                //     'content' => "*contoh_nama_pegawai*",
-                //     'margin-top' => "0",
-                //     'margin-left' => "0",
-                //     'font-size' => "10rem",
-                // ],
-                // 'jabatan' => [
-                //     'urutan' => 3,
-                //     'content' => "*contoh_jabatan*",
-                //     'margin-top' => "0",
-                //     'margin-left' => "0",
-                //     'font-size' => "10rem",
-                // ],
-                // 'unit_kerja' => [
-                //     'urutan' => 4,
-                //     'content' => "*contoh_unit_kerja*",
-                //     'margin-top' => "0",
-                //     'margin-left' => "0",
-                //     'font-size' => "10rem",
-                // ],
-                // 'qr' => [
-                //     'urutan' => 5,
-                //     'src' => $res['qr'],
-                //     'margin-top' => "0",
-                //     'margin-left' => "0",
-                //     'width' => 200,
-                // ],
+                'nomor_surat' => [
+                    'content' => "*contoh_nomor_surat*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "2rem",
+                ],
+                'nama_lengkap' => [
+                    'content' => "*contoh_nama_pegawai*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "5rem",
+                ],
+                'nama_lengkap' => [
+                    'content' => "*contoh_nip*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "5rem",
+                ],
+                'jabatan' => [
+                    'content' => "*contoh_jabatan*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "3rem",
+                ],
+                'unit_kerja' => [
+                    'content' => "*contoh_unit_kerja*",
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'font-size' => "3rem",
+                ],
+                'qr' => [
+                    'src' => $res['qr'],
+                    'margin-top' => "0",
+                    'margin-left' => "0",
+                    'width' => 50,
+                ],
             ];
             
             $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
@@ -2757,7 +2758,25 @@
             ); 
 
             $this->mpdf->WriteHTML($html);
-            $this->mpdf->WriteFixedPosHTML('This text will appear just where I want it! ', 30, 120, 10, 10, 'auto');
+            foreach($data['result'] as $k => $v){
+                if($k != "url_template"){
+                    $this->mpdf->setX($v['margin-left']);
+                    $this->mpdf->setY($v['margin-top']);
+                    if($k != "qr"){
+                        $this->mpdf->writeHtml("<p style='
+                            font-family: Tahoma;
+                            text-align: center;
+                            font-size: ".$v['font-size'].";
+                        '>".$v['content']."</p>");
+                    } else {
+                        $this->mpdf->writeHtml(
+                            "<p style='text-align: center;'><img style='
+                                width: ".$v['width']."px;
+                            ' src='".$v['src']."' /></p>"
+                        );
+                    }
+                }
+            }
             $this->mpdf->showImageErrors = true;
             $this->mpdf->Output($outputFile, 'I');
 

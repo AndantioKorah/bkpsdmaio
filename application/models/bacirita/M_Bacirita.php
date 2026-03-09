@@ -193,9 +193,10 @@ class M_Bacirita extends CI_Model
 
             $data['template_sertifikat'] = $res['template_sertifikat'];
         }
+
         $explode = explode(".", $data['template_sertifikat']);
         $inputFile = $data['template_sertifikat'];
-        $previewFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+        $previewFile = $explode[0]."_preview.pdf";
         if(isset($data['previewFile'])){
             $previewFile = $data['previewFile'];
         }
@@ -218,7 +219,6 @@ class M_Bacirita extends CI_Model
             12
         ); 
 
-        $this->mpdf->WriteHTML($html);
         foreach($data['result'] as $k => $v){
             if($k != "url_template"){
                 if($v['flag_show'] == 1){
@@ -259,6 +259,7 @@ class M_Bacirita extends CI_Model
                 }
             }
         }
+        $this->mpdf->WriteHTML($html);
         $this->mpdf->showImageErrors = true;
         $this->mpdf->OutputFile($previewFile);
     }

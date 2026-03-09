@@ -726,7 +726,7 @@ class M_Bacirita extends CI_Model
 
             } else {
                 $dataFile 			= $this->upload->data();
-                $dataUpdate['template_sertifikat'] = $nama_file;
+                $dataUpdate['template_sertifikat'] = $target_dir.$nama_file;
                 $this->db->where('id', $id)
                     ->update('db_bacirita.t_kegiatan', $dataUpdate);
             }

@@ -785,4 +785,14 @@ class M_Bacirita extends CI_Model
 
         return ['code' => 0, 'message' => ""];
     }
+
+    public function toggleBukaAbsensi($id, $state){
+        $this->db->where('id', $id)
+                ->update('db_bacirita.t_kegiatan', [
+                    'flag_buka_absen' => $state,
+                    'updated_by' => $this->general_library->getid()
+                ]);
+
+        return ['code' => 0, 'message' => ""];
+    }
 }

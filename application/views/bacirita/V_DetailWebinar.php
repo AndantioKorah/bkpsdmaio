@@ -23,7 +23,7 @@
 				<h3><b>WEBINAR <?= strtoupper(getNamaBulan($month));?> <?=date('Y');?></b></h3>
 				<h4><i><?= strtoupper($webinar['topik']);?></i></h4>
                 <br>
-                <h4><b>(2 JP)</b> Badan Kepegawaian dan Pengembangan Sumber Daya Manusia</h4>
+                <h4><b>(3 JP)</b> Badan Kepegawaian dan Pengembangan Sumber Daya Manusia</h4>
                 <?= formatDateNamaBulan($webinar['tanggal']);?>  <?= substr($webinar['jam_mulai'], 0, 8);?> - <?= substr($webinar['jam_selesai'], 0, 8);?> <br>
 
                 <?php 

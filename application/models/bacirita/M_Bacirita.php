@@ -493,7 +493,20 @@ class M_Bacirita extends CI_Model
 
         $datapost = $this->input->post();
         $this->db->trans_begin();
-     
+
+
+        $getJamPresensi =  $this->db->select('*')
+                        ->from('db_bacirita.t_kegiatan')
+                        ->where('flag_active', 1)
+                        ->where('id', $id_kegiatan)
+                        ->get()->row_array(); 
+
+        if($getJamPresensi['flag_buka_absen'] == 0){
+            $res['code'] = 1;
+            $res['message'] = 'Presensi Webinar Belum dibuka';
+            $res['success'] = false;
+        } else {
+            
         $data["flag_absen"] = 1;
         $data["date_absen"] = date('Y-m-d H:i:s');
         $data["updated_by"] = $this->general_library->getId();
@@ -502,6 +515,9 @@ class M_Bacirita extends CI_Model
                  ->where('id_m_user', $id_m_user)
                  ->update('db_bacirita.t_peserta_kegiatan', $data);
 
+        }
+     
+       
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
             $res['code'] = 1;

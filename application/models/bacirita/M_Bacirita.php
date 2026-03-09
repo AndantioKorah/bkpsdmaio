@@ -202,7 +202,6 @@ class M_Bacirita extends CI_Model
         if(file_exists(base_url($previewFile))){
             unlink(base_url($previewFile));
         }
-
         $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
         $this->mpdf->AddPage(

@@ -1778,6 +1778,7 @@
                                 ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                                 ->where('a.flag_ditebus', 0)
                                 ->where('a.flag_terpenuhi', 0)
+                                ->where('a.flag_exception', 0)
                                 ->where('a.flag_active', 1)
                                 ->where('bulan_tahun <=', $param['tahun']."-".$param['bulan']."-01");
                                 // ->where_in('b.nipbaru_ws', $pegawai)

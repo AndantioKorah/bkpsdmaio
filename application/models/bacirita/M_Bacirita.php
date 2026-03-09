@@ -444,7 +444,7 @@ class M_Bacirita extends CI_Model
                     ->join('db_bacirita.t_peserta_kegiatan d', '(a.id = d.id_t_kegiatan  and d.id_m_user = "'.$this->general_library->getId().'" and d.flag_active = 1)', 'left')
                     ->order_by('a.created_date', 'desc')
                     ->where('a.flag_active', 1)
-                    ->where('a.id', $id)
+                    ->where('a.link_url', $id)
                     ->get()->row_array();
     }
 
@@ -506,7 +506,7 @@ class M_Bacirita extends CI_Model
             $res['message'] = 'Presensi Webinar Belum dibuka';
             $res['success'] = false;
         } else {
-            
+
         $data["flag_absen"] = 1;
         $data["date_absen"] = date('Y-m-d H:i:s');
         $data["updated_by"] = $this->general_library->getId();

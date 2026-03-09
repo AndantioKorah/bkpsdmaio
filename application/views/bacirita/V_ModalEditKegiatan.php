@@ -150,11 +150,14 @@
 							<div class="col-lg-12 mt-1">
 								<input class="form-control" type="file" id="banner_file_edit" name="file"  />
 							</div>
+							
 							<div class="col-lg-12 text-right">
 								<hr>
 								<button id="btn_simpan_edit" class="btn btn-navy btn-block" ><i class="fa fa-save"></i> Simpan</button>
 								<button id="btn_simpan_loading_edit" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
 							</div>
+
+							
 						</div>
 					</form>
 				</div>

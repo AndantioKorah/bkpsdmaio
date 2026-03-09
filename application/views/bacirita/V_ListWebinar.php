@@ -127,7 +127,7 @@
 										</span>
 									</div>
 									<div class="col-lg-6 text-right">
-										<a href="<?=base_url('bacirita/detail-webinar/')?><?=$rs['id']?>" 
+										<a href="<?=base_url('bacirita/detail-webinar/')?><?=$rs['link_url']?>" 
 										class="text-right btn btn-navy">Detail</a>
 									</div>
 								</div>

@@ -50,11 +50,15 @@
                     $onclick = "-";
 				} 
                 
-                if(date('H:i:s') < $webinar['jam_buka_absensi']) {
-                    $stylePresensi ="display:none;";
-				}
+                // if(date('H:i:s') < $webinar['jam_buka_absensi']) {
+                //     $stylePresensi ="display:none;";
+				// }
 
-                if(date('H:i:s') > $webinar['jam_batas_absensi']) {
+                // if(date('H:i:s') > $webinar['jam_batas_absensi']) {
+                //     $stylePresensi ="display:none;";
+				// }
+
+                if($webinar['flag_buka_absen'] == 0) {
                     $stylePresensi ="display:none;";
 				}
 

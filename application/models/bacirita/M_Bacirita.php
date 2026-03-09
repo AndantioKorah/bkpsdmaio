@@ -632,7 +632,7 @@ class M_Bacirita extends CI_Model
                 'jenisdiklat' => 50,
                 'nm_diklat' => $serti['topik'],
                 'tptdiklat' => 'Manado',
-                'penyelenggara' => 'Badan Kepegawaian dan Pengembangan Sumber Daya Kota Manado',
+                'penyelenggara' => 'Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado',
                 'angkatan' => '-',
                 'jam' => $serti['jumlah_jp'],
                 'tglmulai' => $serti['tanggal'],
@@ -660,8 +660,13 @@ class M_Bacirita extends CI_Model
                 $res = $ns;
                 return $res;
             }
-
-
+            
+            $explodeTanggal = explode("-", $serti['tanggal']);
+            $tahun = $explodeTanggal[0];
+            $bulan = $explodeTanggal[1];
+            $tanggal = $explodeTanggal[2];
+            
+            $this->general->cronCheckBangkom($bulan, $tahun, $check['data']['peserta']['nipbaru_ws'], 0);
 
         } else {
             $this->db->trans_rollback();

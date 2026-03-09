@@ -188,14 +188,14 @@
 						</div>
 						<div class="col-lg-12 mt-2">
 							<?php
-								$srcIframe = base_url()."arsipbkpsdmbacirita/sertifikat/".$rs['template_sertifikat'];
+								$srcIframe = base_url().$rs['template_sertifikat'];
 								if($rs['template_sertifikat']){
 									$coordinate = null;
 									if($rs['meta_coordinate']){
 										$coordinate = json_decode($rs['meta_coordinate'], true);
 									}
 									$explode = explode(".", $rs['template_sertifikat']);
-									$previewFile = base_url()."arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+									$previewFile = base_url().$explode[0]."_preview.pdf";
 									$srcIframe = $previewFile;
 							?>
 								<div class="row">

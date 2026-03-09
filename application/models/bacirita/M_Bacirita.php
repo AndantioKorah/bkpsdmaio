@@ -193,7 +193,6 @@ class M_Bacirita extends CI_Model
 
             $data['template_sertifikat'] = $res['template_sertifikat'];
         }
-
         $explode = explode(".", $data['template_sertifikat']);
         $inputFile = $data['template_sertifikat'];
         $previewFile = $explode[0]."_preview.pdf";
@@ -218,6 +217,7 @@ class M_Bacirita extends CI_Model
             0, // margin header
             12
         ); 
+        $this->mpdf->WriteHTML($html);
 
         foreach($data['result'] as $k => $v){
             if($k != "url_template"){
@@ -229,14 +229,14 @@ class M_Bacirita extends CI_Model
                             $this->mpdf->writeHtml("<p style='
                                 font-family: Tahoma;
                                 text-align: center;
-                                font-size: ".$v['font-size'].";
+                                font-size: ".$v['font-size']."rem;
                             '>".$v['content']."</p>");
                         } else {
                             $this->mpdf->setX($v['margin-left']);
                             $this->mpdf->writeHtml("<p style='
                                 font-family: Tahoma;
                                 margin-left: ".$v['margin-left']."px;
-                                font-size: ".$v['font-size'].";
+                                font-size: ".$v['font-size']."rem;
                             '>".$v['content']."</p>");
                         }
                     } else {
@@ -259,7 +259,6 @@ class M_Bacirita extends CI_Model
                 }
             }
         }
-        $this->mpdf->WriteHTML($html);
         $this->mpdf->showImageErrors = true;
         $this->mpdf->OutputFile($previewFile);
     }
@@ -275,7 +274,7 @@ class M_Bacirita extends CI_Model
         if($data['template_sertifikat']){
             $explode = explode(".", $data['template_sertifikat']);
             $inputFile = $data['template_sertifikat'];
-            $previewFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+            $previewFile = $explode[0]."_preview.pdf";
             if(file_exists(base_url($previewFile))){
                 unlink(base_url($previewFile));
             }
@@ -743,7 +742,7 @@ class M_Bacirita extends CI_Model
                         ->get()->row_array();
 
         $explode = explode(".", $kegiatan['template_sertifikat']);
-        $outputFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+        $outputFile = $explode[0]."_preview.pdf";
         if(file_exists($outputFile)){
             unlink($outputFile);
         }

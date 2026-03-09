@@ -1559,12 +1559,12 @@
 						</span>
 					</a>	
 				</li>
+			<?php } ?>
 			<li class="sidebar-item">
 				<a title="Kegiatan BKPSDM Bacirita" class="sidebar-link" href="<?=base_url('bacirita/list-webinar')?>">
 					<i class="fa fa-microphone"></i> <span class="align-middle">BKPSDM Bacirita</span>
 				</a>
 			</li>
-			<?php } ?>
 </ul>
 <div class="mt-5">
 	<p></p>

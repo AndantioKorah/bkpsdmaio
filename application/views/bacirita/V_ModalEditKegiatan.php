@@ -84,7 +84,7 @@
 								<hr>
 							</div>
 							<div class="col-lg-12">
-								<label class="lbl-form-divider">Batas Absensi</label>
+								<label class="lbl-form-divider">Absensi</label>
 							</div>
 							<div class="col-lg-4 mt-1">
 								<label class="lbl-form-input-kegiatan">Tanggal:</label>
@@ -97,6 +97,12 @@
 							<div class="col-lg-4 mt-1">
 								<label class="lbl-form-input-kegiatan">Jam Tutup Absensi</label>
 								<input required class="form-control" type="time" name="jam_batas_absensi" id="jam_batas_absensi_edit" value="<?= substr($rs['jam_batas_absensi'], 0, 5);?>"/>
+							</div>
+							<div class="col-lg-12">
+								<div class="form-check form-switch">
+									<input style="cursor: pointer;" class="form-check-input" type="checkbox" role="switch" <?=$rs['flag_buka_absen'] == 1 ? 'checked' : ''?> id="flag_buka_absen">
+									<label class="form-check-label" for="flag_buka_absen">Buka Presensi</label>
+								</div>
 							</div>
 							<div class="col-lg-12">
 								<hr>
@@ -364,6 +370,28 @@
 	function refreshIframePreview(){
 		$('#iframe_preview')[0].contentWindow.location.reload(true)
 	}
+
+	$('#flag_buka_absen').on('change', function(){
+		id = '<?=$rs['id']?>'
+		state_download_sertifikat = 0
+		if($('#flag_buka_absen').is(':checked')){
+			state_download_sertifikat = 1
+		}
+		$.ajax({  
+		url: '<?=base_url("bacirita/C_Bacirita/toggleBukaAbsensi/")?>'+id+'/'+state_download_sertifikat,
+		method:"POST",  
+		success: function(data){
+				let resp = JSON.parse(data)
+				if(resp.code == 0){
+					successtoast('Berhasil disimpan')
+				} else {
+					errortoast(resp.message)
+				}
+			}, error: function(e){
+				errortoast('Terjadi Kesalahan')
+			}  
+		})
+	})
 
 	$('#flag_download_sertifikat').on('change', function(){
 		id = '<?=$rs['id']?>'

@@ -75,6 +75,10 @@ class C_Bacirita extends CI_Controller
         echo json_encode($this->bacirita->toggleDownloadSertifikat($id, $state));
     }
 
+    public function toggleBukaAbsensi($id, $state){
+        echo json_encode($this->bacirita->toggleBukaAbsensi($id, $state));
+    }
+
     public function generateSertifikat(){
         echo json_encode($this->bacirita->generateSertifikat());
     }

@@ -20,7 +20,7 @@
 		<div class="row">
 			<div class="col-lg-12">
                 <?php $month = date("m", strtotime($webinar['tanggal'])); ?>
-				<h3><b>BKPSDM BACIRITA EDISI <?= strtoupper(getNamaBulan($month));?> <?=date('Y');?></b></h3>
+				<h3><b>WEBINAR <?= strtoupper(getNamaBulan($month));?> <?=date('Y');?></b></h3>
 				<h4><i><?= strtoupper($webinar['topik']);?></i></h4>
                 <br>
                 <h4><b>(2 JP)</b> Badan Kepegawaian dan Pengembangan Sumber Daya Manusia</h4>
@@ -99,11 +99,19 @@
   <tbody>
     <tr>
       <td>Zoom Meeting <br>ID : <?=$webinar['meeting_id_zoom'];?> Passcode : <?=$webinar['passcode_zoom'];?></td>
-      <td><?=$webinar['link_zoom'];?></i></td>
+      <td>
+        <a href="<?=$webinar['link_zoom'];?>" target="_blank">
+        <?=$webinar['link_zoom'];?></i>
+        </a>
+    </td>
     </tr>
     <tr>
       <td>Youtube</td>
-      <td><?=$webinar['link_youtube'];?></i></td>
+       <td>
+      <a href="<?=$webinar['link_youtube'];?>" target="_blank">
+     <?=$webinar['link_youtube'];?></i>
+      </a>
+    </td>
     </tr>
      </tbody>
 </table>

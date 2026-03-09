@@ -794,4 +794,24 @@ class M_Bacirita extends CI_Model
 
         return ['code' => 0, 'message' => ""];
     }
+
+    public function downloadSertifikat($data){
+        $res = [
+            'code' => 0,
+            'message' => 'ok',
+            'url' => null
+        ];
+
+        $result = $this->db->select('*')
+                        ->from('db_bacirita.t_peserta_kegiatan')
+                        ->where('flag_active', 1)
+                        ->where('id_t_kegiatan', $data['id_t_kegiatan'])
+                        ->where('id_m_user', $data['id_m_user'])
+                        ->get()->row_array();
+        if($result){
+            $res['url'] = base_url().$result['url_sertifikat'];
+        }
+
+        return $res;
+    }
 }

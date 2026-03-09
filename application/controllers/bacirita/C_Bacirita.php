@@ -88,4 +88,9 @@ class C_Bacirita extends CI_Controller
         render('bacirita/V_DetailWebinar', '', '', $data);
     }
 
+    public function downloadSertifikat(){
+        $data = $this->input->post();
+        echo json_encode($this->bacirita->downloadSertifikat($data));
+    }
+
 }

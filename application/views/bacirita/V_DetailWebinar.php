@@ -77,23 +77,28 @@
                 <?php } else { ?>
                     <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda sudah terdaftar</span><br>
                     <!-- <button type="button" class="btn mt-3 btn-info"> Anda Sudah Terdaftar</button><br> -->
-                    <?php if($webinar['tanggal'] == date('Y-m-d')){  ?>
+                    <?php if($webinar['tanggal'] == date('Y-m-d')){ ?>
                         <?php if($webinar['flag_absen'] == 0) { ?>
                             <button onclick= "presensiKegiatan()" style="<?=$stylePresensi;?>"  type="button" class="btn mt-3 btn-dark"> Presensi Seminar</button>
-                        <?php } else { ?>
-                            <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda Sudah Melakukan Presensi</span><br>
-                            <!-- <button type="button" class="btn mt-3 btn-success"> Anda Sudah Melakukan Presensi</button> -->
-                        <?php }?>
-                    <?php }?>
-
-                    <?php if(date('H:i:s') > $webinar['jam_selesai']){  ?>
-                        <br>
-                        <?php if($webinar['flag_download_sertifikat'] == 1){ ?>
-                    
-                            <button style="display: <?=$webinar['flag_generate_sertifikat'] == 0 ? 'block' : 'none'?>" id="btn_generate_sertifikat" type="button" class="btn mt-3 btn-primary">Generate Sertifikat</button>
-                            <button style="display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" id="btn_download_sertifikat" type="button" class="btn mt-3 btn-primary"><i class="fa fa-download"></i> Download Sertifikat</button><br>
-                            <span style="color: green; font-size: .65rem; margin-top: -15px; font-style: italic; font-weight: bold; display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" class="download_sertifikat_label"><i class="fa fa-check"></i> Sertifikat sudah dapat didownload</span>
-                            <span style="color: green; font-size: .65rem; margin-top: -15px; font-style: italic; font-weight: bold; display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" class="download_sertifikat_label">Sertifikat sudah terisi secara otomatis di data Bangkom Anda</span>
+                        <?php } ?>
+                    <?php } ?>
+                    <?php if($webinar['flag_absen'] == 1) { ?>
+                        <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda Sudah Melakukan Presensi</span><br>
+                        <?php if(date('H:i:s') > $webinar['jam_selesai']){ ?>
+                            <?php if(date('H:i:s') > $webinar['jam_selesai']){  ?>
+                                <br>
+                                <?php if($webinar['flag_download_sertifikat'] == 1
+                                // && (
+                                    // $this->general_library->isProgrammer() ||
+                                    // $this->general_library->getIdUnitKerjaPegawai() == ID_UNITKERJA_BKPSDM
+                                // )
+                                ){ ?>
+                                    <button style="display: <?=$webinar['flag_generate_sertifikat'] == 0 ? 'block' : 'none'?>" id="btn_generate_sertifikat" type="button" class="btn mt-3 btn-primary">Generate Sertifikat</button>
+                                    <button style="display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" id="btn_download_sertifikat" type="button" class="btn mt-3 btn-primary"><i class="fa fa-download"></i> Download Sertifikat</button><br>
+                                    <span style="color: green; font-size: .65rem; margin-top: -15px; font-style: italic; font-weight: bold; display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" class="download_sertifikat_label"><i class="fa fa-check"></i> Sertifikat sudah dapat didownload</span><br>
+                                    <span style="color: green; font-size: .65rem; margin-top: -15px; font-style: italic; font-weight: bold; display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" class="download_sertifikat_label">Sertifikat sudah terisi secara otomatis di data Bangkom Anda</span>
+                                <?php } ?>
+                            <?php } ?>
                         <?php } ?>
                     <?php } ?>
                 <?php } ?>
@@ -195,6 +200,28 @@
                     $('#btn_download_sertifikat').show()
                     $('.download_sertifikat_label').show()
                     successtoast('Berhasil membuat sertifikat')
+                } else {
+                    errortoast(result.message)
+                } 
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })
+
+    $('#btn_download_sertifikat').on('click', function(){
+        $.ajax({
+            url: '<?=base_url("bacirita/C_Bacirita/downloadSertifikat")?>',
+            method: 'post',
+            data: {
+                'id_t_kegiatan': '<?=$webinar['id_kegiatan']?>',
+                'id_m_user': '<?=$this->general_library->getId()?>'
+            },
+            success: function(res){
+                var result = JSON.parse(res); 
+                if(result.code == 0){
+                    console.log(result.url)
+                    window.open(result.url, "_blank")
                 } else {
                     errortoast(result.message)
                 } 

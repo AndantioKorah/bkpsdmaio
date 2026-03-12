@@ -195,7 +195,7 @@ class M_Bacirita extends CI_Model
         }
         $explode = explode(".", $data['template_sertifikat']);
         $inputFile = $data['template_sertifikat'];
-        $previewFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+        $previewFile = $explode[0]."_preview.pdf";
         if(isset($data['previewFile'])){
             $previewFile = $data['previewFile'];
         }
@@ -217,8 +217,8 @@ class M_Bacirita extends CI_Model
             0, // margin header
             12
         ); 
-
         $this->mpdf->WriteHTML($html);
+
         foreach($data['result'] as $k => $v){
             if($k != "url_template"){
                 if($v['flag_show'] == 1){
@@ -229,14 +229,14 @@ class M_Bacirita extends CI_Model
                             $this->mpdf->writeHtml("<p style='
                                 font-family: Tahoma;
                                 text-align: center;
-                                font-size: ".$v['font-size'].";
+                                font-size: ".$v['font-size']."rem;
                             '>".$v['content']."</p>");
                         } else {
                             $this->mpdf->setX($v['margin-left']);
                             $this->mpdf->writeHtml("<p style='
                                 font-family: Tahoma;
                                 margin-left: ".$v['margin-left']."px;
-                                font-size: ".$v['font-size'].";
+                                font-size: ".$v['font-size']."rem;
                             '>".$v['content']."</p>");
                         }
                     } else {
@@ -274,7 +274,7 @@ class M_Bacirita extends CI_Model
         if($data['template_sertifikat']){
             $explode = explode(".", $data['template_sertifikat']);
             $inputFile = $data['template_sertifikat'];
-            $previewFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+            $previewFile = $explode[0]."_preview.pdf";
             if(file_exists(base_url($previewFile))){
                 unlink(base_url($previewFile));
             }
@@ -632,7 +632,7 @@ class M_Bacirita extends CI_Model
                 'jenisdiklat' => 50,
                 'nm_diklat' => $serti['topik'],
                 'tptdiklat' => 'Manado',
-                'penyelenggara' => 'Badan Kepegawaian dan Pengembangan Sumber Daya Kota Manado',
+                'penyelenggara' => 'Badan Kepegawaian dan Pengembangan Sumber Daya Manusia Kota Manado',
                 'angkatan' => '-',
                 'jam' => $serti['jumlah_jp'],
                 'tglmulai' => $serti['tanggal'],
@@ -660,8 +660,13 @@ class M_Bacirita extends CI_Model
                 $res = $ns;
                 return $res;
             }
-
-
+            
+            $explodeTanggal = explode("-", $serti['tanggal']);
+            $tahun = $explodeTanggal[0];
+            $bulan = $explodeTanggal[1];
+            $tanggal = $explodeTanggal[2];
+            
+            $this->general->cronCheckBangkom($bulan, $tahun, $check['data']['peserta']['nipbaru_ws'], 0);
 
         } else {
             $this->db->trans_rollback();
@@ -742,7 +747,7 @@ class M_Bacirita extends CI_Model
                         ->get()->row_array();
 
         $explode = explode(".", $kegiatan['template_sertifikat']);
-        $outputFile = "arsipbkpsdmbacirita/sertifikat/".$explode[0]."_preview.pdf";
+        $outputFile = $explode[0]."_preview.pdf";
         if(file_exists($outputFile)){
             unlink($outputFile);
         }
@@ -793,5 +798,25 @@ class M_Bacirita extends CI_Model
                 ]);
 
         return ['code' => 0, 'message' => ""];
+    }
+
+    public function downloadSertifikat($data){
+        $res = [
+            'code' => 0,
+            'message' => 'ok',
+            'url' => null
+        ];
+
+        $result = $this->db->select('*')
+                        ->from('db_bacirita.t_peserta_kegiatan')
+                        ->where('flag_active', 1)
+                        ->where('id_t_kegiatan', $data['id_t_kegiatan'])
+                        ->where('id_m_user', $data['id_m_user'])
+                        ->get()->row_array();
+        if($result){
+            $res['url'] = base_url().$result['url_sertifikat'];
+        }
+
+        return $res;
     }
 }

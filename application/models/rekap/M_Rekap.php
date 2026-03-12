@@ -1753,6 +1753,10 @@
             'id_unitkerja' => $param['id_unitkerja']
         ];
         
+        if(intval($param['bulan']) == 2 && $param['tahun'] == 2026){
+            return $res;
+        }
+
         if(in_array($param['id_unitkerja'], [3010000])){
             $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja, a.nipbaru_ws as nip')
                     ->from('db_pegawai.pegawai a')

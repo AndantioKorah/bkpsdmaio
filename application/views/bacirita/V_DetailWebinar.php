@@ -77,11 +77,14 @@
                 <?php } else { ?>
                     <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda sudah terdaftar</span><br>
                     <!-- <button type="button" class="btn mt-3 btn-info"> Anda Sudah Terdaftar</button><br> -->
-                    <?php if($webinar['tanggal'] == date('Y-m-d')){  ?>
+                    <?php if($webinar['tanggal'] == date('Y-m-d')){ ?>
                         <?php if($webinar['flag_absen'] == 0) { ?>
                             <button onclick= "presensiKegiatan()" style="<?=$stylePresensi;?>"  type="button" class="btn mt-3 btn-dark"> Presensi Seminar</button>
-                        <?php } else { ?>
-                            <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda Sudah Melakukan Presensi</span><br>
+                        <?php } ?>
+                    <?php } ?>
+                    <?php if($webinar['flag_absen'] == 1) { ?>
+                        <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda Sudah Melakukan Presensi</span><br>
+                        <?php if(date('H:i:s') > $webinar['jam_selesai']){ ?>
                             <?php if(date('H:i:s') > $webinar['jam_selesai']){  ?>
                                 <br>
                                 <?php if($webinar['flag_download_sertifikat'] == 1
@@ -96,9 +99,8 @@
                                     <span style="color: green; font-size: .65rem; margin-top: -15px; font-style: italic; font-weight: bold; display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" class="download_sertifikat_label">Sertifikat sudah terisi secara otomatis di data Bangkom Anda</span>
                                 <?php } ?>
                             <?php } ?>
-                            <!-- <button type="button" class="btn mt-3 btn-success"> Anda Sudah Melakukan Presensi</button> -->
-                        <?php }?>
-                    <?php }?>
+                        <?php } ?>
+                    <?php } ?>
                 <?php } ?>
                 
                 <h4 class="mt-4">LINK</h4>

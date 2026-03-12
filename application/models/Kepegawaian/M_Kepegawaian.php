@@ -281,7 +281,7 @@ class M_Kepegawaian extends CI_Model
             }
 
             if($data['unitkerja'] != '0'){
-                if($data['unitkerja'] == '3010000'){
+                if($data['unitkerja'] == '3010000xx'){
                 $this->db->where_in('c.id_unitkerjamaster', ['8000000','8010000','8020000']);
                 } else if($data['unitkerja'] == 991){
                     $this->db->where('c.id_unitkerjamaster', '8010000');

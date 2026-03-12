@@ -28,7 +28,7 @@
     Keterangan : <br> 
     - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
     - Jika menggunakan foto, kirim foto tersebut ke nomor Whatsapp Siladen <b>(0895355011333)</b> setelah itu discreenshot dan diupload sebagai bukti.<br>
-    - Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
+    - Maksimal Peninjauan Absensi per pegawai hanya 8 kali bulan ini.
     </span>
     <div class="row ml-2">
     <div class="col-lg-6">
@@ -248,7 +248,7 @@ contoh Screenshot Whatsapp<br>
     <b style="font-size:20px;">-</b> Jika menggunakan foto timestamp berlatarbelakang stiker, upload foto tersebut ke grup kepegawaian masing - masing setelah itu discreenshot dan diupload sebagai bukti. 
     <b  style="color:red">Jam pada keterangan timestamp akan menjadi jam absensi bagi pegawai yang melakukan pengajuan</b><br>
     <b style="font-size:20px;">-</b> Upload bukti pada hari yang sama. <br>
-    <b style="font-size:20px;">-</b> Maksimal Peninjauan Absensi per pegawai hanya 2 kali dalam sebulan.
+    <b style="font-size:20px;">-</b> Maksimal Peninjauan Absensi per pegawai hanya 8  untuk bulan ini.
     </span>
       </div>
       <div class="modal-footer">
@@ -287,7 +287,7 @@ var today = new Date();
     var maxDate = "<?= $maxDate['max_date'];?>";
     // var maxDate = "2025-07-09";
 
-    var datearray = ["2025-12-24","2025-12-29","2025-12-30","2025-12-31"];
+    var datearray = ["2025-12-24","2025-12-29"];
 $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',       
     datesDisabled: datearray,
@@ -335,7 +335,7 @@ function loadListPeninjauan(){
                 total = res[0].total_pengajuan - res[0].total_tolak
               <?php  if( $this->general_library->getId() != '000'){ ?>
                <?php  if( $this->general_library->getIdUnitKerjaPegawai() != '6170000'){ ?>
-                if(total >= 2) {
+                if(total >= 8) {
                   $('#btn_upload').hide()
                   $('#ket').show()
                 } else {

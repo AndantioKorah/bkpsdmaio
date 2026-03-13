@@ -3025,6 +3025,7 @@
                         ->where('a.tanggal_absensi', $this->input->post('tanggal_kolektif'))
                         ->where('a.jenis_absensi', $this->input->post('jenis_absensi'))
                         ->where('a.status', 0)
+                        ->limit(1000)
                         ->get()->result_array();
 
         foreach ($peninjauan as $rs) {

@@ -151,8 +151,8 @@
             success: function(data){
                 successtoast('Berhasi')
                 document.getElementById('btn_verif_kolektif').disabled = false;
-               $('#btn_verif_kolektif').html('Verifikasi')
-                $('#form_search_verif_dokumen').submit()
+                $('#btn_verif_kolektif').html('Verifikasi')
+                // $('#form_search_verif_dokumen').submit()
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')
             }

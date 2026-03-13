@@ -1191,12 +1191,17 @@
 		<?php } ?>
 	</li> -->
 		<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"> -->
-		<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>
+		<?php 
+		// dd($this->general_library->isSetda());
+		// if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ 
+			?>
     <li class="sidebar-header">
 		<!-- Manajemen Talenta -->
 		 SIPANTAS
 	</li>
-					<?php } ?>
+					<?php 
+					// } 
+					?>
 
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
 		<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ ?>

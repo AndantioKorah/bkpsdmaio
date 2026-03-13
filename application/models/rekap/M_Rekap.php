@@ -1179,6 +1179,8 @@
         } else { //jika dinas atau badan
             if(!$result['kasubag'] || !$result['kepalaskpd']){ // jika kasubag atau kepalaskpd kosong
                 // cek di plt plh
+                $lastDate = $tahun.'-'.$bulan.'-01';
+                $lastDate = date('Y-m-t', strtotime($lastDate));
                 $list_plt =  $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                         f.id as id_m_user, a.flag_bendahara, h.nama_jabatan, h.kepalaskpd, h.eselon, g.jenis')
                                         ->from('db_pegawai.pegawai a')
@@ -1190,7 +1192,7 @@
                                         ->where('a.skpd', $unitkerja['id_unitkerja'])
                                         // ->where('e.nama_jabatan', 'Sekretaris Daerah')
                                         ->where('id_m_status_pegawai', 1)
-                                        ->where('g.tanggal_akhir >=', $tahun.'-'.$bulan.'-30')
+                                        ->where('g.tanggal_akhir >=', $lastDate)
                                         // ->where('g.tanggal_mulai <=', date('Y-m-d'))
                                         ->get()->result_array();
                 // dd($list_plt);
@@ -1266,7 +1268,7 @@
         //coding ini untuk mengubah penandatangan menjadi hardcode
         if($id_unitkerja == 3016000 || // dishub, kasub sudah pensiun
         $id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
-        // $id_unitkerja == 3017000 || // kominfo, kasub cuti
+        $id_unitkerja == 3018000 || // pu, kasubag sudah pindah
         $id_unitkerja == 3020000){ //diskop, kasub sudah pensiun
             $result['kasubag'] = $result['sek'];
         } else if($id_unitkerja == 4014000){
@@ -1309,6 +1311,19 @@
                                     ->get()->row_array();
 
             $result['kasubag']['nama_jabatan'] = "Kepala Sub Bagian Umum dan Kepegawaian"; 
+        } else if($id_unitkerja == 1010200){ // kesra
+            $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->where('a.nipbaru_ws', '197101032009021001')
+                                    ->where('id_m_status_pegawai', 1)
+                                    ->get()->row_array();
+
+            $result['kepalaskpd']['nama_jabatan'] = "Kepala Bagian Kerja Sama"; 
         } else if($id_unitkerja == 1010200){ // kesra
             $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                     e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')

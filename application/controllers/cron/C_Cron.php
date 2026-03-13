@@ -35,7 +35,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSendWa(){
-        $this->cronSyncBangkomPerData();
+        // $this->cronSyncBangkomPerData();
         // $this->general->logCron('cronSendWa');
         // $this->general->cronSendWa();
         // dd('asdd');
@@ -50,7 +50,7 @@ class C_Cron extends CI_Controller
 	}
 
     public function updateSisaCuti($id, $operand){
-		$this->kepegawaian->updateSisaCuti($id, $operand);
+		// $this->kepegawaian->updateSisaCuti($id, $operand);
 	}
 
     public function cronTestSyncJabatan(){
@@ -58,9 +58,9 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSyncJabatanSiasn(){
-        $this->general->logCron('cronSyncJabatanSiasn');
+        // $this->general->logCron('cronSyncJabatanSiasn');
         // $this->siasn->cronRiwayatJabatanSiasn();
-        $this->siasn->cronSyncJabatanSiasn();
+        // $this->siasn->cronSyncJabatanSiasn();
     }
 
     public function cronCheckBangkom($bulan = 0, $tahun = 0, $nip = "", $id_unitkerja = 0){
@@ -83,12 +83,12 @@ class C_Cron extends CI_Controller
     }
 
     public function cronJafungCpns(){
-        $this->user->cronJafungCpns();
+        // $this->user->cronJafungCpns();
         $this->general->logCron('cronJafungCpns');
     }
 
     public function cronHashFileBangkom(){
-        $this->user->cronHashFileBangkom();
+        // $this->user->cronHashFileBangkom();
         $this->general->logCron('cronHashFileBangkom');
     }
 
@@ -103,8 +103,8 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSyncSkpSiasn(){
-        $this->cronHashFileBangkom();
-        $this->cronSyncBangkom();
+        // $this->cronHashFileBangkom();
+        // $this->cronSyncBangkom();
         // $this->general->logCron('cronSyncSkpSiasn');
         // $this->siasn->cronRiwayatSkpSiasn();
     }
@@ -124,15 +124,15 @@ class C_Cron extends CI_Controller
     }
 
     public function cronUpdateGajiBkad(){
-        $this->general->logCron('cronUpdateGajiBkad');
-        $this->rekap->cronUpdateGajiBkad();
+        // $this->general->logCron('cronUpdateGajiBkad');
+        // $this->rekap->cronUpdateGajiBkad();
 
-        $this->cronSyncBangkomToSiasn();
+        // $this->cronSyncBangkomToSiasn();
     }
 
     public function cronAsync(){
-        $this->general->logCron('cronAsync');
-        $this->general->cronAsync();
+        // $this->general->logCron('cronAsync');
+        // $this->general->cronAsync();
 
         // $this->rekap->rekapKehadiranPeriodik();
     }

@@ -4384,6 +4384,38 @@
             }
         }
 
+        public function insertPesertaBkpsdmBacirita(){
+            $id_kegiatan = 3;
+            $kegiatan = $this->db->select('*')
+                                ->from('db_bacirita.t_kegiatan')
+                                ->where('id', $id_kegiatan)
+                                ->get()->row_array();
+
+            $data = $this->db->select('a.*, b.id as id_t_peserta_kegiatan')
+                            ->from('t_temp_bkpsdm_bacirita a')
+                            ->join("db_bacirita.t_peserta_kegiatan b", "a.id_m_user = b.id_m_user AND b.flag_active = 1 AND id_t_kegiatan = '".$id_kegiatan."'", "left")
+                            ->where('a.id_m_user IS NOT NULL')
+                            ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    if(!$d['id_t_peserta_kegiatan']){ // hanya jika tidak ada saja
+                        echo "inserting ".$d['nip']."\n<br>";
+                        $this->db->insert('db_bacirita.t_peserta_kegiatan', [
+                            'id_m_user' => $d['id_m_user'],
+                            'created_by' => $d['id_m_user'],
+                            'id_t_kegiatan' => $kegiatan['id'],
+                            'flag_absen' => 1,
+                            'date_absen' => $kegiatan['tanggal'],
+                            'flag_generate_sertifikat' => 0
+                        ]);
+                    } else {
+                        echo "skipping ".$d['nip']."\n<br>";
+                    }
+                }
+                dd('done');
+            }
+        }
+
         public function inputSertiBkpsdmBacirita(){
             $noSttpp = "800.1.13.1/B.04/BKPSDM/247/2026";
             $data = $this->db->select('b.id_peg, b.nipbaru_ws, c.id as id_pegdiklat')

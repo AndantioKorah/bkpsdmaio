@@ -291,7 +291,8 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
-        $this->general->editPdf();
+        // $this->general->editPdf();
+        $this->user->insertPesertaBkpsdmBacirita();
 
         // dd($this->general_library->getDataKabanBkpsdm());
         // $randomString = generateRandomString(30, 1, 't_file_ds'); 

@@ -124,8 +124,8 @@ class C_Cron extends CI_Controller
     }
 
     public function cronUpdateGajiBkad(){
-        $this->general->logCron('cronUpdateGajiBkad');
-        $this->rekap->cronUpdateGajiBkad();
+        // $this->general->logCron('cronUpdateGajiBkad');
+        // $this->rekap->cronUpdateGajiBkad();
 
         // $this->cronSyncBangkomToSiasn();
     }

@@ -8,7 +8,7 @@
                 </div>
                 <div class="col-md-12 col-sm-12 col-lg-2">
                     <label>Tanggal</label>
-                    <input class="form-control datepickerthisedit" value="<?=date('Y-m-d')?>" name="tgl" value="<?=$result['tgl']?>" />
+                    <input class="form-control datepickerthisedit" name="tgl" value="<?=$result['tgl']?>" />
                 </div>
                 <div class="col-md-12 col-sm-12 col-lg-2">
                     <label>Radius (m)</label>

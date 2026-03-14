@@ -458,21 +458,6 @@
 		}
 	?>
 	<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
-
-		<?php if($this->general_library->isProgrammer() 
-			|| $this->general_library->isAdminAplikasi() 
-		    || $this->general_library->isHakAkses('rekap_bangkom')
-			||  $this->general_library->isPegawaiBkpsdm()
-			|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
-			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
-			){ ?>
-		<li class="sidebar-item">
-			<a title="Perangkat Daerah" class="sidebar-link" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
-				<i class="fa fa-database"></i> <span class="align-middle">Rekap Bangkom</span>
-			</a>
-		</li>
-		<?php } ?>
-
 	<li class="sidebar-item">
 		<!-- <a class="sidebar-link" href="<?=base_url();?>kepegawaian/layanan"> -->
 		<a title="Layanan" data-bs-target="#layanan" data-bs-toggle="collapse" class="sidebar-link">
@@ -936,6 +921,19 @@
 				<li class="sidebar-item ">
 					<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/kehadiran-periodik')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Kehadiran
+					</a>
+				</li>
+			<?php } ?>
+			<?php if($this->general_library->isProgrammer() 
+				|| $this->general_library->isAdminAplikasi() 
+				|| $this->general_library->isHakAkses('rekap_bangkom')
+				||  $this->general_library->isPegawaiBkpsdm()
+				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
+				){ ?>
+				<li class="sidebar-item ">
+					<a title="Pengembangan Kompetensi" class="sidebar-link sidebar-link-child" href="<?=base_url('master/perangkat-daerah/bangkom')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengembangan Kompetensi
 					</a>
 				</li>
 			<?php } ?>

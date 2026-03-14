@@ -3703,7 +3703,6 @@
                             ->get()->row_array();
             }
             $pagu_tpp = $this->general->getListTppKelasJabatanNew();
-
             $nama_unit_kerja = explode(" ", $unitkerja['nm_unitkerja']);
                                 
             $this->db->select('a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, f.id as id_m_user, b.kelas_jabatan_jfu, b.kelas_jabatan_jft, b.id_pangkat,

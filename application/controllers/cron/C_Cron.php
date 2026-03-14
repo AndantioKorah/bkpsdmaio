@@ -35,7 +35,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSendWa(){
-        // $this->cronSyncBangkomPerData();
+        $this->cronSyncBangkomPerData();
         // $this->general->logCron('cronSendWa');
         // $this->general->cronSendWa();
         // dd('asdd');
@@ -103,10 +103,10 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSyncSkpSiasn(){
-        // $this->cronHashFileBangkom();
+        $this->cronHashFileBangkom();
         // $this->cronSyncBangkom();
-        // $this->general->logCron('cronSyncSkpSiasn');
-        // $this->siasn->cronRiwayatSkpSiasn();
+        $this->general->logCron('cronSyncSkpSiasn');
+        $this->siasn->cronRiwayatSkpSiasn();
     }
 
     public function cronSyncBangkom(){
@@ -124,8 +124,8 @@ class C_Cron extends CI_Controller
     }
 
     public function cronUpdateGajiBkad(){
-        // $this->general->logCron('cronUpdateGajiBkad');
-        // $this->rekap->cronUpdateGajiBkad();
+        $this->general->logCron('cronUpdateGajiBkad');
+        $this->rekap->cronUpdateGajiBkad();
 
         // $this->cronSyncBangkomToSiasn();
     }
@@ -291,7 +291,8 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
-        $this->general->editPdf();
+        // $this->general->editPdf();
+        $this->user->insertPesertaBkpsdmBacirita();
 
         // dd($this->general_library->getDataKabanBkpsdm());
         // $randomString = generateRandomString(30, 1, 't_file_ds'); 

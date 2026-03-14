@@ -2748,9 +2748,9 @@ class M_Layanan extends CI_Model
                     ->where('a.flag_active', 1)
                     ->order_by('b.tgl', 'desc')
                     ->order_by('a.created_date', 'desc');
-
+                    
         if(!$this->general_library->isProgrammer()
-        && !$this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
+        && $this->general_library->getBidangUser() != ID_BIDANG_PEKIN){
             $this->db->where_in('a.id_unitkerja', $listUk);
         }
 

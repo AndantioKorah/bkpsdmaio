@@ -277,14 +277,14 @@ $(function(){
 
 var today = new Date();
   if(today.getDay() == 0 || today.getDay() == 6){
-    // $('#btn_upload').hide()
+    $('#btn_upload').hide()
   } else {
     $('#btn_upload').show()
   }
     
     })
 
-
+    var maxDate = "<?= $maxDate['max_date'];?>";
     var maxDate = "2026-03-10";
 
     var datearray = ["2026-03-16","2026-03-17"];

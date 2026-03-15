@@ -540,7 +540,7 @@ class C_Kinerja extends CI_Controller
         // $date->modify("last day of previous month");
         // $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit($date->format("Y-m-d")), 3, 'minus');
 
-        $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit(" 03/10/2026"), 6, 'minus');
+        $data['maxDate'] = countMaxDateUpload2(formatDateOnlyForEdit(" 03/10/2026"), 6, 'plus');
 
         // dd($data['maxDate']['max_date']);
         $data['skpd'] = $this->master->getAllUnitKerja();

@@ -2794,5 +2794,21 @@
             echo "<iframe src='".$outputFile."' style='width: 100vw;'></iframe>";
             // echo "Text replaced and new PDF saved to $outputFile";
         }
+
+        public function getKepalaSkpdHardcodeByNip($nip){
+            $res = null;
+            $rs = $this->db->select('*')
+                        ->from('db_pegawai.unitkerja')
+                        ->where('nip_kepalaskpd_hardcode', $nip)
+                        ->get()->result_array();
+            if($rs){
+                $res = $rs;
+                foreach($rs as $r){
+                    $res['list_uker'][] = $r['id_unitkerja'];
+                }
+            }
+
+            return $res;
+        }
 	}
 ?>

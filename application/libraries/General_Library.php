@@ -610,7 +610,8 @@ class General_library
     }
 
     public function isKepalaSkpdHardcode(){
-        return $this->userLoggedIn['flag_kepalaskpdhardcode'] == 1;
+        return $this->nikita->m_general->getKepalaSkpdHardcodeByNip($this->getNipPegawai());
+        // return $this->userLoggedIn['flag_kepalaskpdhardcode'] == 1;
     }
 
     public function isKepalaBkpsdm(){

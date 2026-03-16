@@ -2490,6 +2490,8 @@ class M_Layanan extends CI_Model
                             ->order_by('nm_unitkerja')
                             ->get()->result_array();
 
+        $listSkpdHardcode = $this->general_library->isKepalaSkpdHardcode();
+
         foreach($list_unitkerja as $u){
             if($id_unitkerja == 3010000){ //jika diknas, ambil sekolah2
                 if($u['id_unitkerja'] == 3010000 ||
@@ -2498,6 +2500,10 @@ class M_Layanan extends CI_Model
                 }
             } else if(stringStartWith("Kecamatan", $unitkerja['nm_unitkerja'])){
                 if($u['id_unitkerjamaster'] == $unitkerja['id_unitkerjamaster']){
+                    $result[] = $u;
+                }
+            } else if($listSkpdHardcode && isset($listSkpdHardcode['list_uker'])){
+                if(in_array($u['id_unitkerja'], $listSkpdHardcode['list_uker'])){
                     $result[] = $u;
                 }
             } else {
@@ -2750,7 +2756,8 @@ class M_Layanan extends CI_Model
                     ->order_by('a.created_date', 'desc');
                     
         if(!$this->general_library->isProgrammer()
-        && $this->general_library->getBidangUser() != ID_BIDANG_PEKIN){
+            && !$this->general_library->isAdminAplikasi() 
+            && $this->general_library->getBidangUser() != ID_BIDANG_PEKIN){
             $this->db->where_in('a.id_unitkerja', $listUk);
         }
 

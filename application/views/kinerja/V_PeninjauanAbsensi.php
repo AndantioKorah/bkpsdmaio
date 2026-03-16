@@ -582,6 +582,9 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
                 $('#btn_upload').show()
                 $('#ket').hide()
                 }
+               } else {
+                $('#btn_upload').show()
+                $('#ket').hide()
                }
               }
           });

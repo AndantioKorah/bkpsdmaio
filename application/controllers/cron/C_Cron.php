@@ -43,7 +43,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronDsBulkTte(){
-        // $this->cronCheckDataBangkom();
+        // $this->cronRiwayatJabatanSiasn();
 
         // $this->general->logCron('cronDsBulkTte');
 		// $this->layanan->cronBulkDs();
@@ -57,9 +57,18 @@ class C_Cron extends CI_Controller
         // $this->siasn->cronSyncJabatanSiasn();
     }
 
+    public function cronRiwayatJabatanSiasn($id = null){
+        $this->siasn->cronRiwayatJabatanSiasn($id);
+        $this->general->logCron('cronRiwayatJabatanSiasn');
+    }
+
+    // public function cronUploadDokRwSiasn(){
+    //     $this->siasn->cronUploadDokRwSiasn();
+    //     $this->general->logCron('cronUploadDokRwSiasn');
+    // }
+
     public function cronSyncJabatanSiasn(){
         // $this->general->logCron('cronSyncJabatanSiasn');
-        // $this->siasn->cronRiwayatJabatanSiasn();
         // $this->siasn->cronSyncJabatanSiasn();
     }
 

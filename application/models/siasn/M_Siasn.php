@@ -16,6 +16,7 @@
         {
             parent::__construct();
             $this->db = $this->load->database('main', true);
+            $this->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
         }
 
         public function sinkronIdSiasn($id_siladen, $id_siasn, $data){
@@ -290,7 +291,52 @@
             }
         }
 
-        public function cronRiwayatJabatanSiasn(){
+        public function cronRiwayatJabatanSiasn($id = null){
+            $this->db->select('a.id, a.temp_count')
+                    ->from('db_pegawai.pegjabatan a')
+                    ->where('a.id_siasn IS NULL')
+                    ->where('temp_count < 3')
+                    ->where('status', 2)
+                    ->where('flag_active', 1)
+                    ->order_by('created_date', 'desc')
+                    ->limit(5);
+            if($id){
+                $this->db->where('a.id', $id);
+            }
+            $dataRiwayat = $this->db->get()->result_array();
+            if($dataRiwayat){
+                foreach($dataRiwayat as $dr){
+                    // echo "trying...".$dr['id']."<br>\n";
+                    $res = $this->kepegawaian->syncSiasnJabatan($dr['id']);
+                    $this->db->where('id', $dr['id'])
+                            ->update('db_pegawai.pegjabatan', [
+                                'temp_count' => intval($dr['temp_count']+=1),
+                                'log_sync' => json_encode($res)
+                            ]);
+                }
+            }
+        }
+
+        // belum jadi pake karena file tidak terbaca saat upload
+        // public function cronUploadDokRwSiasn(){
+        //     $dataRiwayat = $this->db->select('*')
+        //                         ->from('db_pegawai.pegjabatan a')
+        //                         ->where('a.id_siasn IS NOT NULL')
+        //                         ->where('data_upload_dok IS NOT NULL')
+        //                         ->where('temp_count_upload_dok < 3')
+        //                         ->where('flag_upload_dok', 0)
+        //                         ->where('status', 2)
+        //                         ->where('flag_active', 1)
+        //                         ->limit(5)
+        //                         ->get()->result_array();
+        //     if($dataRiwayat){
+        //         foreach($dataRiwayat as $dr){
+        //             $this->kepegawaian->cronUploadDokRwSiasn($dr);
+        //         }
+        //     }
+        // }
+
+        public function cronRiwayatJabatanSiasnOld(){
             $listPegawai = $this->db->select('a.*, b.id as id_m_user')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('m_user b', 'a.nipbaru_ws = b.username')

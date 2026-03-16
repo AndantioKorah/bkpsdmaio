@@ -134,7 +134,7 @@
   </div>
   <div class="form-group col-lg-12 mt-2">
      <button class="btn btn-block btn-primary customButton" style="width:100%;display:none;" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
-      <span id="ket" style="display:none;color:red"><b>Sudah ada 2 kali Pengajuan Absensi untuk bulan ini</b></span>
+      <span id="ket" style="display:none;color:red"><b></b></span>
     </div>
 </form> 
     </div>
@@ -274,27 +274,27 @@ $(function(){
  $("#jenis_absensi").prop('disabled',true);
         loadListPeninjauan()
         cekPengajuan()
+        // cekJikaWFA()
 
-var today = new Date();
-  if(today.getDay() == 0 || today.getDay() == 6){
-    $('#btn_upload').hide()
-  } else {
-    $('#btn_upload').show()
-  }
+// var today = new Date();
+//   if(today.getDay() == 0 || today.getDay() == 6){
+//     $('#btn_upload').show()
+//   } else {
+//     $('#btn_upload').show()
+//   }
     
     })
 
-    var maxDate = "<?= $maxDate['max_date'];?>";
     var maxDate = "2026-03-10";
 
-    var datearray = ["2026-03-16","2026-03-17"];
+    var datearray = ["2025-03-17"];
    $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',       
     datesDisabled: datearray,
     daysOfWeekDisabled: [0,6],   //Disable sunday
     autoclose:true,
     todayHighlight: true,
-    startDate : maxDate,
+    startDate : maxDate, 
     endDate: '0d',
     
 });
@@ -324,7 +324,6 @@ function loadListPeninjauan(){
       tanggal = "<?= date('Y-m-d');?>";
     }
   
-   
     $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataPengajuanAbsensiPegawai",
               method : "POST",
@@ -338,6 +337,7 @@ function loadListPeninjauan(){
                 if(total >= 8) {
                   $('#btn_upload').hide()
                   $('#ket').show()
+                  $('#ket').html('Sudah ada 2 kali Pengajuan Absensi untuk bulan ini')
                 } else {
                   $('#btn_upload').show()
                   $('#ket').hide()
@@ -349,6 +349,7 @@ function loadListPeninjauan(){
     });
  
    }
+
 
 $('#form_tinjau_absen').on('submit', function(e){  
        
@@ -563,9 +564,51 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
         });
 
         $('#tanggal_absensi').on('change', function(){
-        var tanggal =  $('#tanggal_absensi').val()
+        var curentdate = "<?= date('Y-m-d');?>"
+         var tanggal =  $('#tanggal_absensi').val()
+            $.ajax({
+              url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataWfa",
+              method : "POST",
+              data : {tanggal: tanggal},
+              async : false,
+              dataType : 'json',
+              success: function(ress){
+                if(tanggal != '2026-03-16'){
+                if(ress == 1){
+                $('#btn_upload').hide()
+                $('#ket').show()
+                $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+                } else {
+                $('#btn_upload').show()
+                $('#ket').hide()
+                }
+               } else {
+                $('#btn_upload').show()
+                $('#ket').hide()
+               }
+              }
+          });
+
+       
             $("#jenis_absensi").prop('disabled',false);
-           
+              $.ajax({
+              url : "<?php echo base_url();?>kinerja/C_Kinerja/checkMaxDate",
+              method : "POST",
+              data : {date: tanggal, max : 6, operand : "plus"},
+              async : false,
+              dataType : 'json',
+              success: function(res){
+                if(curentdate > res.max_date){
+                  errortoast("<b>Tanggal "+tanggal+" Sudah melewati batas hari penginputan</b>")
+                  $('#btn_upload').hide()
+                  return false;
+                } else {
+                  // $('#btn_upload').show()
+                }
+             
+               
+              }
+            });
 
         if(tanggal == "2025-11-28"){
            $('#jenis_absensi').val('')

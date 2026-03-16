@@ -5,7 +5,7 @@
 		-moz-box-shadow: 4px 4px 7px 0px rgba(0,0,0,0.75);
 		border: 1px solid rgba(0,0,0,0.75);
 		border-radius: 10px;
-		height: 30rem;
+		height: 600px;
 	}
 
 	.img-kegiatan{
@@ -24,7 +24,7 @@
 		font-size: 1rem !important;
 		display: -webkit-box; /* Required for older browser compatibility */
 		-webkit-box-orient: vertical; /* Required for older browser compatibility */
-		-webkit-line-clamp: 6; /* Limits text to 3 lines */
+		-webkit-line-clamp: 8; /* Limits text to 3 lines */
 		overflow: hidden;
 		text-overflow: ellipsis; /* Ensures the ellipsis appears */
 	}
@@ -40,7 +40,7 @@
 		color: rgba(53, 52, 52, 1);
 		font-weight: bold;
 		font-style: italic;
-		font-size: .8rem;
+		font-size: .75rem;
 	}
 
 	.card-list-kegiatan:hover{
@@ -77,7 +77,7 @@
 				$badgeKegiatan = "badge-success";
 			}
 		?>
-			<div class="col-lg-3 p-3">
+			<div class="col-lg-3 col-md-3 col-sm-3 p-3">
 				<div class="card card-list-kegiatan">
 					<a class="badge-kegiatan badge badge-sm <?=$badgeKegiatan?>"><?=$rs['nama_tipe_kegiatan']?></a>
 					<img class="card-img-top img-fluid img-kegiatan" src="<?=base_url($srcImage)?>">

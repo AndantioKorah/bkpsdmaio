@@ -5030,6 +5030,25 @@
     return $result;
 }
 
+function getDataWfa()
+    {        
+        $wfa = 0; 
+        $this->db->select('a.id')
+        ->from('db_sip.event a')
+        ->join('t_pegawai_event b', 'b.id_event = a.id')
+        ->join('t_pegawai_event_detail c', 'c.id_t_pegawai_event = b.id')
+        ->where_in('a.id', [48,49,50,51,52])
+        ->where('a.flag_active', 1)
+        ->where('c.flag_active', 1)
+        ->where('c.id_m_user', $this->general_library->getId())
+        ->where('a.tgl', $this->input->post('tanggal'));
+        $result = $this->db->get()->result_array();
+        if($result){
+            $wfa = 1;
+        }
+        return $wfa;
+    }
+
     public function getStatusLockKinerja($menu){
         return $this->db->select('a.status')
                         ->from('t_lock_kinerja as a ')

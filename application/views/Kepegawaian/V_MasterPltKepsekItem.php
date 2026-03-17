@@ -21,7 +21,7 @@
                         <td class="text-center"><?=$no++;?></td>
                         <td class="text-left"><?= getNamaPegawaiFull($lp)?></td>
                         <td class="text-left"><?=$lp['sekolah_def']?></td>
-                        <td class="text-left"><?=$lp['sekolah_plt']?></td>
+                        <td class="text-left"><?=$lp['nm_sekolah']?></td>
                         <td class="text-left"><?= formatDateNamaBulan($lp['tanggal_mulai'])?></td>
                         <td class="text-left"><?= formatDateNamaBulan($lp['tanggal_akhir'])?></td>
                         <td class="text-center">

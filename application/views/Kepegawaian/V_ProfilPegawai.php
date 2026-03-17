@@ -582,18 +582,18 @@
                  
                 </span>
               </div>
-
-              <!-- <div class="col-lg-12 div_label text-left">
+             <?php if(isset($plt_kepsek)) { ?>
+              <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
-                  Tunjangan Jabatan
+                  Jabatan PLT Kepala Sekolah 
                 </span>
               </div>
               <div class="col-lg-12 text-left" >
-                <span class="sp_profil_sm">
-              Dalam Pengembangan
+              <span class="sp_profil_sm">
+              <?= $plt_kepsek['nm_sekolah'];?> <span style="font-size:9px;"> <i>(<?= formatDateNamaBulan($plt_kepsek['tanggal_mulai']);?> - <?= formatDateNamaBulan($plt_kepsek['tanggal_akhir']);?>)</i></span>
               </span>
-              </div> -->
-
+              </div>
+              <?php } ?>
 
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">

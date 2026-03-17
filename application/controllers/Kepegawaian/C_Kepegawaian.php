@@ -3857,8 +3857,8 @@ class C_Kepegawaian extends CI_Controller
                 'tahun' => date('Y'),
                 'perihal' => "Usul DS"
             ], 0);
-		// $data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
-		$data['nomor_surat'] = "800.1.6.2/BKPSDM/SK/SLDN/2924/2026";
+		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
+		// $data['nomor_surat'] = "800.1.6.2/BKPSDM/SK/SLDN/2924/2026";
 
 		
 		$data['instansi_tujuan'] = $this->input->post('instansi_tujuan');

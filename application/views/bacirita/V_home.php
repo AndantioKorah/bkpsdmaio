@@ -11,14 +11,38 @@
 		color: black;
 		font-weight: bold;
 	}
+		
+
+	 .myButton {
+		background-color: #222e3c; /* Normal background color */
+		border: 1px solid #000000;  /* The main border property */
+		
+		color: #fff;
+		padding: 5px 22px;
+		text-align: center;
+		text-decoration: none;
+		/* display: inline-block; */
+		font-size: 13px;
+		margin: 4px 2px;
+		cursor: pointer; /* Changes cursor to a hand pointer */
+		transition-duration: 0.4s; /* Smooth transition over 0.4 seconds */
+		border-radius: 5px;   
+		}
+
+		.myButton:hover {
+		background-color: #127cd4;
+		color:#fff; /* Green background on hover */
+		}
 </style>
 
 <div class="mt-3 card card-default">
 	<div class="card-body">
 		<div class="row">
 			<div class="col-lg-12">
-				<h4><span class="badge badge-dark">Semua Webinar</span></h4>
-				
+
+				<h4><button onclick="loadListKegiatan(1)" class="myButton">Semua Webinar</button>
+				<button onclick="loadListKegiatan(2)" class="myButton">Diikuti</button></h4>
+
 				<hr>
 			</div>
 			<div id="div_list_kegiatan" class="col-lg-12">
@@ -45,7 +69,7 @@
 	$(function(){
 		$('#tipe_kegiatan').select2()
 		refreshDatePicker()
-		loadListKegiatan()
+		loadListKegiatan('0')
 	})
 
 	function refreshDatePicker(){
@@ -73,10 +97,10 @@
 		})
 	}
 
-	function loadListKegiatan(){
+	function loadListKegiatan(id){
 		$('#div_list_kegiatan').html()
 		$('#div_list_kegiatan').append(divLoaderNavy)
-		$('#div_list_kegiatan').load('<?=base_url("bacirita/C_Bacirita/loadListWebinar")?>', function(){
+		$('#div_list_kegiatan').load('<?=base_url("bacirita/C_Bacirita/loadListWebinar/")?>'+id, function(){
 			$('#loader').hide()
 		})
 	}

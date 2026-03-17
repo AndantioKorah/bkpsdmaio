@@ -23,8 +23,8 @@ class C_Bacirita extends CI_Controller
         echo json_encode($this->bacirita->saveDataKegiatan($this->input->post()));
     }
 
-    public function loadListKegiatan(){
-        $data['result'] = $this->bacirita->loadListKegiatan();
+    public function loadListKegiatan($id){
+        $data['result'] = $this->bacirita->loadListKegiatan($id);
         $this->load->view('bacirita/V_ListKegiatanAdmin', $data);
     }
 
@@ -41,8 +41,8 @@ class C_Bacirita extends CI_Controller
         render('bacirita/V_home', null, null, null);
     }
 
-     public function loadListWebinar(){
-        $data['result'] = $this->bacirita->loadListKegiatan();
+     public function loadListWebinar($id){
+        $data['result'] = $this->bacirita->loadListKegiatan($id);
         $this->load->view('bacirita/V_ListWebinar', $data);
     }
 

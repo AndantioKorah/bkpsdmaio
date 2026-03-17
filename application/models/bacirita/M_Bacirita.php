@@ -15,14 +15,25 @@ class M_Bacirita extends CI_Model
         $this->db->insert($tablename, $data);
     }
 
-    public function loadListKegiatan(){
-        return $this->db->select('a.*, c.nama_tipe_kegiatan, a.id as id_kegiatan')
+    public function loadListKegiatan($id){
+         $this->db->select('a.*, c.nama_tipe_kegiatan, a.id as id_kegiatan')
                     ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
                     ->order_by('a.tanggal', 'desc')
-                    ->where('a.flag_active', 1)
-                    ->get()->result_array();
+                    ->where('a.flag_active', 1);
+                    // if(!$this->general_library->isProgrammer()) {
+                    // $this->db->where('a.tanggal >=', date('Y-m-d'));
+                    // }
+                    if($id == 0){
+                        $this->db->where('a.tanggal >=', date('Y-m-d'));
+                    }
+                    if($id == 2){
+                        $this->db->join('db_bacirita.t_peserta_kegiatan d', 'd.id_t_kegiatan = a.id AND d.id_m_user = "'.$this->general_library->getId().'" AND d.flag_active = 1');
+                        // $this->db->where('a.tanggal >=', date('Y-m-d'));
+                    }
+                    $query = $this->db->get()->result_array();
+                  return $query;
     }
 
     public function saveDataKegiatan($data){

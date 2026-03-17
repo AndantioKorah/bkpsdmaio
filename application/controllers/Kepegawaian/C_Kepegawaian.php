@@ -2558,6 +2558,11 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->submitPltPlh());
 	}
 
+	public function submitPltKepsek()
+	{ 
+		echo json_encode( $this->kepegawaian->submitPltKepsek());
+	}
+
 	public function deleteTpltPlh($id){
         $this->general->delete('id', $id, 't_plt_plh');
     }
@@ -3852,7 +3857,10 @@ class C_Kepegawaian extends CI_Controller
                 'tahun' => date('Y'),
                 'perihal' => "Usul DS"
             ], 0);
-		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
+		// $data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
+		$data['nomor_surat'] = "800.1.6.2/BKPSDM/SK/SLDN/2924/2026";
+
+		
 		$data['instansi_tujuan'] = $this->input->post('instansi_tujuan');
 		// $this->load->view('kepegawaian/surat/V_SuratHukdis2', $data, true); 
 		$mpdf = new \Mpdf\Mpdf([
@@ -4190,6 +4198,29 @@ class C_Kepegawaian extends CI_Controller
         $data['bulan'] = $this->input->post('bulan');
         $data['tahun'] = $this->input->post('tahun');
         $this->load->view('kepegawaian/laporan/V_skpdUploadBangkomItemExcel', $data);
+    }
+
+	public function pltKepsek(){
+		$data['sekolah'] = $this->kepegawaian->getUnitKerjaSekolah();
+		$data['unit_kerja'] = $this->kepegawaian->getUnitKerjaSekolah();
+        // $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanAll();
+		//  $data['list_guru'] = $this->kepegawaian->getAllPegawaiGuru();
+        render('kepegawaian/V_MasterPltKepsek', '', '', $data);
+    }
+
+	 public function getListGuru(){
+		$searchTerm = $this->input->post('searchTerm');
+		$response = $this->kepegawaian->getListGuru($searchTerm);
+		echo json_encode($response);
+	}
+
+		public function loadListPltKepsek(){
+        $data['list_pltkepsek'] = $this->kepegawaian->getPltKepsek();
+        $this->load->view('kepegawaian/V_MasterPltKepsekItem', $data);
+    }
+
+	public function deletePltKepsek($id){
+        $this->general->delete('id', $id, 'db_efort.t_plt_kepsek');
     }
 
 

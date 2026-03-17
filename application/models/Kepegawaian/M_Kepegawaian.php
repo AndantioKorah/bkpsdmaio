@@ -11586,6 +11586,14 @@ public function getFileForKarisKarsu()
         return $this->db->get()->result_array(); 
     }
 
+    function getUnitKerjaSekolah(){
+        $this->db->select('*')
+        ->where_not_in('id_unitkerja', [5])
+        ->where_in('id_unitkerjamaster', [8000000,8010000,8020000])
+        ->from('db_pegawai.unitkerja a');
+        return $this->db->get()->result_array(); 
+    }
+
     public function submitEditPltPlh($id){
         $this->db->trans_begin();
 
@@ -16984,6 +16992,106 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
             return $result;
         }
+
+    public function getAllPegawaiGuru(){
+            return $this->db->select('a.*, c.id as id_m_user')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('m_user c', 'a.nipbaru_ws = c.username')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where('c.flag_active', 1)
+                    ->order_by('a.nama')
+                    ->where_in('b.id_unitkerjamaster', ['8010000','8020000','8000000'])
+                    ->get()->result_array();
+        }
+
+
+    function getListGuru($searchTerm=""){
+            $this->db->select('*');
+            $this->db->where("a.nama like '%".$searchTerm."%' ");
+            $this->db->where('b.flag_active', 1);
+            $this->db->where('a.id_m_status_pegawai', 1);
+            $this->db->where_in('b.id_unitkerjamaster', ['8010000','8020000','8000000']);
+            $this->db->join('m_user b', 'b.username = a.nipbaru_ws');
+            $this->db->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja');
+            $fetched_records = $this->db->get('db_pegawai.pegawai as a');
+            $jabatan = $fetched_records->result_array();
+            $data = array();
+            foreach($jabatan as $jabatan){
+                $data[] = array("id"=>$jabatan['id'], "text"=>$jabatan['nama']);
+            }
+            return $data;
+        }
+
+
+
+    public function submitPltKepsek()
+	{
+
+        $this->db->trans_begin();
+            
+        $target_dir						= './arsippltkepsek/';
+        
+        $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+        $filename = str_replace(' ', '', $random_number.$_FILES['file']['name']);
+		
+		$config['upload_path']          = $target_dir;
+		$config['allowed_types']        = 'pdf';
+		$config['encrypt_name']			= FALSE;
+		$config['overwrite']			= TRUE;
+		$config['detect_mime']			= TRUE;
+        $config['file_name']            = "$filename";
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+			$data['error']    = strip_tags($this->upload->display_errors());
+			$data['token']    = $this->security->get_csrf_hash();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+            return $res;
+		} else {
+			$dataFile 			= $this->upload->data();
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $file_tmp = $_FILES['file']['tmp_name'];
+            $data_file = file_get_contents($file_tmp);
+            $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
+            $path = substr($target_dir,2);
+         
+            $dataInsert['id_m_user']     = $this->input->post('id_m_user');
+            $dataInsert['id_unitkerja']      = $this->input->post('id_unitkerja');
+            $dataInsert['tanggal_mulai']      = $this->input->post('tanggal_mulai');
+            $dataInsert['tanggal_akhir']      = $this->input->post('tanggal_akhir');
+            $dataInsert['file_sk']         = $filename;
+            $dataInsert['created_by']      = $this->general_library->getId();
+            $dataInsert['updated_by']      = $this->general_library->getId();
+  
+            $result = $this->db->insert('t_plt_kepsek', $dataInsert);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+    if($this->db->trans_status() == FALSE){
+        $this->db->trans_rollback();
+        $rs['code'] = 1;
+        $rs['message'] = 'Terjadi Kesalahan';
+    } else {
+        $this->db->trans_commit();
+    }
+
+    return $res;
+        
+	}
+
+       public function getPltKepsek()
+    {
+        $this->db->select('c.*, a.*, d.nm_unitkerja as sekolah_def, e.nm_unitkerja as sekolah_plt,  a.id as id_plt')
+        ->from('db_efort.t_plt_kepsek as a')
+        ->join('db_efort.m_user b', 'a.id_m_user  = b.id')
+        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+        ->join('db_pegawai.unitkerja e', 'a.id_unitkerja = e.id_unitkerja')
+        ->where('a.flag_active', 1)
+        ->order_by('a.id', 'desc');
+     
+        return $this->db->get()->result_array(); 
+    }
     
 
 }

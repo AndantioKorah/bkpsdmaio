@@ -243,6 +243,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>PLT/PLH
 					</a>
 				</li>
+
+				<li class="sidebar-item ">
+					<a title="PLT/TPLH" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/plt-kepsek')?>">
+						<i class="align-middle me-2 far fa-circle"></i>PLT Kepala Sekolah
+					</a>
+				</li>
 				
 				<?php } if($this->general_library->isHakAkses('lock_tpp') ||
 				$this->general_library->isProgrammer() ||

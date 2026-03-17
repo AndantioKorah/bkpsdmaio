@@ -199,9 +199,9 @@
 			2. Wakil Wali Kota Manado;<br>
 			3. Sekretaris Daerah Kota Manado;<br>
 			<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
-				4. Kepala Dinas Pendidikan dan Kebudayaan<br>
+				4. Kepala Dinas Pendidikan dan Kebudayaan Kota Manado<br>
 			<?php } else { ?>
-				4. Kepala <?= $profil_pegawai['nm_unitkerja'];?><br>
+				4. Kepala <?= $profil_pegawai['nm_unitkerja'];?> Kota Manado<br>
 			<?php } ?>
 			5. Arsip.
 			</td>

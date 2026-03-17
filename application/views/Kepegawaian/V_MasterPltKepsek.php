@@ -13,8 +13,8 @@
 
     <div class="form-group mb-2">
     <label for="exampleInputEmail1">Pegawai</label>
-    <select class="form-control select2-navy" id="selJabatan" name="id_m_user">
-                            <option >-- Pilih Pegawai --</option>
+    <select class="form-control select2-navy" id="selJabatan" name="id_m_user" required>
+                            <option value="">-- Pilih Pegawai --</option>
     </select>
   </div>
 
@@ -23,7 +23,7 @@
     <select class="form-control select2"  name="id_unitkerja" id="id_unitkerja" required>
                     <option value="" disabled selected>Pilih Unit Kerja</option>
                     <?php if($unit_kerja){ foreach($unit_kerja as $r){ ?>
-                        <option  value="<?=$r['id_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
+                        <option  value="<?=$r['id_unitkerja']?>|<?=$r['nm_unitkerja']?>"><?=$r['nm_unitkerja']?></option>
                     <?php } } ?>
     </select>
   </div>
@@ -31,16 +31,16 @@
 
   <div class="form-group mb-2">
     <label for="exampleInputEmail1">Tanggal Mulai</label>
-    <input autocomplete="off" type="text" class="form-control datepicker2" id="tanggal_mulai" name="tanggal_mulai">
+    <input autocomplete="off" type="text" class="form-control datepicker2" id="tanggal_mulai" name="tanggal_mulai" required>
   </div>
   <div class="form-group mb-2">
     <label for="exampleInputEmail1">Tanggal Selesai</label>
-    <input autocomplete="off" type="text" class="form-control datepicker2" id="tanggal_akhir" name="tanggal_akhir">
+    <input autocomplete="off" type="text" class="form-control datepicker2" id="tanggal_akhir" name="tanggal_akhir" required>
   </div>
 
    <div class="form-group mb-3">
     <label>File SK</label>
-    <input  class="form-control my-image-field" type="file" id="pdf_file_sk" name="file"   />
+    <input  class="form-control my-image-field" type="file" id="pdf_file_sk" name="file"   required/>
   </div>
 
  

@@ -17076,7 +17076,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
 	{
 
         $this->db->trans_begin();
-            
+
+               
+
         $target_dir						= './arsippltkepsek/';
         
         $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
@@ -17102,9 +17104,15 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $data_file = file_get_contents($file_tmp);
             $base64 = 'data:file/pdf;base64,' . base64_encode($data_file);
             $path = substr($target_dir,2);
+
+            $sekolah = explode("|", $this->input->post('id_unitkerja'));
+            $id_sekolah = $sekolah[0];
+            $nama_sekolah = $sekolah[1];
+
          
             $dataInsert['id_m_user']     = $this->input->post('id_m_user');
-            $dataInsert['id_unitkerja']      = $this->input->post('id_unitkerja');
+            $dataInsert['id_sekolah']      = $id_sekolah;
+            $dataInsert['nm_sekolah']      = $nama_sekolah;
             $dataInsert['tanggal_mulai']      = $this->input->post('tanggal_mulai');
             $dataInsert['tanggal_akhir']      = $this->input->post('tanggal_akhir');
             $dataInsert['file_sk']         = $filename;
@@ -17128,16 +17136,30 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
        public function getPltKepsek()
     {
-        $this->db->select('c.*, a.*, d.nm_unitkerja as sekolah_def, e.nm_unitkerja as sekolah_plt,  a.id as id_plt')
+        $this->db->select('c.*, a.*, d.nm_unitkerja as sekolah_def,  a.id as id_plt')
         ->from('db_efort.t_plt_kepsek as a')
         ->join('db_efort.m_user b', 'a.id_m_user  = b.id')
         ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
         ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
-        ->join('db_pegawai.unitkerja e', 'a.id_unitkerja = e.id_unitkerja')
+        // ->join('db_pegawai.unitkerja e', 'a.id_sekolah = e.id_unitkerja')
         ->where('a.flag_active', 1)
         ->order_by('a.id', 'desc');
-     
         return $this->db->get()->result_array(); 
+    }
+
+        public function getDataPltKepsek($id_user){
+            // dd(date('Y-m-d'));
+        $this->db->select('a.nm_sekolah, a.tanggal_mulai, a.tanggal_akhir')
+        ->from('db_efort.t_plt_kepsek as a')
+        ->join('db_efort.m_user b', 'a.id_m_user  = b.id')
+        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+        ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+        ->where('a.id_m_user', $id_user)
+        ->where('a.flag_active', 1)
+        ->where('a.tanggal_mulai <=', date('Y-m-d'))
+        ->where('a.tanggal_akhir >=', date('Y-m-d'))
+        ->order_by('a.id', 'desc');
+        return $this->db->get()->row_array(); 
     }
     
 

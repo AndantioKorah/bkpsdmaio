@@ -15,14 +15,27 @@ class M_Bacirita extends CI_Model
         $this->db->insert($tablename, $data);
     }
 
-    public function loadListKegiatan(){
-        return $this->db->select('a.*, c.nama_tipe_kegiatan, a.id as id_kegiatan')
+    public function loadListKegiatan($tab){
+        $res = null;
+        $data = $this->db->select('a.*, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_t_peserta_kegiatan')
                     ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
+                    ->join("db_bacirita.t_peserta_kegiatan d", "a.id = d.id_t_kegiatan AND d.flag_active = 1 AND d.id_m_user = '".$this->general_library->getId()."'", "left")
                     ->order_by('a.tanggal', 'desc')
                     ->where('a.flag_active', 1)
                     ->get()->result_array();
+        if($tab == "all"){
+            $res = $data;
+        } else if($tab == "personal"){
+            foreach($data as $d){
+                if($d['id_t_peserta_kegiatan']){
+                    $res[] = $d;
+                } 
+            }
+        }
+
+        return $res;
     }
 
     public function saveDataKegiatan($data){
@@ -436,7 +449,7 @@ class M_Bacirita extends CI_Model
 
     public function loadDetailWebinar($id){
         return $this->db->select('a.*, d.flag_absen, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_daftar, d.flag_generate_sertifikat,
-                    d.url_sertifikat as url_sertifikat_peserta')
+                    d.url_sertifikat as url_sertifikat_peserta, d.date_absen, d.date_generate_sertifikat')
                     ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')

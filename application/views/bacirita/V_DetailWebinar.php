@@ -11,9 +11,61 @@
 		color: black;
 		font-weight: bold;
 	}
+
+    .progress-container{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        gap: 100px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        align-items: center;
+    }
+
+    .path{
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .path_keterangan{
+        margin-top: 5px;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        line-height: 15px;
+    }
+
+    .sp_keterangan_date{
+        font-size: .65rem;
+        font-weight: 550;
+        font-style: italic;
+        color: grey;
+    }
+
+    .sp_keterangan{
+        font-size: .85rem;
+        font-weight: bold;
+    }
+
+    .txt_ditutup{
+        color: rgba(84, 84, 84, 0.7) !important;
+    }
+
+    .icon-after::after{
+        content: "";
+        display: block;
+        height: 2px;
+        width: 50%;
+        background: black;
+        position: relative;
+        left: 65%;
+        top: -70%;
+        transform: translateY(-50%);
+    }
 </style>
 <a href="<?=base_url('bacirita/list-webinar')?>">
-<button type="button" class="btn btn-sm btn-primary"> <i class="fa fa-arrow-left"></i> Kembali</button>
+    <button type="button" class="btn btn-sm btn-primary"> <i class="fa fa-arrow-left"></i> Kembali</button>
 </a>
 <div class="mt-3 card card-default">
 	<div class="card-body">
@@ -71,12 +123,156 @@
                 }
 
                 ?>
+                
+                <?php if($this->general_library->isProgrammer()){
+                    $jamWaktuSelesai = $webinar['tanggal']." ".$webinar['jam_selesai'];
+                    $flagHariSama = $webinar['tanggal'] == date('Y-m-d') ? 1 : 0;
+                ?>
+                    <div class="row">
+                        <div class="col-lg-12 progress-container">
+                            <div class="path">
+                                <?php if($webinar['id_daftar']){ ?> 
+                                    <!-- sudah daftar -->
+                                    <i class="fa fa-4x fa-user-plus text-success"></i>
+                                    <div class="path_keterangan">
+                                        <span class="sp_keterangan text-success">Sudah terdaftar </span>
+                                        <span class="sp_keterangan_date text-success">(<?=formatDateNamaBulanWithTime($webinar['created_date'])?>)</span>
+                                    </div>
+                                <?php } else { ?>
+                                    <!-- belum daftar -->
+                                     <?php if($flagHariSama == 1){ ?>
+                                        <!-- masih pada hari yang sama -->
+                                        <i class="fa fa-3x fa-user-plus text-warning"></i>
+                                        <div class="path_keterangan">
+                                            <span class="sp_keterangan">Belum terdaftar</span>
+                                        </div>
+                                        <!-- button daftar di sini -->
+                                    <?php } else { ?>
+                                        <!-- tidak pada hari yang sama -->
+                                        <i class="fa fa-2x fa-user-plus text-grey"></i>
+                                        <div class="path_keterangan">
+                                            <span class="sp_keterangan txt_ditutup">Pendaftaran ditutup</span>
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
+                            <div class="path">
+                                <?php if($webinar['flag_absen'] == 1){ ?>
+                                    <!-- sudah absen -->
+                                    <i class="fa fa-4x fa-file-signature text-success"></i>
+                                    <div class="path_keterangan">
+                                        <span class="sp_keterangan text-success">Sudah absen</span>
+                                        <span class="sp_keterangan_date text-success">(<?=formatDateNamaBulanWithTime($webinar['date_absen'])?>)</span>
+                                    </div>
+                                <?php } else { ?>
+                                    <!-- belum absen -->
+                                    <?php if($flagHariSama == 1){ ?>
+                                        <!-- hari yang sama -->
+                                        <?php if($webinar['flag_buka_absen'] == 1){ ?>
+                                            <!-- absen sudah dibuka -->
+                                            <?php if($webinar['id_daftar']){ ?>
+                                                <!-- sudah daftar -->
+                                                <i class="fa fa-3x fa-file-signature text-warning"></i>
+                                                <div class="path_keterangan">
+                                                    <span class="sp_keterangan text-warning">Belum absen</span>
+                                                    <!-- button absen di sini -->
+                                                </div>
+                                            <?php } else { ?>
+                                            <i class="fa fa-2x fa-file-signature text-grey"></i>
+                                                <!-- belum daftar -->
+                                                <div class="path_keterangan">
+                                                    <span class="sp_keterangan txt_ditutup">Belum terdaftar</span>
+                                                </div>
+                                            <?php } ?>
+                                        <?php } else { ?>
+                                            <!-- flag_buka_absen == 0 -->
+                                            <?php if(date('H:i:s') <= $webinar['jam_batas_absensi']){ ?>
+                                                <!-- masih dalam batas absen -->
+                                                <i class="fa fa-2x fa-file-signature text-grey"></i>
+                                                <div class="path_keterangan">
+                                                    <span class="sp_keterangan">Absen belum dibuka</span>
+                                                </div>
+                                            <?php } else { ?>
+                                                <i class="fa fa-2x fa-file-signature text-grey"></i>
+                                                <div class="path_keterangan">
+                                                    <span class="sp_keterangan txt_ditutup">Absen sudah ditutup</span>
+                                                </div>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <!-- beda hari -->
+                                        <?php if(date('Y-m-d') < $webinar['tanggal']){ ?>
+                                            <!-- belum harinya -->
+                                            <i class="fa fa-2x fa-file-signature text-grey"></i>
+                                            <div class="path_keterangan">
+                                                <span class="sp_keterangan">Absen belum dibuka</span>
+                                            </div>
+                                        <?php } else { ?>
+                                            <!-- lewat hari -->
+                                            <i class="fa fa-2x fa-file-signature text-grey"></i>
+                                            <div class="path_keterangan">
+                                                <span class="sp_keterangan txt_ditutup">Absen sudah ditutup</span>
+                                            </div>
+                                        <?php } ?>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
+                            <div class="path">
+                                <?php if($webinar['flag_download_sertifikat'] == 1){ ?>
+                                    <!-- generate sertifikat sudah dibuka -->
+                                    <?php if($webinar['flag_generate_sertifikat']){ ?>
+                                        <!-- sertifikat sudah digenerate -->
+                                        <i class="fa fa-4x fa-certificate text-success"></i>
+                                        <div class="path_keterangan">
+                                            <span class="sp_keterangan text-success">Sertifikat sudah tersedia</span>
+                                            <span class="sp_keterangan_date text-success">(<?=formatDateNamaBulanWithTime($webinar['date_generate_sertifikat'])?>)</span>
+                                        </div>
+                                    <?php } else { ?>
+                                        <!-- sertifikat belum digenerate -->
+                                        <?php if($webinar['flag_absen']){ ?>
+                                            <!-- sudah absen -->
+                                            <i class="fa fa-3x fa-certificate text-warning"></i>
+                                            <div class="path_keterangan">
+                                                <!-- button generate sertifikat di sini -->
+                                                <span class="sp_keterangan text-warning">Sertifikat belum tersedia</span>
+                                            </div>
+                                        <?php } else { ?>
+                                            <!-- belum absen -->
+                                            <i class="fa fa-2x fa-certificate text-grey"></i>
+                                            <div class="path_keterangan">
+                                                <span class="sp_keterangan txt_ditutup">Belum absen</span>
+                                            </div>
+                                        <?php } ?>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <i class="fa fa-2x fa-certificate text-grey"></i>
+                                    <div class="path_keterangan">
+                                        <span class="sp_keterangan text-grey">Sertifikat dalam proses</span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                            <div class="path">
+                                <?php if($webinar['url_sertifikat_peserta']){ ?>
+                                    <!-- sertifikat sudah dapat didownload -->
+                                    <i class="fa fa-4x fa-upload text-success"></i>
+                                    <div class="path_keterangan">
+                                        <span class="sp_keterangan text-success">Terupload di Siladen</span>
+                                    </div>
+                                <?php } else { ?>
+                                    <i class="fa fa-2x fa-upload text-grey"></i>
+                                    <div class="path_keterangan">
+                                        <span class="sp_keterangan txt_ditutup">Sertifikat tidak tersedia</span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
 
                 <?php if($webinar['id_daftar'] == null) { ?>
                     <button id="btn_daftar" onclick= <?=$onclick;?>  type="button" class="btn mt-3 <?=$badgeStatusDaftar;?>"> <?=$statusDaftar;?></button>
                 <?php } else { ?>
                     <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda sudah terdaftar</span><br>
-                    <!-- <button type="button" class="btn mt-3 btn-info"> Anda Sudah Terdaftar</button><br> -->
                     <?php if($webinar['tanggal'] == date('Y-m-d')){ ?>
                         <?php if($webinar['flag_absen'] == 0) { ?>
                             <button onclick= "presensiKegiatan()" style="<?=$stylePresensi;?>"  type="button" class="btn mt-3 btn-dark"> Presensi Seminar</button>
@@ -89,10 +285,6 @@
                             if(date('Y-m-d H:i:s') > $jamWaktuSelesai){ ?>
                             <br>
                             <?php if($webinar['flag_download_sertifikat'] == 1
-                            // && (
-                                // $this->general_library->isProgrammer() ||
-                                // $this->general_library->getIdUnitKerjaPegawai() == ID_UNITKERJA_BKPSDM
-                            // )
                             ){ ?>
                                 <button style="display: <?=$webinar['flag_generate_sertifikat'] == 0 ? 'block' : 'none'?>" id="btn_generate_sertifikat" type="button" class="btn mt-3 btn-primary">Generate Sertifikat</button>
                                 <button style="display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" id="btn_download_sertifikat" type="button" class="btn mt-3 btn-primary"><i class="fa fa-download"></i> Download Sertifikat</button><br>
@@ -138,7 +330,7 @@
 	</div>
 </div>
 <div class="modal fade" id="modal_detail_kegiatan" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" 
-  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div id="modal-dialog" class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -151,7 +343,7 @@
             </div>
         </div>
     </div>
-  </div>
+</div>
 <script>
 	$(function(){
 		$('#tipe_kegiatan').select2()

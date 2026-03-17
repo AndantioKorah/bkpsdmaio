@@ -5,7 +5,7 @@
 		-moz-box-shadow: 4px 4px 7px 0px rgba(0,0,0,0.75);
 		border: 1px solid rgba(0,0,0,0.75);
 		border-radius: 10px;
-		height: 600px;
+		/* height: 450px; */
 	}
 
 	.img-kegiatan{
@@ -24,16 +24,16 @@
 		font-size: 1rem !important;
 		display: -webkit-box; /* Required for older browser compatibility */
 		-webkit-box-orient: vertical; /* Required for older browser compatibility */
-		-webkit-line-clamp: 8; /* Limits text to 3 lines */
+		-webkit-line-clamp: 5; /* Limits text to 3 lines */
 		overflow: hidden;
 		text-overflow: ellipsis; /* Ensures the ellipsis appears */
 	}
 
 	.div-button{
-		position: absolute;
+		/* position: absolute;
 		bottom: 0;
 		right: 0;
-		margin-bottom: 10px;
+		margin-bottom: 10px; */
 	}
 
 	.lbl-detail-kegiatan{
@@ -43,7 +43,14 @@
 		font-size: .7rem;
 	}
 
-	.card-list-kegiatan:hover{
+	/* .card-list-kegiatan:hover{
+		cursor: pointer;
+		border-color: var(--primary-color);
+		border: 5px solid var(--primary-color);
+		transition: .2s;
+	} */
+
+	.card-list-kegiatan-hover:hover{
 		cursor: pointer;
 		/* background-color: grey; */
 		border-color: var(--primary-color);
@@ -86,16 +93,16 @@
 			}
 
 			$badgeStatusKegiatan = "badge-warning";
-			$statusKegiatan = "Belum dimulai";
+			$statusKegiatan = "Coming Soon";
 			
 			if($rs['tanggal'] == date('Y-m-d')){ 
 				if($rs['jam_mulai'] > date('H:i:s')) {
 					$badgeStatusKegiatan = "badge-warning";
-					$statusKegiatan = "Belum dimulai";
+					// $statusKegiatan = "Belum dimulai";
 				}
 				if($rs['jam_mulai'] < date('H:i:s')) {
 					$badgeStatusKegiatan = "badge-warning";
-					$statusKegiatan = "Telah dimulai";
+					$statusKegiatan = "Sedang Berlangsung";
 				} 
 				if(date('H:i:s') > $rs['jam_selesai']) {
 					$badgeStatusKegiatan = "badge-success";
@@ -108,7 +115,11 @@
 			}
 		?>
 			<div class="col-lg-3 col-md-3 col-sm-3 p-3">
-				<div class="card card-list-kegiatan">
+				<?php if($rs['id_t_peserta_kegiatan'] || date('Y-m-d') <= $rs['tanggal']){ ?>
+					<div class="card card-list-kegiatan card-list-kegiatan-hover" onclick="openDetailWebinar('<?=$rs['link_url']?>')">
+				<?php } else { ?>
+					<div class="card card-list-kegiatan">
+				<?php } ?>
 					<a class="badge-kegiatan badge badge-sm <?=$badgeKegiatan?>"><?=$rs['nama_tipe_kegiatan']?></a>
 					<a class="badge-status-webinar badge badge-sm <?=$badgeStatusKegiatan?>"><?=$statusKegiatan?></a>
 
@@ -127,8 +138,12 @@
 										</span>
 									</div>
 									<div class="col-lg-6 text-right">
-										<a href="<?=base_url('bacirita/detail-webinar/')?><?=$rs['link_url']?>" 
-										class="text-right btn btn-navy">Detail</a>
+										<?php if($rs['id_t_peserta_kegiatan'] || date('Y-m-d') <= $rs['tanggal']){ ?>
+											<a href="<?=base_url('bacirita/detail-webinar/')?><?=$rs['link_url']?>" 
+												class="text-right btn btn-navy">Detail</a>
+										<?php } else { ?>
+											<!-- <span class="text-dark fw-bold" style="font-style: italic;">Selesai</span> -->
+										<?php } ?>
 									</div>
 								</div>
 							</div>
@@ -147,5 +162,9 @@
 		$('#modal_detail_kegiatan_content').load('<?=base_url("bacirita/C_Bacirita/modalLoadDetailKegiatan/")?>'+id, function(){
 			$('#loader').hide()
 		})
+	}
+
+	function openDetailWebinar(url){
+		window.location.href = '<?=base_url('bacirita/detail-webinar/')?>'+url
 	}
 </script>

@@ -11,14 +11,31 @@
 		color: black;
 		font-weight: bold;
 	}
+
+	.tab-webinar{
+		font-size: .85rem;
+		border: 1px solid var(--primary-color);
+		padding: 5px;
+		border-radius: 10px;
+		background-color: ghostwhite;
+		font-weight: 600;
+		color: var(--primary-color);
+		cursor: pointer;
+	}
+
+	.tab-webinar-active{
+		background-color: var(--primary-color) !important;
+		font-weight: bold !important;
+		color: ghostwhite !important;
+	}
 </style>
 
 <div class="mt-3 card card-default">
 	<div class="card-body">
 		<div class="row">
 			<div class="col-lg-12">
-				<h4><span class="badge badge-dark">Semua Webinar</span></h4>
-				
+				<span id="tab-webinar-all" onclick="filterWebinar('all')" class="tab-webinar tab-webinar-active">Semua Webinar</span>
+				<span id="tab-webinar-personal" onclick="filterWebinar('personal')" class="tab-webinar">Webinar Saya</span>
 				<hr>
 			</div>
 			<div id="div_list_kegiatan" class="col-lg-12">
@@ -45,8 +62,14 @@
 	$(function(){
 		$('#tipe_kegiatan').select2()
 		refreshDatePicker()
-		loadListKegiatan()
+		loadListKegiatan('all')
 	})
+
+	function filterWebinar(tab){
+		$('.tab-webinar').removeClass('tab-webinar-active')
+		$('#tab-webinar-'+tab).addClass('tab-webinar-active')
+		loadListKegiatan(tab)
+	}
 
 	function refreshDatePicker(){
 		$('#tanggal').datepicker({
@@ -73,10 +96,10 @@
 		})
 	}
 
-	function loadListKegiatan(){
-		$('#div_list_kegiatan').html()
+	function loadListKegiatan(tab){
+		$('#div_list_kegiatan').html('')
 		$('#div_list_kegiatan').append(divLoaderNavy)
-		$('#div_list_kegiatan').load('<?=base_url("bacirita/C_Bacirita/loadListWebinar")?>', function(){
+		$('#div_list_kegiatan').load('<?=base_url("bacirita/C_Bacirita/loadListWebinar/")?>'+tab, function(){
 			$('#loader').hide()
 		})
 	}

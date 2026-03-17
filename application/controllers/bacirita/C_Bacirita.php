@@ -41,8 +41,8 @@ class C_Bacirita extends CI_Controller
         render('bacirita/V_home', null, null, null);
     }
 
-     public function loadListWebinar(){
-        $data['result'] = $this->bacirita->loadListKegiatan();
+     public function loadListWebinar($tab){
+        $data['result'] = $this->bacirita->loadListKegiatan($tab);
         $this->load->view('bacirita/V_ListWebinar', $data);
     }
 

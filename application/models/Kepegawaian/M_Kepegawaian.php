@@ -4159,6 +4159,7 @@ public function getAllPelanggaranByNip($nip){
                     $update['subJabatanId'] = getDefaultSubJabatan($data['kel_jabatan_id']);
                 }
             }
+            // dd($id_jabatan_siasn);
             $ws = $this->siasnlib->saveJabatan($update);
             // dd($ws);
             $rs = json_decode($ws['data'], true);
@@ -4171,17 +4172,29 @@ public function getAllPelanggaranByNip($nip){
                     'id_riwayat' => $id_jabatan_siasn,
                     'id_ref_dokumen' => 872,
                     'file' => new CURLFile ($url)
+                    // 'file' => base_url($url)
                 ];
+
+                $this->db->where('id', $data['id'])
+                            ->update('db_pegawai.pegjabatan', [
+                                'meta_data_siasn' => json_encode($ws),
+                                'id_siasn' => $id_jabatan_siasn,
+                                // 'data_upload_dok' => json_encode($request),
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+                
+                // karena proses sinkron terlalu lama, setelah berhasil, input ke cron untuk upload dokumen
+                // ==== cut here for cron upload docs ==== 
+
                 // dd($request);
                 $reqUploadDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
-
                 $updatedJabatan = $this->siasnlib->getJabatanByIdRiwayat($id_jabatan_siasn);
                 if($updatedJabatan['code'] == 0){
                     $newMeta = json_decode($updatedJabatan['data'], true);
                     $this->db->where('id', $data['id'])
                             ->update('db_pegawai.pegjabatan', [
                                 'meta_data_siasn' => json_encode($newMeta['data']),
-                                'id_siasn' => $newMeta['data']['id'],
+                                // 'id_siasn' => $newMeta['data']['id'],
                                 'id_unor_siasn' => $newMeta['data']['unorId'],
                                 'gambarsk' => $data['gambarsk'],
                                 // 'gambarsk' => isset($newMeta['data']['path'][872]['dok_uri']) ? $newMeta['data']['path'][872]['dok_uri'] : null,
@@ -4195,6 +4208,40 @@ public function getAllPelanggaranByNip($nip){
 
             return $ws;
         }
+        
+        // belum jadi pake karena file tidak terbaca saat upload
+        // public function cronUploadDokRwSiasn($data){
+        //     $request = json_decode($data['data_upload_dok'], true);
+        //     $reqUploadDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
+        //     if($reqUploadDokumen['code'] != 1){
+        //         $updatedJabatan = $this->siasnlib->getJabatanByIdRiwayat($data['id_siasn']);
+        //         if($updatedJabatan['code'] == 0){
+        //             $newMeta = json_decode($updatedJabatan['data'], true);
+        //             $this->db->where('id', $data['id'])
+        //                     ->update('db_pegawai.pegjabatan', [
+        //                         'meta_data_siasn' => json_encode($newMeta['data']),
+        //                         'id_siasn' => $newMeta['data']['id'],
+        //                         'id_unor_siasn' => $newMeta['data']['unorId'],
+        //                         'gambarsk' => $data['gambarsk'],
+        //                         'flag_upload_dok' => 1,
+        //                         'log_sync' => json_encode($reqUploadDokumen),
+        //                         'temp_count_upload_dok' => intval($data['temp_count_upload_dok']+=1)
+        //                     ]);
+        //         } else {
+        //             $this->db->where('id', $data['id'])
+        //                     ->update('db_pegawai.pegjabatan', [
+        //                         'log_sync' => json_encode($reqUploadDokumen),
+        //                         'temp_count_upload_dok' => intval($data['temp_count_upload_dok']+=1)
+        //                     ]);
+        //         }
+        //     } else {
+        //         $this->db->where('id', $data['id'])
+        //                     ->update('db_pegawai.pegjabatan', [
+        //                         'log_sync' => json_encode($reqUploadDokumen),
+        //                         'temp_count_upload_dok' => intval($data['temp_count_upload_dok']+=1)
+        //                     ]);
+        //     }
+        // }
 
         function getJabatanPegawaiEdit($id){
             $this->db->select('d.jenis_jabatan,c.id_unitkerja,b.skpd as unitkerja_id,c.eselon,c.pejabat,c.jenisjabatan, b.id_pns_siasn, c.id_siasn,

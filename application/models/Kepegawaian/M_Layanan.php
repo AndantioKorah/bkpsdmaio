@@ -2513,20 +2513,27 @@ class M_Layanan extends CI_Model
                 }
             }
         }
+        // dd(json_encode($result));
         return $result;
     }
 
     public function getListPegawaiSuratTugasEvent($unitkerja){
-        $listUnitKerja = null;
-        foreach($unitkerja as $u){
-            $listUnitKerja[] = $u['id_unitkerja'];
+        $listUnitKerja = $this->getListUnitKerjaBerjenjang();
+        $listUk = null;
+        foreach($listUnitKerja as $u){
+            $listUk[] = $u['id_unitkerja'];
         }
+        // $listUnitKerja = null;
+        // foreach($unitkerja as $u){
+        //     $listUnitKerja[] = $u['id_unitkerja'];
+        // }
 
         $this->db->select('a.*, b.nama_jabatan, c.nm_pangkat, d.id as id_m_user')
                 ->from('db_pegawai.pegawai a')
                 ->join('db_pegawai.jabatan b', 'a.jabatan = b.id_jabatanpeg')
                 ->join('db_pegawai.pangkat c', 'a.pangkat = c.id_pangkat')
                 ->join('m_user d', 'a.nipbaru_ws = d.username')
+                ->join('db_pegawai.unitkerja e', 'a.skpd = e.id_unitkerja')
                 // ->where_in('a.skpd', $listUnitKerja)
                 ->order_by('b.eselon', 'asc')
                 // ->order_by('c.id_pangkat', 'desc')
@@ -2534,10 +2541,15 @@ class M_Layanan extends CI_Model
                 ->where('a.id_m_status_pegawai', 1)
                 ->where('d.flag_active', 1);
                 // ->get()->result_array();
-        if(!$this->general_library->isProgrammer() &&
-            !$this->general_library->getBidangUser() == ID_BIDANG_PEKIN
-        ){ //jika bukan kondisi, tambahkan filter cari berdasarkan SKPD
-            $this->db->where_in('a.skpd', $listUnitKerja);
+        // if(!$this->general_library->isProgrammer() &&
+        //     !$this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+        // ){ //jika bukan kondisi, tambahkan filter cari berdasarkan SKPD
+        //     $this->db->where_in('a.skpd', $listUnitKerja);
+        // }
+        if(!$this->general_library->isProgrammer()
+            && !$this->general_library->isAdminAplikasi() 
+            && $this->general_library->getBidangUser() != ID_BIDANG_PEKIN){
+            $this->db->where_in('e.id_unitkerja', $listUk);
         }
 
         return $this->db->get()->result_array();
@@ -2743,7 +2755,7 @@ class M_Layanan extends CI_Model
         foreach($unitkerja as $u){
             $listUk[] = $u['id_unitkerja'];
         }
-
+        
         $this->db->select('a.*, b.judul, b.tgl, c.nama as inputer, d.nm_unitkerja')
                     ->from('t_pegawai_event a')
                     ->join('db_sip.event b', 'a.id_event = b.id')

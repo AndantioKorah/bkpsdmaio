@@ -22,9 +22,7 @@ class M_Bacirita extends CI_Model
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
                     ->order_by('a.tanggal', 'desc')
                     ->where('a.flag_active', 1);
-                    // if(!$this->general_library->isProgrammer()) {
-                    // $this->db->where('a.tanggal >=', date('Y-m-d'));
-                    // }
+                   
                     if($id == 0){
                         $this->db->where('a.tanggal >=', date('Y-m-d'));
                     }

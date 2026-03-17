@@ -172,7 +172,7 @@
 	$(function(){
 		$('#tipe_kegiatan').select2()
 		refreshDatePicker()
-		loadListKegiatan()
+		loadListKegiatan('1')
 	})
 
 	function refreshDatePicker(){
@@ -200,10 +200,10 @@
 		})
 	}
 
-	function loadListKegiatan(){
+	function loadListKegiatan(id){
 		$('#div_list_kegiatan').html()
 		$('#div_list_kegiatan').append(divLoaderNavy)
-		$('#div_list_kegiatan').load('<?=base_url("bacirita/C_Bacirita/loadListKegiatan")?>', function(){
+		$('#div_list_kegiatan').load('<?=base_url("bacirita/C_Bacirita/loadListKegiatan/")?>'+id, function(){
 			$('#loader').hide()
 		})
 	}

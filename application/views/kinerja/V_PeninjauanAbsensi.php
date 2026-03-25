@@ -575,9 +575,22 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
               success: function(ress){
                 if(tanggal != '2026-03-16'){
                 if(ress == 1){
-                $('#btn_upload').hide()
-                $('#ket').show()
-                $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+                  // <?php  if( $this->general_library->getIdUnitKerjaPegawai() == '5009001'){ ?>
+                  // $('#jenis_absensi').val('')
+                  // document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+                  //  if (opt.value == "2") {
+                  //     opt.disabled = true;
+                  //   }
+                  //  });
+                  // <?php } else { ?>
+                  //  $('#btn_upload').hide()
+                  //  $('#ket').show()
+                  //  $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+                  // <?php } ?>
+
+                   $('#btn_upload').hide()
+                   $('#ket').show()
+                   $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
                 } else {
                 $('#btn_upload').show()
                 $('#ket').hide()
@@ -610,20 +623,21 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
               }
             });
 
-        if(tanggal == "2025-11-28"){
-           $('#jenis_absensi').val('')
-          document.querySelectorAll("#jenis_absensi option").forEach(opt => {
-            if (opt.value == "1") {
-                opt.disabled = true;
-            }
-        });
-        } else {
-           document.querySelectorAll("#jenis_absensi option").forEach(opt => {
-            if (opt.value == "1") {
-                opt.disabled = false;
-            }
-        });
-        }
+        // if(tanggal == "2026-03-24"){
+        //    $('#jenis_absensi').val('')
+        //   document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+        //     if (opt.value == "1") {
+        //         opt.disabled = true;
+        //     }
+        // });
+        // } else {
+        //    document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+        //     if (opt.value == "1") {
+        //         opt.disabled = false;
+        //     }
+        // });
+        // }
+
         })
 
 

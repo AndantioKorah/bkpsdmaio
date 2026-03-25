@@ -628,6 +628,7 @@ class C_Simata extends CI_Controller
     {
         $data['periode'] = $this->input->post();
         $data['list_pegawai'] = $this->simata->loadPegawaiPenilaianSejawat($this->input->post());
+        // dd($data['list_pegawai']);
         $this->load->view('simata/V_PenilaianSejawatItem', $data);
     }
 

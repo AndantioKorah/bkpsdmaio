@@ -15683,11 +15683,11 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
        public function updateGajiBerkalaBerikut()
     {
-        $this->db->select('a.id_peg,a.statuspeg,a.tmtgjberkala,a.pangkat')
-            ->from('db_pegawai.pegawai a')
+        $this->db->select('a.id_peg,a.statuspeg,a.tmtgjberkala,a.pangkat,a.tmtcpns')
+            ->from('db_pegawai.pegawaix a')
             ->where('a.tmtgjberkalaberikut is null')
             ->where('a.id_m_status_pegawai', 1)
-            ->where_in('a.statuspeg', [1,2,3])
+            ->where_in('a.statuspeg', [3])
             ->limit(1000);
             
         $pegawai = $this->db->get()->result_array();

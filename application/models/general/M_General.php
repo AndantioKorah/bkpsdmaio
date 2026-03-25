@@ -506,13 +506,13 @@
                 }
             }
 
-            $this->db->select('a.jabatan,a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
+            $this->db->select('a.statuspeg,a.jabatan,a.nipbaru_ws, a.nama, a.gelar1, a.gelar2, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan,
                     d.nm_pangkat, a.tgllahir, a.jk, c.eselon, d.id_pangkat, a.nipbaru, c.jenis_jabatan')
                     ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
                     ->join('db_pegawai.pangkat d', 'a.pangkat = d.id_pangkat', 'left')
-                    ->where('a.statuspeg', 2)
+                    ->where_in('a.statuspeg', [2,3])
                     // ->where_in('id_m_status_pegawai', [1,2])
                     ->group_by('a.nipbaru_ws')
                     ->order_by('a.nipbaru_ws', 'asc');

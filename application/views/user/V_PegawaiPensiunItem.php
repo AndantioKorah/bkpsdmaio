@@ -43,6 +43,17 @@
                 </thead>
                 <tbody>
                     <?php $no = 1; foreach($result as $rs){ ?>
+                        <?php
+                                        $badge_status = 'badge-cpns';
+                                        if($rs['statuspeg'] == 2){
+                                        $badge_status = 'badge-pns';
+                                        } else if($rs['statuspeg'] == 3){
+                                        $badge_status = 'badge-pppk';
+                                        } else if($rs['statuspeg'] == 6){
+                                        $badge_status = 'badge-pppk-pw';
+                                        }
+                                    ?>
+                                    
                         <?php if(isset($list_checklist_pensiun[$rs['nipbaru_ws']])){ ?>
                             <tr style="background-color: <?=$list_checklist_pensiun[$rs['nipbaru_ws']]['bg-color']?>;
                                 color: <?=$list_checklist_pensiun[$rs['nipbaru_ws']]['txt-color']?> !important; font-weight: bold;">
@@ -54,7 +65,8 @@
                                 <span class="text-nama"><?=getNamaPegawaiFull($rs)?></span><br>
                                 <span class="text-small"><?=($rs['nipbaru_ws'])?></span><br>
                                 <span class="text-small fw-bold"><?=($rs['nama_jabatan'])?></span><br>
-                                <span class="text-small"><?=($rs['nm_pangkat'])?></span>
+                                <span class="text-small"><?=($rs['nm_pangkat'])?></span><br>
+                                 <span class="badge <?=$badge_status?>"> <?php  if($rs['statuspeg'] == 1) echo "CPNS"; else if($rs['statuspeg'] == 2) echo "PNS"; else if($rs['statuspeg'] == 3) echo "PPPK"; else echo "PPPK Paruh Waktu";?> </span>
                             </td>
                             <td class="text-center"><?=($rs['eselon'])?></td>
                             <td class="text-center"><?=($rs['jenis_jabatan'])?></td>

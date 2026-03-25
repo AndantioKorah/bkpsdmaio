@@ -453,6 +453,7 @@ class C_User extends CI_Controller
 
     public function getListPegawaiPensiunByYear($flag_welcome_view = 0){
         $data['result'] = $this->m_general->getListPegawaiPensiunByYear($this->input->post());
+       
         if($flag_welcome_view == 0){
             $temp['result'] = $data['result'];
             $temp['param'] = $this->input->post();
@@ -461,6 +462,8 @@ class C_User extends CI_Controller
             $this->session->set_userdata('data_pensiun', $temp);
             $this->load->view('user/V_PegawaiPensiunItem', $data);
         } else {
+            $data['list_checklist_pensiun'] = $data['result']['list_checklist_pensiun'];
+            unset($data['result']['list_checklist_pensiun']);
             $count['total'] = $data['result'] ? count($data['result']) : 0;
             echo json_encode($count);
         }

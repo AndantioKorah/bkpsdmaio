@@ -51,7 +51,9 @@
                 </tr>
             </table>
             <div class="text-right float-right">
-                <?php if(date('Y-m-d') <= $lp['max_change_date']){ ?>
+                <?php if($this->general_library->isProgrammer()
+    			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
+                || date('Y-m-d') <= $lp['max_change_date']){ ?>
                     <button id="btn_delete_pegawai_<?=$lp['id_t_pegawai_event_detail']?>"
                         onclick="deletePegawai('<?=$lp['id_t_pegawai_event_detail']?>')" class="btn btn-danger btn-sm">
                         <i class="fa fa-trash"></i>
@@ -77,8 +79,13 @@
                     method: 'post',
                     data: null,
                     success: function(data){
-                        successtoast('Data berhasil dihapus')
-                        loadListPegawaiSTEvent()
+                        let rs = JSON.parse(data)
+                        if(rs.code == 0){
+                            successtoast('Data berhasil dihapus')
+                            loadListPegawaiSTEvent()
+                        } else {
+                            errortoast(rs.message)
+                        }
                     }, error: function(e){
                         errortoast('Terjadi Kesalahan')
                     }

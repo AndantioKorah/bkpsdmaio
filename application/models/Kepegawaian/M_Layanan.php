@@ -2833,7 +2833,9 @@ class M_Layanan extends CI_Model
                             ->where('b.id', $id)
                             ->get()->row_array();
 
-        if(date('Y-m-d') > $dataEvent['max_change_date']){
+        if(!$this->general_library->isProgrammer()
+            && $this->general_library->getBidangUser() != ID_BIDANG_PEKIN
+            && date('Y-m-d') <= $dataEvent['max_change_date']){
             $res['code'] = 1;
             $res['message'] = "Data tidak dapat diubah karena sudah melewati Batas Waktu Edit yaitu ".formatDateNamaBulan($dataEvent['max_change_date']);
         } else {

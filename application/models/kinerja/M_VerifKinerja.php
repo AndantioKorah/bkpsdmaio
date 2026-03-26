@@ -78,8 +78,8 @@
                     ->join('db_pegawai.pegawai e', 'a.username = e.nipbaru_ws')
                     // ->where_in('d.role_name', $list_role)
                     ->where('a.id !=', $this->general_library->getId())
-                    ->where('a.flag_active', 1)
-                    ->where('c.flag_active', 1);
+                    ->where('a.flag_active', 1);
+                    // ->where('c.flag_active', 1);
 
                     if(stringStartWith("Bagian", $this_user['nm_unitkerja']) || stringStartWith('Kecamatan', $this_user['nm_unitkerja'])){
                         $this->db->where('e.skpd', $this_user['skpd']);

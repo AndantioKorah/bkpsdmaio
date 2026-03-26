@@ -4586,7 +4586,6 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         public function loadPegawaiPenilaianSejawat($data){
             $result = null;
             $list_id_pegawai = $this->getListIdPegawaiForPenilaianSejawat($data);
-
             if($list_id_pegawai){
                 $result = $this->db->select('*, a.id as id_m_user,
                 (select berorientasi_pelayanan from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as berorientasi_pelayanan,
@@ -4604,7 +4603,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                 ->join('db_pegawai.unitkerja g', 'b.skpd = g.id_unitkerja')
                                 ->where_in('a.id', $list_id_pegawai)
                                 ->where('id_m_status_pegawai', 1)
-                                ->order_by('c.eselon', 'asc')
+                                ->order_by('c.kelas_jabatan', 'desc')
                                 ->order_by('g.id_unitkerja', 'asc')
                                 ->get()->result_array();
             }
@@ -5240,7 +5239,19 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                         $this->db->where('f.eselon', 'III A');
                     } else {
                         $this->db->where('e.skpd', $this_user['skpd']);
-                        $this->db->where_in('f.eselon', ['III A', 'III B']);
+
+                        $this->db->group_start(); 
+                        $this->db->where('f.kelas_jabatan', 9);
+                        $this->db->or_where_in('f.eselon', ['III A', 'III B','II B']);
+                        $this->db->group_end();
+                        
+                        $this->db->group_start();
+                        $this->db->or_where_in('f.eselon', ['III A', 'III B','II B']); 
+                        $this->db->or_where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                        $this->db->group_end();
+                       
+             
+
                     }
 
                     $list_pegawai = $this->db->get()->result_array();
@@ -5304,7 +5315,6 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                             ->group_by('a.id')
                                             ->get()->result_array();
             }  else if($eselon == 1){
-               
                 $this->db->select('*, id as id_m_user')
                 ->from('m_user a')
                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
@@ -5316,22 +5326,29 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 ->where('a.flag_active', 1)
                 ->where('b.statuspeg', 2);
                
+
+               
                 if($this_user['jenis_jabatan'] == 'JFT'){
                 if($this_user['kelas_jabatan'] == 8){
-                    $this->db->where_in('c.kelas_jabatan', [6,7,8]);
+                    $this->db->where_in('c.kelas_jabatan', [6,7,8,9]);
                     $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
                 } else if($this_user['kelas_jabatan'] == 9){
-                    $this->db->group_start();
-                    $this->db->where('c.kelas_jabatan', 9);
-                    $this->db->group_end();
+                    // $this->db->group_start();
+                    // $this->db->where('c.kelas_jabatan', 9);
+                    $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    $this->db->where_in('c.kelas_jabatan', [6,7,8,9,11]);
+                    $this->db->order_by('c.kelas_jabatan', 'DESC');
+                    // $this->db->group_end();
                 }
-                } else {
+                } 
+                else {
                    
                     if(!stringStartWith('Kelurahan', $this_user['nm_unitkerja'])){ 
                         $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
                         $this->db->where_in('c.kelas_jabatan', [6,7,8]);
                     } else {
                         $this->db->where_in('c.kelas_jabatan', [7]);
+                        
 
                     }
                   

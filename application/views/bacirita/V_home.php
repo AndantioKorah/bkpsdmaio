@@ -104,38 +104,5 @@
 		})
 	}
 
-	$('#form_input_kegiatan').on('submit', function(e){
-		e.preventDefault()
-		// $('#btn_simpan').hide()
-		// $('#btn_simpan_loading').show()
-		var formvalue = $('#form_input_kegiatan');
-		var form_data = new FormData(formvalue[0]);
-
-		$.ajax({  
-        url: '<?=base_url("bacirita/C_Bacirita/saveDataKegiatan")?>',
-        method:"POST",  
-        data:form_data,  
-        contentType: false,  
-        cache: false,  
-        processData:false,  
-        // dataType: "json",
-           success: function(data){
-                let resp = JSON.parse(data)
-                if(resp.code == 0){
-                    $('#topik').val('')
-					$('#div_form_input_kegiatan').hide()
-					successtoast('Data berhasil disimpan')
-					loadListKegiatan()
-                } else {
-                    errortoast(resp.message)
-                }
-				$('#btn_simpan').show()
-				$('#btn_simpan_loading').hide()
-            }, error: function(e){
-                errortoast('Terjadi Kesalahan')
-				$('#btn_simpan').show()
-				$('#btn_simpan_loading').hide()
-            }  
-        });
-	})
+	
 </script>

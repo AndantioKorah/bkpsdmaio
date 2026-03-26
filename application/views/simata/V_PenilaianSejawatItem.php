@@ -79,7 +79,7 @@ label:has(~ label:hover)::after,
 label:has(~ label > :checked)::after,
 label:has(:checked)::after,
 label:hover::after {
-  background-color: var(--star-clr-active);
+  background-color: var(--star-clr-active); 
   scale: 1;
 }
 
@@ -98,7 +98,7 @@ hr.new5 {
 }
 
 h3 {
-  color: #fff;
+  color: #ffffff;
 }
       </style>
    
@@ -139,7 +139,7 @@ h3 {
                               data-adaptif="<?=$p['adaptif']?>"
                                 data-kolaboratif="<?=$p['kolaboratif']?>"
                     type="button" class="btn btn-primary btn-sm open-DetailPT" data-toggle="modal" data-target="#exampleModal">
-                        Beri Nilai
+                        Beri Nilai <i class="fa fa-edit"></i>
                         </button>
                     </td>
                   
@@ -168,20 +168,43 @@ h3 {
 <div   class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content" >
-      <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">
-      <img id="foto_mini"  class="avatar img-fluid rounded-circle" >
-      <span id="nama_pegawai"></span>
-        </h4>
+      <div class="modal-header" >
+
+      <!-- <div class="row" style="width:100%">
+        <div class="col-12">1</div>
+        <div class="col-12">2</div>
+      </div>
+       -->
+        <div class="row" style="width:100%">
+        <div class="col-12" >
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <!-- 022C22 -->
-      <div class="modal-body" style="background-color: #222e3c;">
+        
+      <div class="col-12" style="text-align: center;">
+        <img id="foto_mini"  class="rounded-circle" style="font-size: 120px;" width="80" height="80">
+        <h4 class="modal-title mt-2" id="exampleModalLabel">
+           <span id="nama_pegawai"></span>
+        </h4>
+      </div>
       
-       <form id="form_penilaian_sejawat" method="post" enctype="multipart/form-data" >
-       <input type="hidden" name="id_pegawai" id="id_pegawai">         
+       </div>
+         
+        <!-- <h4 class="modal-title" id="exampleModalLabel"><br>
+      <img id="foto_mini"  class="avatar img-fluid rounded-circle" >
+      <span id="nama_pegawai"></span>
+        </h4> -->
+       
+      </div>
+
+      <div class="modal-body" style="background-color: #222e3c;align-items: center;">
+      <!-- <div class="modal-body" style="background-color: #ffffff;"> -->
+
+      
+       <form id="form_penilaian_sejawat" method="post" enctype="multipart/form-data" style="align-items: center;">
+       <input type="hidden" name="id_pegawai" id="id_pegawai">    
+       <center>    
        <h3 >Berorientasi Pelayanan</h3>
        <div class="rating">
         <label for="radio-1" aria-label="Rating 1"><input type="radio" name="berorientasi_pelayanan" id="radio-1" class="sr-only" value="20"></label>
@@ -191,7 +214,6 @@ h3 {
         <label for="radio-5" aria-label="Rating 5"><input type="radio" name="berorientasi_pelayanan" id="radio-5" class="sr-only" value="100"></label>
       </div>
       <hr class="new5">
-     
       <h3>Akuntabel</h3>
        <div class="rating">
         <label for="radio-12" aria-label="Rating2 1"><input type="radio" name="akuntabel" id="radio-12" class="sr-only" value="20"></label>
@@ -246,8 +268,8 @@ h3 {
         <label for="radio-57" aria-label="Rating7 5"><input type="radio" name="kolaboratif" id="radio-57" class="sr-only" value="100"></label>
       </div>
       <hr class="new5">
-
-        <button class="btn btn-warning" style="width:100%;border-color:#f59e0b;color:#000;">Simpan</button>
+      </center> 
+        <button class="btn btn-warning" id="btn_simpan" style="width:100%;border-color:#f59e0b;color:#000;">Simpan</button>
         </form>
       </div>
       <div class="modal-footer">
@@ -435,8 +457,8 @@ $('#table_list_pegawai').DataTable({
         var formvalue = $('#form_penilaian_sejawat');
         var form_data = new FormData(formvalue[0]);
 
-       
-      
+        document.getElementById('btn_simpan').disabled = true;
+        $('#btn_simpan').html('Simpan.. <i class="fas fa-spinner fa-spin"></i>')
 
         $.ajax({  
         url:"<?=base_url("simata/C_Simata/submitPenilaianSejawat")?>",
@@ -446,6 +468,7 @@ $('#table_list_pegawai').DataTable({
         cache: false,  
         processData:false,  
         success:function(res){ 
+           $('#btn_simpan').html('Simpan')
            location.reload()
                 
         }  

@@ -179,7 +179,7 @@ $("#checkBoxID").click(function() {
     <label>Target Kualitas (%)</label>
     <input  class="form-control customInput" type="text" id="target_kualitas" name="target_kualitas" value="100" readonly/>
   </div>
-  <div class="form-group">
+  <div class="form-group mt-2">
      <button class="btn btn-block btn-primary customButton" style="width:100%" id="btn_upload"><i class="fa fa-save"></i> SIMPAN</button>
  </div>
 </form> 

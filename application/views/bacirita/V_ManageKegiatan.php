@@ -172,7 +172,7 @@
 	$(function(){
 		$('#tipe_kegiatan').select2()
 		refreshDatePicker()
-		loadListKegiatan('1')
+		loadListKegiatan('all')
 	})
 
 	function refreshDatePicker(){

@@ -2791,7 +2791,7 @@ class M_Layanan extends CI_Model
     }
 
     public function getListPegawaiEventDetail($id){
-        return $this->db->select('a.id as id_t_pegawai_event_detail, b.*, c.nama_jabatan, d.nm_pangkat, f.max_change_date')
+        return $this->db->select('a.id as id_t_pegawai_event_detail, b.*, c.nama_jabatan, d.nm_pangkat, f.max_change_date, e.id_unitkerja')
                             ->from('t_pegawai_event_detail a')
                             ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                             ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')

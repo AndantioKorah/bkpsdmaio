@@ -1,4 +1,11 @@
-<?php if($list_pegawai){ foreach($list_pegawai as $lp){ ?>
+<?php if($list_pegawai){
+    if(!in_array($list_pegawai[0]['id_unitkerja'], [6000000, 7005000, 8000000, 8010000, 8020000])){ ?>
+    <div class="row">
+        <div class="col-lg-12 text-danger">
+            *pegawai yang sudah diinput akan muncul setelah kegiatan GIA
+        </div>
+    </div>
+<?php } else { foreach($list_pegawai as $lp){ ?>
     <style>
         .value_tabel{
             font-size: .8rem;
@@ -93,7 +100,7 @@
             }
         }
     </script>
-<?php } } else { ?>
+<?php } } } else { ?>
     <div class="text-center">
         <h5>Data Tidak Ditemukan</h5>
     </div>

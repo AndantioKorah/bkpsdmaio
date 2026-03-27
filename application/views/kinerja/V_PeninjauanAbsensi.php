@@ -323,6 +323,15 @@ function loadListPeninjauan(){
     if(tanggal == null || tanggal == ""){
       tanggal = "<?= date('Y-m-d');?>";
     }
+    date = new Date(tanggal); // A specific date
+
+// 2. Get the zero-based month index
+    bulan = date.getMonth()  + 1;
+    tahun = date.getFullYear();
+    max = 2;
+    if(tahun == '2026' && bulan == '3'){
+    max = 8;
+    }
   
     $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataPengajuanAbsensiPegawai",
@@ -334,7 +343,7 @@ function loadListPeninjauan(){
                 total = res[0].total_pengajuan - res[0].total_tolak
               <?php  if( $this->general_library->getId() != '000'){ ?>
                <?php  if( $this->general_library->getIdUnitKerjaPegawai() != '6170000'){ ?>
-                if(total >= 8) {
+                if(total >= max) {
                   $('#btn_upload').hide()
                   $('#ket').show()
                   $('#ket').html('Sudah ada 2 kali Pengajuan Absensi untuk bulan ini')
@@ -607,7 +616,7 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
               $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/checkMaxDate",
               method : "POST",
-              data : {date: tanggal, max : 6, operand : "plus"},
+              data : {date: tanggal, max : 3, operand : "plus"},
               async : false,
               dataType : 'json',
               success: function(res){

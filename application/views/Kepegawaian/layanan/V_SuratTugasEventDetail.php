@@ -83,15 +83,15 @@
                                             *diisi hanya jika ada perubahan Nama Pegawai pada Surat Tugas
                                         </span>
                                     </div>
-                                    <?php if(in_array($result['data']['id_unitkerja'], [6000000, 7005000, 8000000, 8010000, 8020000])){ ?>
+                                    <?php // if(in_array($result['data']['id_unitkerja'], [6000000, 7005000, 8000000, 8010000, 8020000])){ ?>
                                         <div class="col-lg-12 mt-2 text-right">
                                             <button id="btn_edit_data" type="submit" class="btn btn-navy"><i class="fa fa-save"></i> Simpan</button>
                                         </div>
-                                    <?php } else { ?>
-                                        <div class="col-lg-12 mt-2 text-danger">
+                                    <?php // } else { ?>
+                                        <!-- <div class="col-lg-12 mt-2 text-danger">
                                             *pegawai selain nakes dan guru yang masuk dalam WFA tetap mengikuti kegiatan GIA sesuai titik lokasi masing-masing unitkerja
-                                        </div>
-                                    <?php } ?>
+                                        </div> -->
+                                    <?php // } ?>
                                 </form>
                             <?php } else { ?>
                                 <span style="color:red; font-size: .7rem; font-weight: bold; font-style: italic;">

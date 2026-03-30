@@ -23,17 +23,21 @@
 			<div id="div_form_input_kegiatan" style="display:none;" class="col-lg-12">
 					 <form method="post" id="form_input_kegiatan" enctype="multipart/form-data" >
 					<div class="row">
-						<div class="col-lg-9">
+						<div class="col-lg-8">
 							<label  cass="lbl-form-input-kegiatan">Topik:</label>
 							<input required id="topik" class="form-control" name="topik" />
 						</div>
-						<div class="col-lg-3">
+						<div class="col-lg-2">
 							<label class="lbl-form-input-kegiatan">Tipe Kegiatan:</label>
 							<select class="form-control select2-navy" style="width: 100%"
 								id="tipe_kegiatan" data-dropdown-css-class="select2-navy" name="tipe_kegiatan">
 								<option value="1">Internal</option>
 								<option value="2">Umum</option>
 							</select>
+						</div>
+							<div class="col-lg-2">
+							<label  cass="lbl-form-input-kegiatan">Jumlah JP</label>
+							<input type="number" required id="jumlah_jp" class="form-control" name="jumlah_jp" />
 						</div>
 						<div class="col-lg-12 mt-3">
 							<label class="lbl-form-divider">Waktu Pelaksanaan</label>

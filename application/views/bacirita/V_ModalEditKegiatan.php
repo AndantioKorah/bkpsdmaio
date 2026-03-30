@@ -49,17 +49,21 @@
 					<form method="post" id="form_edit_kegiatan" enctype="multipart/form-data" >
 						<input type="hidden" name="id_kegiatan" id="id_kegiatan" value="<?=$rs['id']?>">
 						<div class="row">
-							<div class="col-lg-9">
+							<div class="col-lg-8">
 								<label cass="lbl-form-input-kegiatan">Topik:</label>
 								<input value="<?=$rs['topik']?>" required id="topik_edit" class="form-control" name="topik" />
 							</div>
-							<div class="col-lg-3">
+							<div class="col-lg-2">
 								<label class="lbl-form-input-kegiatan">Tipe Kegiatan:</label>
 								<select class="form-control select2-navy" style="width: 100%"
 									id="tipe_kegiatan_edit" data-dropdown-css-class="select2-navy" name="tipe_kegiatan">
 									<option <?=$rs['id_m_tipe_kegiatan'] == 1 ? "selected" : ""?> value="1">Internal</option>
 									<option <?=$rs['id_m_tipe_kegiatan'] == 2 ? "selected" : ""?> value="2">Umum</option>
 								</select>
+							</div>
+							<div class="col-lg-2">
+								<label cass="lbl-form-input-kegiatan">Jumlah JP</label>
+								<input type="number" value="<?=$rs['jumlah_jp']?>" required id="jumlah_jp" class="form-control" name="jumlah_jp" />
 							</div>
 							<div class="col-lg-12 mt-3">
 								<label class="lbl-form-divider">Waktu Pelaksanaan</label>
@@ -107,7 +111,7 @@
 							<div class="col-lg-12">
 								<hr>
 							</div>
-							<div class="col-lg-12">
+							<div class="col-lg-9">
 								<label class="lbl-form-divider">Batas Pendaftaran</label>
 							</div>
 							<div class="col-lg-4 mt-1">
@@ -118,9 +122,11 @@
 								<label class="lbl-form-input-kegiatan">Jam Batas Pendaftaran</label>
 								<input required class="form-control" type="time" name="jam_batas_pendaftaran" id="jam_batas_pendaftaran_edit" value="<?= substr($rs['jam_batas_pendaftaran'], 0, 5);?>"/>
 							</div>
+							
 							<div class="col-lg-12">
 								<hr>
 							</div>
+							
 							<div class="col-lg-12">
 								<label class="lbl-form-divider">Zoom</label>
 							</div>

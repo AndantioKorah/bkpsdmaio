@@ -2808,7 +2808,10 @@
 
         $bulan = date("m",strtotime($this->input->post('tanggal_absensi')));
         $tahun = date("Y",strtotime($this->input->post('tanggal_absensi')));
-
+        $max = 2;
+        if($bulan == "03" AND $tahun == "2026"){
+        $max = 8;
+        }
         // cek tpp
 
         $id_unitkerja = null;
@@ -2862,7 +2865,7 @@
         } else {
 
         
-        if($result[0]['total_verif'] >= 8 && $id_unitkerja != '6170000') {
+        if($result[0]['total_verif'] >= $max && $id_unitkerja != '6170000') {
             $rs['code'] = 1;        
             $rs['message'] = 'Sudah ada 2 Pengajuan yang diterima';        
         } else {     

@@ -8,15 +8,9 @@
 <div class="col-lg-12 mt-2">
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-default"><i class="fa fa-search"></i></span>
+            <span class="input-group-text" id="inputGroup-sizing-default" style="font-size: 1.5rem;"><i class="fa fa-search"></i></span>
         </div>
-        <input oninput=searchListOperator() type="text" id="input_search_operator" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-    </div>
-    <div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Small</span>
-        </div>
-        <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        <input id="input_search_list_operator" oninput=searchListOperator() type="text" id="input_search_operator" class="form-control form-control-sm" aria-label="Default" aria-describedby="inputGroup-sizing-default">
     </div>
 </div>
 <?php if($list_operator){ ?>
@@ -41,6 +35,14 @@
             }
         })
     }
+
+    $('#input_search_list_operator').on('focus', function(){
+        if((this).val() == ""){
+            
+        } else {
+            searchListOperator() 
+        }
+    })
 
     $('#btn_back_assign_operator').on('click', function(){
         console.log('asd')

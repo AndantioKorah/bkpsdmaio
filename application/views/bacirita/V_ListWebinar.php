@@ -102,7 +102,7 @@
 				}
 				if($rs['jam_mulai'] < date('H:i:s')) {
 					$badgeStatusKegiatan = "badge-warning";
-					$statusKegiatan = "Sedang Berlangsung";
+					$statusKegiatan = "On Going";
 				} 
 				if(date('H:i:s') > $rs['jam_selesai']) {
 					$badgeStatusKegiatan = "badge-success";

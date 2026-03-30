@@ -4453,5 +4453,56 @@
                 }
             }
         }
+
+        public function assignOperator(){
+            $rs = [
+                'code' => 0,
+                'message' => ""
+            ];
+
+            $this->db->trans_begin();
+            
+            $dataInput = $this->input->post();
+            $data = $this->db->select('a.*, b.nama')
+                            ->from('t_live_chat a')
+                            ->join('m_user b', 'b.id = a.id_m_user_assigned', 'left')
+                            ->where('a.id', $dataInput['id_t_live_chat'])
+                            ->get()->row_array();
+
+            if($data['id_m_user_assigned']){
+                $rs['code'] = 1;
+                $rs['message'] = "Tidak dapat melakukan assign operator karena telah di-assign kepada ".$data['nama'];
+                return $rs;
+            }
+            
+            $this->db->insert('t_live_chat_detail', [
+                'id_t_live_chat' => $dataInput['id_t_live_chat'],
+                'pesan' => 'Admin telah memilih Operator Teknis Layanan untuk membantu kebutuhan Anda',
+                'is_sistem' => 1
+            ]);
+
+            $lastId = $this->db->insert_id();
+
+            $this->db->where('id', $dataInput['id_t_live_chat'])
+                    ->update('t_live_chat', [
+                        'id_m_user_assigned' => $dataInput['id_m_user'],
+                        'assigned_date' => date('Y-m-d H:i:s'),
+                        'id_m_user_assigned_by' => $this->general_library->getId(),
+                        'updated_by' => $this->general_library->getId(),
+                        'last_id_t_live_chat_detail' => $lastId
+                    ]);
+
+            // tambahkan notifikasi kepada user yang diassigned
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $rs;
+        }
 	}
 ?>

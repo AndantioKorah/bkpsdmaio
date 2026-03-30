@@ -724,16 +724,16 @@ class C_User extends CI_Controller
 
     public function searchListOperator(){
         $data = $this->input->post();
-        if($data['search'] != ""){
-            $data['all_list'] = $this->user->getOperatorKonsultasi($data['search']);
-        } else {
-            $data['all_list'] = json_decode($data['all_list'], true);
-        }
+        $data['all_list'] = $this->user->getOperatorKonsultasi($data['search']);
         $this->load->view('user/V_LiveChatAssignOperatorItem', $data);
     }
 
-     public function inputSertiBkpsdmBacirita(){
+    public function inputSertiBkpsdmBacirita(){
         echo json_encode($this->user->inputSertiBkpsdmBacirita());
+    }
+
+    public function assignOperator(){
+        echo json_encode($this->user->assignOperator());
     }
 
 }

@@ -575,6 +575,7 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
         $('#tanggal_absensi').on('change', function(){
         var curentdate = "<?= date('Y-m-d');?>"
          var tanggal =  $('#tanggal_absensi').val()
+            <?php  if( $this->general_library->getIdUnitKerjaPegawai() != '3018000'){ ?>
             $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataWfa",
               method : "POST",
@@ -610,13 +611,14 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
                }
               }
           });
+          <?php } ?>
 
        
             $("#jenis_absensi").prop('disabled',false);
               $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/checkMaxDate",
               method : "POST",
-              data : {date: tanggal, max : 3, operand : "plus"},
+              data : {date: tanggal, max : 10, operand : "plus"},
               async : false,
               dataType : 'json',
               success: function(res){

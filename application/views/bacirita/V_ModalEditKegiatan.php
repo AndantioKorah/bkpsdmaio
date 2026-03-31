@@ -550,10 +550,11 @@
            success: function(data){
                 let resp = JSON.parse(data)
                 if(resp.code == 0){
-                    $('#topik').val('')
-					$('#div_form_edit_kegiatan').hide()
-					successtoast('Data berhasil disimpan')
-					loadListKegiatan()
+					openDetailModal('<?=$rs["id"]?>')
+                    // $('#topik').val('')
+					// $('#div_form_edit_kegiatan').hide()
+					// successtoast('Data berhasil disimpan')
+					// loadListKegiatan()
                 } else {
                     errortoast(resp.message)
                 }

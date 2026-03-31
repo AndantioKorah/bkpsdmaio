@@ -97,36 +97,47 @@
 <?php } ?>
 <?php if($result['detail']){ $i = 1; ?>
     <?php foreach($result['detail'] as $rd){ ?>
-        <div class="col-lg-12 pt-2 <?=$this->general_library->isHakAkses('admin_live_chat_konsultasi') && $i==1 ? "margin-admin" : ""?>">
-            <?php
-                $divChat = "div_chat_left"; 
-                $spJam = "sp_jam_pesan_chatkonsul_left"; 
-                if($rd['is_sender_admin'] == 0){ 
-                    $divChat = "div_chat_right"; 
-                    $spJam = "sp_jam_pesan_chatkonsul_right"; 
-                }
-
-                if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){
-                    if($rd['is_sender_admin'] == 1){ 
+        <?php if($rd['is_sistem'] == 1){ ?>
+            <div class="col-lg-12 text-center p-3">
+                <p style="color: grey; margin-bottom: 0; font-size: .6rem; font-style: italic; font-weight: bold;">
+                    <?=trim(formatDateNotifikasi($rd['created_date']), 1)?><br>
+                </p>
+                <p style="color: grey; font-size: .75rem; font-style: italic; font-weight: bold;">
+                    <?=$rd['pesan']?>
+                </p>
+            </div>
+        <?php } else { ?>
+            <div class="col-lg-12 pt-2 <?=$this->general_library->isHakAkses('admin_live_chat_konsultasi') && $i==1 ? "margin-admin" : ""?>">
+                <?php
+                    $divChat = "div_chat_left"; 
+                    $spJam = "sp_jam_pesan_chatkonsul_left"; 
+                    if($rd['is_sender_admin'] == 0){ 
                         $divChat = "div_chat_right"; 
                         $spJam = "sp_jam_pesan_chatkonsul_right"; 
-                        if($i == 1){
-                            $divChat.=" margin-admin";
-                        }
-                    } else {
-                        $divChat = "div_chat_left";
-                        $spJam = "sp_jam_pesan_chatkonsul_left";
                     }
-                }
-            ?>
-            <div class="<?=$divChat?> div_chat">
-                <div class="col-lg-12">
-                    <span class="sp_chat_pesan_chatkonsul"><?=$rd['pesan']?></span><br>
-                </div>
-                <div class="col-lg-12">
-                    <span class="sp_jam_pesan_chatkonsul <?=$spJam?>"><?=trim(formatDateNotifikasi($rd['created_date']), 0)?></span>
+
+                    if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+                        if($rd['is_sender_admin'] == 1){ 
+                            $divChat = "div_chat_right"; 
+                            $spJam = "sp_jam_pesan_chatkonsul_right"; 
+                            if($i == 1){
+                                $divChat.=" margin-admin";
+                            }
+                        } else {
+                            $divChat = "div_chat_left";
+                            $spJam = "sp_jam_pesan_chatkonsul_left";
+                        }
+                    }
+                ?>
+                <div class="<?=$divChat?> div_chat">
+                    <div class="col-lg-12">
+                        <span class="sp_chat_pesan_chatkonsul"><?=$rd['pesan']?></span><br>
+                    </div>
+                    <div class="col-lg-12">
+                        <span class="sp_jam_pesan_chatkonsul <?=$spJam?>"><?=trim(formatDateNotifikasi($rd['created_date']), 0)?></span>
+                    </div>
                 </div>
             </div>
-        </div>
+        <?php } ?>
     <?php $i++; } ?>
 <?php } ?>

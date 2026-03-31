@@ -6256,7 +6256,7 @@ public function submitEditJabatan(){
 
             $ket_tambahan = '';
             if($exists){
-                $ket_tambahan = 'Proses Cuti saat ini sedang menunggu Digital Signature oleh Kepala BKPSDM Kota Manado.';
+                $ket_tambahan = 'Proses telah disetujui, silahkan menjalankan Cuti. SK Cuti sedang menunggu Digital Signature oleh Kepala BKPSDM Kota Manado.';
                 if($exists['url_sk']){
                     $ket_tambahan = 'SK Cuti sudah ditandatangani secara digital oleh Kepala BKPSDM Kota Manado.';
                 }

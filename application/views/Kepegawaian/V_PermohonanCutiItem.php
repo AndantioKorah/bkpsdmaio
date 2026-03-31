@@ -63,11 +63,7 @@
           <?php
             $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             $badge = "badge-warning";
-<<<<<<< HEAD
             if($rs['flag_ds_cuti'] == 1){
-=======
-            if(isset($rs['flag_ds_cuti']) && $rs['flag_ds_cuti'] == 1){
->>>>>>> 8f3a18ef1f18ab2c4b0e80fc1f221ea03c64c89e
               $badge = "badge-success";
               $rs['status_pengajuan_cuti'] = "Selesai";
               $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
@@ -75,7 +71,11 @@
               $badge = "badge-danger";
               $statusPengajuanCuti = "Ditolak, ".$statusPengajuanCuti;
             } else {
-              $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
+              if(stringStartWith('Digital Signature', $rs['status_pengajuan_cuti'])){
+                $rs['status_pengajuan_cuti'] = "Proses telah disetujui, silahkan menjalankan cuti. SK Cuti sedang menunggu ".$rs['status_pengajuan_cuti'];
+              } else {
+                $rs['status_pengajuan_cuti'] = "Menunggu ".$rs['status_pengajuan_cuti'];
+              }
               $statusPengajuanCuti = $rs['status_pengajuan_cuti'];
             }
             // if(stringStartWith("Digital Signature", $rs['status_pengajuan_cuti'])){

@@ -109,7 +109,7 @@ input:checked + .slider .off
 </style>
 
 
-<?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 21 || $id_m_layanan == 29) { ?>
+<?php if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 21 || $id_m_layanan == 29 || $id_m_layanan == 18) { ?>
 
   <?php $status = null; if($status_layanan['status'] == 1) {
     $status = 'checked';
@@ -125,8 +125,8 @@ input:checked + .slider .off
             <td><h3>Status Layanan <?=$nm_layanan;?> </h3></td>
             <td>  
               <label class="switch ml-2"><input type="checkbox" id="togBtn" <?=$status;?>><div class="slider round">
-      <span class="on" style="font-size:15px;">Dibuka </span>
-      <span class="off" style="font-size:15px;"> Ditutup </span></div></label></td>
+              <span class="on" style="font-size:15px;">Dibuka </span>
+              <span class="off" style="font-size:15px;"> Ditutup </span></div></label></td>
           </table>  
         </div>
       </div>

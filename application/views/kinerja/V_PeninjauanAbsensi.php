@@ -618,7 +618,7 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
               $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/checkMaxDate",
               method : "POST",
-              data : {date: tanggal, max : 10, operand : "plus"},
+              data : {date: tanggal, max : 3, operand : "plus"},
               async : false,
               dataType : 'json',
               success: function(res){

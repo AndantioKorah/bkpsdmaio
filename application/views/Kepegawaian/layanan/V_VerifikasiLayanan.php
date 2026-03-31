@@ -212,6 +212,14 @@ input:checked + .slider .off
                   <option value="3" >Usul BKAD</option>
                   <option value="4" >Diterima BKAD</option>
                   <option value="5" >Ditolak BKAD</option>
+            <?php } else if($id_m_layanan == 21) { ?>
+                  <option value="" >Semua</option>
+                  <option value="0" selected>Pengajuan</option>
+                  <option value="1" >Selesai verifikasi BKPSDM </option>
+                  <option value="2" >Tolak Siladen</option>
+                  <option value="6" >Tolak BKN</option>
+                  <option value="7" >ACC BKN</option>
+                  <option value="3" >Selesai</option>
                   <?php } else { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>

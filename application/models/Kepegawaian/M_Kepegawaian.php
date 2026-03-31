@@ -13707,7 +13707,7 @@ public function getFileForVerifLayanan()
         // PENINGKATAN PENDIDIKAN / PENAMBAHANAN GELAR
         if($id_m_layanan == 21){
             $data["dokumen_layanan"] = null; 
-            $data["status"] = 1; 
+            $data["status"] = 7; 
             $this->db->where('id', $id_usul)
                         ->update('t_layanan', $data);
             }
@@ -15239,8 +15239,11 @@ public function checkListIjazahCpns($id, $id_pegawai){
         if($this->input->post('id_layanan') == 6){
         $this->db->where_in('id', [6,7,8,9,29])
         ->update('m_layanan', $data);
-        } else {
+        } else if($this->input->post('id_layanan') == 21) {
         $this->db->where_in('id', [21])
+        ->update('m_layanan', $data);
+        } else if($this->input->post('id_layanan') == 18) {
+        $this->db->where_in('id', [18,19,20])
         ->update('m_layanan', $data);
         }
         

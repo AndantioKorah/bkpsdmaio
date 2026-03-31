@@ -114,18 +114,23 @@
         Verifikasi
         </button>
         <?php } ?>
+  <?php if($result[0]['status_layanan'] != 3 && $result[0]['status_layanan'] != 0) { ;?>
+  <button id="btn_verifikasix" type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#modelVerif">
+        Update Status
+        </button>
+        <?php } ?>
         <?php 
         // if($result[0]['status_layanan'] == 1) {
            ;?>
         
-        <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
+        <!-- <button id="btn_tolak_verifikasix" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Verif
-        </button>
+        </button> -->
         <?php 
         // } 
         ?>
       
-        <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
+        <?php if($result[0]['status_layanan'] == 7) { ;?>
         <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
         Upload Dokumen
         </button>
@@ -471,9 +476,14 @@
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
         <option selected>--</option>
-        <option value="1">ACC</option>
-        <option value="2">TOLAK</option>
+        <!-- <option value="1">ACC</option>
+        <option value="2">TOLAK</option> -->
         <!-- <option value="3">TMS</option> -->
+          <option <?php if($result[0]['status_layanan'] == 0) echo "selected";?> value="0" >Pengajuan</option>
+          <option <?php if($result[0]['status_layanan'] == 1) echo "selected";?> value="1" >Selesai verifikasi BKPSDM </option>
+          <option <?php if($result[0]['status_layanan'] == 2) echo "selected";?> value="2" >Tolak Siladen</option>
+          <option <?php if($result[0]['status_layanan'] == 6) echo "selected";?> value="6" >Tolak BKN</option>
+          <option <?php if($result[0]['status_layanan'] == 7) echo "selected";?> value="7" >ACC BKN</option>
       </select>
       </div>
       <div class="mb-3">
@@ -622,6 +632,7 @@ $(function(){
     autoclose: true
     });
 
+    $('#btn_lihat_dok').hide()
 
    if(status == 0){
     $('#btn_upload_sk').hide()
@@ -637,16 +648,19 @@ $(function(){
     } else {
       $('#btn_tolak_verifikasi').hide()
       $('#btn_upload_dok').show()
-      $('#btn_lihat_dok').show()
+      // $('#btn_lihat_dok').show()
     } 
     // $('#btn_upload_dok').show()
-    $('#btn_verifikasi').hide()
+    // $('#btn_verifikasi').hide()
    } else if(status == 2) {
     $('#btn_tolak_verifikasi').show()
     $('#btn_upload_dok').hide()
     $('#btn_upload_sk').hide()
     $('#btn_verifikasi').hide()
     $('#btn_lihat_dok').hide()
+   } else if(status == 3) {
+    $('#btn_tolak_verifikasi').show()
+    $('#btn_lihat_dok').show()
    }
   })
 

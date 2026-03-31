@@ -155,13 +155,30 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-lg-12 text-right">
-                        <?php if($rs['pesan']){ ?>
-                            <span class="sp_last_chat_date_rw_konsul"><?=formatDateNotifikasi($rs['last_message_date'], 0)?></span>
-                        <?php } else { ?>
-                            <span class="sp_last_chat_date_rw_konsul"><?=formatDateNotifikasi($rs['created_date'], 0)?></span>
-                        <?php } ?>
-                            | <span style="color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>" class="sp_last_chat_date_rw_konsul"><?=$rs['chat_id']?></span>
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 text-left">
+                                <?php if($rs['id_m_user_assigned']){
+                                    $userAssign = [
+                                        'nama' => $rs['nama_assign'],  
+                                        'gelar1' => $rs['gelar1_assign'],  
+                                        'gelar2' => $rs['gelar2_assign'],  
+                                    ];
+                                ?>
+                                    <span
+                                        style="color: green;"
+                                        class="sp_last_chat_date_rw_konsul"><i class="fa fa-headset"></i> <?=getNamaPegawaiFull($userAssign, 1, 1)?></span>
+                                <?php } ?>
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-sm-8 text-right">
+                                <?php if($rs['pesan']){ ?>
+                                    <span class="sp_last_chat_date_rw_konsul"><?=formatDateNotifikasi($rs['last_message_date'], 0)?></span>
+                                <?php } else { ?>
+                                    <span class="sp_last_chat_date_rw_konsul"><?=formatDateNotifikasi($rs['created_date'], 0)?></span>
+                                <?php } ?>
+                                    | <span style="color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>" class="sp_last_chat_date_rw_konsul"><?=$rs['chat_id']?></span>
+                            </div>
+                        </div>
                     </div>
                 </div> 
             <?php } else { ?> 

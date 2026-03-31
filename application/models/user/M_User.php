@@ -4139,13 +4139,15 @@
             $listChat = null;
             
             $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
-                        d.nipbaru_ws')
+                        d.nipbaru_ws, h.gelar1 as gelar1_assign, h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign')
                         ->from('t_live_chat a')
                         ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
                         ->join('m_user c', 'a.id_m_user = c.id')
                         ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
                         ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
                         ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                        ->join('m_user g', 'a.id_m_user_assigned = g.id', 'left')
+                        ->join('db_pegawai.pegawai h', 'g.username = h.nipbaru_ws', 'left')
                         // ->where('a.id_m_user', $this->general_library->getId())
                         ->where('a.flag_active', 1)
                         ->where('c.flag_active', 1)
@@ -4186,12 +4188,15 @@
         }
 
         public function openKonsultasiDetail($id){
-            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws')
+            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws, h.gelar1 as gelar1_assign,
+                            h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign')
                             ->from('t_live_chat a')
                             ->join('m_user c', 'a.id_m_user = c.id')
                             ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
                             ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
                             ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                            ->join('m_user g', 'a.id_m_user_assigned = g.id', 'left')
+                            ->join('db_pegawai.pegawai h', 'g.username = h.nipbaru_ws', 'left')
                             ->where('a.id', $id)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
@@ -4470,9 +4475,24 @@
                             ->get()->row_array();
 
             if($data['id_m_user_assigned']){
-                $rs['code'] = 1;
-                $rs['message'] = "Tidak dapat melakukan assign operator karena telah di-assign kepada ".$data['nama'];
-                return $rs;
+                // $rs['code'] = 1;
+                // $rs['message'] = "Tidak dapat melakukan assign operator karena telah di-assign kepada ".$data['nama'];
+                // return $rs;
+
+                $this->db->insert('t_notifikasi', [
+                    'id_m_user' => $data['id_m_user_assigned'],
+                    'jenis_notifikasi' => 'assign_operator_live_chat',
+                    'judul_notifikasi' => 'Konsultasi Online #'.$data['chat_id'],
+                    'pesan' => "Admin Konsultasi Online telah mengganti Anda dengan pegawai lain sebagai Operator Teknis Layanan",
+                    'link_href' => 'siladen/notifikasi-pegawai',
+                    'fa_icon' => "fa fa-headset",
+                    'icon_color' => "black"
+                ]);
+                // $last_id = $this->db->insert_id();
+                // $this->db->where('id', $last_id)
+                //         ->update('t_notifikasi', [
+                //             'link_href' => 'siladen/notifikasi-pegawai#$'
+                //         ]);
             }
             
             $this->db->insert('t_live_chat_detail', [
@@ -4493,6 +4513,20 @@
                     ]);
 
             // tambahkan notifikasi kepada user yang diassigned
+            $this->db->insert('t_notifikasi', [
+                'id_m_user' => $dataInput['id_m_user'],
+                'jenis_notifikasi' => 'assign_operator_live_chat',
+                'judul_notifikasi' => 'Konsultasi Online #'.$data['chat_id'],
+                'pesan' => "Anda telah menjadi Operator Teknis Layanan. Harap menggunakan bahasa yang sopan dan mudah dimengerti.",
+                'link_href' => 'siladen/notifikasi-pegawai',
+                'fa_icon' => "fa fa-headset",
+                'icon_color' => "black"
+            ]);
+
+            $this->db->insert('t_riwayat_assign_user', [
+                'id_m_user_assigned' => $dataInput['id_m_user'],
+                'created_by' => $this->general_library->getId()
+            ]);
 
             if($this->db->trans_status() == FALSE){
                 $this->db->trans_rollback();

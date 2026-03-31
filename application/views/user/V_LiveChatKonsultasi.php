@@ -1,6 +1,6 @@
 <style>
     .sp_chat_id_chatkonsul{
-        font-size: 1.3rem;
+        font-size: .9rem;
         color: #f9fbf9;
         font-weight: bold;
     }
@@ -59,24 +59,42 @@
         font-weight: bold;
     }
 </style>
-<div class="col-lg-8 col-md-8 col-sm-8 text-left">
+<div class="col-lg-7 col-md-7 col-sm-7 text-left">
     <span style="cursor:pointer;" class="sp_chat_id_chatkonsul btn_back_chatkonsul"><i class="fa fa-chevron-left"></i></span>
-    <span class="sp_chat_id_chatkonsul">&nbsp;&nbsp;#<?=$result['chat']['chat_id']?></span>
+    <?php
+        $userAssign = null;
+        if($result['chat']['id_m_user_assigned']){
+            $userAssign = [
+                'nama' => $result['chat']['nama_assign'],  
+                'gelar1' => $result['chat']['gelar1_assign'],  
+                'gelar2' => $result['chat']['gelar2_assign'],  
+            ];
+        }
+    ?>
+    <?php if($userAssign){ ?>
+        &nbsp;&nbsp;
+        <span style="cursor: pointer;" title="<?=getNamaPegawaiFull($userAssign)?>" class="sp_chat_id_chatkonsul">
+            <i class="fa fa-headset"></i>&nbsp;&nbsp;<?=getNamaPegawaiFull($userAssign, 1, 1)?>
+        </span>
+    <?php } ?>
 </div>
-<div class="col-lg-4 col-md-4 col-sm-4 text-right">
+<div class="col-lg-5 col-md-5 col-sm-5 text-right">
     <div class="btn-group" role="group">
-        <button id="btn-group-konsultasi" type="button" class="btn btn-outline-warning dropdown-toggle"
+        <button id="btn-group-konsultasi" type="button" class="btn btn-sm btn-outline-warning dropdown-toggle"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Pilihan
+                <span class="sp_chat_id_chatkonsul">&nbsp;#<?=$result['chat']['chat_id']?></span>
         </button>
-        <div class="dropdown-menu" aria-labelledby="btn-group-konsultasi">
+        <div class="dropdown-menu" aria-labelledby="btn-group-konsultasi"
+            style="
+                margin: 0;
+                padding: 0;
+            "
+        >
             <?php if($result['chat']['flag_done'] == 0){ ?>
-                <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){ ?>
-                    <?php if(!$result['chat']['id_m_user_assigned']){ //jika belum ada yang di assign ?>
-                        <a class="dropdown-item" onclick="pilihTeknisLayanan('<?=$result['chat']['id']?>')">Assign Operator</a>
-                    <?php } else { //jika sudah di assign ?>
-                    <?php } ?>
+                <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){  ?>
+                    <a class="dropdown-item" onclick="pilihTeknisLayanan('<?=$result['chat']['id']?>')"><?=(!$result['chat']['id_m_user_assigned']) ? "Assign" : "Ganti"?> Operator</a>
                 <?php } ?>
+                <hr style="margin: 0 !important;">
                 <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')">Akhiri Konsultasi</a>
             <?php } else { ?>
                 <!-- <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')" >Akhiri Konsultasi</a> -->

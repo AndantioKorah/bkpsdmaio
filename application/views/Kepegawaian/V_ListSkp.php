@@ -5,7 +5,7 @@
         <thead>
           <th class="text-left">No</th>
           <th class="text-left">Tahun</th>
-          <th class="text-left">Nilai</th>
+          <!-- <th class="text-left">Nilai</th> -->
           <th class="text-left">Predikat</th>
           <th class="text-left">File</th>
           
@@ -37,7 +37,7 @@
                   <?php } ?>
                 <?php } ?>
               </td>
-              <td class="text-left"><?= $rs['nilai']?></td>          
+              <!-- <td class="text-left"><?= $rs['nilai']?></td>           -->
               <td class="text-left"><?= $rs['predikat']?></td>   
               <td class="text-left">
                 <?php if($rs['gambarsk'] != "") { ?>

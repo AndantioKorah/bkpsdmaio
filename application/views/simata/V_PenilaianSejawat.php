@@ -1,7 +1,7 @@
 
 <div class="card card-default">
     <div class="card-header">
-        <h4>Penilaian Rekan Sejawat</h4>
+        <h4>Penilaian 360</h4>
     </div>
     <div class="card-body">
         <form id="form_search_komponen_kinerja" style="display:none">

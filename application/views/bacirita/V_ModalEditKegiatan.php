@@ -29,6 +29,10 @@
 			font-size: .7rem;
 			font-style: italic;
 		}
+		.text-white {
+			font-weight: bold;
+			font-size: 1rem;
+	   }
 	</style>
 	<div class="row p-3">
 		<div class="col-lg-12">
@@ -169,6 +173,18 @@
 								<button id="btn_simpan_loading_edit" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
 							</div>
 
+<br>	
+<div class="container mt-4" id="total_peserta">
+  <div class="card bg-primary text-white">
+    <div class="card-body">Total Pendaftaran : <?=$total_peserta['total_daftar']?></div>
+  </div>
+  <div class="card bg-success text-white">
+    <div class="card-body">Total Absen : <?=$total_peserta['total_absen']?></div>
+  </div>
+  <div class="card bg-info text-white">
+    <div class="card-body">Total Generate Sertifikat : <?=$total_peserta['total_generate_sertifikat']?></div>
+  </div>
+</div>
 							
 						</div>
 					</form>
@@ -373,6 +389,7 @@
 		refreshIframePreview()
 	})
 
+
 	function refreshIframePreview(){
 		$('#iframe_preview')[0].contentWindow.location.reload(true)
 	}
@@ -567,4 +584,5 @@
             }  
         });
 	})
+
 </script>

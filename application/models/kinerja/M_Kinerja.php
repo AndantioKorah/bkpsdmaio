@@ -2810,10 +2810,10 @@
         $tahun = date("Y",strtotime($this->input->post('tanggal_absensi')));
         $max = 2;
         if($bulan == "03" AND $tahun == "2026"){
-        $max = 8;
+        $max = 10;
         }
         // cek tpp
-
+        // dd($max);
         $id_unitkerja = null;
         $datapegawai = $this->db->select('*')
         ->from('m_user as a')

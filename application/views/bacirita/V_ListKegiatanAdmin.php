@@ -109,11 +109,17 @@
 <?php } ?>
 
 <script>
+	
 	function openDetailModal(id){
 		$('#modal_detail_kegiatan_content').html('')
 		$('#modal_detail_kegiatan_content').append(divLoaderNavy)
 		$('#modal_detail_kegiatan_content').load('<?=base_url("bacirita/C_Bacirita/modalLoadDetailKegiatan/")?>'+id, function(){
 			$('#loader').hide()
 		})
+
+
+
 	}
+
+
 </script>

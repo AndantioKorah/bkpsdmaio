@@ -453,6 +453,8 @@
             var div = $(event.relatedTarget) // Tombol dimana modal di tampilkan
             var modal          = $(this)
 
+            var bulan = div.data('bulan');
+
             if(div.data('jenis_absen') == 1){
                 var jenis_absen = "Pagi"
                 var path = "http://203.175.10.90/sip/upload/"+div.data('foto_absen_masuk')
@@ -541,7 +543,7 @@
 
                 $('#pills-presensi').html('')
                 $('#pills-presensi').append(divLoaderNavy)
-                $('#pills-presensi').load('<?=base_url("kepegawaian/C_Kepegawaian/openPresensiTab/")?>'+id_m_user, function(){
+                $('#pills-presensi').load('<?=base_url("kinerja/C_Kinerja/openPresensiTab/")?>'+id_m_user+'/'+bulan, function(){
                   $('#loader').hide()
                 })
 

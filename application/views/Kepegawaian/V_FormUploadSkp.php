@@ -299,12 +299,19 @@ $(function(){
         if(selectedValue == 2024 || selectedValue == 2025){
           errortoast("Untuk SKP "+selectedValue+" silahkan lakukan Sinkron SIASN")
           $('.yearpicker').datepicker('setDate', null);
-        } 
+        } else if(selectedValue == 2026){
+          errortoast("belum bisa upload SKP 2026")
+          $('.yearpicker').datepicker('setDate', null);
+        }  
     });
    
      
     var statuspeg = "<?= $profil_pegawai['statuspeg']?>";
-    var end = new Date();
+
+    var currentDate = new Date();
+    var lastYear = currentDate.getFullYear() -1;
+    var end = new Date('01-01-'+lastYear);
+        
     // end.setFullYear(end.getFullYear() - 2);
     if(statuspeg == 1 || statuspeg == 2){
     $('.yearpicker').datepicker({

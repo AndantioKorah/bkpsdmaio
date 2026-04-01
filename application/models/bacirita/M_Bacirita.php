@@ -358,6 +358,30 @@ class M_Bacirita extends CI_Model
         return $data;
     }
 
+       public function getTotalPeserta($id){
+        $data = $this->db->select('COUNT(a.id) as total_daftar,
+                    (
+                        SELECT COUNT(aa.id)
+                        FROM db_bacirita.t_peserta_kegiatan aa
+                        WHERE aa.id_t_kegiatan = a.id_t_kegiatan
+                        AND aa.flag_active = 1
+                        AND aa.flag_absen = 1
+                    ) as total_absen,
+                    (
+                        SELECT COUNT(aa.id)
+                        FROM db_bacirita.t_peserta_kegiatan aa
+                        WHERE aa.id_t_kegiatan = a.id_t_kegiatan
+                        AND aa.flag_active = 1
+                        AND aa.flag_generate_sertifikat = 1
+                    ) as total_generate_sertifikat')
+                    ->from('db_bacirita.t_peserta_kegiatan a')
+                    ->where('a.id_t_kegiatan', $id)
+                    ->where('a.flag_active', 1)
+                    ->get()->row_array();
+      
+        return $data;
+    }
+
 
     public function editDataKegiatan($data){
         $res = [

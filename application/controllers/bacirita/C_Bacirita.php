@@ -30,8 +30,11 @@ class C_Bacirita extends CI_Controller
 
     public function modalLoadDetailKegiatan($id){
         $data['result'] = $this->bacirita->modalLoadDetailKegiatan($id);
+        $data['total_peserta'] = $this->bacirita->getTotalPeserta($id);
         $this->load->view('bacirita/V_ModalEditKegiatan', $data);
     }
+
+    
 
      public function editDataKegiatan(){
         echo json_encode($this->bacirita->editDataKegiatan($this->input->post()));

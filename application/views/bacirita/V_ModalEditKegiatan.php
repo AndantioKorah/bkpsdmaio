@@ -29,6 +29,10 @@
 			font-size: .7rem;
 			font-style: italic;
 		}
+		.text-white {
+			font-weight: bold;
+			font-size: 1rem;
+	   }
 	</style>
 	<div class="row p-3">
 		<div class="col-lg-12">
@@ -169,7 +173,7 @@
 								<button id="btn_simpan_loading_edit" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
 							</div>
 
-<br>					
+<br>	
 <div class="container mt-4" id="total_peserta">
   <div class="card bg-primary text-white">
     <div class="card-body">Total Pendaftaran : <?=$total_peserta['total_daftar']?></div>

@@ -1337,6 +1337,17 @@
                                     ->get()->row_array();
 
             $result['kepalaskpd']['nama_jabatan'] = "Kepala Bagian Kerja Sama"; 
+        } else if($id_unitkerja == 4011000){ // kesra
+            $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->where('a.nipbaru_ws', '196907291998032004')
+                                    ->where('id_m_status_pegawai', 1)
+                                    ->get()->row_array();
         } else if($result['flag_sekolah'] == 1){ // sekolah
             $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                             e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -1914,9 +1925,20 @@
         }
 
         if($flag_rekap_tpp == 1){
-            if($data['tahun'].'-'.$data['bulan'].'01' >= '2026-02-01'
-                && $data['id_unitkerja'] != "1000001" // skip jika sekda & asisten    
-            ){
+            $exceptBangkom = $this->db->select('*')
+                                ->from('t_except_bangkom')
+                                ->where('flag_active', 1)
+                                ->where("
+                                    (id_unitkerja = '".$data['id_unitkerja']."' AND bulan = '".intval($data['bulan'])."' AND tahun = '".intval($data['tahun'])."') OR
+                                    (id_unitkerja = '0' AND bulan = '".intval($data['bulan'])."' AND tahun = '".intval($data['tahun'])."') OR
+                                    (id_unitkerja = '".$data['id_unitkerja']."' AND bulan = '0' AND tahun = '0')
+                                ")
+                                ->get()->row_array();
+                                // cari jika id unitkerja sesuai parameter, bulan dan tahun sesuai parameter
+                                // cari jika semua unitkerja, bulan dan tahun sesuai parameter
+                                // cari jika unitkerja sesuai parameter, semua bulan dan tahun sesuai
+
+            if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
                 if($rs['code'] == 1){
                     return $rs;

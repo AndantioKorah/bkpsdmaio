@@ -1137,4 +1137,10 @@ class C_Kinerja extends CI_Controller
         $this->load->view('kinerja/V_ViewFotoPeninjauanSiladen', $data);
     }
 
+    public function openPresensiTab($id,$bulan){
+		$data['id_pegawai'] = $id;
+        $data['bulan'] = $bulan;
+		$this->load->view('kinerja/V_VerifikasiLayananPresensiPeninjauan', $data);
+	}
+
 }

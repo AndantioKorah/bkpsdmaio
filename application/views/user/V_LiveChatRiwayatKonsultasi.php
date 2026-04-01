@@ -76,7 +76,7 @@
                 $flagRead = $rs['flag_read_pegawai'];
             }
         ?>
-            <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){ ?>
+            <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi') || $this->general_library->isProgrammer()){ ?>
                 <div class="div_profil_live_chat profile_chat_<?=$rs['id']?>">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -158,6 +158,12 @@
                     <div class="col-lg-12">
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-4 text-left">
+                                <?php if($rs['flag_rating_pegawai']){ ?>
+                                    <span class="sp_last_chat_date_rw_konsul"><i class="fa fa-user"></i></span>
+                                <?php } ?>
+                                <?php if($rs['flag_rating']){ ?>
+                                    <span class="sp_last_chat_date_rw_konsul"><i class="fa fa-star"></i></span>
+                                <?php } ?>
                                 <?php if($rs['id_m_user_assigned']){
                                     $userAssign = [
                                         'nama' => $rs['nama_assign'],  
@@ -165,8 +171,14 @@
                                         'gelar2' => $rs['gelar2_assign'],  
                                     ];
                                 ?>
+                                    <?php
+                                        $colorAssign = "green";
+                                        if($rs['flag_done'] == 1){
+                                            $colorAssign = "grey";
+                                        }
+                                    ?>
                                     <span
-                                        style="color: green;"
+                                        style="color: <?=$colorAssign?>"
                                         class="sp_last_chat_date_rw_konsul"><i class="fa fa-headset"></i> <?=getNamaPegawaiFull($userAssign, 1, 1)?></span>
                                 <?php } ?>
                             </div>
@@ -197,7 +209,19 @@
                             </label>
                         </div>
                         <div class="col-lg-12 text-right">
-                            <span style="color: <?=$flagRead == 1 ? "grey" : "#e62329" ?>" class="sp_last_chat_date_rw_konsul"><?=formatDateNotifikasi($rs['last_message_date'], 0)?></span>
+                            <div class="row">
+                                <div class="col-lg-6 text-left">
+                                    <?php if($rs['id_m_user_assigned']){ ?>
+                                        <span class="sp_last_chat_date_rw_konsul"><i class="text-muted fa fa-headset"></i></span>
+                                    <?php } ?>
+                                    <?php if($rs['flag_rating'] == 1){ ?>
+                                        <span class="sp_last_chat_date_rw_konsul"><i class="text-muted fa fa-star"></i></span>
+                                    <?php } ?>
+                                </div>
+                                <div class="col-lg-6 text-right">
+                                    <span style="color: <?=$flagRead == 1 ? "grey" : "#e62329" ?>" class="sp_last_chat_date_rw_konsul"><?=formatDateNotifikasi($rs['last_message_date'], 0)?></span>
+                                </div>
+                            </div>
                         </div>
                     <?php } else { ?>
                         <div class="col-lg-12 text-right">

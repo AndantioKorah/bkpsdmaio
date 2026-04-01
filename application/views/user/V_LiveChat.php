@@ -3,7 +3,7 @@
       --primary-color-live-chat: #222e3c;
     }
 
-    .div_riwayat_live_chat{
+    .div_riwayat_live_chat, .div_pilih_layanan_konsultasi{
         background-color: white;
         margin-top: 10px;
         border-radius: 10px;
@@ -43,6 +43,10 @@
                 <br>
                 <button class="mt-3 btn btn-info btn_konsultasi">Mulai Konsultasi</button>
                 <button style="display:none;" class="mt-3 btn btn-info btn_konsultasi_loader"><i class="fa fa-spinner"></i> Menunggu...</button>
+
+                <div style="display: none;" class="col-lg-12 div_pilih_layanan_konsultasi">
+                </div>
+
                 <div class="col-lg-12 div_riwayat_live_chat">
                     <div class="row">
                         <div class="col-lg-12 pt-3" style="border-bottom: 1px solid grey;">
@@ -69,9 +73,9 @@
         })
     }
 
-    $('.btn_konsultasi').on('click', function(){
-        $('.btn_konsultasi_loader').show()
-        $('.btn_konsultasi').hide()
+    function startKonsultasi(){
+        // $('.btn_konsultasi_loader').show()
+        // $('.btn_konsultasi').hide()
         $.ajax({
             url: '<?=base_url("user/C_User/startKonsultasi")?>',
             method: 'post',
@@ -81,13 +85,23 @@
                 if(rs.code == 1){
                     errortoast(rs.message)
                 } else {
-                    
+                    openKonsultasiDetail(rs.id)
                 }
-                $('.btn_konsultasi_loader').hide()
-                $('.btn_konsultasi').show()
+                // $('.btn_konsultasi_loader').hide()
+                // $('.btn_konsultasi').show()
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')
             }
+        })
+    }
+
+    $('.btn_konsultasi').on('click', function(){
+        $('.div_riwayat_live_chat').hide()
+        $('.div_pilih_layanan_konsultasi').show()
+        $('.div_pilih_layanan_konsultasi').html('')
+        $('.div_pilih_layanan_konsultasi').append(divLoaderNavy)
+        $('.div_pilih_layanan_konsultasi').load('<?=base_url("user/C_User/loadLayananKonsultasi")?>', function(){
+            $('#loader').hide()
         })
     })
 
@@ -97,7 +111,7 @@
         $('#div_chat_konsultasi').html('')
         $('#div_chat_konsultasi').append(divLoaderNavy)
         $('#div_chat_konsultasi').load('<?=base_url("user/C_User/openKonsultasiDetail/")?>'+id, function(){
-            $("#loader").hide
+            $("#loader").hide()
         })
     }
 </script>

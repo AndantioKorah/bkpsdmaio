@@ -1914,7 +1914,9 @@
         }
 
         if($flag_rekap_tpp == 1){
-            if($data['tahun'].'-'.$data['bulan'].'01' >= '2026-02-01'){
+            if($data['tahun'].'-'.$data['bulan'].'01' >= '2026-02-01'
+                && $data['id_unitkerja'] != "1000001" // skip jika sekda & asisten    
+            ){
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
                 if($rs['code'] == 1){
                     return $rs;

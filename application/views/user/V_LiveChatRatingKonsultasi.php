@@ -22,38 +22,67 @@
     <?php if($result){ ?>
         <h6>Berikan Penilaian Anda:</h6>
         <strong><h3 style="font-weight: bold;">#<?=$result['chat_id']?></h3></strong>
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <form id="form-rating" method="post" enctype="multipart/form-data">
-                    <label class="lbl-main">Waktu Respon</label><br>
-                    <label class="lbl-sec">(kecepatan balasan yang diterima)</label><br>
-                    <?php $this->load->view('user/V_Rating', [
-                        'data' => [
-                            'skala' => 5,
-                            'name' => 'rating_kecepatan'
-                        ]
-                    ]) ?>
-                    <label class="lbl-main">Ketepatan Informasi</label><br>
-                    <label class="lbl-sec">(informasi yang didapat sudah jelas dan tepat)</label><br>
-                    <?php $this->load->view('user/V_Rating', [
-                        'data' => [
-                            'skala' => 5,
-                            'name' => 'rating_ketepatan'
-                        ]
-                    ]) ?>
-                    <label class="lbl-main">Kritik & Saran</label><br>
-                    <label class="lbl-sec">(berikan komentar Anda untuk kami)</label>
-                    <textarea rows=3 name="kritik_saran" style="
-                        width: 100%;
-                        resize: none;
-                        border-radius: 10px;
-                        padding: 5px;
-                        border-color: grey;
-                    "></textarea>
-                    <button type="submit" style="width: 100%;" class="mt-4 btn btn-submit btn-navy">Submit Penilaian</button>
-                </form>
+        <?php if($this->general_library->isProgrammer() ||
+            $this->general_library->isHakAkses('admin_live_chat_konsultasi') ||
+            $this->general_library->getId() == $result['id_m_user_assigned'] // jika user yang menilai adalah user yang di assing
+            ){ ?>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <form id="form-rating-pegawai" method="post" enctype="multipart/form-data">
+                        <label class="lbl-main">Waktu Respon</label><br>
+                        <label class="lbl-sec">(kecepatan balasan yang diterima)</label><br>
+                        <?php $this->load->view('user/V_Rating', [
+                            'data' => [
+                                'skala' => 5,
+                                'name' => 'rating_kecepatan_pegawai'
+                            ]
+                        ]) ?>
+                        <label class="lbl-main">Bahasa yang Digunakan</label><br>
+                        <label class="lbl-sec">(menggunakan bahasa yang sopan dan mudah dimengerti)</label><br>
+                        <?php $this->load->view('user/V_Rating', [
+                            'data' => [
+                                'skala' => 5,
+                                'name' => 'rating_bahasa_pegawai'
+                            ]
+                        ]) ?>
+                        <button type="submit" style="width: 100%;" class="mt-4 btn btn-submit btn-navy">Submit Penilaian</button>
+                    </form>
+                </div>
             </div>
-        </div>
+        <?php } else { ?>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <form id="form-rating" method="post" enctype="multipart/form-data">
+                        <label class="lbl-main">Waktu Respon</label><br>
+                        <label class="lbl-sec">(kecepatan balasan yang diterima)</label><br>
+                        <?php $this->load->view('user/V_Rating', [
+                            'data' => [
+                                'skala' => 5,
+                                'name' => 'rating_kecepatan'
+                            ]
+                        ]) ?>
+                        <label class="lbl-main">Ketepatan Informasi</label><br>
+                        <label class="lbl-sec">(informasi yang didapat sudah jelas dan tepat)</label><br>
+                        <?php $this->load->view('user/V_Rating', [
+                            'data' => [
+                                'skala' => 5,
+                                'name' => 'rating_ketepatan'
+                            ]
+                        ]) ?>
+                        <label class="lbl-main">Kritik & Saran</label><br>
+                        <label class="lbl-sec">(berikan komentar Anda untuk kami)</label>
+                        <textarea rows=3 name="kritik_saran" style="
+                            width: 100%;
+                            resize: none;
+                            border-radius: 10px;
+                            padding: 5px;
+                            border-color: grey;
+                        "></textarea>
+                        <button type="submit" style="width: 100%;" class="mt-4 btn btn-submit btn-navy">Submit Penilaian</button>
+                    </form>
+                </div>
+            </div>
+        <?php } ?>
     <?php } else { ?>
         <h4 style="color: red;"><i class="fa fa-exclamation"></i> Terjadi Kesalahan</h4>
     <?php } ?>
@@ -78,6 +107,33 @@
                     errortoast(rs.message)
                 } else {
                     successtoast('Terima Kasih atas penilaian yang telah Anda berikan')
+                    backToStartView()
+                }
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })
+
+    $('#form-rating-pegawai').on('submit', function(e){
+        e.preventDefault()
+        // $('#btn-submit').prop('disabled', true)
+        // $('#btn-submit').text('<i class="fa fa-spin fa-spinner"></i>')
+        var formvalue = $('#form-rating-pegawai');
+        var form_data = new FormData(formvalue[0]);
+        $.ajax({
+            url: '<?=base_url("user/C_User/submitRatingKonsultasi/".$result['id'])?>',
+            method: 'post',
+            data: form_data,
+            contentType: false,  
+            cache: false,  
+            processData:false,
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 1){
+                    errortoast(rs.message)
+                } else {
+                    successtoast('Penilaian sudah tersimpan')
                     backToStartView()
                 }
             }, error: function(e){

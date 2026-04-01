@@ -4115,22 +4115,36 @@
                 'code' => 0,
                 'message' => null
             ];
-            $exists = $this->db->select('*')
+            
+            $existsNotDone = $this->db->select('*')
                         ->from('t_live_chat')
                         ->where('flag_active', 1)
                         ->where('id_m_user', $this->general_library->getId())
                         ->where('flag_done', 0)
                         ->get()->row_array();
-            if($exists){
+            if($existsNotDone){
                 $rs['code'] = 1;
                 $rs['message'] = "Tidak dapat memulai Sesi Konsultasi baru jika masih ada Sesi Konsultasi yang sedang berlangsung.";
-            } else {
-                $this->db->insert('t_live_chat', [
-                    'id_m_user' => $this->general_library->getId(),
-                    'chat_id' => generateRandomString(7)
-                ]);
-                $rs['id'] = $this->db->insert_id();
+                return $rs;
             }
+
+            $existsNotRating = $this->db->select('*')
+                        ->from('t_live_chat')
+                        ->where('flag_active', 1)
+                        ->where('id_m_user', $this->general_library->getId())
+                        ->where('flag_rating', 0)
+                        ->get()->row_array();
+            if($existsNotRating){
+                $rs['code'] = 1;
+                $rs['message'] = "Tidak dapat memulai Sesi Konsultasi baru karena ada Sesi Konsultasi yang belum diberikan penilaian.";
+                return $rs;
+            }
+
+            $this->db->insert('t_live_chat', [
+                'id_m_user' => $this->general_library->getId(),
+                'chat_id' => generateRandomString(7)
+            ]);
+            $rs['id'] = $this->db->insert_id();
 
             return $rs;
         }
@@ -4202,7 +4216,11 @@
                             ->get()->row_array();
 
             if($chat){
-                if(!$this->general_library->isHakAkses('admin_live_chat_konsultasi') && $chat['flag_read_pegawai'] == 0){
+                // disini
+                if((!$this->general_library->isHakAkses('admin_live_chat_konsultasi') 
+                && !$this->general_library->isProgrammer()
+                && $this->general_library->getId() != $chat['id_m_user_assigned']
+                ) && $chat['flag_read_pegawai'] == 0){
                     // jika pegawai yang buka chat, ubah flag_read_pegawai jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
                     $this->db->where('id', $chat['id'])
                         ->update('t_live_chat', [
@@ -4217,7 +4235,11 @@
                                 'updated_by' => $this->general_library->getId()
                             ]);
 
-                } else if($this->general_library->isHakAkses('admin_live_chat_konsultasi') && $chat['flag_read_admin'] == 0){
+                } else if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
+                || $this->general_library->isProgrammer()
+                || $this->general_library->getId() == $chat['id_m_user_assigned']
+                )
+                && $chat['flag_read_admin'] == 0){
                     // jika admin yang buka chat, ubah flag_read_admin jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
                     $this->db->where('id', $chat['id'])
                         ->update('t_live_chat', [
@@ -4252,7 +4274,9 @@
             unset($data['id']);
             
             $updateChat = null;
-            if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+            if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
+                || $this->general_library->isProgrammer()
+                || $this->general_library->getId() == $chat['id_m_user_assigned'])){
                 $data['is_sender_admin'] = 1;
                 $updateChat['flag_read_pegawai'] = 0;
             } else {
@@ -4312,12 +4336,38 @@
             $this->db->trans_begin();
 
             $data = $this->input->post();
-            $data['flag_rating'] = 1;
-            $data['date_rating'] = date('Y-m-d H:i:s');
+
+            $dataLiveChat = $this->db->select('*')
+                                    ->from('t_live_chat')
+                                    ->where('id', $id)
+                                    ->get()->row_array();
+
             $data['flag_done'] = 1;
             $data['done_date'] = date('Y-m-d H:i:s');
-            $data['updated_by'] = $this->general_library->getId();
+            if($this->general_library->isProgrammer()
+                || $this->general_library->isHakAkses('admin_live_chat_konsultasi')
+                || $dataLiveChat['id_m_user_assigned'] == $this->general_library->getId()
+            ){ // jika rating untuk pegawai
+                $data['flag_rating_pegawai'] = 1;
+                $data['date_rating_pegawai'] = date('Y-m-d H:i:s'); 
 
+                $pesan = " telah mengakhiri Sesi Konsultasi pada ".formatDateNamaBulanWT($data['date_rating_pegawai']);
+                if($dataLiveChat['id_m_user_assigned'] == $this->general_library->getId()){
+                    $pesan = "Operator Teknis Layanan ".$pesan;
+                } else {
+                    $pesan = "Admin ".$pesan;
+                }
+                $this->db->insert('t_live_chat_detail', [
+                    'id_t_live_chat' => $id,
+                    'pesan' => $pesan,
+                    'is_sistem' => 1
+                ]);
+            } else { // jika rating untuk admin
+                $data['flag_rating'] = 1;
+                $data['date_rating'] = date('Y-m-d H:i:s');
+            }
+            $data['updated_by'] = $this->general_library->getId();
+            $data['id_m_user_done_by'] = $this->general_library->getId();
             $this->db->where('id', $id)
                     ->update('t_live_chat', $data);
 
@@ -4359,6 +4409,32 @@
             return $this->db->get()->result_array();
         }
         
+        public function loadLayananKonsultasi(){
+            $data = $this->db->select('*')
+                            ->from('m_layanan_konsul')
+                            ->order_by('nama_layanan')
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+            $bidang = $this->db->select('*')
+                            ->from('m_bidang')
+                            ->where('id_unitkerja', ID_UNITKERJA_BKPSDM)
+                            ->where('flag_active', 1)
+                            ->order_by('id', 'desc')
+                            ->get()->result_array();
+
+            $result = null;
+            foreach($bidang as $b){
+                $result[$b['id']] = $b;
+            }
+
+            foreach($data as $d){
+                $result[$d['id_m_bidang']]['layanan'][$d['id']] = $d; 
+            }
+
+            return $result;
+        }
+
         public function cronHashFileBangkom(){
             $data = $this->db->select('*')
                             ->from('db_pegawai.pegdiklat')

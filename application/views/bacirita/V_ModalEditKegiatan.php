@@ -385,8 +385,6 @@
 	$(function(){
 		$('#tipe_kegiatan_edit').select2()
 		refreshDatePicker()
-		totalPeserta('1')
-
 		// loadListKegiatan()
 		refreshIframePreview()
 	})
@@ -587,11 +585,4 @@
         });
 	})
 
-	// function totalPeserta(id){
-	// 	$('#total_peserta').html('')
-	// 	$('#total_peserta').append(divLoaderNavy)
-	// 	$('#total_peserta').load('<?=base_url("bacirita/C_Bacirita/getDataTotalPeserta/")?>'+id, function(){
-	// 		$('#loader').hide()
-	// 	})
-	// }
 </script>

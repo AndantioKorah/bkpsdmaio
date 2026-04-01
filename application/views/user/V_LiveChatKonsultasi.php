@@ -1,6 +1,6 @@
 <style>
     .sp_chat_id_chatkonsul{
-        font-size: 1.3rem;
+        font-size: .9rem;
         color: #f9fbf9;
         font-weight: bold;
     }
@@ -59,24 +59,45 @@
         font-weight: bold;
     }
 </style>
-<div class="col-lg-8 col-md-8 col-sm-8 text-left">
+<div class="col-lg-7 col-md-7 col-sm-7 text-left">
     <span style="cursor:pointer;" class="sp_chat_id_chatkonsul btn_back_chatkonsul"><i class="fa fa-chevron-left"></i></span>
-    <span class="sp_chat_id_chatkonsul">&nbsp;&nbsp;#<?=$result['chat']['chat_id']?></span>
+    <?php
+        if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+            $userAssign = null;
+            if($result['chat']['id_m_user_assigned']){
+                $userAssign = [
+                    'nama' => $result['chat']['nama_assign'],  
+                    'gelar1' => $result['chat']['gelar1_assign'],  
+                    'gelar2' => $result['chat']['gelar2_assign'],  
+                ];
+            }
+    ?>
+    <?php if($userAssign){ ?>
+        &nbsp;&nbsp;
+        <span style="cursor: pointer;" title="<?=getNamaPegawaiFull($userAssign)?>" class="sp_chat_id_chatkonsul">
+            <i class="fa fa-headset"></i>&nbsp;&nbsp;<?=getNamaPegawaiFull($userAssign, 1, 1)?>
+        </span>
+    <?php } } ?>
 </div>
-<div class="col-lg-4 col-md-4 col-sm-4 text-right">
+<div class="col-lg-5 col-md-5 col-sm-5 text-right">
     <div class="btn-group" role="group">
-        <button id="btn-group-konsultasi" type="button" class="btn btn-outline-warning dropdown-toggle"
+        <button id="btn-group-konsultasi" type="button" class="btn btn-sm btn-outline-warning dropdown-toggle"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Pilihan
+                <span class="sp_chat_id_chatkonsul">&nbsp;#<?=$result['chat']['chat_id']?></span>
         </button>
-        <div class="dropdown-menu" aria-labelledby="btn-group-konsultasi">
+        <div class="dropdown-menu" aria-labelledby="btn-group-konsultasi"
+            style="
+                margin: 0;
+                padding: 0;
+            "
+        >
             <?php if($result['chat']['flag_done'] == 0){ ?>
-                <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){ ?>
-                    <?php if(!$result['chat']['id_m_user_assigned']){ //jika belum ada yang di assign ?>
-                        <a class="dropdown-item" onclick="pilihTeknisLayanan('<?=$result['chat']['id']?>')">Assign Operator</a>
-                    <?php } else { //jika sudah di assign ?>
-                    <?php } ?>
+                <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi') ||
+                    $this->general_library->isProgrammer()
+                ){  ?>
+                    <a class="dropdown-item" onclick="pilihTeknisLayanan('<?=$result['chat']['id']?>')"><?=(!$result['chat']['id_m_user_assigned']) ? "Assign" : "Ganti"?> Operator</a>
                 <?php } ?>
+                <hr style="margin: 0 !important;">
                 <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')">Akhiri Konsultasi</a>
             <?php } else { ?>
                 <!-- <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')" >Akhiri Konsultasi</a> -->
@@ -86,7 +107,7 @@
 </div>
 <?php
     $heightChatContainer = "75vh";
-    if($result['chat']['flag_done'] == 1){
+    if($result['chat']['flag_done'] == 1 && $result['chat']['flag_rating'] == 1){
         $heightChatContainer = "65vh";
     }
 ?>
@@ -160,37 +181,108 @@
         </div>
     </form>
 <?php } else { ?>
-    <div class="col-lg-12 mt-3" style="
-            width: 100%;
-            max-height: 25vh;
-            background-color: white;
-            border-radius: 10px;
-            padding: 10px;
-            overflow-y: auto;
-            overflow-x: hidden;
-        ">
-        <div class="row">
-            <div class="col-lg-6 text-left">
-                <span class="lbl_rating_nm">Waktu Respon</span><br>
-                <?php for($i = 1; $i <= $result['chat']['rating_kecepatan']; $i++){ ?>
-                    <i class="text-warning fa fa-star"></i>
-                <?php } ?>
+    <?php if($this->general_library->isProgrammer() ||
+        $this->general_library->isHakAkses('admin_live_chat_konsultasi') ||
+        $this->general_library->getId() == $result['chat']['id_m_user_assigned']
+        ) {?>
+        <?php if($result['chat']['flag_rating_pegawai'] == 1){ ?>
+            <div class="col-lg-12 mt-3" style="
+                    width: 100%;
+                    max-height: 25vh;
+                    background-color: white;
+                    border-radius: 10px;
+                    padding: 10px;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                ">
+                RATING PEGAWAI
+                <div class="row">
+                    <div class="col-lg-12 text-left">
+                        <span class="lbl_rating_nm">Waktu Respon</span><br>
+                        <?php // for($i = 1; $i <= $result['chat']['rating_kecepatan']; $i++){ ?>
+                        <?php for($i = 1; $i <= 5; $i++){ ?>
+                            <?php if($i <= $result['chat']['rating_kecepatan_pegawai']){ ?>
+                                <i style="font-size: 1rem;" class="text-warning fa fa-star"></i>
+                            <?php } else { ?>
+                                <i style="font-size: 1rem;" class="text-muted fa fa-star"></i>
+                            <?php } ?>
+                        <?php } ?>
+                    </div>
+                    <div class="col-lg-12 text-left">
+                        <span class="lbl_rating_nm">Bahasa yang Digunakan</span><br>
+                        <?php for($i = 1; $i <= 5; $i++){ ?>
+                            <?php if($i <= $result['chat']['rating_bahasa_pegawai']){ ?>
+                                <i style="font-size: 1rem;" class="text-warning fa fa-star"></i>
+                            <?php } else { ?>
+                                <i style="font-size: 1rem;" class="text-muted fa fa-star"></i>
+                            <?php } ?>
+                        <?php } ?>
+                    </div>
+                    <div class="col-lg-12 mt-1 text-right">
+                        <span class="lbl_rating_nm"><?=formatDateNamaBulanWT($result['chat']['date_rating_pegawai'])?></span><br>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-6 text-left">
-                <span class="lbl_rating_nm">Ketepatan Informasi</span><br>
-                <?php for($i = 1; $i <= $result['chat']['rating_ketepatan']; $i++){ ?>
-                    <i class="text-warning fa fa-star fa-2x"></i>
-                <?php } ?>
+        <?php } else { ?>
+            <div class="col-lg-12 mt-3">
+                <button onclick="endKonsultasi('<?=$result['chat']['id']?>')" style="width: 100% !important;"
+                    class="btn btn-block btn-warning"><i class="fa fa-input"></i> Berikan Penilaian</button>
             </div>
-            <div class="col-lg-12 mt-3 text-left">
-                <span class="lbl_rating_nm">Kritik dan Saran</span><br>
-                <span class="lbl_rating_val"><?=$result['chat']['kritik_saran']?></span><br>
-            </div>
-            <div class="col-lg-12 mt-1 text-right">
-                <span class="lbl_rating_nm"><?=formatDateNamaBulanWT($result['chat']['date_rating'])?></span><br>
+        <?php } ?>
+    <?php } ?>
+    <?php if($result['chat']['flag_rating'] == 1){ ?>
+        <div class="col-lg-12 mt-3" style="
+                width: 100%;
+                max-height: 25vh;
+                background-color: white;
+                border-radius: 10px;
+                padding: 10px;
+                overflow-y: auto;
+                overflow-x: hidden;
+            ">
+            RATING KONSULTASI
+            <div class="row">
+                <div class="col-lg-6 text-left">
+                    <span class="lbl_rating_nm">Waktu Respon</span><br>
+                    <?php // for($i = 1; $i <= $result['chat']['rating_kecepatan']; $i++){ ?>
+                    <?php for($i = 1; $i <= 5; $i++){ ?>
+                        <?php if($i <= $result['chat']['rating_kecepatan']){ ?>
+                            <i style="font-size: 1rem;" class="text-warning fa fa-star"></i>
+                        <?php } else { ?>
+                            <i style="font-size: 1rem;" class="text-muted fa fa-star"></i>
+                        <?php } ?>
+                    <?php } ?>
+                </div>
+                <div class="col-lg-6 text-left">
+                    <span class="lbl_rating_nm">Ketepatan Informasi</span><br>
+                    <?php for($i = 1; $i <= 5; $i++){ ?>
+                        <?php if($i <= $result['chat']['rating_ketepatan']){ ?>
+                            <i style="font-size: 1rem;" class="text-warning fa fa-star"></i>
+                        <?php } else { ?>
+                            <i style="font-size: 1rem;" class="text-muted fa fa-star"></i>
+                        <?php } ?>
+                    <?php } ?>
+                </div>
+                <div class="col-lg-12 mt-3 text-left">
+                    <span class="lbl_rating_nm">Kritik dan Saran</span><br>
+                    <span class="lbl_rating_val"><?=$result['chat']['kritik_saran']?></span><br>
+                </div>
+                <div class="col-lg-12 mt-1 text-right">
+                    <span class="lbl_rating_nm"><?=formatDateNamaBulanWT($result['chat']['date_rating'])?></span><br>
+                </div>
             </div>
         </div>
-    </div>
+    <?php } else { ?>
+        <?php if(!$this->general_library->isProgrammer() &&
+            !$this->general_library->isHakAkses('admin_live_chat_konsultasi') &&
+            $this->general_library->getId() != $result['chat']['id_m_user_assigned']
+            ) { ?>
+        <div class="col-lg-12 mt-3">
+            <button onclick="endKonsultasi('<?=$result['chat']['id']?>')" style="width: 100% !important;"
+                class="btn btn-block btn-warning"><i class="fa fa-input"></i> Berikan Penilaian</button>
+        </div>
+        <?php } ?>
+    <?php } ?>
 <?php } ?>
 <script>
     $(function(){

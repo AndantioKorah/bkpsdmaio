@@ -829,7 +829,7 @@ function formatDateNamaBulanWithTime($data)
     return $explode[0] . ' ' . getNamaBulan($explode[1]) . ' ' . $explode[2];
 }
 
-function getNamaPegawaiFull($pegawai, $flag_capital_nama = 0)
+function getNamaPegawaiFull($pegawai, $flag_capital_nama = 0, $flag_first_name = 0)
 {
     $nama_pegawai = trim($pegawai['nama']);
     if($flag_capital_nama == 1){
@@ -837,6 +837,12 @@ function getNamaPegawaiFull($pegawai, $flag_capital_nama = 0)
     }
     if(trim(substr($nama_pegawai, strlen($nama_pegawai)-1)) != "," && ($pegawai['gelar2'] != "" && $pegawai['gelar2'] != null && $pegawai['gelar2'] != "-")){
         $nama_pegawai .= ",";
+    }
+
+    if($flag_first_name == 1){
+        $explode = explode(" ", $nama_pegawai);
+
+        return trim(ucwords(trim($explode[0])));
     }
 
     return trim(trim($pegawai['gelar1']).' '.ucwords(trim($nama_pegawai)).' '.trim($pegawai['gelar2']));
@@ -1500,6 +1506,7 @@ function isKasubKepegawaian($nama_jabatan, $eselon = null){
     stringStartWith('Kasubag. Umum dan Kepegawaian', $nama_jabatan) ||
     stringStartWith('Kepala Sub Bagian Administrasi dan Umum', $nama_jabatan) ||
     stringStartWith('Kepala Sub Bagian Umum, Hukum dan Kepegawaian', $nama_jabatan) ||
+    $CI->general_library->isHakAkses('role_kasubag_kepegawaian') ||
     (stringStartWith('Kepala Sub Bagian Tata Usaha', $nama_jabatan) && $eselon == 'IV A')) 
     ? true : false;
 }

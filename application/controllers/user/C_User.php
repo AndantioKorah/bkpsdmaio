@@ -736,4 +736,10 @@ class C_User extends CI_Controller
         echo json_encode($this->user->assignOperator());
     }
 
+    public function loadLayananKonsultasi($id){
+        $data['id'] = $id;
+        $data['jenis_layanan'] = $this->user->loadLayananKonsultasi();
+        $this->load->view('user/V_LiveChatJenisLayananKonsul', $data);
+    }
+
 }

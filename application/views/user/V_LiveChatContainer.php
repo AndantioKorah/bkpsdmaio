@@ -21,7 +21,7 @@
     position: fixed;
     line-height: 12px;
     padding: 10px;
-    top: 64px;
+    top: 60px;
     width: 326px;
     box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.64);
     -webkit-box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.64);
@@ -98,13 +98,13 @@
 <?php if($result['detail']){ $i = 1; ?>
     <?php foreach($result['detail'] as $rd){ ?>
         <?php if($rd['is_sistem'] == 1){ ?>
-            <div class="col-lg-12 text-center p-3">
-                <p style="color: grey; margin-bottom: 0; font-size: .6rem; font-style: italic; font-weight: bold;">
-                    <?=trim(formatDateNotifikasi($rd['created_date']), 1)?><br>
-                </p>
-                <p style="color: grey; font-size: .75rem; font-style: italic; font-weight: bold;">
+            <div class="col-lg-12 text-center mt-2 mb-2" style="line-height: 12px;">
+                <span style="color: grey; margin-bottom: 0; font-size: .6rem; font-style: italic; font-weight: bold;">
+                    <?=trim(formatDateNotifikasi($rd['created_date'], 1))?><br>
+                </span>
+                <span style="color: grey; font-size: .75rem; font-style: italic; font-weight: bold;">
                     <?=$rd['pesan']?>
-                </p>
+                </span>
             </div>
         <?php } else { ?>
             <div class="col-lg-12 pt-2 <?=$this->general_library->isHakAkses('admin_live_chat_konsultasi') && $i==1 ? "margin-admin" : ""?>">

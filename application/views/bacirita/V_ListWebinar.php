@@ -5,7 +5,7 @@
 		-moz-box-shadow: 4px 4px 7px 0px rgba(0,0,0,0.75);
 		border: 1px solid rgba(0,0,0,0.75);
 		border-radius: 10px;
-		max-height: 450px;
+		height: 600px;
 	}
 
 	.img-kegiatan{

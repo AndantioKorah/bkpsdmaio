@@ -14,6 +14,7 @@
         cursor: pointer;
         background-color: #dcdcdc !important;
         transition: .2s;
+		color: #333333 !important;
     }
 
     .col-notifikasi-left{
@@ -22,7 +23,11 @@
     }
 
     .col-notif-selected{
-        background-color: #dcdcdc !important;
+        background-color: var(--primary-color) !important;
+    }
+
+    .col-notif-selected span{
+        color: white;
     }
 
     .notif-pegawai-not-read{
@@ -43,7 +48,7 @@
             id="id_col_notif_left_<?=$rs['id']?>" onclick="loadDetailNotif('<?=$rs['id']?>')">
                 <div class="row">
                     <div class="col-lg-12">
-                        <span class="text-dark"><?=$rs['judul_notifikasi']?></span>
+                        <span class=""><?=$rs['judul_notifikasi']?></span>
                     </div>
                     <div class="col-lg-12">
                         <span class="sp-isi-notif"><?=$rs['pesan']?></span>

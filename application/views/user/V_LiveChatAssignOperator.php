@@ -87,7 +87,8 @@
                 let rs = JSON.parse(data)
                 if(rs.code == 0){
                     successtoast('Berhasil assign operator')
-                    $('#btn_back_assign_operator').click()
+                    openKonsultasiDetail('<?=$id?>')
+                    // $('#btn_back_assign_operator').click()
                 } else {
                     errortoast(rs.message)
                 }

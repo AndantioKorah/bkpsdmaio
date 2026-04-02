@@ -13,7 +13,8 @@
 		box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.75);
 		-webkit-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.75);
 		-moz-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.75);
-		width: 100%;
+		/* width: 100%; */
+		/* height: 300px; */
 		aspect-ratio: 1/1;
 		object-fit: contain;
 	}
@@ -30,10 +31,10 @@
 	}
 
 	.div-button{
-		/* position: absolute;
+		position: absolute;
 		bottom: 0;
 		right: 0;
-		margin-bottom: 10px; */
+		margin-bottom: 10px;
 	}
 
 	.lbl-detail-kegiatan{
@@ -104,7 +105,7 @@
 					$badgeStatusKegiatan = "badge-warning";
 					$statusKegiatan = "On Going";
 				} 
-				if(date('H:i:s') > $rs['jam_selesai']) {
+				if((date('H:i:s') > $rs['jam_selesai']) && formatTimeAbsen($rs['jam_selesai']) != "00:00") {
 					$badgeStatusKegiatan = "badge-success";
 					$statusKegiatan = "Selesai";
 				}  
@@ -122,7 +123,6 @@
 				<?php } ?>
 					<a class="badge-kegiatan badge badge-sm <?=$badgeKegiatan?>"><?=$rs['nama_tipe_kegiatan']?></a>
 					<a class="badge-status-webinar badge badge-sm <?=$badgeStatusKegiatan?>"><?=$statusKegiatan?></a>
-
 					<img class="card-img-top img-fluid img-kegiatan" src="<?=base_url($srcImage)?>">
 					<div class="card-body">
 						<div class="row">

@@ -1076,7 +1076,8 @@
                 $kepala = $atasan;
             } else if(stringStartWith('Puskesmas', $pegawai['nm_unitkerja'])
             || $pegawai['id_unitkerja'] == 7005020 
-            || $pegawai['id_unitkerja'] == 7005010){// jika kapus, atau direktur rumah sakit
+            || $pegawai['id_unitkerja'] == 7005010
+            || $pegawai['id_unitkerja'] == 6160000){// jika kapus, atau direktur rumah sakit, atau instalasi farmasi
                 $atasan = $this->baseQueryAtasan()
                                 ->where('c.id_unitkerja', 3012000)
                                 ->where('d.kepalaskpd', 1)
@@ -1116,6 +1117,9 @@
             || $pegawai['id_unitkerja'] == 7005010
             || $pegawai['id_unitkerja'] == 6160000
             ){ // jika puskes, rumah sakit, gudang farmasi, ambil kadis dan sek dinkes 
+                // if($this->general_library->isProgrammer()){
+                //     dd($pegawai);
+                // }
                 $fl = 1;
                 $kadis = $this->baseQueryAtasan()
                             ->where('b.skpd', 3012000)

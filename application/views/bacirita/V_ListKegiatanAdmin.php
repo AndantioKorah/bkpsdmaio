@@ -83,7 +83,20 @@
 					<img class="card-img-top img-fluid img-kegiatan" src="<?=base_url($srcImage)?>">
 					<div class="card-body">
 						<div class="row">
-							<div class="col-lg-12 div-title">
+							<div class="col-lg-12 div-statistik">
+								<div class="row fw-bold" style="font-size: .85rem;">
+									<div class="col-lg-4">
+										<i class="fa fa-user text-danger"></i> <?=formatCurrencyWithoutRp($rs['total_pendaftaran'], 0)?>
+									</div>
+									<div class="col-lg-4">
+										<i class="fa fa-file-signature text-success"></i> <?=formatCurrencyWithoutRp($rs['total_absen'], 0)?>
+									</div>
+									<div class="col-lg-4">
+										<i class="fa fa-certificate text-warning"></i> <?=formatCurrencyWithoutRp($rs['total_generate_sertifikat'], 0)?>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-12 div-title mt-3">
 								<h5 class="title-kegiatan card-title"><?=($rs['topik'])?></h5>
 							</div>
 							<div class="col-lg-12 div-button">

@@ -17,13 +17,36 @@ class M_Bacirita extends CI_Model
 
     public function loadListKegiatan($tab){
         $res = null;
-        $data = $this->db->select('a.*, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_t_peserta_kegiatan')
+        $data = $this->db->select('a.*, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_t_peserta_kegiatan,
+                    (
+                        SELECT COUNT(*)
+                        FROM db_bacirita.t_peserta_kegiatan aa
+                        WHERE aa.flag_active = 1
+                        AND aa.id_t_kegiatan = a.id
+                    ) as total_pendaftaran,
+                    (
+                        SELECT COUNT(*)
+                        FROM db_bacirita.t_peserta_kegiatan bb
+                        WHERE bb.flag_active = 1
+                        AND bb.id_t_kegiatan = a.id
+                        AND bb.flag_absen = 1
+                    ) as total_absen,
+                    (
+                        SELECT COUNT(*)
+                        FROM db_bacirita.t_peserta_kegiatan cc
+                        WHERE cc.flag_active = 1
+                        AND cc.id_t_kegiatan = a.id
+                        AND cc.flag_absen = 1
+                        AND cc.flag_generate_sertifikat  = 1
+                    ) as total_generate_sertifikat
+        ')
                     ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
                     ->join("db_bacirita.t_peserta_kegiatan d", "a.id = d.id_t_kegiatan AND d.flag_active = 1 AND d.id_m_user = '".$this->general_library->getId()."'", "left")
-                    ->order_by('a.tanggal', 'desc')
                     ->where('a.flag_active', 1)
+                    ->group_by('a.id')
+                    ->order_by('a.tanggal', 'desc')
                     ->get()->result_array();
         if($tab == "all"){
             $res = $data;

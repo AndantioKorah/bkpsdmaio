@@ -124,7 +124,7 @@
 
                 ?>
                 
-                <?php if($this->general_library->isProgrammer()){
+                <?php // if($this->general_library->isProgrammer()){
                     $jamWaktuSelesai = $webinar['tanggal']." ".$webinar['jam_selesai'];
                     $flagHariSama = $webinar['tanggal'] == date('Y-m-d') ? 1 : 0;
                 ?>
@@ -267,16 +267,17 @@
                             </div>
                         </div>
                     </div>
-                <?php } ?>
+                <?php // } ?>
 
                 <?php if($webinar['id_daftar'] == null) { ?>
                     <button id="btn_daftar" onclick= <?=$onclick;?>  type="button" class="btn mt-3 <?=$badgeStatusDaftar;?>"> <?=$statusDaftar;?></button>
                 <?php } else { ?>
                     <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda sudah terdaftar</span><br>
-                    <?php if($webinar['tanggal'] == date('Y-m-d')){ ?>
-                        <?php if($webinar['flag_absen'] == 0) { ?>
+                    <?php if(($webinar['tanggal'] == date('Y-m-d') &&
+                        $webinar['flag_absen'] == 0 &&
+                        (formatTimeAbsen($webinar['jam_mulai']) >= date('H:i:s') && formatTimeAbsen($webinar['jam_selesai']) <= date('H:i:s'))) || 
+                        $webinar['flag_buka_absen'] == 1){ ?>
                             <button onclick= "presensiKegiatan()" style="<?=$stylePresensi;?>"  type="button" class="btn mt-3 btn-dark"> Presensi Seminar</button>
-                        <?php } ?>
                     <?php } ?>
                     <?php if($webinar['flag_absen'] == 1) { ?>
                         <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda Sudah Melakukan Presensi</span><br>

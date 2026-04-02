@@ -287,7 +287,9 @@
                             <br>
                             <?php if($webinar['flag_download_sertifikat'] == 1
                             ){ ?>
-                                <button style="display: <?=$webinar['flag_generate_sertifikat'] == 0 ? 'block' : 'none'?>" id="btn_generate_sertifikat" type="button" class="btn mt-3 btn-primary">Generate Sertifikat</button>
+                                <?php if($this->general_library->isProgrammer()){ ?>
+                                    <button style="display: <?=$webinar['flag_generate_sertifikat'] == 0 ? 'block' : 'none'?>" id="btn_generate_sertifikat" type="button" class="btn mt-3 btn-primary">Generate Sertifikat</button>
+                                <?php } ?>
                                 <button style="display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" id="btn_download_sertifikat" type="button" class="btn mt-3 btn-primary"><i class="fa fa-download"></i> Download Sertifikat</button><br>
                                 <span style="color: green; font-size: .65rem; margin-top: -15px; font-style: italic; font-weight: bold; display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" class="download_sertifikat_label"><i class="fa fa-check"></i> Sertifikat sudah dapat didownload</span><br>
                                 <span style="color: green; font-size: .65rem; margin-top: -15px; font-style: italic; font-weight: bold; display: <?=$webinar['url_sertifikat_peserta'] ? 'block' : 'none'?>" class="download_sertifikat_label">Sertifikat sudah terisi secara otomatis di data Bangkom Anda</span>

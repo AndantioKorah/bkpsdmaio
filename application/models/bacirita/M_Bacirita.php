@@ -271,6 +271,9 @@ class M_Bacirita extends CI_Model
                             $this->mpdf->setX($v['margin-left']);
                             $this->mpdf->writeHtml("<p style='
                                 font-family: Tahoma;
+                                text-align: left;
+                                border: 1px solid black;
+                                width: 500px;
                                 margin-left: ".$v['margin-left']."px;
                                 font-size: ".$v['font-size']."rem;
                             '>".$v['content']."</p>");

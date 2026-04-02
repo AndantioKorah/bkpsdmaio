@@ -199,7 +199,7 @@
 		font-size: 1rem;
 	}
 </style>	
-
+<!-- 
 <div class="row mt-4">
   <div class="col-sm-4">
     <div class="card">
@@ -224,8 +224,7 @@
       </div>
     </div>
   </div>
-
-</div>
+</div> -->
 							
 						</div>
 					</form>

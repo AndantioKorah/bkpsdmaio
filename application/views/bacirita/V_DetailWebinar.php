@@ -268,7 +268,6 @@
                         </div>
                     </div>
                 <?php // } ?>
-
                 <?php if($webinar['id_daftar'] == null) { ?>
                     <button id="btn_daftar" onclick= <?=$onclick;?>  type="button" class="btn mt-3 <?=$badgeStatusDaftar;?>"> <?=$statusDaftar;?></button>
                 <?php } else { ?>
@@ -277,8 +276,11 @@
                         $webinar['flag_absen'] == 0 &&
                         (formatTimeAbsen($webinar['jam_mulai']) >= date('H:i:s') && formatTimeAbsen($webinar['jam_selesai']) <= date('H:i:s'))) || 
                         $webinar['flag_buka_absen'] == 1){ ?>
-                            <button onclick= "presensiKegiatan()" style="<?=$stylePresensi;?>"  type="button" class="btn mt-3 btn-dark"> Presensi Seminar</button>
-                    <?php } ?>
+                        <?php if($webinar['flag_absen'] == 0 && date('H:i:s') < formatTimeAbsen($webinar['jam_batas_absensi'])){ ?>
+                            <button onclick= "presensiKegiatan()"   type="button" class="btn mt-3 btn-dark"> Presensi Seminar</button>
+                            <?php } ?>
+                        <?php } ?>
+
                     <?php if($webinar['flag_absen'] == 1) { ?>
                         <span style="font-size: 1rem; font-weight: bold; font-style: italic; color: green;"><i class="fa fa-check"></i> Anda Sudah Melakukan Presensi</span><br>
                         <?php

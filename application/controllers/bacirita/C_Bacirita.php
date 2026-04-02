@@ -34,9 +34,7 @@ class C_Bacirita extends CI_Controller
         $this->load->view('bacirita/V_ModalEditKegiatan', $data);
     }
 
-    
-
-     public function editDataKegiatan(){
+    public function editDataKegiatan(){
         echo json_encode($this->bacirita->editDataKegiatan($this->input->post()));
     }
 
@@ -94,6 +92,11 @@ class C_Bacirita extends CI_Controller
     public function downloadSertifikat(){
         $data = $this->input->post();
         echo json_encode($this->bacirita->downloadSertifikat($data));
+    }
+
+    public function loadPesertaKegiatan($id){
+        $data['result'] = $this->bacirita->loadPesertaKegiatan($id);
+        $this->load->view('bacirita/V_ListPesertaKegiatan', $data);
     }
 
 }

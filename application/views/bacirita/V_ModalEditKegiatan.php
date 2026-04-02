@@ -45,6 +45,10 @@
 					<button class="nav-link nav-link-bacirita" id="pills-sertifikat-tab"
 					data-bs-toggle="pill" data-bs-target="#pills-sertifikat" type="button" role="tab" aria-selected="true">Sertifikat</button>
 				</li>
+				<li class="nav-item nav-item-bacirita" role="presentation">
+					<button class="nav-link nav-link-bacirita" id="pills-peserta-tab"
+					data-bs-toggle="pill" data-bs-target="#pills-peserta" type="button" role="tab" aria-selected="true">Peserta</button>
+				</li>
 			</ul>
 		</div>
 		<div class="col-lg-12">
@@ -172,60 +176,6 @@
 								<button id="btn_simpan_edit" class="btn btn-navy btn-block" ><i class="fa fa-save"></i> Simpan</button>
 								<button id="btn_simpan_loading_edit" style="display: none;" disabled class="btn btn-navy btn-block" type="button"><i class="fa fa-spin fa-spinner"></i> Menyimpan Data</button>
 							</div>
-
-<br>
-<style>
-	.total_daftar{
-		background-color: #3b7ddd;
-		color: white;
-		border-radius:5px;
-		font-weight: bold;
-		font-size: 1rem;
-	}
-
-	.total_absen{
-		background-color: #1cbb8c;
-		color: white;
-		border-radius:5px;
-		font-weight: bold;
-		font-size: 1rem;
-	}
-
-	.total_serti{
-		background-color: #17a2b8;
-		color: white;
-		border-radius:5px;
-		font-weight: bold;
-		font-size: 1rem;
-	}
-</style>	
-<!-- 
-<div class="row mt-4">
-  <div class="col-sm-4">
-    <div class="card">
-      <div class="card-body total_daftar">
-        Total Pendaftaran : <?=$total_peserta['total_daftar']?>
-      </div>
-    </div>
-  </div>
-
-   <div class="col-sm-4 ">
-    <div class="card">
-      <div class="card-body total_absen">
-        Total Absen : <?=$total_peserta['total_absen']?>
-      </div>
-    </div>
-  </div>
-
-   <div class="col-sm-4 ">
-    <div class="card">
-      <div class="card-body total_serti">
-        Total Generate Sertifikat : <?=$total_peserta['total_generate_sertifikat']?>
-      </div>
-    </div>
-  </div>
-</div> -->
-							
 						</div>
 					</form>
 				</div>
@@ -417,6 +367,8 @@
 						</div>
 					</div>
 				</div>
+				<div class="tab-pane" id="pills-peserta" role="tabpanel" aria-labelledby="pills-peserta-tab">
+				</div>
 			</div>
 		</div>
 	</div>
@@ -433,6 +385,14 @@
 	function refreshIframePreview(){
 		$('#iframe_preview')[0].contentWindow.location.reload(true)
 	}
+
+	$('#pills-peserta-tab').on('click', function(){
+		$('#pills-peserta').html('')
+		$('#pills-peserta').append(divLoaderNavy)
+		$('#pills-peserta').load('<?=base_url("bacirita/C_Bacirita/loadPesertaKegiatan/".$rs['id'])?>', function(){
+			$('#loader').hide()
+		})
+	})
 
 	$('#flag_buka_absen').on('change', function(){
 		id = '<?=$rs['id']?>'

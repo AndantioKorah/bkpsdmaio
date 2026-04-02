@@ -5,7 +5,7 @@
 		-moz-box-shadow: 4px 4px 7px 0px rgba(0,0,0,0.75);
 		border: 1px solid rgba(0,0,0,0.75);
 		border-radius: 10px;
-		height: 600px;
+		/* height: 600px; */
 	}
 
 	.img-kegiatan{
@@ -13,7 +13,7 @@
 		box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.75);
 		-webkit-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.75);
 		-moz-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.75);
-		width: 100%;
+		/* width: 100%; */
 		aspect-ratio: 1/1;
 		object-fit: contain;
 	}
@@ -24,16 +24,16 @@
 		font-size: 1rem !important;
 		display: -webkit-box; /* Required for older browser compatibility */
 		-webkit-box-orient: vertical; /* Required for older browser compatibility */
-		-webkit-line-clamp: 8; /* Limits text to 3 lines */
+		-webkit-line-clamp: 5; /* Limits text to 3 lines */
 		overflow: hidden;
 		text-overflow: ellipsis; /* Ensures the ellipsis appears */
 	}
 
 	.div-button{
-		position: absolute;
+		/* position: absolute;
 		bottom: 0;
 		right: 0;
-		margin-bottom: 10px;
+		margin-bottom: 10px; */
 	}
 
 	.lbl-detail-kegiatan{

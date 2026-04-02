@@ -5,7 +5,7 @@
 		-moz-box-shadow: 4px 4px 7px 0px rgba(0,0,0,0.75);
 		border: 1px solid rgba(0,0,0,0.75);
 		border-radius: 10px;
-		height: 600px;
+		/* height: 600px; */
 	}
 
 	.img-kegiatan{
@@ -25,16 +25,16 @@
 		font-size: 1rem !important;
 		display: -webkit-box; /* Required for older browser compatibility */
 		-webkit-box-orient: vertical; /* Required for older browser compatibility */
-		-webkit-line-clamp: 5; /* Limits text to 3 lines */
+		-webkit-line-clamp: 4; /* Limits text to 3 lines */
 		overflow: hidden;
 		text-overflow: ellipsis; /* Ensures the ellipsis appears */
 	}
 
 	.div-button{
-		position: absolute;
+		/* position: absolute;
 		bottom: 0;
 		right: 0;
-		margin-bottom: 10px;
+		margin-bottom: 10px; */
 	}
 
 	.lbl-detail-kegiatan{
@@ -115,7 +115,7 @@
 					$statusKegiatan = "Selesai";
 			}
 		?>
-			<div class="col-lg-3 col-md-3 col-sm-3 p-3">
+			<div class="col-lg-3 p-4">
 				<?php if($rs['id_t_peserta_kegiatan'] || date('Y-m-d') <= $rs['tanggal']){ ?>
 					<div class="card card-list-kegiatan card-list-kegiatan-hover" onclick="openDetailWebinar('<?=$rs['link_url']?>')">
 				<?php } else { ?>
@@ -126,18 +126,18 @@
 					<img class="card-img-top img-fluid img-kegiatan" src="<?=base_url($srcImage)?>">
 					<div class="card-body">
 						<div class="row">
-							<div class="col-lg-12 div-title">
+							<div class="col-lg-12 div-title" style="margin-bottom: 0;">
 								<h5 class="title-kegiatan card-title"><?=($rs['topik'])?></h5>
 							</div>
 							<div class="col-lg-12 div-button">
 								<div class="row">
-									<div class="col-lg-6">
+									<div class="col-lg-6 col-md-6 col-sm-6">
 										<span class="lbl-detail-kegiatan">
 											<?=formatDateNamaBulan($rs['tanggal'])?><br>
 											<?=formatTimeAbsen($rs['jam_mulai'])." - ".$jamSelesai?>
 										</span>
 									</div>
-									<div class="col-lg-6 text-right">
+									<div class="col-lg-6 col-md-6 col-sm-6 text-right">
 										<?php if($rs['id_t_peserta_kegiatan'] || date('Y-m-d') <= $rs['tanggal']){ ?>
 											<a href="<?=base_url('bacirita/detail-webinar/')?><?=$rs['link_url']?>" 
 												class="text-right btn btn-navy">Detail</a>

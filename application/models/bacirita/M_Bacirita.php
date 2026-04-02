@@ -145,19 +145,21 @@ class M_Bacirita extends CI_Model
         if(!$data['meta_coordinate'] && $data['template_sertifikat']){
             $contentQr = trim(base_url('login'), generateRandomString());
     		$res['qr'] = generateQr($contentQr);
-            
+
+            $nomorSuratDummy = "800.1.13.1/BKPSDM/SK/SLDN/9999/".date('Y');
+            $namaDummy = "Jonathan Christopher Pendelton-Smith";
             $meta = [
                 'url_template' => base_url('arsipbkpsdmbacirita/sertifikat/'.$data['template_sertifikat']),
                 'nomor_surat' => [
                     'flag_show' => 1,
-                    'content' => "*nomor_surat*",
+                    'content' => "*".$nomorSuratDummy."*",
                     'margin-top' => "0",
                     'margin-left' => "0",
                     'font-size' => "4",
                 ],
                 'nama_lengkap' => [
                     'flag_show' => 1,
-                    'content' => "*nama_pegawai*",
+                    'content' => "*".$namaDummy."*",
                     'margin-top' => "0",
                     'margin-left' => "0",
                     'font-size' => "4",
@@ -271,9 +273,6 @@ class M_Bacirita extends CI_Model
                             $this->mpdf->setX($v['margin-left']);
                             $this->mpdf->writeHtml("<p style='
                                 font-family: Tahoma;
-                                text-align: left;
-                                border: 1px solid black;
-                                width: 500px;
                                 margin-left: ".$v['margin-left']."px;
                                 font-size: ".$v['font-size']."rem;
                             '>".$v['content']."</p>");

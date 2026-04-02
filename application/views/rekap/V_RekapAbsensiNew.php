@@ -51,11 +51,11 @@
                                                 <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
                                                     <?=$uk['nm_unitkerja']?>
                                                 </option>
-                                            <?php } } else { if($skpd_plt && isset($skpd_plt[$uk['id_unitkerja']])){ // cek jika ada unitkerja plt ?>
+                                            <?php } } else { if($skpd_plt){ if(isset($skpd_plt[$uk['id_unitkerja']])){ // cek jika ada unitkerja plt ?>
                                                 <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
                                                     <?=$uk['nm_unitkerja']?>
                                                 </option>
-                                            <?php } else if($uk['id_unitkerja'] == $this->general_library->getIdUnitKerjaPegawai()){  ?>
+                                            <?php } } else if($uk['id_unitkerja'] == $this->general_library->getIdUnitKerjaPegawai()){  ?>
                                             <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
                                                 <?=$uk['nm_unitkerja']?>
                                             </option>

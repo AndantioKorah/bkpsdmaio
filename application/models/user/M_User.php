@@ -2485,9 +2485,10 @@
                             ->get()->result_array();
             if($data){
                 foreach($data as $d){
-                    $res['id_unitkerja'] = $d;
+                    $res[$d['id_unitkerja']] = $d;
                 }
             }
+            return $res;
         }
 
         public function loadDetailPdmUser(){

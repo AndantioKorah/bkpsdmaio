@@ -9,19 +9,19 @@
 	</div>
 </div>
 
-    <div class="card-header" style="margin-bottom:-40px">
-    
+
+
+<?php if($result) { ?>
+<div class="card-header" style="margin-bottom:-40px">
  <form  method="post" enctype="multipart/form-data" class="float-right mr-1 mb-4" action="<?=base_url('kepegawaian/C_Kepegawaian/openListUploadBangkomSkpdItemExcel')?>" target="_blank">
                 <input type="hidden" name="unitkerja" value="<?=$skpd;?>">
                 <input type="hidden" name="tahun" value="<?=$tahun;?>">
             	<input type="hidden" name="bulan" value="<?=$bulan;?>">
                 <button type="submit" class="btn btn-success"><i class="fa fa-file"></i> Download as Excel</button>
 		</form>
-    </div>
+</div>
+<div class="card-body table-responsive" >
 
-
-    <div class="card-body table-responsive" >
-<?php if($result) { ?>
 <div class="table-responsive">
          <table class="table datatable" style="border: 0px black solid;" border-collapse="collapse">
                                 <thead>
@@ -32,8 +32,9 @@
                                     <th class="text-center">Bulan</th>
                                     <th class="text-center">Data Bangkom</th>
                                     <th class="text-center">Total JP</th>
-                                    <!-- <th class="text-center">Status</th> -->
-
+                                    <?php if(isset($result[0]['riwayat'])) { ?>
+                                    <th class="text-center">Semua Data</th>
+                                     <?php } ?>
                                     
 
                                 </thead>
@@ -60,6 +61,15 @@
                                             <td class="text-center"><?= getNamaBulan($bulan)?></td>
                                             <td class="text-center"><?php if($lj['id'] == null) echo "-"; else echo "Ada";?></td>
                                             <td class="text-center"><?=$lj['total_jp']?></td>
+                                            <?php if(isset($lj['riwayat'])) { ?>
+                                            <td class="text-center">
+                                            <?php foreach($lj['riwayat'] as $l){ ?>
+                                            <?php echo  "| ".getNamaBulan($l['bulan'])." : ".$l['jumlah_jp']." JP |";?><br>
+                                            <?php } ?>
+                                            <?php } ?>
+                                            
+                                        </td>
+
                                             <!-- <td class="text-center">
                                                 <?php if($lj['status'] == null) echo "-"; else if($lj['status'] == 2) echo "Sudah Verif"; else echo "Belum Verif";?>
                                             </td> -->
@@ -70,7 +80,7 @@
                             </table>
                             </div>
                             <?php } else { ?>
-                            <h5>Belum ada data </h5>
+                            <h5>Tidak ada data </h5>
                             <?php } ?>
     </div>
 </div>

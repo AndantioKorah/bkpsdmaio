@@ -112,6 +112,7 @@ class C_Rekap extends CI_Controller
 
     public function readAbsensiExcelNew()
     {
+      
         $temp = $this->rekap->readAbsensiExcelNew();
         $data = $this->rekap->buildDataAbsensi($temp);
         $this->session->set_userdata('data_read_absensi_excel', $data);
@@ -567,6 +568,7 @@ class C_Rekap extends CI_Controller
             case "absen":
                 $data = null;
                 $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null, 1);
+                dd($data['result']);
                 $data['flag_print'] = 0;
                 if($data['result'] && (!isset($data['result']['code']))){
                     $data['skpd'] = $data['result']['skpd'];

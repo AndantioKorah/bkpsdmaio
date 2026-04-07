@@ -67,15 +67,15 @@
                  </select>
                 </div>
 
-                <div class="form-group" >
+    <div class="form-group" >
     <label for="exampleFormControlInput1">Status</label>
     <select class="form-control select2-navy customInput" style="width: 100%"
                  id="bulan" data-dropdown-css-class="select2-navy" name="status">
                
                                     <option value="0" selected>Semua</option>
-                                    <option value="1" >Belum terpenuhi untuk pengurususan TPP</option>
+                                    <option value="1" >Belum terpenuhi untuk pengurusan TPP</option>
                  </select>
-                </div>
+    </div>
 
                 
                 <div class="col-lg-12 col-md-9" style="margin-top: 28px;">

@@ -29,14 +29,13 @@
                                     <th class="text-left" style="width:10%;">Nama </th>
                                     <th class="text-center">Unit Kerja</th>
                                     <th class="text-center">Tahun</th>
+                                    <?php if(isset($result[0]['riwayat'])) { ?>
+                                    <th class="text-center">Semua Data</th>
+                                     <?php } else { ?>
                                     <th class="text-center">Bulan</th>
                                     <th class="text-center">Data Bangkom</th>
                                     <th class="text-center">Total JP</th>
-                                    <?php if(isset($result[0]['riwayat'])) { ?>
-                                    <th class="text-center">Semua Data</th>
-                                     <?php } ?>
-                                    
-
+                                     <?php }  ?>
                                 </thead>
                                 <tbody>
                                     <?php $no=1; foreach($result as $lj){ ?>
@@ -58,15 +57,18 @@
                                             </td>
                                             <td class="text-center"><?=$lj['nm_unitkerja']?></td>
                                             <td class="text-center"><?=$tahun?></td>
-                                            <td class="text-center"><?= getNamaBulan($bulan)?></td>
-                                            <td class="text-center"><?php if($lj['id'] == null) echo "-"; else echo "Ada";?></td>
-                                            <td class="text-center"><?=$lj['total_jp']?></td>
                                             <?php if(isset($lj['riwayat'])) { ?>
                                             <td class="text-center">
                                             <?php foreach($lj['riwayat'] as $l){ ?>
-                                            <?php echo  "| ".getNamaBulan($l['bulan'])." : ".$l['jumlah_jp']." JP |";?><br>
+                                            <span class="badge badge-dark"><?php echo  getNamaBulan($l['bulan'])." : ".$l['jumlah_jp']." JP";?></span>
+                                            <br>
                                             <?php } ?>
+                                            <?php } else { ?>
+                                            <td class="text-center"><?= getNamaBulan($bulan)?></td>
+                                            <td class="text-center"><?php if($lj['id'] == null) echo "-"; else echo "Ada";?></td>
+                                            <td class="text-center"><?=$lj['total_jp']?></td>
                                             <?php } ?>
+
                                             
                                         </td>
 

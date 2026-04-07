@@ -17122,8 +17122,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                     $data[] = $res;
                                 }
                                 }
-
-                                  $result = $data;
+                                if(isset($data)){
+                                $result = $data;
+                                }
             }
             return $result;
         }

@@ -63,6 +63,20 @@
         top: -70%;
         transform: translateY(-50%);
     }
+
+.link_webinar {
+  flex: 1;
+  text-decoration: none;
+  outline-color: transparent;
+  text-align: center;
+  line-height: 3;
+  color: black;
+  background: #7dddea;
+  padding:8px;
+  border-radius:5px;
+}
+
+
 </style>
 <a href="<?=base_url('bacirita/list-webinar')?>">
     <button type="button" class="btn btn-sm btn-primary"> <i class="fa fa-arrow-left"></i> Kembali</button>
@@ -313,7 +327,7 @@
     <tr>
       <td>Zoom Meeting <br>ID : <?=$webinar['meeting_id_zoom'];?> Passcode : <?=$webinar['passcode_zoom'];?></td>
       <td>
-        <a href="<?=$webinar['link_zoom'];?>" target="_blank">
+        <a class="link_webinar" href="<?=$webinar['link_zoom'];?>" target="_blank">
         <?=$webinar['link_zoom'];?></i>
         </a>
     </td>
@@ -321,7 +335,7 @@
     <tr>
       <td>Youtube</td>
        <td>
-      <a href="<?=$webinar['link_youtube'];?>" target="_blank">
+      <a class="link_webinar" href="<?=$webinar['link_youtube'];?>" target="_blank">
      <?=$webinar['link_youtube'];?></i>
       </a>
     </td>

@@ -4113,10 +4113,11 @@
             }
         }
 
-        public function startKonsultasi(){
+        public function startKonsultasi($id_m_layanan_konsul = 0){
             $rs = [
                 'code' => 0,
-                'message' => null
+                'message' => null,
+                'id' => null
             ];
             
             $existsNotDone = $this->db->select('*')
@@ -4126,8 +4127,9 @@
                         ->where('flag_done', 0)
                         ->get()->row_array();
             if($existsNotDone){
-                $rs['code'] = 1;
+                $rs['code'] = 2;
                 $rs['message'] = "Tidak dapat memulai Sesi Konsultasi baru jika masih ada Sesi Konsultasi yang sedang berlangsung.";
+                $rs['id'] = $existsNotDone['id'];
                 return $rs;
             }
 
@@ -4138,13 +4140,15 @@
                         ->where('flag_rating', 0)
                         ->get()->row_array();
             if($existsNotRating){
-                $rs['code'] = 1;
+                $rs['code'] = 3;
                 $rs['message'] = "Tidak dapat memulai Sesi Konsultasi baru karena ada Sesi Konsultasi yang belum diberikan penilaian.";
+                $rs['id'] = $existsNotRating['id'];
                 return $rs;
             }
 
             $this->db->insert('t_live_chat', [
                 'id_m_user' => $this->general_library->getId(),
+                'id_m_layanan_konsul' => $id_m_layanan_konsul,
                 'chat_id' => generateRandomString(7)
             ]);
             $rs['id'] = $this->db->insert_id();
@@ -4169,6 +4173,8 @@
                         // ->where('a.id_m_user', $this->general_library->getId())
                         ->where('a.flag_active', 1)
                         ->where('c.flag_active', 1)
+                        ->order_by('a.flag_done', 'asc')
+                        ->order_by('a.done_date', 'desc')
                         ->order_by('b.created_date', 'desc')
                         ->group_by('a.id');
                         
@@ -4212,7 +4218,7 @@
 
         public function openKonsultasiDetail($id){
             $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws, h.gelar1 as gelar1_assign,
-                            h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign')
+                            h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan')
                             ->from('t_live_chat a')
                             ->join('m_user c', 'a.id_m_user = c.id')
                             ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
@@ -4220,6 +4226,7 @@
                             ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
                             ->join('m_user g', 'a.id_m_user_assigned = g.id', 'left')
                             ->join('db_pegawai.pegawai h', 'g.username = h.nipbaru_ws', 'left')
+                            ->join('m_layanan_konsul i', 'a.id_m_layanan_konsul = i.id')
                             ->where('a.id', $id)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
@@ -4323,10 +4330,22 @@
 
             $this->db->trans_begin();
             
+            $chats = $this->db->select('*')
+                            ->from('t_live_chat_detail')
+                            ->where('flag_active', 1)
+                            ->where('id_t_live_chat', $id)
+                            ->where('is_sender_admin', 1)
+                            ->get()->row_array();
+            if($chats != null){
+                $rs = [
+                    'code' => 1,
+                ];
+                return $rs;
+            }
+
             $this->db->where('id', $id)
                     ->update('t_live_chat', [
-                        'flag_done' => 1,
-                        'done_date' => date('Y-m-d H:i:s'),
+                        'flag_active' => 0,
                         'updated_by' => $this->general_library->getId()
                     ]);
 
@@ -4447,6 +4466,43 @@
             }
 
             return $result;
+        }
+
+        public function submitGantiJenisLayanan($id_t_live_chat = 0, $id_m_layanan_konsul){
+            $res = [
+                'code' => 0,
+                'message' => "ok",
+                'id' => $id_t_live_chat
+            ];
+
+            if($id_t_live_chat == 0){
+                // baru mulai konsul
+                $insert = $this->startKonsultasi($id_m_layanan_konsul);
+                if($insert['code'] == 0){
+                    $res['id'] = $insert['id'];
+                } else {
+                    $res = $insert;
+                }
+            } else {
+                $mKonsul = $this->db->select('*')
+                                    ->from('m_layanan_konsul')
+                                    ->where('id', $id_m_layanan_konsul)
+                                    ->get()->row_array();
+
+                $this->db->where('id', $id_t_live_chat)
+                        ->update('t_live_chat', [
+                            'id_m_layanan_konsul' => $id_m_layanan_konsul,
+                            'updated_by' => $this->general_library->getId()
+                        ]);
+
+                $this->db->insert('t_live_chat_detail', [
+                    'id_t_live_chat' => $id_t_live_chat,
+                    'pesan' => 'Admin telah mengganti Jenis Layanan Konsul menjadi '.$mKonsul['nama_layanan'],
+                    'is_sistem' => 1
+                ]);
+            }
+
+            return $res;
         }
 
         public function cronHashFileBangkom(){

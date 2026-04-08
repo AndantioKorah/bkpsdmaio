@@ -93,9 +93,9 @@
         >
             <?php if($result['chat']['flag_done'] == 0){ ?>
                 <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi') ||
-                    $this->general_library->isProgrammer()
-                ){  ?>
+                    $this->general_library->isProgrammer()){ ?>
                     <a class="dropdown-item" onclick="pilihTeknisLayanan('<?=$result['chat']['id']?>')"><?=(!$result['chat']['id_m_user_assigned']) ? "Assign" : "Ganti"?> Operator</a>
+                    <a class="dropdown-item" onclick="gantiJenisLayanan('<?=$result['chat']['id']?>')">Jenis Layanan</a>
                 <?php } ?>
                 <hr style="margin: 0 !important;">
                 <a class="dropdown-item" onclick="endKonsultasi('<?=$result['chat']['id']?>')">Akhiri Konsultasi</a>
@@ -289,6 +289,15 @@
         reloadLiveChatContainer('<?=$result['chat']['id']?>')
     })
 
+    function gantiJenisLayanan(id){
+        showPopupLiveChat('Ganti Jenis Layanan')
+        $('.popup_body').html('')
+        $('.popup_body').append(divLoaderNavy)
+        $('.popup_body').load('<?=base_url("user/C_User/loadLayananKonsultasi/")?>'+id+'/1', function(){
+            $('#loader').hide()
+        })
+    }
+
     function pilihTeknisLayanan(id){
         $('#div_live_chat_container').hide()
         $('#div_assign_operator').show()
@@ -300,15 +309,30 @@
     }
     
     function endKonsultasi(id){
-        if(confirm('Apakah Anda yakin?')){
-            $('#div_start_konsultasi').hide()
-            $('#div_chat_konsultasi').show()
-            $('#div_chat_konsultasi').html('')
-            $('#div_chat_konsultasi').append(divLoaderNavy)
-            $('#div_chat_konsultasi').load('<?=base_url('user/C_User/ratingKonsultasi/')?>'+id, function(){
-                $('#loader').hide()
-            })
-        }
+        $.ajax({
+            url: '<?=base_url("user/C_User/endKonsultasi/")?>'+id,
+            method: 'post',
+            data: null,
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 1){
+                    if(confirm('Apakah Anda yakin?')){
+                        $('#div_start_konsultasi').hide()
+                        $('#div_chat_konsultasi').show()
+                        $('#div_chat_konsultasi').html('')
+                        $('#div_chat_konsultasi').append(divLoaderNavy)
+                        $('#div_chat_konsultasi').load('<?=base_url('user/C_User/ratingKonsultasi/')?>'+id, function(){
+                            $('#loader').hide()
+                        })
+                    }
+                } else {
+                    successtoast('Konsultasi dihapus karena belum terjadi percakapan')
+                    backToStartView()
+                }
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
     }
 
     function backToStartView(){

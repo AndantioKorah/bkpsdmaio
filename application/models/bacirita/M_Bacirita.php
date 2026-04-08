@@ -264,18 +264,36 @@ class M_Bacirita extends CI_Model
                     $this->mpdf->setX(0);
                     if($k != "qr"){
                         if($v['margin-left'] == 0){
-                            $this->mpdf->writeHtml("<p style='
-                                font-family: Tahoma;
-                                text-align: center;
-                                font-size: ".$v['font-size']."rem;
-                            '>".$v['content']."</p>");
+                            if(isset($v['font-color'])){
+                                $this->mpdf->writeHtml("<p style='
+                                    font-family: Tahoma;
+                                    text-align: center;
+                                    font-size: ".$v['font-size']."rem;
+                                    color: ".$v['font-color'].";
+                                '>".$v['content']."</p>");
+                            } else {
+                                $this->mpdf->writeHtml("<p style='
+                                    font-family: Tahoma;
+                                    text-align: center;
+                                    font-size: ".$v['font-size']."rem;
+                                '>".$v['content']."</p>");
+                            }
                         } else {
                             $this->mpdf->setX($v['margin-left']);
-                            $this->mpdf->writeHtml("<p style='
-                                font-family: Tahoma;
-                                margin-left: ".$v['margin-left']."px;
-                                font-size: ".$v['font-size']."rem;
-                            '>".$v['content']."</p>");
+                            if(isset($v['font-color'])){
+                                $this->mpdf->writeHtml("<p style='
+                                    font-family: Tahoma;
+                                    margin-left: ".$v['margin-left']."px;
+                                    font-size: ".$v['font-size']."rem;
+                                    color: ".$v['font-color'].";
+                                '>".$v['content']."</p>");
+                            } else {
+                                $this->mpdf->writeHtml("<p style='
+                                    font-family: Tahoma;
+                                    margin-left: ".$v['margin-left']."px;
+                                    font-size: ".$v['font-size']."rem;
+                                '>".$v['content']."</p>");
+                            }
                         }
                     } else {
                         if($v['margin-left'] == 0){
@@ -823,6 +841,7 @@ class M_Bacirita extends CI_Model
                 $temp[$k]['margin-top'] = $data['result'][$k]['margin-top'];
                 $temp[$k]['margin-left'] = $data['result'][$k]['margin-left'];
                 $temp[$k]['font-size'] = $data['result'][$k]['font-size'];
+                $temp[$k]['font-color'] = $data['result'][$k]['font-color'];
             } else {
                 $temp[$k]['margin-top'] = $data['result'][$k]['margin-top'];
                 $temp[$k]['margin-left'] = $data['result'][$k]['margin-left'];

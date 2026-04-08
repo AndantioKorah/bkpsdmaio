@@ -231,17 +231,21 @@
 														Nomor Surat 
 													</label>
 													<div class="row">
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['margin-top']) ? ($coordinate["nomor_surat"]['margin-top']) : 0 ;?>" name="nomor_surat[margin-top]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['margin-left']) ? ($coordinate["nomor_surat"]['margin-left']) : 0 ;?>" name="nomor_surat[margin-left]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['font-size']) ? ($coordinate["nomor_surat"]['font-size']) : 0 ;?>" name="nomor_surat[font-size]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Warna</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nomor_surat"]['font-color']) ? ($coordinate["nomor_surat"]['font-color']) : 0 ;?>" name="nomor_surat[font-color]"/>
 														</div>
 													</div>
 													<hr>
@@ -252,17 +256,21 @@
 														<i onclick="toggleFieldPreview('nama_lengkap', 1)" id="icon_nama_lengkap_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['nama_lengkap']) && $coordinate['nama_lengkap']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
 														Nama Pegawai</label>
 													<div class="row">
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['margin-top']) ? ($coordinate["nama_lengkap"]['margin-top']) : 0 ;?>" name="nama_lengkap[margin-top]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['margin-left']) ? ($coordinate["nama_lengkap"]['margin-left']) : 0 ;?>" name="nama_lengkap[margin-left]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['font-size']) ? ($coordinate["nama_lengkap"]['font-size']) : 0 ;?>" name="nama_lengkap[font-size]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Warna</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nama_lengkap"]['font-color']) ? ($coordinate["nama_lengkap"]['font-color']) : 0 ;?>" name="nama_lengkap[font-color]"/>
 														</div>
 													</div>
 													<hr>
@@ -273,17 +281,21 @@
 														<i onclick="toggleFieldPreview('nip', 1)" id="icon_nip_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['nip']) && $coordinate['nip']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
 														NIP</label>
 													<div class="row">
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['margin-top']) ? ($coordinate["nip"]['margin-top']) : 0 ;?>" name="nip[margin-top]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['margin-left']) ? ($coordinate["nip"]['margin-left']) : 0 ;?>" name="nip[margin-left]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['font-size']) ? ($coordinate["nip"]['font-size']) : 0 ;?>" name="nip[font-size]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Warna</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["nip"]['font-color']) ? ($coordinate["nip"]['font-color']) : 0 ;?>" name="nip[font-color]"/>
 														</div>
 													</div>
 													<hr>
@@ -294,17 +306,21 @@
 														<i onclick="toggleFieldPreview('jabatan', 1)" id="icon_jabatan_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['jabatan']) && $coordinate['jabatan']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
 														Jabatan</label>
 													<div class="row">
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['margin-top']) ? ($coordinate["jabatan"]['margin-top']) : 0 ;?>" name="jabatan[margin-top]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['margin-left']) ? ($coordinate["jabatan"]['margin-left']) : 0 ;?>" name="jabatan[margin-left]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['font-size']) ? ($coordinate["jabatan"]['font-size']) : 0 ;?>" name="jabatan[font-size]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Warna</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["jabatan"]['font-color']) ? ($coordinate["jabatan"]['font-color']) : 0 ;?>" name="jabatan[font-color]"/>
 														</div>
 													</div>
 													<hr>
@@ -315,17 +331,21 @@
 														<i onclick="toggleFieldPreview('unit_kerja', 1)" id="icon_unit_kerja_hide" class="fa fa-eye-slash" style="margin-top: 4px; padding-right: 5px;float: left; color: grey; cursor: pointer; display: <?=isset($coordinate['unit_kerja']) && $coordinate['unit_kerja']['flag_show'] == 1 ? 'none' : 'block';?>"></i>
 														Unit Kerja</label>
 													<div class="row">
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Top</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['margin-top']) ? ($coordinate["unit_kerja"]['margin-top']) : 0 ;?>" name="unit_kerja[margin-top]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Left</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['margin-left']) ? ($coordinate["unit_kerja"]['margin-left']) : 0 ;?>" name="unit_kerja[margin-left]"/>
 														</div>
-														<div class="col-lg-4 col-md-4 col-sm-4">
+														<div class="col-lg-3 col-md-3 col-sm-3">
 															<label class="lbl_field_detail">Size</label>
 															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['font-size']) ? ($coordinate["unit_kerja"]['font-size']) : 0 ;?>" name="unit_kerja[font-size]"/>
+														</div>
+														<div class="col-lg-3 col-md-3 col-sm-3">
+															<label class="lbl_field_detail">Warna</label>
+															<input class="form-control form-control-sm" value="<?=isset($coordinate["unit_kerja"]['font-color']) ? ($coordinate["unit_kerja"]['font-color']) : 0 ;?>" name="unit_kerja[font-color]"/>
 														</div>
 													</div>
 													<hr>

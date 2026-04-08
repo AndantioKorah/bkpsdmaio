@@ -134,5 +134,6 @@
     $('#btn_back_assign_operator').on('click', function(){
         $('#div_live_chat_container').show()
         $('#div_assign_operator').hide()
+        $('#form_send_message').show()
     })
 </script>

@@ -619,7 +619,7 @@
 <body>
   <?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 87){ ?>
     <div class="div_live_chat div_live_chat_slide_out">
-      <?php $this->load->view('user/V_LiveChat', null) ?>
+      <?php // $this->load->view('user/V_LiveChat', null) ?>
     </div>
   <?php } ?>
 	<div class="wrapper wrapper-all">

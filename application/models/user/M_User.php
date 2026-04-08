@@ -2828,9 +2828,9 @@
         }
 
         public function cekKenegaraan2Custom(){
-            $tanggal = 17;
-            $bulan = 8;
-            $tahun = 2025;
+            $tanggal = 1;
+            $bulan = 4;
+            $tahun = 2026;
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -2952,9 +2952,9 @@
         }
 
         public function cekKenegaraanCustom(){
-            $tanggal = 16;
-            $bulan = 8;
-            $tahun = 2025;
+            $tanggal = 1;
+            $bulan = 4;
+            $tahun = 2026;
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -3080,10 +3080,10 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 10;
-            $bulan = 11;
-            $tahun = 2025;
-            $namaKegiatan = "Apel Perdana Bulan November Tahun 2025"; 
+            $tanggal = 1;
+            $bulan = 4;
+            $tahun = 2026;
+            $namaKegiatan = "Apel Perdana Bulan April Tahun 2026"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -3238,13 +3238,15 @@
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
-                    // $this->db->insert('t_doku=men_pendukung', $dokpenKenegaraan);
+                    // $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
 
-                    $sendWa['sendTo'] = convertPhoneNumber($k['handphone']);
-                    $sendWa['message'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($k).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran *KENEGARAAN* dengan keterangan: *".$k['keterangan_sistem']."*";
-                    $sendWa['flag_prioritas'] = 0;
-                    $sendWa['type'] = "text";
-                    // $this->db->insert('t_cron_wa', $sendWa);
+                    $notif['id_m_user'] = $k['user_id'];
+                    $notif['pesan'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($k).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran KENEGARAAN dengan keterangan: ".$k['keterangan_sistem']."";
+                    $notif['judul_notifikasi'] = "Pelanggaran Kenegaraan";
+                    $notif['jenis_notifikasi'] = "pelanggaran_kenegaraan";
+                    $notif['icon_color'] = "red";
+                    $notif['fa_icon'] = "fa fa-times";
+                    // $this->db->insert('t_notifikasi', $notif);
 
                     // echo "input ".$k['user_id']."\n <br>";
                 } else {
@@ -4154,7 +4156,7 @@
             $listChat = null;
             
             $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
-                        d.nipbaru_ws, h.gelar1 as gelar1_assign, h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign')
+                        d.nipbaru_ws, h.gelar1 as gelar1_assign, h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan')
                         ->from('t_live_chat a')
                         ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
                         ->join('m_user c', 'a.id_m_user = c.id')
@@ -4163,14 +4165,17 @@
                         ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
                         ->join('m_user g', 'a.id_m_user_assigned = g.id', 'left')
                         ->join('db_pegawai.pegawai h', 'g.username = h.nipbaru_ws', 'left')
+                        ->join('m_layanan_konsul i', 'a.id_m_layanan_konsul = i.id', 'left')
                         // ->where('a.id_m_user', $this->general_library->getId())
                         ->where('a.flag_active', 1)
                         ->where('c.flag_active', 1)
-                        ->order_by('a.created_date', 'desc')
+                        ->order_by('b.created_date', 'desc')
                         ->group_by('a.id');
                         
             if(!$this->general_library->isHakAkses('admin_live_chat_konsultasi')){
-                $this->db->where('a.id_m_user', $this->general_library->getId());
+                $this->db->where("(a.id_m_user = ".$this->general_library->getId()." OR id_m_user_assigned = ".$this->general_library->getId().")");
+            } else {
+                $this->db->order_by('a.flag_read_admin', 'asc');
             }
 
             $listChat = $this->db->get()->result_array();
@@ -4179,21 +4184,24 @@
         }       
 
         public function reloadChatContainer($id){
-            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws')
+            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws, g.nama_layanan')
                             ->from('t_live_chat a')
                             ->join('m_user c', 'a.id_m_user = c.id')
                             ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
                             ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
                             ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                            ->join('m_layanan_konsul g', 'a.id_m_layanan_konsul = g.id')
                             ->where('a.id', $id)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
 
-            $detail = $this->db->select('*')
-                            ->from('t_live_chat_detail')
-                            ->where('flag_active', 1)
-                            ->where('id_t_live_chat', $id)
-                            ->order_by('created_date', 'asc')
+            $detail = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2')
+                            ->from('t_live_chat_detail a')
+                            ->join('m_user b', 'a.id_m_user_sender = b.id', 'left')
+                            ->join('db_pegawai.pegawai c', 'c.nipbaru_ws = b.username', 'left')
+                            ->where('a.flag_active', 1)
+                            ->where('a.id_t_live_chat', $id)
+                            ->order_by('a.created_date', 'asc')
                             ->get()->result_array();
 
             return [
@@ -4274,6 +4282,11 @@
             $data['id_t_live_chat'] = $data['id'];
             unset($data['id']);
             
+            $chat = $this->db->select('*')
+                            ->from('t_live_chat')
+                            ->where('id', $data['id_t_live_chat'])
+                            ->get()->row_array();
+
             $updateChat = null;
             if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                 || $this->general_library->isProgrammer()

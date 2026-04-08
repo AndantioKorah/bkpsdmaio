@@ -11,7 +11,7 @@
          <div class="row">
                   <div class="col-lg-12">
                                 <label>Pilih Unit Kerja</label>
-                                <select class="form-control select2-navy" 
+                                <select class="form-control select2-navy" style="width: 100%" 
                                     id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
                                     <?php $i = 0; foreach($unitkerja as $u){ $i++; ?>
                                         <option <?=$u['id_unitkerja'] == $this->general_library->getUnitKerjaPegawai() ? 'selected' : ''?>
@@ -24,8 +24,7 @@
             <div class="row">
               <div class="col-lg-12">
                             <label class="label-filter">Unit Kerja</label>
-                            <div class="">
-                                <select class="form-control select2-navy" 
+                                <select class="form-control select2-navy" style="width: 100%" 
                                     id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
                                     <option value="0" selected>Semua</option>
                                     <?php foreach($unitkerja as $u){ ?>
@@ -36,9 +35,8 @@
                                     <option value="992" >Semua SMP</option>
                                     <option value="993" >Semua UPTD Dinas kesehatan</option>
                                 </select>
-                            </div>
                         </div>
-                          <div class="row">
+                          
               
             <?php } ?>
 

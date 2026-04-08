@@ -25,7 +25,7 @@
 		font-size: 1rem !important;
 		display: -webkit-box; /* Required for older browser compatibility */
 		-webkit-box-orient: vertical; /* Required for older browser compatibility */
-		-webkit-line-clamp: 4; /* Limits text to 3 lines */
+		-webkit-line-clamp: 2; /* Limits text to 3 lines */
 		overflow: hidden;
 		text-overflow: ellipsis; /* Ensures the ellipsis appears */
 	}
@@ -34,7 +34,7 @@
 		/* position: absolute;
 		bottom: 0;
 		right: 0;
-		margin-bottom: 10px; */
+		margin-top: 20px; */
 	}
 
 	.lbl-detail-kegiatan{
@@ -115,7 +115,7 @@
 					$statusKegiatan = "Selesai";
 			}
 		?>
-			<div class="col-lg-3 p-4">
+			<div class="col-lg-3 p-3">
 				<?php if($rs['id_t_peserta_kegiatan'] || date('Y-m-d') <= $rs['tanggal']){ ?>
 					<div class="card card-list-kegiatan card-list-kegiatan-hover" onclick="openDetailWebinar('<?=$rs['link_url']?>')">
 				<?php } else { ?>
@@ -124,13 +124,13 @@
 					<a class="badge-kegiatan badge badge-sm <?=$badgeKegiatan?>"><?=$rs['nama_tipe_kegiatan']?></a>
 					<a class="badge-status-webinar badge badge-sm <?=$badgeStatusKegiatan?>"><?=$statusKegiatan?></a>
 					<img class="card-img-top img-fluid img-kegiatan" src="<?=base_url($srcImage)?>">
-					<div class="card-body">
+					<div class="card-body" style="padding: 10px;">
 						<div class="row">
 							<div class="col-lg-12 div-title" style="margin-bottom: 0;">
 								<h5 class="title-kegiatan card-title"><?=($rs['topik'])?></h5>
 							</div>
 							<div class="col-lg-12 div-button">
-								<div class="row">
+								<div class="row d-flex align-items-center">
 									<div class="col-lg-6 col-md-6 col-sm-6">
 										<span class="lbl-detail-kegiatan">
 											<?=formatDateNamaBulan($rs['tanggal'])?><br>

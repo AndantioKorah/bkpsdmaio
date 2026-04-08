@@ -742,4 +742,8 @@ class C_User extends CI_Controller
         $this->load->view('user/V_LiveChatJenisLayananKonsul', $data);
     }
 
+    public function loadLiveChat(){
+        $this->load->view('user/V_LiveChat', null);
+    }
+
 }

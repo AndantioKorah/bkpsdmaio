@@ -13,6 +13,14 @@
     .div_riwayat_live_chat_admin{
         min-height: 75vh !important;
     }
+
+    .ellipsis_this{
+        display: -webkit-box; /* Required for older browser compatibility */
+        -webkit-box-orient: vertical; /* Required for older browser compatibility */
+        -webkit-line-clamp: 1; /* Limits text to 3 lines */
+        overflow: hidden;
+        text-overflow: ellipsis; /* Ensures the ellipsis appears */
+    }
 </style>
 
 <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){ ?> 

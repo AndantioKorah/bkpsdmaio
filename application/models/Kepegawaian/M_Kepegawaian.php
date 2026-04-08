@@ -16988,10 +16988,15 @@ public function checkListIjazahCpns($id, $id_pegawai){
     }
 
           public function getListUploadBangkomSkpd(){
+
+        
+
             $bulan = $this->input->post('bulan');
             $tahun = $this->input->post('tahun');
+            $filter = $this->input->post('status');
             
-            $this->db->select('a.statuspeg,a.nama, a.gelar1, a.gelar2, b.nm_unitkerja, c.id, c.status, sum(c.jam) as total_jp')
+            if($filter != 1){
+                                $this->db->select('a.statuspeg,a.nama, a.gelar1, a.gelar2, b.nm_unitkerja, c.id, c.status, sum(c.jam) as total_jp')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                                 ->join('db_pegawai.pegdiklat c', '(a.id_peg = c.id_pegawai AND MONTH(c.tglsttpp) = "'.$bulan.'" and YEAR(c.tglsttpp) = "'.$tahun.'" and c.status = 2 and c.flag_active = 1)', 'left')
@@ -17039,7 +17044,88 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                 }
                                 }
                                 $result = $this->db->get()->result_array();
+            } else {
+            $month = $bulan;
+            $formattedMonth = str_pad($month, 2, "0", STR_PAD_LEFT);
+            $this->db->select('a.*, b.gelar1, b.nama, b.gelar2, b.statuspeg,c.nm_unitkerja, a.jumlah_jp as total_jp')
+                                ->from('t_cek_bangkom a')
+                                ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->where('a.flag_ditebus', 0)
+                                ->where('a.flag_terpenuhi', 0)
+                                ->where('a.flag_exception', 0)
+                                ->where('a.flag_active', 1)
+                                ->where('b.id_m_status_pegawai', 1);
+                                
+                                if($this->input->post('unitkerja') == 0){
+                                    $this->db->where('bulan =', $formattedMonth);
+                                    $this->db->where('tahun =', $tahun);
+                                } else {
+                                    $this->db->where('bulan_tahun <=', $tahun."-".$formattedMonth."-01");
+                                }
+                                // ->where('b.skpd', $this->input->post('unitkerja'));
 
+                                if($this->input->post('unitkerja') != 0){
+                                if($this->input->post('unitkerja') == 991){
+                                    $this->db->where('c.id_unitkerjamaster', '8010000');
+                                } else if($this->input->post('unitkerja') == 992){
+                                    $this->db->where('c.id_unitkerjamaster', '8020000');
+                                } else if($this->input->post('unitkerja') == 990){
+                                    $this->db->where('c.id_unitkerjamaster', '8000000');
+                                } else if($this->input->post('unitkerja') == 993){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['6000000','7005000']);
+                                } else if($this->input->post('unitkerja') == 994){
+                                    $this->db->where_not_in('c.id_unitkerjamaster', ['6000000','7005000','8010000','8020000','8000000']);
+                                }  else if($this->input->post('unitkerja') == '5001001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5001000']);
+                                } else if($this->input->post('unitkerja') == '5002001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5002000']);
+                                } else if($this->input->post('unitkerja') == '5003001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5003000']);
+                                } else if($this->input->post('unitkerja') == '5004001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5004000']);
+                                } else if($this->input->post('unitkerja') == '5005001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5005000']);
+                                } else if($this->input->post('unitkerja') == '5006001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5006000']);
+                                } else if($this->input->post('unitkerja') == '5007001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5007000']);
+                                }else if($this->input->post('unitkerja') == '5008001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5008000']);
+                                } else if($this->input->post('unitkerja') == '5009001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5009000']);
+                                } else if($this->input->post('unitkerja') == '5010001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5010001']);
+                                } else if($this->input->post('unitkerja') == '5011001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5011001']);
+                                }  else {
+                                $this->db->where('b.skpd', $this->input->post('unitkerja'));
+                                }
+                                }
+
+                              
+
+                                 $result = $this->db->get()->result_array();
+                                 if($result) {
+                                    foreach($result as $res){
+                                    $this->db->select('a.bulan,a.jumlah_jp')
+                                                    ->from('t_cek_bangkom a')
+                                                    ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                                                    ->where('a.flag_active', 1)
+                                                    // ->where('bulan_tahun <=', $tahun."-".$formattedMonth."-01")
+                                                    ->where('a.nip', $res['nip'])
+                                                    ->where('b.id_m_status_pegawai', 1)
+                                                    ->order_by('a.bulan', 'desc');
+
+                                    $dataBangkom = $this->db->get()->result_array();
+                                    $res += ["riwayat" => $dataBangkom];
+                                    $data[] = $res;
+                                }
+                                }
+                                if(isset($data)){
+                                $result = $data;
+                                }
+            }
             return $result;
         }
 

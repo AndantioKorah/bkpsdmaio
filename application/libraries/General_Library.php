@@ -634,6 +634,10 @@ class General_library
         return $this->userLoggedIn['id_unitkerja'];
     }
 
+    public function getIdUnitKerjaMasterPegawai(){
+        return $this->userLoggedIn['id_unitkerjamaster'];
+    }
+
     public function getId(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         return $this->userLoggedIn ? $this->userLoggedIn['id'] : '';

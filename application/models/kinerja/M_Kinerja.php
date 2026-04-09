@@ -5056,6 +5056,28 @@ function getDataWfa()
         return $wfa;
     }
 
+    function getSkpdWfa()
+    {        
+        $wfa = 1; 
+        $id_eselon = $this->general_library->getIdEselon();
+        $list_unitkerja_wfo = [4013000,3016000,3027000,3026000,3015000,3030000,4026000,3012000,3010000];
+        $list_unitkerjamaster_wfo = [6000000,7005000,8010000,8020000,8030000,5001000,5002000,5003000,5004000,5005000,5006000,5007000,5008000,5009000,5010001,5011001];
+
+        if (in_array($this->general_library->getIdUnitKerjaPegawai(), $list_unitkerja_wfo)){
+        $wfa = 0;
+        }
+
+        if (in_array($this->general_library->getIdUnitKerjaMasterPegawai(), $list_unitkerjamaster_wfo)){
+        $wfa = 0;
+        }
+
+        if($id_eselon == 4 || $id_eselon == 5 || $id_eselon == 6 || $id_eselon == 7){
+        $wfa = 0; 
+        }
+
+        return $wfa;
+    }
+
     public function getStatusLockKinerja($menu){
         return $this->db->select('a.status')
                         ->from('t_lock_kinerja as a ')

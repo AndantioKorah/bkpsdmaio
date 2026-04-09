@@ -575,29 +575,52 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
         $('#tanggal_absensi').on('change', function(){
         var curentdate = "<?= date('Y-m-d');?>"
          var tanggal =  $('#tanggal_absensi').val()
-            <?php  if( $this->general_library->getIdUnitKerjaPegawai() != '3018000'){ ?>
+            
+          //     $.ajax({
+          //     url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataWfa",
+          //     method : "POST",
+          //     data : {tanggal: tanggal},
+          //     async : false,
+          //     dataType : 'json',
+          //     success: function(ress){
+          //       if(tanggal != '2026-03-16'){
+          //       if(ress == 1){
+          //         <?php  if( $this->general_library->getIdUnitKerjaPegawai() == '5009001'){ ?>
+          //         $('#jenis_absensi').val('')
+          //         document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+          //          if (opt.value == "2") {
+          //             opt.disabled = true;
+          //           }
+          //          });
+          //         <?php } else { ?>
+          //          $('#btn_upload').hide()
+          //          $('#ket').show()
+          //          $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+          //         <?php } ?>
+
+          //          $('#btn_upload').hide()
+          //          $('#ket').show()
+          //          $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+          //       } else {
+          //       $('#btn_upload').show()
+          //       $('#ket').hide()
+          //       }
+          //      } else {
+          //       $('#btn_upload').show()
+          //       $('#ket').hide()
+          //      }
+          //     }
+          // });
+
             $.ajax({
-              url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataWfa",
+              url : "<?php echo base_url();?>kinerja/C_Kinerja/getSkpdWfa",
               method : "POST",
               data : {tanggal: tanggal},
               async : false,
               dataType : 'json',
               success: function(ress){
-                if(tanggal != '2026-03-16'){
+                if(tanggal >= '2026-04-09'){
                 if(ress == 1){
-                  // <?php  if( $this->general_library->getIdUnitKerjaPegawai() == '5009001'){ ?>
-                  // $('#jenis_absensi').val('')
-                  // document.querySelectorAll("#jenis_absensi option").forEach(opt => {
-                  //  if (opt.value == "2") {
-                  //     opt.disabled = true;
-                  //   }
-                  //  });
-                  // <?php } else { ?>
-                  //  $('#btn_upload').hide()
-                  //  $('#ket').show()
-                  //  $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
-                  // <?php } ?>
-
                    $('#btn_upload').hide()
                    $('#ket').show()
                    $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
@@ -605,13 +628,12 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
                 $('#btn_upload').show()
                 $('#ket').hide()
                 }
-               } else {
+                } else {
                 $('#btn_upload').show()
                 $('#ket').hide()
-               }
+              }
               }
           });
-          <?php } ?>
 
        
             $("#jenis_absensi").prop('disabled',false);

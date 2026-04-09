@@ -323,19 +323,19 @@ ol {
              <li>
 				<a class="<?php if($skp1) echo 'select'; else echo 'unselect';?>" <?php if($skp1) { ?>
 				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?> <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?>* <i
 				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
 			</li>
               <li>
 				<a class="<?php if($pengujian_kesehatan) echo 'select'; else echo 'unselect';?>" <?php if($pengujian_kesehatan) { ?>
 				onclick="viewBerkasPangkat('<?=$pengujian_kesehatan['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> Surat Pengujian Kesehatan* <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Surat Pengujian Kesehatan* (Upload pada menu Profil pada bagian Arsip Lain pilih Jenis Dokumen Pengujian Kesehatan) <i
 				class="fas fa-<?php if($pengujian_kesehatan) echo ''; else echo '';?>"></i></a>
 			</li>
              <li>
 				<a class="<?php if($sertifikat_latsar) echo 'select'; else echo 'unselect';?>" <?php if($sertifikat_latsar) { ?>
 				onclick="viewBerkasPangkat('<?=$sertifikat_latsar['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i>Sertifikat Latsar* <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Latsar* (Upload pada menu Profil pada bagian bangkom pilih Jenis Diklat Struktural, Jenjang Diklat Latsar) <i
 				class="fas fa-<?php if($sertifikat_latsar) echo ''; else echo '';?>"></i></a>
 			</li>
            
@@ -381,7 +381,7 @@ ol {
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 	aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-dialog modal-xl" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel"></h5>
@@ -407,7 +407,7 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
-  loadListRiwayatSuratPidana()
+  loadListRiwayatCpnsPns()
     })
     $('#form_cpns_pns').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -417,9 +417,9 @@ $(function(){
         var form_data = new FormData(formvalue[0]);
       
         var id_m_layanan = "<?=$id_m_layanan;?>"
-        var sertifikat_latsar = $('#sk_pns').val()
+        var sertifikat_latsar = $('#sertifikat_latsar').val()
         var skp1 = $('#skp1').val()
-        var pengujian_kesehatan = $('#kontrak_kerja').val()
+        var pengujian_kesehatan = $('#pengujian_kesehatan').val()
 			
         if(pengujian_kesehatan == ""){
             errortoast(' Berkas Belum Lengkap')
@@ -451,7 +451,7 @@ $(function(){
             var result = JSON.parse(res); 
             if(result.success == true){
                 successtoast(result.msg)
-                loadListRiwayatSuratPidana()
+                loadListRiwayatCpnsPns()
                 // window.scrollTo(0, document.body.scrollHeight);
                 window.scrollTo(0, 0);
               } else {
@@ -487,15 +487,15 @@ function viewBerkasPangkat(filename,id){
 
   }
 
-  // function loadListRiwayatSuratPidana(){
+  // function loadListRiwayatCpnsPns(){
   //   $('#list_riwayat_karsu').html('')
   //   $('#list_riwayat_karsu').append(divLoaderNavy)
-  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatSuratPidana/")?>', function(){
+  //   $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatCpnsPns/")?>', function(){
   //     $('#loader').hide()
   //   })
   //   }
 
-  function loadListRiwayatSuratPidana(){
+  function loadListRiwayatCpnsPns(){
     $('#list_riwayat_karsu').html('')
     $('#list_riwayat_karsu').append(divLoaderNavy)
     $('#list_riwayat_karsu').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListRiwayatLayanan/")?>'+id_m_layanan, function(){

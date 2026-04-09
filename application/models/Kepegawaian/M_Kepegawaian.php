@@ -17058,13 +17058,15 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                 ->where('a.flag_terpenuhi', 0)
                                 ->where('a.flag_exception', 0)
                                 ->where('a.flag_active', 1)
-                                ->where('b.id_m_status_pegawai', 1);
+                                ->where('b.id_m_status_pegawai', 1)
+                                ->group_by('b.nipbaru_ws');
                                 
                                 if($this->input->post('unitkerja') == 0){
                                     $this->db->where('bulan =', $formattedMonth);
                                     $this->db->where('tahun =', $tahun);
                                 } else {
                                     $this->db->where('bulan_tahun <=', $tahun."-".$formattedMonth."-01");
+                                     $this->db->where('tahun', $tahun);
                                 }
                                 // ->where('b.skpd', $this->input->post('unitkerja'));
 

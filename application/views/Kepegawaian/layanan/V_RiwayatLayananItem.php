@@ -317,6 +317,9 @@
                                 if(id_layanan == 34){
                                 loadListRiwayatCutiBesar()
                                }
+                               if(id_layanan == 35){
+                                loadListRiwayatCpnsPns()
+                               }
                                
                                
                            }, error: function(e){

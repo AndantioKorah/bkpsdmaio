@@ -619,7 +619,7 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
               async : false,
               dataType : 'json',
               success: function(ress){
-                if(tanggal >= '2026-04-09'){
+                if(tanggal >= '2026-04-10'){
                 if(ress == 1){
                    $('#btn_upload').hide()
                    $('#ket').show()

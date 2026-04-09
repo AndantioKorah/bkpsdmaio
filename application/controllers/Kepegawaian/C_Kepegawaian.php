@@ -4236,6 +4236,7 @@ class C_Kepegawaian extends CI_Controller
 
 			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
 			$data['pengujian_kesehatan'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','36','0');	
+			$data['sertifikat_latsar'] = $this->kepegawaian->getSertifikatLatsar();
 			$this->load->view('kepegawaian/layanan/V_LayananCpnsPns', $data);
 		}
 

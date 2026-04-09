@@ -360,6 +360,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || i
   $link = "<?=base_url();?>dokumen_layanan/peninjauan_masa_kerja/"+filename+"?v="+number;
 } else if(id_layanan == 34){
   $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
+} else if(35){
+  $link = "<?=base_url();?>dokumen_layanan/cpns_pns/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)

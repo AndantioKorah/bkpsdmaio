@@ -296,13 +296,14 @@ ol {
 
 			<div class="card-body">
 
-				<form id="form_peninjauan_masa_kerja" method="post" enctype="multipart/form-data" id="form_cuti"
+				<form id="form_cpns_pns" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
             <input type="hidden" id="sk_pns" value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
             <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
             <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
 			<input type="hidden" id="skp1" value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
-			<input type="hidden" id="pengujian_kesehatan" value="<?php if($kontrak_kerja) echo $kontrak_kerja['id']; else echo "";?>">
+			<input type="hidden" id="pengujian_kesehatan" value="<?php if($pengujian_kesehatan) echo $pengujian_kesehatan['id']; else echo "";?>">
+			<input type="hidden" id="sertifikat_latsar" value="<?php if($sertifikat_latsar) echo $sertifikat_latsar['id']; else echo "";?>">
 		
     
           <span><b>Berkas Persyaratan :</b></span>
@@ -318,11 +319,29 @@ ol {
          </div> -->
        
 			<ol class="rectangle-list">
-            <li>
-            	<a class="<?php if($sk_pangkat){ if($sk_pangkat['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
-            		<?php if($sk_pangkat) { ?> onclick="viewBerkasPangkat('<?=$sk_pangkat['gambarsk'];?>',2)"
-            		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pangkat Terakhir* <i class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
-            </li>
+           
+             <li>
+				<a class="<?php if($skp1) echo 'select'; else echo 'unselect';?>" <?php if($skp1) { ?>
+				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?> <i
+				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+			</li>
+              <li>
+				<a class="<?php if($pengujian_kesehatan) echo 'select'; else echo 'unselect';?>" <?php if($pengujian_kesehatan) { ?>
+				onclick="viewBerkasPangkat('<?=$pengujian_kesehatan['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Surat Pengujian Kesehatan* <i
+				class="fas fa-<?php if($pengujian_kesehatan) echo ''; else echo '';?>"></i></a>
+			</li>
+             <li>
+				<a class="<?php if($sertifikat_latsar) echo 'select'; else echo 'unselect';?>" <?php if($sertifikat_latsar) { ?>
+				onclick="viewBerkasPangkat('<?=$sertifikat_latsar['gambarsk'];?>',1)" data-toggle="modal" data-target="#exampleModal"
+				<?php } ?>> <i class="fa fa-file-pdf"></i>Sertifikat Latsar* <i
+				class="fas fa-<?php if($sertifikat_latsar) echo ''; else echo '';?>"></i></a>
+			</li>
+           
+            
+           
+            
 			</ol>
 			</div>
 
@@ -390,50 +409,33 @@ $(function(){
 	});
   loadListRiwayatSuratPidana()
     })
-    $('#form_peninjauan_masa_kerja').on('submit', function(e){  
+    $('#form_cpns_pns').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#form_peninjauan_masa_kerja');
+        var formvalue = $('#form_cpns_pns');
         var form_data = new FormData(formvalue[0]);
       
         var id_m_layanan = "<?=$id_m_layanan;?>"
-        var sk_pns = $('#sk_pns').val()
+        var sertifikat_latsar = $('#sk_pns').val()
         var skp1 = $('#skp1').val()
-        var kontrak_kerja = $('#kontrak_kerja').val()
-        var dok_pemberhentian_kerja = $('#dok_pemberhentian_kerja').val()
-        var surat_keterangan_kerja = $('#surat_keterangan_kerja').val()
-        var slip_gaji_pmk = $('#slip_gaji_pmk').val()
-        var sk_pangkat = $('#sk_pangkat').val()
+        var pengujian_kesehatan = $('#kontrak_kerja').val()
 			
-        if(sk_pns == ""){
+        if(pengujian_kesehatan == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
+
         if(skp1 == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-        if(kontrak_kerja == ""){
+
+        if(sertifikat_latsar == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;
         }
-        if(dok_pemberhentian_kerja == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
-        if(surat_keterangan_kerja == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
-        if(slip_gaji_pmk == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
-        if(sk_pangkat == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        
        
 
         $.ajax({  
@@ -469,11 +471,7 @@ function viewBerkasPangkat(filename,id){
     
     var number = Math.floor(Math.random() * 1000);
     if(id == 1){
-        $link = "<?=base_url();?>/arsipberkaspns/"+filename+"?v="+number;
-    } else if(id == 2){
-        $link = "<?=base_url();?>/arsipelektronik/"+filename+"?v="+number;
-    } else if(id == 3){
-        $link = "<?=base_url();?>/arsippendidikan/"+filename+"?v="+number;
+        $link = "<?=base_url();?>/arsipdiklat/"+filename+"?v="+number;
     } else if(id == 4){
         $link = "<?=base_url();?>/arsipskp/"+filename+"?v="+number;
     }  else {

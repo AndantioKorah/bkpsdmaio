@@ -267,6 +267,7 @@ class M_Bacirita extends CI_Model
                             if(isset($v['font-color'])){
                                 $this->mpdf->writeHtml("<p style='
                                     font-family: Tahoma;
+                                    font-weight: bold;
                                     text-align: center;
                                     font-size: ".$v['font-size']."rem;
                                     color: ".$v['font-color'].";
@@ -274,6 +275,7 @@ class M_Bacirita extends CI_Model
                             } else {
                                 $this->mpdf->writeHtml("<p style='
                                     font-family: Tahoma;
+                                    font-weight: bold;
                                     text-align: center;
                                     font-size: ".$v['font-size']."rem;
                                 '>".$v['content']."</p>");
@@ -283,6 +285,7 @@ class M_Bacirita extends CI_Model
                             if(isset($v['font-color'])){
                                 $this->mpdf->writeHtml("<p style='
                                     font-family: Tahoma;
+                                    font-weight: bold;
                                     margin-left: ".$v['margin-left']."px;
                                     font-size: ".$v['font-size']."rem;
                                     color: ".$v['font-color'].";
@@ -290,6 +293,7 @@ class M_Bacirita extends CI_Model
                             } else {
                                 $this->mpdf->writeHtml("<p style='
                                     font-family: Tahoma;
+                                    font-weight: bold;
                                     margin-left: ".$v['margin-left']."px;
                                     font-size: ".$v['font-size']."rem;
                                 '>".$v['content']."</p>");

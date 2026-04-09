@@ -28,7 +28,7 @@
     Keterangan : <br> 
     - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
     - Jika menggunakan foto, kirim foto tersebut ke nomor Whatsapp Siladen <b>(0895355011333)</b> setelah itu discreenshot dan diupload sebagai bukti.<br>
-    - Maksimal Peninjauan Absensi per pegawai hanya 8 kali bulan ini.
+    - Maksimal Peninjauan Absensi per pegawai hanya 2 kali bulan ini.
     </span>
     <div class="row ml-2">
     <div class="col-lg-6">

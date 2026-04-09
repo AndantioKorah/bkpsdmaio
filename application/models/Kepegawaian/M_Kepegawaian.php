@@ -17112,6 +17112,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                                     ->from('t_cek_bangkom a')
                                                     ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                                                     ->where('a.flag_active', 1)
+                                                    ->where('tahun', $tahun)
                                                     // ->where('bulan_tahun <=', $tahun."-".$formattedMonth."-01")
                                                     ->where('a.nip', $res['nip'])
                                                     ->where('b.id_m_status_pegawai', 1)

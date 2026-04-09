@@ -16,87 +16,8 @@
         margin-top: 80px;
     }
 </style>
-<div class="profile_live_chat_container" style="
-    background-color: #f9fbf9;
-    position: fixed;
-    line-height: 12px;
-    padding: 10px;
-    top: 60px;
-    width: 326px;
-    box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.64);
-    -webkit-box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.64);
-    -moz-box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.64);
-">
-    <table id="mini_profile_live_chat_cotainer" style="cursor: pointer; border: 0;">
-        <tr>
-            <td rowspan=4 style="width: 15%;">
-                <img style="
-                    border-radius: 50% !important;
-                    width: 100%;
-                    aspect-ratio: 1;
-                    object-fit: cover" class="img-fluid b-lazy"
-                        src="<?php
-                            $path = './assets/fotopeg/'.$result['chat']['fotopeg'];
-                            // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                            if($result['chat']['fotopeg']){
-                            if (file_exists($path)) {
-                            $src = './assets/fotopeg/'.$result['chat']['fotopeg'];
-                            //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                            } else {
-                            $src = './assets/img/user.png';
-                            // $src = '../siladen/assets/img/user.png';
-                            }
-                            } else {
-                            $src = './assets/img/user.png';
-                            }
-                            echo base_url().$src;?>" /> 
-            </td>
-            <td class="text-left" rowspan=1 style="width: 85%;">
-                <span class="sp_profil_nama_pegawai_live_chat ellipsis_this"><?=getNamaPegawaiFull($result['chat'])?></span><br>
-                <span class="sp_profil_pegawai_live_chat ellipsis_this" style="
-                    font-style: italic;
-                    margin-top: -10px;
-                "><?=($result['chat']['nama_layanan'])?></span>
-            </td>
-        </tr>
-    </table>
-    <div style="cursor: pointer; display: none;" id="detail_profile_live_chat_cotainer" class="col-lg-12">
-        <img style="
-            border-radius: 50% !important;
-            width: 35%;
-            aspect-ratio: 1;
-            object-fit: cover" class="img-fluid b-lazy"
-                src="<?php
-                    $path = './assets/fotopeg/'.$result['chat']['fotopeg'];
-                    // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                    if($result['chat']['fotopeg']){
-                    if (file_exists($path)) {
-                    $src = './assets/fotopeg/'.$result['chat']['fotopeg'];
-                    //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
-                    } else {
-                    $src = './assets/img/user.png';
-                    // $src = '../siladen/assets/img/user.png';
-                    }
-                    } else {
-                    $src = './assets/img/user.png';
-                    }
-                    echo base_url().$src;?>" /><br><br>
-        <span class="sp_profil_nama_pegawai_live_chat"><?=getNamaPegawaiFull($result['chat'])?></span><br>
-        <span class="sp_profil_pegawai_live_chat">NIP. <?=($result['chat']['nipbaru_ws'])?></span><br>
-        <span style="line-height: 10px !important;" class="sp_profil_pegawai_live_chat"><?=($result['chat']['nama_jabatan'])?></span><br>
-        <span style="line-height: 10px !important;" class="sp_profil_pegawai_live_chat"><?=($result['chat']['nm_unitkerja'])?></span>
-    </div>
-</div>
 <script>
-    $('#mini_profile_live_chat_cotainer').on('click', function(){
-        $(this).hide()
-        $('#detail_profile_live_chat_cotainer').show()
-    })
-
-    $('#detail_profile_live_chat_cotainer').on('click', function(){
-        $(this).hide()
-        $('#mini_profile_live_chat_cotainer').show()
-    })
+    
 </script>
 <?php } ?>
 <?php if($result['detail']){ $i = 1; ?>

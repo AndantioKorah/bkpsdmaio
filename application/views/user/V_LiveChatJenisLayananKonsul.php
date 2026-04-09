@@ -11,10 +11,12 @@
     }
 
     @keyframes pulse-bg {
-        0% { background-color: #f9f9a8; }
-        25% { background-color: #f6f943; }
-        50% { background-color: #f9f9a8; }
-        75% { background-color: #f8f8e8; }
+        0% { background-color: #ffffff; }
+        10% { background-color: #f9f9a8; }
+        25% { background-color: #fefe70; }
+        50% { background-color: #f2f603; }
+        75% { background-color: #fefe70; }
+        90% { background-color: #f9f9a8; }
         100% { background-color: #ffffff; }
     }
 </style>

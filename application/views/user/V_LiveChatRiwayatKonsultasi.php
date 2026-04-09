@@ -79,8 +79,8 @@
             }
         ?>
             <?php if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
-                    || $this->general_library->isProgrammer()
-                    || $this->general_library->getId() == $rs['id_m_user_assigned'])){ ?>
+            || $this->general_library->isProgrammer()
+            || $this->general_library->getId() == $rs['id_m_user_assigned'])){ ?>
                 <div class="div_profil_live_chat profile_chat_<?=$rs['id']?>">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -137,10 +137,10 @@
                                 </td>
                                 <td style="width: 80%;" rowspan=1>
                                     <div class="ml-2" style="line-height: 17px;">
-                                        <?php if($rs['flag_done'] == 0){ ?>
-                                            <span><i style="font-size: .6rem; color: green;" class="fa fa-circle"></i></span>
-                                        <?php } ?>
-                                        <span class="sp_chat_id_rw_konsul ellipsis_this sp_chat_id_rw_konsul_admin"><?=formatNamaPegawaiLiveChat($rs)?></span>
+                                        <span class="sp_chat_id_rw_konsul ellipsis_this sp_chat_id_rw_konsul_admin">
+                                            <?=$rs['flag_done'] == 0 ? '<i style="font-size: .6rem; color: green;" class="fa fa-circle"></i>' : ''?>
+                                            <?=formatNamaPegawaiLiveChat($rs)?>
+                                        </span>
                                         <?php if($rs['pesan']){ ?>
                                             <div class="text-left">
                                                 <label style="
@@ -212,7 +212,7 @@
                     </div>
                 </div> 
             <?php } else { ?> 
-                <div class="div_chat_konsul_item pt-2" onclick="openKonsultasiDetail('<?=$rs['id']?>')">
+                <div class="div_chat_konsul_item div_chat_item_<?=$rs['id']?> pt-2" onclick="openKonsultasiDetail('<?=$rs['id']?>')">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6 text-left">
                             <?php

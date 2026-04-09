@@ -58,6 +58,13 @@
         color: black;
         font-weight: bold;
     }
+
+    .btn_icon{
+        display: flex;
+        justify-content: center; /* Centers horizontally */
+        align-items: center;
+        padding: 0;
+    }
 </style>
 <div class="col-lg-7 col-md-7 col-sm-7 text-left">
     <span style="cursor:pointer;" class="sp_chat_id_chatkonsul btn_back_chatkonsul"><i class="fa fa-chevron-left"></i></span>
@@ -106,9 +113,10 @@
     </div>
 </div>
 <?php
-    $heightChatContainer = "75vh";
+    $heightChatContainer = "90vh";
+    $paddingBottomChat = "70px";
     if($result['chat']['flag_done'] == 1 && $result['chat']['flag_rating'] == 1){
-        $heightChatContainer = "65vh";
+        $paddingBottomChat = "0px";
     }
 ?>
 <div id="div_live_chat_container" class="col-lg-12 mt-2" style="
@@ -117,7 +125,7 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
-    padding-bottom: 10px;
+    padding-bottom: <?=$paddingBottomChat?>;
 ">  
     <div class="row" id="live_chat_container">
     </div>
@@ -131,54 +139,157 @@
     <div class="row p-3" id="assign_operator_container">
     </div>
 </div>
+<div class="profile_live_chat_container" style="
+    background-color: #f9fbf9;
+    position: absolute;
+    line-height: 12px;
+    padding: 10px;
+    top: 60px;
+    width: 326px;
+    box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.64);
+    -webkit-box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.64);
+    -moz-box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.64);">
+    <table id="mini_profile_live_chat_cotainer" style="cursor: pointer; border: 0;">
+        <tr>
+            <td rowspan=4 style="width: 15%;">
+                <img style="
+                    border-radius: 50% !important;
+                    width: 100%;
+                    aspect-ratio: 1;
+                    object-fit: cover" class="img-fluid b-lazy"
+                        src="<?php
+                            $path = './assets/fotopeg/'.$result['chat']['fotopeg'];
+                            // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                            if($result['chat']['fotopeg']){
+                            if (file_exists($path)) {
+                            $src = './assets/fotopeg/'.$result['chat']['fotopeg'];
+                            //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                            } else {
+                            $src = './assets/img/user.png';
+                            // $src = '../siladen/assets/img/user.png';
+                            }
+                            } else {
+                            $src = './assets/img/user.png';
+                            }
+                            echo base_url().$src;?>" /> 
+            </td>
+            <td class="text-left" rowspan=1 style="width: 85%;">
+                <span class="sp_profil_nama_pegawai_live_chat ellipsis_this"><?=getNamaPegawaiFull($result['chat'])?></span><br>
+                <span class="sp_profil_pegawai_live_chat ellipsis_this" style="
+                    font-style: italic;
+                    margin-top: -10px;
+                "><?=($result['chat']['nama_layanan'])?></span>
+            </td>
+        </tr>
+    </table>
+    <div style="cursor: pointer; display: none;" id="detail_profile_live_chat_cotainer" class="col-lg-12">
+        <img style="
+            border-radius: 50% !important;
+            width: 35%;
+            aspect-ratio: 1;
+            object-fit: cover" class="img-fluid b-lazy"
+                src="<?php
+                    $path = './assets/fotopeg/'.$result['chat']['fotopeg'];
+                    // $path = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                    if($result['chat']['fotopeg']){
+                    if (file_exists($path)) {
+                    $src = './assets/fotopeg/'.$result['chat']['fotopeg'];
+                    //  $src = '../siladen/assets/fotopeg/'.$profil_pegawai['fotopeg'];
+                    } else {
+                    $src = './assets/img/user.png';
+                    // $src = '../siladen/assets/img/user.png';
+                    }
+                    } else {
+                    $src = './assets/img/user.png';
+                    }
+                    echo base_url().$src;?>" /><br><br>
+        <span class="sp_profil_nama_pegawai_live_chat"><?=getNamaPegawaiFull($result['chat'])?></span><br>
+        <span class="sp_profil_pegawai_live_chat">NIP. <?=($result['chat']['nipbaru_ws'])?></span><br>
+        <span style="line-height: 10px !important;" class="sp_profil_pegawai_live_chat"><?=($result['chat']['nama_jabatan'])?></span><br>
+        <span style="line-height: 10px !important;" class="sp_profil_pegawai_live_chat"><?=($result['chat']['nm_unitkerja'])?></span>
+    </div>
+</div>
 <?php if($result['chat']['flag_done'] == 0){ ?>
-    <form id="form_send_message">
-        <div class="col-lg-12 mt-2" style="
-            width: 100%;
-        ">
-            <div class="row"
-                style="
-                    display: flex;
-                    align-items: center;
-                    background-color: #f9fafb;
-                    border-radius: 50px;
-                    padding: 5px 10px 5px 0px;
-                "
-            >
-                <div class="col-lg-10">
-                    <textarea name="pesan" id="pesan" style="
-                        resize: none;
-                        width: 100%;
-                        height: 40px;
-                        margin-top: 5px;
-                        background-color: #f9fafb;
-                        overflow: hidden;
-                        padding: 10px 0px 5px 0px;
-                        outline: none;
-                        font-size: 1rem;
-                        border: 0;
-                    "
-                        placeholder="Tulis pesan disini..."></textarea>
-                </div>
-                <div class="col-lg-2">
-                    <button id="btn_send_message" type="submit" style="
-                        width: 40px;
-                        height: 40px;
-                    "
-                    class="btn btn-success rounded-circle p-2">
-                        <i class="fa fa-paper-plane"></i>
-                    </button>
-                    <button id="btn_send_message_loading" type="button" disabled style="
-                        width: 40px;
-                        height: 40px;
-                        display: none;
-                    "
-                    class="btn btn-success rounded-circle p-2">
-                        <i class="fa fa-spin fa-spinner"></i>
-                    </button>
+    <!-- <div class="div_file_option" style="
+        position: absolute;
+        bottom: 65px;
+        z-index: 1;
+        left: 18px;
+        width: 15vw;
+        text-align: left;
+        background-color: red;
+    ">
+    </div> -->
+    <form id="form_send_message" style="
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    ">
+        <center>
+            <div style="
+                background-color: #d9d9d9;
+                padding: 1px 5px 5px 5px;
+                margin-bottom: 8px;
+                box-shadow: 0 -10px 10px -10px rgba(0, 0, 0, 0.5);
+                border-radius: 10px 10px 0 0;
+            ">
+                <div class="col-lg-12 mt-2" style="
+                    width: 90%;">
+                    <div class="row"
+                        style="
+                            display: flex;
+                            align-items: center;
+                            background-color: #f9fafb;
+                            border-radius: 50px;
+                            padding: 3px 0px 3px 0px;
+                        ">   
+                        <div class="col-lg-12 col-md-12 col-sm-12 d-flex align-items-center">
+                            <input type="file" accept="image/*, .pdf" id="upload_file" style="display: none;" />
+                            <button id="btn_add_file" type="button" style="
+                                width: 30px;
+                                height: 30px;
+                                margin-left: -5px;
+                            "
+                            class="btn btn_icon btn-outline-info rounded-circle p-2">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                            <textarea name="pesan" id="pesan" style="
+                                resize: none;
+                                width: 100%;
+                                height: 30px;
+                                margin-top: 5px;
+                                background-color: #f9fafb;
+                                overflow: hidden;
+                                padding: 1px 0px 0px 3px;
+                                outline: none;
+                                font-size: 1rem;
+                                border: 0;
+                                line-height: 20px;
+                                margin-left: 3px;
+                            "
+                                placeholder="Tulis pesan disini..."></textarea>
+                                <button id="btn_send_message" type="submit" style="
+                                    width: 30px;
+                                    height: 30px;
+                                    margin-right: -5px;
+                                "
+                                class="btn btn_icon btn-success rounded-circle p-2">
+                                    <i class="fa fa-paper-plane"></i>
+                                </button>
+                                <button id="btn_send_message_loading" type="button" disabled style="
+                                    width: 30px;
+                                    height: 30px;
+                                    display: none;
+                                    margin-right: -5px;
+                                "
+                                class="btn btn_icon btn-success rounded-circle p-2">
+                                    <i class="fa fa-spin fa-spinner"></i>
+                                </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </center>
     </form>
 <?php } else { ?>
     <?php if($this->general_library->isProgrammer() ||
@@ -289,6 +400,20 @@
         reloadLiveChatContainer('<?=$result['chat']['id']?>')
     })
 
+    $('#btn_add_file').on('click', function(){
+        $('#upload_file').click()
+    })
+
+    $('#mini_profile_live_chat_cotainer').on('click', function(){
+        $(this).hide()
+        $('#detail_profile_live_chat_cotainer').show()
+    })
+
+    $('#detail_profile_live_chat_cotainer').on('click', function(){
+        $(this).hide()
+        $('#mini_profile_live_chat_cotainer').show()
+    })
+
     function gantiJenisLayanan(id){
         showPopupLiveChat('Ganti Jenis Layanan')
         $('.popup_body').html('')
@@ -357,6 +482,7 @@
     }
 
     $('#pesan').on('keydown', function(e){
+        console.log($('#pesan').val().split('\n').length)
         if (e.key === 'Enter' && e.shiftKey) {
             e.preventDefault(); // Mencegah perilaku default
             const cursorPosition = this.selectionStart;

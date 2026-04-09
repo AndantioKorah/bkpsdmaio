@@ -14319,7 +14319,10 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 34){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/cuti_besar';
-            }  else {
+            } else if($id_m_layanan == 35){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/cpns_pns';
+            }   else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
 
@@ -17112,6 +17115,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                                     ->from('t_cek_bangkom a')
                                                     ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                                                     ->where('a.flag_active', 1)
+                                                    ->where('tahun', $tahun)
                                                     // ->where('bulan_tahun <=', $tahun."-".$formattedMonth."-01")
                                                     ->where('a.nip', $res['nip'])
                                                     ->where('b.id_m_status_pegawai', 1)
@@ -17249,6 +17253,17 @@ public function checkListIjazahCpns($id, $id_pegawai){
         ->where('a.tanggal_akhir >=', date('Y-m-d'))
         ->order_by('a.id', 'desc');
         return $this->db->get()->row_array(); 
+    }
+
+        public function getSertifikatLatsar()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('jenjang_diklat', 10)
+        ->from('db_pegawai.pegdiklat');
+        $query = $this->db->get()->row_array();
+        return $query;  
     }
     
 

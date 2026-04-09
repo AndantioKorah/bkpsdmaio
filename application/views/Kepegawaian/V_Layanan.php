@@ -281,7 +281,11 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/cutiBesar/")?>'+val, function(){
       $('#loader').hide()
     })
-    }else {
+    } else if(val == 35) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/CpnsPns/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else {
       $('#form_layanan').html('')
     }
 

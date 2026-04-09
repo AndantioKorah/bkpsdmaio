@@ -240,7 +240,7 @@
                         ->where('a.tgl >=', $tglAwal)
                         ->where('a.tgl <=', $tglAkhir)
                         ->where('id_m_status_pegawai', 1)
-                        ->where('a.aktivitas', 1)
+                        ->where_in('a.aktivitas', [1,2])
                         ->order_by('a.masuk', 'desc') 
                         ->order_by('a.pulang', 'asc');
 

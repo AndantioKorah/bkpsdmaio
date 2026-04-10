@@ -2810,5 +2810,63 @@
 
             return $res;
         }
+
+        public function cekWaktuKerja($maxMin = 0, $minMin = 0){
+            $res['code'] = 0;
+            $res['message'] = "";
+
+            $date = date('Y-m-d H:i:s');
+            $expl = explode(" ", $date);
+            $dateOnly = $expl[0];
+            $timeOnly = $expl[1];
+            $timeOnly = "06:00";
+
+            $hariLibur = $this->db->select('*')
+                            ->from('t_hari_libur')
+                            ->where('flag_active', 1)
+                            ->where('tanggal', $dateOnly)
+                            ->where('flag_hari_libur_nasional', 1)
+                            ->get()->row_array();
+            if($hariLibur){
+                $res['code'] = 1;
+                $res['message'] = 'Hari Libur';
+            } else {
+                $jam_kerja = $this->db->select('*')
+                    ->from('t_jam_kerja')
+                    ->where('id_m_jenis_skpd', 1)
+                    ->where('flag_event', 0)
+                    ->where('flag_active', 1)
+                    ->order_by('created_date')
+                    ->get()->row_array();
+
+                if(getNamaHari($dateOnly) == "Sabtu" || getNamaHari($dateOnly) == "Minggu"){
+                    $res['code'] = 2;
+                    $res['message'] = 'Hari Sabtu dan/atau Minggu';
+                } else {
+                    $jamMasuk = $jam_kerja['wfo_masuk'];
+                    if(getNamaHari($dateOnly) == "Jumat"){
+                        $jamMasuk = $jam_kerja['wfoj_masuk'];
+                    }
+                    $diff = (strtotime($jamMasuk) - strtotime($timeOnly)) / 60;
+                    if($diff > $minMin){
+                        $res['code'] = 4;
+                        $res['message'] = "Waktu minimum adalah ".$minMin." setelah waktu masuk";
+                        return $res;
+                    }
+
+                    $jamPulang = $jam_kerja['wfo_pulang'];
+                    if(getNamaHari($dateOnly) == "Jumat"){
+                        $jamPulang = $jam_kerja['wfoj_pulang'];
+                    }
+                    $diff = (strtotime($jamPulang) - strtotime($timeOnly)) / 60;
+                    if($diff < $maxMin){
+                        $res['code'] = 3;
+                        $res['message'] = "Waktu maksimal adalah ".$maxMin." sebelum waktu pulang";
+                    }
+                }
+            }
+
+            return $res;
+        }
 	}
 ?>

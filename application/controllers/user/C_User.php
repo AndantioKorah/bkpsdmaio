@@ -699,7 +699,9 @@ class C_User extends CI_Controller
         $this->load->view('user/V_LiveChatKonsultasi', $data);
     }
 
-    public function sendMessageKonsultasi(){
+    public function sendMessageKonsultasi($id){
+        dd($_FILES);
+        dd($this->input->post());
         echo json_encode($this->user->sendMessageKonsultasi($this->input->post()));
     }
 

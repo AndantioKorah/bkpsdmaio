@@ -220,7 +220,7 @@
         background-color: red;
     ">
     </div> -->
-    <form id="form_send_message" style="
+    <form id="form_send_message" method="post" enctype="multipart/form-data" style="
         position: absolute;
         bottom: 0;
         left: 0;
@@ -244,14 +244,20 @@
                             padding: 3px 0px 3px 0px;
                         ">   
                         <div class="col-lg-12 col-md-12 col-sm-12 d-flex align-items-center">
-                            <input type="file" accept="image/*, .pdf" id="upload_file" style="display: none;" />
+                            <input type="file" accept="image/*, .pdf" name="chat_attachment" id="upload_file" style="position: absolute; z-index: -10000;" />
                             <button id="btn_add_file" type="button" style="
                                 width: 30px;
                                 height: 30px;
-                                margin-left: -5px;
-                            "
-                            class="btn btn_icon btn-outline-info rounded-circle p-2">
+                                margin-left: -5px;"
+                                class="btn btn_icon btn-outline-info rounded-circle p-2">
                                 <i class="fa fa-plus"></i>
+                            <button id="btn_cancel_add_file" type="button" style="
+                                width: 30px;
+                                height: 30px;
+                                margin-left: -5px;
+                                display: none;"
+                                class="btn btn_icon btn-outline-danger rounded-circle p-2">
+                                <i class="fa fa-times"></i>
                             </button>
                             <textarea name="pesan" id="pesan" style="
                                 resize: none;
@@ -267,24 +273,30 @@
                                 line-height: 20px;
                                 margin-left: 3px;
                             "
-                                placeholder="Tulis pesan disini..."></textarea>
-                                <button id="btn_send_message" type="submit" style="
-                                    width: 30px;
-                                    height: 30px;
-                                    margin-right: -5px;
-                                "
-                                class="btn btn_icon btn-success rounded-circle p-2">
-                                    <i class="fa fa-paper-plane"></i>
-                                </button>
-                                <button id="btn_send_message_loading" type="button" disabled style="
-                                    width: 30px;
-                                    height: 30px;
-                                    display: none;
-                                    margin-right: -5px;
-                                "
-                                class="btn btn_icon btn-success rounded-circle p-2">
-                                    <i class="fa fa-spin fa-spinner"></i>
-                                </button>
+                            placeholder="Tulis pesan disini..."></textarea>
+                            <div class="div_file_uploaded w-100 d-none align-items-center p-2"
+                                style="">
+                                <i style="font-size: 1.3rem;" id="fa_file_icon" class="text-info fa fa-file"></i>
+                                <i style="font-size: 1.3rem;" id="fa_file_image" class="text-info fa fa-image"></i>
+                                <span class="ml-2 ellipsis_this fw-bold text-left" id="file_name_uploaded"></span>
+                            </div>
+                            <button id="btn_send_message" type="submit" style="
+                                width: 30px;
+                                height: 30px;
+                                margin-right: -5px;
+                            "
+                            class="btn btn_icon btn-success rounded-circle p-2">
+                                <i class="fa fa-paper-plane"></i>
+                            </button>
+                            <button id="btn_send_message_loading" type="button" disabled style="
+                                width: 30px;
+                                height: 30px;
+                                display: none;
+                                margin-right: -5px;
+                            "
+                            class="btn btn_icon btn-success rounded-circle p-2">
+                                <i class="fa fa-spin fa-spinner"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -400,6 +412,40 @@
         reloadLiveChatContainer('<?=$result['chat']['id']?>')
     })
 
+    $('#upload_file').change(function(){
+        if (this.files && this.files.length > 0) {
+            if(this.files[0].size > 1000000){
+                errortoast('Max. Ukuran File adalah 1 MB')
+                return false
+            }
+            $('#btn_cancel_add_file').show()
+            $('#btn_add_file').hide()
+            let fileName = this.files[0].name;
+            $('#file_name_uploaded').html(fileName)
+            $('#pesan').hide()
+            $('.div_file_uploaded').removeClass('d-none')
+            $('.div_file_uploaded').addClass('d-flex')
+            if (this.files[0].type === "application/pdf") {
+                $('#fa_file_icon').show()
+                $('#fa_file_image').hide()
+            } else {
+                $('#fa_file_icon').hide()
+                $('#fa_file_image').show()
+            }
+        } else {
+            $('#btn_cancel_add_file').click()
+        }
+    })
+
+    $('#btn_cancel_add_file').on('click', function(){
+        $('#btn_cancel_add_file').hide()    
+        $('#btn_add_file').show()
+        $('#pesan').show()
+        $('.div_file_uploaded').removeClass('d-flex')
+        $('.div_file_uploaded').addClass('d-none')
+        $('#upload_file').val('')
+    })
+
     $('#btn_add_file').on('click', function(){
         $('#upload_file').click()
     })
@@ -473,7 +519,42 @@
 
     $('#form_send_message').on('submit', function(e){
         e.preventDefault()
-        $('#btn_send_message').click()
+        // $('#btn_send_message').click()
+        var formvalue = $('#form_send_message');
+        var form_data = new FormData(formvalue[0]);
+        var ins = document.getElementById('upload_file').files.length;
+        if(document.getElementById('upload_file').files[0].size > 1000000){
+            errortoast('Max. Ukuran File adalah 1 MB')
+            return false
+        }
+
+        $.ajax({
+            url: '<?=base_url("user/C_User/sendMessageKonsultasi/".$result['chat']['id'])?>',
+            method: "POST",
+            contentType: false,  
+            cache: false,  
+            processData:false, 
+            // data: {
+            //     'id' : '<?=$result['chat']['id']?>',
+            //     'pesan' : $('#pesan').val(),
+            //     'id_m_user_sender' : '<?=$this->general_library->getId()?>'
+            // },
+            data: form_data,  
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 1){
+                    errortoast(rs.message)
+                } else {
+                    reloadLiveChatContainer('<?=$result['chat']['id']?>')
+                    $('#pesan').val('')
+                }
+                $(this).show()
+                $('#btn_cancel_add_file').click()
+                $('#btn_send_message_loading').hide()
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
     })
 
     function reloadLiveChatContainer(id){
@@ -499,27 +580,5 @@
     $('#btn_send_message').on('click', function(){
         // $(this).hide()
         // $('#btn_send_message_loading').show()
-        $.ajax({
-            url: '<?=base_url("user/C_User/sendMessageKonsultasi")?>',
-            method: 'post',
-            data: {
-                'id' : '<?=$result['chat']['id']?>',
-                'pesan' : $('#pesan').val(),
-                'id_m_user_sender' : '<?=$this->general_library->getId()?>'
-            },
-            success: function(data){
-                let rs = JSON.parse(data)
-                if(rs.code == 1){
-                    errortoast(rs.message)
-                } else {
-                    reloadLiveChatContainer('<?=$result['chat']['id']?>')
-                    $('#pesan').val('')
-                }
-                $(this).show()
-                $('#btn_send_message_loading').hide()
-            }, error: function(e){
-                errortoast('Terjadi Kesalahan')
-            }
-        })
     })
 </script>

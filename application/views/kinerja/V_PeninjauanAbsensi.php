@@ -611,7 +611,8 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
           //      }
           //     }
           // });
-
+            var today = new Date(tanggal);
+            var dayIndex = today.getDay(); 
             $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/getSkpdWfa",
               method : "POST",
@@ -620,10 +621,15 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
               dataType : 'json',
               success: function(ress){
                 if(tanggal >= '2026-04-10'){
+                if(dayIndex == 5){
                 if(ress == 1){
                    $('#btn_upload').hide()
                    $('#ket').show()
-                   $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+                   $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFH</b>')
+                } else {
+                $('#btn_upload').show()
+                $('#ket').hide()
+                }
                 } else {
                 $('#btn_upload').show()
                 $('#ket').hide()

@@ -141,14 +141,20 @@
                                             <?=$rs['flag_done'] == 0 ? '<i style="font-size: .6rem; color: green;" class="fa fa-circle"></i>' : ''?>
                                             <?=formatNamaPegawaiLiveChat($rs)?>
                                         </span>
-                                        <?php if($rs['pesan']){ ?>
+                                        <?php if($rs['pesan'] || $rs['is_image'] || $rs['is_file']){ ?>
                                             <div class="text-left">
-                                                <label style="
-                                                        color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>;
-                                                        font-weight: <?=$flagRead == 0 ? '1000 !important' : 'normal'?>
-                                                    " class="sp_last_chat_rw_konsul">
-                                                    <?=$rs['pesan']?>
-                                                </label>
+                                                <?php if($rs['pesan']){ ?>
+                                                    <label style="
+                                                            color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>;
+                                                            font-weight: <?=$flagRead == 0 ? '1000 !important' : 'normal'?>
+                                                        " class="sp_last_chat_rw_konsul">
+                                                        <?=$rs['pesan']?>
+                                                    </label>
+                                                <?php } else if($rs['is_image'] == 1){ ?>
+                                                    <i style="color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>; font-size: .75rem;" class="fa fa-image"></i>
+                                                <?php } else if($rs['is_file'] == 1){ ?>
+                                                    <i style="color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>; font-size: .75rem;" class="fa fa-file-pdf"></i>
+                                                <?php } ?>
                                             </div>
                                         <?php } ?>
                                         <?php if($rs['id_m_layanan_konsul']){ ?>

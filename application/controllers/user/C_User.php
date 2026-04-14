@@ -700,9 +700,7 @@ class C_User extends CI_Controller
     }
 
     public function sendMessageKonsultasi($id){
-        dd($_FILES);
-        dd($this->input->post());
-        echo json_encode($this->user->sendMessageKonsultasi($this->input->post()));
+        echo json_encode($this->user->sendMessageKonsultasi($this->input->post(), $id));
     }
 
     public function endKonsultasi($id){

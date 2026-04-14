@@ -50,6 +50,13 @@
         font-weight: bold;
         font-size: 1rem;
     }
+
+    .default_hover:hover{
+        filter: brightness(90%); 
+        opacity: 0.9; 
+        transition: .2s;
+        cursor: pointer;
+    }
 </style>
 
 <div class="container_live_chat">

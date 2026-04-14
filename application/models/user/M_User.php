@@ -4160,7 +4160,8 @@
             $listChat = null;
             
             $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
-                        d.nipbaru_ws, h.gelar1 as gelar1_assign, h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan')
+                        d.nipbaru_ws, h.gelar1 as gelar1_assign, h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan,
+                        b.is_image, b.is_file')
                         ->from('t_live_chat a')
                         ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
                         ->join('m_user c', 'a.id_m_user = c.id')
@@ -4278,7 +4279,7 @@
             ];
         }
 
-        public function sendMessageKonsultasi($data){
+        public function sendMessageKonsultasi($data, $id){
             $rs = [
                 'code' => 0,
                 'message' => null
@@ -4286,8 +4287,7 @@
 
             $this->db->trans_begin();
             
-            $data['id_t_live_chat'] = $data['id'];
-            unset($data['id']);
+            $data['id_t_live_chat'] = $id;
             
             $chat = $this->db->select('*')
                             ->from('t_live_chat')
@@ -4302,6 +4302,31 @@
                 $updateChat['flag_read_pegawai'] = 0;
             } else {
                 $updateChat['flag_read_admin'] = 0;
+            }
+
+            $foldername = 'arsiplivechat/';
+            $explode = explode(".", $_FILES['file']['name']);
+            $ext = $explode[count($explode) - 1];
+            $config['upload_path'] = "./".$foldername;
+            $config['file_name'] = $data['id_t_live_chat'].generateRandomString(10, 0, null).date('ymdhis').".".$ext;
+    		$config['overwrite'] = TRUE;
+            $config['allowed_types'] = ['pdf', 'jpg', 'png', 'jpeg'];
+
+            $data['attachment_size'] = intval($_FILES['file']['size']);
+            if($_FILES['file']['type'] == "application/pdf"){
+                $data['is_file'] = 1;
+            } else {
+                $data['is_image'] = 1;
+            }
+            $data['url_attachment'] = $foldername.$config['file_name'];
+            $data['attachment_name'] = $config['file_name'];
+
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('file')) {
+                $rs['code'] = 1;
+    			$rs['message'] = strip_tags($this->upload->display_errors());
+                $this->db->trans_rollback();
+                return $rs;
             }
 
             $this->db->insert('t_live_chat_detail', $data);

@@ -699,6 +699,13 @@ function formatCurrencyWithoutRpNew($data, $decimal = 2)
     return $rs;
 }
 
+function cekWaktuKerja($max = 0){
+    $CI = &get_instance();
+    $CI->load->model('general/M_General', 'general');
+
+    return $CI->general->cekWaktuKerja($max);
+}
+
 function formatCurrencyWithoutRpWithDecimal($data, $decimal = 2)
 {
     return number_format($data, $decimal, ",", ".");

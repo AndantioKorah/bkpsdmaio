@@ -699,7 +699,9 @@ class C_User extends CI_Controller
         $this->load->view('user/V_LiveChatKonsultasi', $data);
     }
 
-    public function sendMessageKonsultasi(){
+    public function sendMessageKonsultasi($id){
+        dd($_FILES);
+        dd($this->input->post());
         echo json_encode($this->user->sendMessageKonsultasi($this->input->post()));
     }
 
@@ -750,6 +752,25 @@ class C_User extends CI_Controller
 
     public function submitGantiJenisLayanan($id_t_live_chat = 0, $id_m_layanan_konsul){
         echo json_encode($this->user->submitGantiJenisLayanan($id_t_live_chat, $id_m_layanan_konsul));
+    }
+
+    public function cekWaktuKerjaKonsultasi(){
+        $batasAkhir = 15;
+        $batasAwalKonsultasi = 60;
+
+        $waktuKerja = cekWaktuKerja($batasAkhir, $batasAwalKonsultasi);
+        switch($waktuKerja['code']){
+            case 1: $waktuKerja['message'] = "Konsultasi Online tidak dapat dilakukan di Hari Libur";
+                break;
+            case 2: $waktuKerja['message'] = "Konsultasi Online tidak dapat dilakukan di Hari Sabtu atau Minggu";
+                break;
+            case 3: $waktuKerja['message'] = "Batas waktu Konsultasi Online adalah ".$batasAkhir." menit sebelum Jam Pulang";
+                break;
+            case 4: $waktuKerja['message'] = "Waktu Konsultasi Online adalah ".$batasAwalKonsultasi." menit setelah Jam Masuk";
+                break;
+            default: $waktuKerja['message'] = "";
+        }
+        echo json_encode($waktuKerja);
     }
 
 }

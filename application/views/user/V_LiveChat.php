@@ -121,6 +121,7 @@
 </div>
 
 <script>
+    var cekWaktuKerja;
     $(function(){
         loadRiwayatChat()
     })
@@ -166,6 +167,29 @@
         // })
     }
 
+    function cekJamKerjaKonsultasi(){
+        $.ajax({
+            url: '<?=base_url("user/C_User/cekWaktuKerjaKonsultasi")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 0){
+                    showPopupLiveChat('Pilih Jenis Layanan')
+                    $('.popup_body').html('')
+                    $('.popup_body').append(divLoaderNavy)
+                    $('.popup_body').load('<?=base_url("user/C_User/loadLayananKonsultasi/0/1")?>', function(){
+                        $('#loader').hide()
+                    })
+                } else {
+                    errortoast(rs.message)
+                }
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
+
     $('.btn_konsultasi').on('click', function(){
         // $('.div_riwayat_live_chat').hide()
         // $('.div_pilih_layanan_konsultasi').show()
@@ -174,13 +198,7 @@
         // $('.div_pilih_layanan_konsultasi').load('<?=base_url("user/C_User/loadLayananKonsultasi")?>', function(){
         //     $('#loader').hide()
         // })
-
-        showPopupLiveChat('Pilih Jenis Layanan')
-        $('.popup_body').html('')
-        $('.popup_body').append(divLoaderNavy)
-        $('.popup_body').load('<?=base_url("user/C_User/loadLayananKonsultasi/0/1")?>', function(){
-            $('#loader').hide()
-        })
+        cekJamKerjaKonsultasi()
     })
 
     function openKonsultasiDetail(id){

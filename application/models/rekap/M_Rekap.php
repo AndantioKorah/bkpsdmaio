@@ -1937,7 +1937,6 @@
                                 // cari jika id unitkerja sesuai parameter, bulan dan tahun sesuai parameter
                                 // cari jika semua unitkerja, bulan dan tahun sesuai parameter
                                 // cari jika unitkerja sesuai parameter, semua bulan dan tahun sesuai
-
             if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
                 if($rs['code'] == 1){
@@ -3691,6 +3690,7 @@
         // dd($skpd);
         $param['id_unitkerja'] = $skpd[0];
         $param['nm_unitkerja'] = $skpd[1];
+        dd($this->buildDataAbsensi($param, 1, $flag_alpha, 0, $flag_rekap_tpp, $flag_penerima_tpp));
         return $this->buildDataAbsensi($param, 1, $flag_alpha, 0, $flag_rekap_tpp, $flag_penerima_tpp);
         
         // $list_data_absen = $this->db->select('a.*, c.*, b.username as nip')

@@ -204,7 +204,7 @@ input:checked + .slider .off
               <?php } else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29) { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>
-                  <option value="1" >Selesai verifikasi BKPSDM dan menunggu jadwal pengusulan ke BKN</option>
+                  <option value="1" >Selesai verifikasi BKPSDM</option>
                   <option value="2" >Tolak Siladen</option>
                   <option value="6" >Tolak BKN</option>
                   <option value="7" >ACC BKN</option>

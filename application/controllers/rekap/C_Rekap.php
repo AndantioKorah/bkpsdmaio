@@ -63,12 +63,19 @@ class C_Rekap extends CI_Controller
                 'tahun' => '2023'
             ];
         }
+
+        $skpd = explode(";", $param['skpd']);
+        if($this->general_library->getIdUnitKerjaMaster($skpd[0]) == '8010000' || $this->general_library->getIdUnitKerjaMaster($skpd[0]) == '8020000'){
+            $flag_rekap_tpp = 1;
+        }
+
+
         $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha, $flag_rekap_tpp, 0);
         if($flag_alpha == 1){
             dd($data['result']);
         }
         $data['flag_print'] = 0;
-        if($data['result']){
+        if(!isset($data['result']['code'])){
             $data['skpd'] = $data['result']['skpd'];
             $data['jam_kerja'] = $data['result']['jam_kerja'];
             $data['jam_kerja_event'] = $data['result']['jam_kerja_event'];
@@ -81,6 +88,7 @@ class C_Rekap extends CI_Controller
             $data['nama_file'] = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.xls';
             $this->session->set_userdata('rekap_absen_aars', $data);
         }
+        
         $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
     }
 
@@ -568,7 +576,7 @@ class C_Rekap extends CI_Controller
             case "absen":
                 $data = null;
                 $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null, 1);
-                dd($data['result']);
+                // dd($data['result']);
                 $data['flag_print'] = 0;
                 if($data['result'] && (!isset($data['result']['code']))){
                     $data['skpd'] = $data['result']['skpd'];

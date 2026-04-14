@@ -1811,7 +1811,8 @@
                                 ->where('a.flag_terpenuhi', 0)
                                 ->where('a.flag_exception', 0)
                                 ->where('a.flag_active', 1)
-                                ->where('bulan_tahun <=', $param['tahun']."-".$param['bulan']."-01");
+                                ->where('bulan_tahun <=', $param['tahun']."-".$param['bulan']."-01")
+                                ->group_by('b.nipbaru_ws');
                                 // ->where_in('b.nipbaru_ws', $pegawai)
                                 // ->get()->result_array();
             if($param['id_unitkerja'] == "3010000"){
@@ -1940,6 +1941,7 @@
 
             if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+                
                 if($rs['code'] == 1){
                     return $rs;
                 } else {
@@ -3691,6 +3693,7 @@
         // dd($skpd);
         $param['id_unitkerja'] = $skpd[0];
         $param['nm_unitkerja'] = $skpd[1];
+        
         return $this->buildDataAbsensi($param, 1, $flag_alpha, 0, $flag_rekap_tpp, $flag_penerima_tpp);
         
         // $list_data_absen = $this->db->select('a.*, c.*, b.username as nip')

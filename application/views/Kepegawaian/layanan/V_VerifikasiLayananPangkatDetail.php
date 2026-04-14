@@ -602,7 +602,7 @@
         <option value="2">TOLAK</option>  -->
         <!-- <option value="3">TMS</option> -->
           <option <?php if($result[0]['status_layanan'] == 0) echo "selected";?> value="0" >Pengajuan</option>
-          <option <?php if($result[0]['status_layanan'] == 1) echo "selected";?> value="1" >Selesai verifikasi BKPSDM dan menunggu jadwal pengusulan ke BKN</option>
+          <option <?php if($result[0]['status_layanan'] == 1) echo "selected";?> value="1" >Selesai verifikasi BKPSDM </option>
           <option <?php if($result[0]['status_layanan'] == 2) echo "selected";?> value="2" >Tolak Siladen</option>
           <option <?php if($result[0]['status_layanan'] == 6) echo "selected";?> value="6" >Tolak BKN</option>
           <option <?php if($result[0]['status_layanan'] == 7) echo "selected";?> value="7" >ACC BKN</option>

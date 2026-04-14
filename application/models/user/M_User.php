@@ -1626,8 +1626,14 @@
             ->from('db_pegawai.pegawai a')
             ->where('a.id_peg', $id_pegawai);
             return $this->db->get()->result_array();
-           
-
+        }
+        
+        public function getIdUnitKerjaMaster($id_unitkerja){
+            $this->db->select('a.id_unitkerjaMaster')
+            ->from('db_pegawai.unitkerja a')
+            ->where('a.id_unitkerja', $id_unitkerja);
+            $result = $this->db->get()->row_array();
+            return $result['id_unitkerjaMaster'];
         }
 
         public function getIDPegawaiByNip($nip){

@@ -24,7 +24,7 @@
                     <div class="row">
                         <div class="col-lg-4 col-md-4">
                             <div class="form-group">
-                                <label class="bmd-label-floating">Pilih SKPD</label>
+                                <label class="bmd-label-floating">Pilih SKPD </label>
                                 <!-- <select class="form-control select2-navy" style="width: 100%"
                                     id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
                                     <?php foreach($list_skpd as $s){ ?>

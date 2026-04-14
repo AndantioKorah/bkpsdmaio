@@ -673,6 +673,12 @@ class General_library
         return $this->nikita->m_user->getNipPegawai($id_peg);
     }
 
+    public function getIdUnitKerjaMaster($id_unitkerja){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        // $this->refreshUserLoggedInData();
+        return $this->nikita->m_user->getIdUnitKerjaMaster($id_unitkerja);
+    }
+
     public function getIDPegawaiByNip($nip){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         // $this->refreshUserLoggedInData();

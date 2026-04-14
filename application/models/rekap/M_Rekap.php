@@ -1924,6 +1924,7 @@
 
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
+
         if($flag_rekap_tpp == 1){
             $exceptBangkom = $this->db->select('*')
                                 ->from('t_except_bangkom')
@@ -1940,6 +1941,7 @@
 
             if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+                
                 if($rs['code'] == 1){
                     return $rs;
                 } else {
@@ -3691,6 +3693,7 @@
         // dd($skpd);
         $param['id_unitkerja'] = $skpd[0];
         $param['nm_unitkerja'] = $skpd[1];
+        
         return $this->buildDataAbsensi($param, 1, $flag_alpha, 0, $flag_rekap_tpp, $flag_penerima_tpp);
         
         // $list_data_absen = $this->db->select('a.*, c.*, b.username as nip')

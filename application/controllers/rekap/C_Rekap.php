@@ -54,7 +54,7 @@ class C_Rekap extends CI_Controller
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
 
-    public function readAbsensiAars($flag_alpha = 0, $flag_rekap_tpp = 1){
+    public function readAbsensiAars($flag_alpha = 0, $flag_rekap_tpp = 0){
         $param = $this->input->post();
         if($flag_alpha == 1){
             $param = [
@@ -63,6 +63,13 @@ class C_Rekap extends CI_Controller
                 'tahun' => '2023'
             ];
         }
+
+        $skpd = explode(";", $param['skpd']);
+        if($this->general_library->getIdUnitKerjaMaster($skpd[0]) == '8010000' || $this->general_library->getIdUnitKerjaMaster($skpd[0]) == '8020000'){
+            $flag_rekap_tpp = 1;
+        }
+
+
         $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha, $flag_rekap_tpp, 0);
         if($flag_alpha == 1){
             dd($data['result']);
@@ -569,7 +576,7 @@ class C_Rekap extends CI_Controller
             case "absen":
                 $data = null;
                 $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha = null, 1);
-                dd($data['result']);
+                // dd($data['result']);
                 $data['flag_print'] = 0;
                 if($data['result'] && (!isset($data['result']['code']))){
                     $data['skpd'] = $data['result']['skpd'];

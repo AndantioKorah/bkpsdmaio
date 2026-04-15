@@ -80,7 +80,34 @@
                 <?php } ?>
                 <div class="<?=$divChat?> div_chat">
                     <div class="col-lg-12">
-                        <span class="sp_chat_pesan_chatkonsul"><?=$rd['pesan']?></span><br>
+                        <?php if($rd['is_file'] == 1){ ?>
+                            <div style="
+                                    width: 100%;
+                                    padding: 10px;
+                                    border-radius: 10px;
+                                    border: 1px solid #930000;
+                                    background-color: #f8dddd;
+                                    color: #930000;
+                                    font-weight: bold;
+                                    cursor: pointer;
+                                "
+                                class="d-flex align-items-center default_hover mb-1"
+                                onclick="openAttachment('<?=str_replace(' ', '_', $rd['url_attachment'])?>')">
+                                <i class="fa fa-file-pdf"></i>&nbsp;
+                                <span class="ellipsis_this"><?=$rd['attachment_name']?></span>
+                            </div>
+                        <?php } else if($rd['is_image'] == 1){ ?>
+                            <image class="b-lazy default_hover mb-1" style="
+                                max-height: 20vh;
+                                border-radius: 10px;
+                                max-width: 100%;
+                                object-fit: cover;
+                                cursor: pointer;
+                            " src="<?=str_replace(' ', '_', base_url($rd['url_attachment']))?>"
+                            onclick="openAttachment('<?=str_replace(' ', '_', $rd['url_attachment'])?>')"/>
+                        <?php } else { ?>
+                            <span class="sp_chat_pesan_chatkonsul"><?=$rd['pesan']?></span><br>
+                        <?php } ?>
                     </div>
                     <div class="col-lg-12">
                         <span class="sp_jam_pesan_chatkonsul <?=$spJam?>"><?=trim(formatDateNotifikasi($rd['created_date']), 0)?></span>
@@ -89,4 +116,9 @@
             </div>
         <?php } ?>
     <?php $i++; } ?>
+    <script>
+        function openAttachment(url){
+            window.open('<?=base_url()?>'+url, "_blank")
+        } 
+    </script>
 <?php } ?>

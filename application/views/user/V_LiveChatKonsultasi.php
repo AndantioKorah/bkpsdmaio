@@ -244,7 +244,7 @@
                             padding: 3px 0px 3px 0px;
                         ">   
                         <div class="col-lg-12 col-md-12 col-sm-12 d-flex align-items-center">
-                            <input type="file" accept="image/*, .pdf" name="chat_attachment" id="upload_file" style="position: absolute; z-index: -10000;" />
+                            <input type="file" accept="image/*, .pdf" name="file" id="upload_file" style="position: absolute; z-index: -10000;" />
                             <button id="btn_add_file" type="button" style="
                                 width: 30px;
                                 height: 30px;
@@ -523,6 +523,14 @@
         var formvalue = $('#form_send_message');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('upload_file').files.length;
+
+        if(ins === 0 && $('#pesan').val() === ""){
+            return false
+        }
+
+        $('#btn_send_message').hide()
+        $('#btn_send_message_loading').show()
+
         if(document.getElementById('upload_file').files[0].size > 1000000){
             errortoast('Max. Ukuran File adalah 1 MB')
             return false
@@ -550,6 +558,7 @@
                 }
                 $(this).show()
                 $('#btn_cancel_add_file').click()
+                $('#btn_send_message').show()
                 $('#btn_send_message_loading').hide()
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')

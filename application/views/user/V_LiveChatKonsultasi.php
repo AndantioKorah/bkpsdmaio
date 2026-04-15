@@ -33,6 +33,8 @@
         padding: 10px;
         border-radius: 10px;
         max-width: 240px;
+        -webkit-box-shadow: 3px 3px 6px 1px rgba(82,82,82,0.46); 
+        box-shadow: 3px 3px 6px 1px rgba(82,82,82,0.46);
         /* position: absolute;
         bottom: 10px; */
     }
@@ -120,12 +122,17 @@
     }
 ?>
 <div id="div_live_chat_container" class="col-lg-12 mt-2" style="
-    background-color: #f9fbf9;
+    /* background-color: #f9fbf9; */
+    background-image: url('../assets/img/bg-live-chat.png');
+    background-repeat: no-repeat;
     height: <?=$heightChatContainer?>;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
     padding-bottom: <?=$paddingBottomChat?>;
+    background-position: center;
+    background-repeat: repeat;
+    background-size: 50%;
 ">  
     <div class="row" id="live_chat_container">
     </div>

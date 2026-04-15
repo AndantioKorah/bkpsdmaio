@@ -594,6 +594,7 @@ class C_Kepegawaian extends CI_Controller
 		if(!$this->general_library->isProgrammer() 
 		&& !$this->general_library->isAdminAplikasi() 
 		&& !$this->general_library->isHakAkses('akses_profil_pegawai')
+		&& $this->general_library->getBidangUser() != ID_BIDANG_PEKIN
 		&& !$this->general_library->isKasubagKepegawaianDiknas()){
 			$this->session->set_userdata('apps_error', 'Anda tidak memiliki Hak Akses untuk menggunakan Menu tersebut');
 			redirect('welcome');

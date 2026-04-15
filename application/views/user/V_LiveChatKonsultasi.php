@@ -477,13 +477,20 @@
     }
 
     function pilihTeknisLayanan(id){
-        $('#div_live_chat_container').hide()
-        $('#div_assign_operator').show()
-        $('#assign_operator_container').html('')
-        $('#assign_operator_container').append(divLoaderNavy)
-        $('#assign_operator_container').load('<?=base_url("user/C_User/assignOperatorKonsultasi/")?>'+id, function(){
+        showPopupLiveChat('Pilih Teknis Layanan')
+        $('.popup_body').html('')
+        $('.popup_body').append(divLoaderNavy)
+        $('.popup_body').load('<?=base_url("user/C_User/assignOperatorKonsultasi/")?>'+id+'/1', function(){
             $('#loader').hide()
         })
+
+        // $('#div_live_chat_container').hide()
+        // $('#div_assign_operator').show()
+        // $('#assign_operator_container').html('')
+        // $('#assign_operator_container').append(divLoaderNavy)
+        // $('#assign_operator_container').load('<?=base_url("user/C_User/assignOperatorKonsultasi/")?>'+id, function(){
+        //     $('#loader').hide()
+        // })
     }
     
     function endKonsultasi(id){

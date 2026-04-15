@@ -1,7 +1,8 @@
 <style>
     .div_operator{
         overflow-y: auto;
-        max-height: 55vh;
+        overflow-x: hidden;
+        max-height: 50vh;
     }
 
     .div_operator_item{
@@ -16,13 +17,13 @@
         transition: .2s;
     }
 </style>
-<div class="col-lg-2 col-md-2 col-sm-2">
+<!-- <div class="col-lg-2 col-md-2 col-sm-2">
     <i style="cursor: pointer;" id="btn_back_assign_operator" class="fa fa-chevron-left"></i>
 </div>
 <div class="col-lg-8 col-md-8 col-sm-8 text-center">
     <h3>Pilih Operator</h3>
 </div>
-<div class="col-lg-2 col-md-2 col-sm-2"></div>
+<div class="col-lg-2 col-md-2 col-sm-2"></div> -->
 <div class="col-lg-12 mt-2">
     <div class="input-group">
         <div class="input-group-prepend">
@@ -86,6 +87,7 @@
             success: function(data){
                 let rs = JSON.parse(data)
                 if(rs.code == 0){
+                    hidePopupLiveChat()
                     successtoast('Berhasil assign operator')
                     openKonsultasiDetail('<?=$id?>')
                     // $('#btn_back_assign_operator').click()

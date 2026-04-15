@@ -32,7 +32,7 @@
     }
 
     .popup_live_chat_body{
-        max-height: 60vh;
+        max-height: 75vh;
         background-color: white;
         border-radius: 10px;
     }

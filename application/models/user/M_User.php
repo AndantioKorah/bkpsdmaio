@@ -4326,6 +4326,7 @@
             }
             $data['url_attachment'] = $foldername.$config['file_name'];
             $data['attachment_name'] = $config['file_name'];
+            $data['id_m_user_sender'] = $this->general_library->getId();
 
             $this->load->library('upload', $config);
             if (!$this->upload->do_upload('file')) {
@@ -4529,7 +4530,7 @@
                 $this->db->insert('t_live_chat_detail', [
                     'id_t_live_chat' => $id_t_live_chat,
                     'pesan' => 'Admin telah mengganti Jenis Layanan Konsul menjadi '.$mKonsul['nama_layanan'],
-                    'is_sistem' => 1
+                    'is_sistem' => 1,
                 ]);
             }
 

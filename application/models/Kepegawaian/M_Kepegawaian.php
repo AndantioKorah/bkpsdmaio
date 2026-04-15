@@ -3171,8 +3171,7 @@ public function submitVerifikasiDokumen(){
     $timestamp = strtotime($mydate);
     $tahun = date("Y", $timestamp);
     $bulansertifikat = date("m", $timestamp);
-
-
+   
     // if($this->general_library->isProgrammer()){
         // dd(base_url($datapost['file_path']));
         $base64 = convertToBase64(($datapost['file_path']));
@@ -3347,8 +3346,9 @@ public function submitVerifikasiDokumen(){
     } else {
         $this->db->trans_commit();
           if($datapost['jenis_dokumen'] == "diklat") {
-            //  $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+            if($tahun >= '2026'){
             $this->general->cronCheckBangkom($bulansertifikat,$tahun, $peg['nipbaru_ws']);
+            }
             }
 
     }

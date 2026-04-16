@@ -398,6 +398,7 @@ class C_User extends CI_Controller
         if($flag_edit == 1){
             $data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id_user, $dt['bulan'], $dt['tahun'], 0);
         } else {
+           
             $data['result'] = $this->general_library->getPaguTppPegawai($dt['bulan'], $dt['tahun']);
         }
         $data['nip'] = $data['result']['pagu_tpp']['nipbaru_ws'];

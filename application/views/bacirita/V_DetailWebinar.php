@@ -78,7 +78,14 @@
 				<h3><b>WEBINAR <?= strtoupper(getNamaBulan($month));?> <?=date('Y');?></b></h3>
 				<h4><i><?= strtoupper($webinar['topik']);?></i></h4>
                 <br>
-                <h4><b>(<?=$webinar['jumlah_jp']?> JP)</b> Badan Kepegawaian dan Pengembangan Sumber Daya Manusia</h4>
+                <h4><b>(<?=$webinar['jumlah_jp']?> JP)</b> 
+                <?php if($webinar['id'] == 6) { ?>
+                Dinas Perindustrian dan Perdagangan
+                <?php } else { ?>
+                Badan Kepegawaian dan Pengembangan Sumber Daya Manusia
+                <?php } ?>
+
+            </h4>
                 <?= formatDateNamaBulan($webinar['tanggal']);?>  <?= substr($webinar['jam_mulai'], 0, 8);?> - <?= substr($webinar['jam_selesai'], 0, 8);?> <br>
 
                 <?php 
@@ -326,6 +333,14 @@
        <td>
         <a class="btn btn-info btn-sm" href="<?=$webinar['link_youtube'];?>" role="button" target="_blank">
             <?=$webinar['link_youtube'];?>
+        </a>
+    </td>
+    </tr>
+    <tr>
+      <td>Facebook</td>
+       <td>
+        <a class="btn btn-info btn-sm" href="<?=$webinar['link_facebook'];?>" role="button" target="_blank">
+            <?=$webinar['link_facebook'];?>
         </a>
     </td>
     </tr>

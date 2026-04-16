@@ -150,9 +150,9 @@
                                                         " class="sp_last_chat_rw_konsul">
                                                         <?=$rs['pesan']?>
                                                     </label>
-                                                <?php } else if($rs['is_image'] == 1){ ?>
-                                                    <i style="color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>; font-size: .75rem;" class="fa fa-image"></i>
                                                 <?php } else if($rs['is_file'] == 1){ ?>
+                                                    <i style="color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>; font-size: .75rem;" class="fa fa-image"></i>
+                                                <?php } else if($rs['is_image'] == 1){ ?>
                                                     <i style="color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>; font-size: .75rem;" class="fa fa-file-pdf"></i>
                                                 <?php } ?>
                                             </div>

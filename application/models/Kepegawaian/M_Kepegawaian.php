@@ -402,6 +402,7 @@ class M_Kepegawaian extends CI_Model
             || $this->general_library->isAdminAplikasi()
             || $this->general_library->isManajemenTalenta()
             || $this->general_library->isHakAkses('akses_profil_pegawai')
+            || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
             ||  isKasubKepegawaian($this->general_library->getNamaJabatan())){
                 $username = $nip;
                 if(!$username){

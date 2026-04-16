@@ -32,10 +32,10 @@
     ?>
         <?php if($rd['is_sistem'] == 1){ ?>
             <div class="col-lg-12 text-center mt-2" style="line-height: 15px;">
-                <span style="color: grey; margin-bottom: 0; font-size: .6rem; font-style: italic; font-weight: bold;">
+                <span style="color: var(--primary-color); margin-bottom: 0; font-size: .6rem; font-style: italic; font-weight: bold;">
                     <?=trim(formatDateNotifikasi($rd['created_date'], 1))?><br>
                 </span>
-                <span style="color: grey; font-size: .75rem; font-style: italic; font-weight: bold;">
+                <span style="color: var(--primary-color); font-size: .75rem; font-style: italic; font-weight: bold;">
                     <?=$rd['pesan']?>
                 </span>
             </div>
@@ -67,13 +67,14 @@
                     }
                 ?>
                 <?php
-                    if($result['chat']['id_m_user_assigned'] != null &&
+                    if(($result['chat']['id_m_user_assigned'] != null &&
                     ($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
-                    || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $flagSenderChanged == 1){
+                    || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $flagSenderChanged == 1)
+                    && $rd['is_sender_admin'] == 1){
                 ?>
                 <div class="col-lg-12 text-right mt-2">
-                    <span style="color: grey; font-size: .7rem; font-style: italic; font-weight: bold;">
+                    <span style="color: var(--primary-color); font-size: .7rem; font-style: italic; font-weight: bold;">
                         <?=getNamaPegawaiFull($rd, 0, 1)?>
                     </span>
                 </div>

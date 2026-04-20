@@ -11216,6 +11216,7 @@ public function getFileForKarisKarsu()
         ->where('a.flag_active', 1)
         ->where('a.jenisjabatan', 10)
         ->where('b.jenis_jabatan', "JFT")
+        ->where('a.statusjabatan', 1)
         ->order_by('a.tmtjabatan', 'desc')
         ->order_by('id', 'desc')
         ->limit(1);

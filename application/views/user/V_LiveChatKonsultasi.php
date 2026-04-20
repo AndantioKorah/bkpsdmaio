@@ -123,7 +123,7 @@
 ?>
 <div id="div_live_chat_container" class="col-lg-12 mt-2" style="
     /* background-color: #f9fbf9; */
-    background-image: url('../assets/img/bg-live-chat.png');
+    background-image: url('<?=base_url('assets/img/bg-live-chat.png')?>');
     background-repeat: no-repeat;
     height: <?=$heightChatContainer?>;
     overflow-y: auto;

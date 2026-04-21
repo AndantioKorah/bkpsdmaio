@@ -74,7 +74,7 @@
                 <td><?=$rs2['res_potensial_total'];?></td>
 				<td><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
                 <td><?=($total_nilai+$rs2['res_kinerja'])/2;?></td>
-                <td><?= pemetaanTalenta($rs2['res_potensial_total'],$rs2['res_kinerja'],)?></td>
+                <td><b><?= pemetaanTalenta($rs2['res_potensial_total'],$rs2['res_kinerja'],)?></b></td>
                 <td>
                 <?= rekomendasi($rs2['res_potensial_total'],$rs2['res_kinerja'])  ?>
                 </td>
@@ -117,9 +117,11 @@
 <script>
 	var groupColumn = 1;
     var table = $('.table_pt_adm').DataTable({
+        order: [[9, 'desc']],
     columnDefs: [{ visible: false, targets: groupColumn},
     { "searchable": false, "targets": [11] }],
-    order: [[groupColumn, 'asc']],
+    // order: [[groupColumn, 'asc']],
+    //  order: [[9, 'desc']]
     displayLength: 200,
     drawCallback: function (settings) {
         var api = this.api();

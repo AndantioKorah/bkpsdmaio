@@ -3063,37 +3063,52 @@
                             ->where('a.id_m_status_pegawai', 1)
                             ->where_in('a.agama', [1, 2]) // khusus pegawai kristen
                             ->where('d.tgl', $dateLengkap)
+                            ->where('d.aktivitas', 2)
                             ->get()->result_array();
+
+            $list_dokpen = $this->db->select('id_m_user, keterangan')
+                                ->from('t_dokumen_pendukung')
+                                ->where('tanggal', $tanggal)
+                                ->where('bulan', $bulan)
+                                ->where('tahun', $tahun)
+                                ->where('flag_active', 1)
+                                ->where('status', 2)
+                                ->get()->result_array();
+
+            foreach($list_dokpen as $ld){
+                $dokpen[$ld['id_m_user']] = $ld;
+            }
             
             if($list_pegawai){
-                dd($list_pegawai);
+                $allDokpen = null;
                 foreach($list_pegawai as $lp){
-                    $keterangan_sistem = ucwords("MENGIKUTI ".$namaDispen);
-                    $dokpenKenegaraan = null;
-                    $dokpenKenegaraan['id_m_user'] = $lp['user_id'];
-                    $dokpenKenegaraan['tanggal'] = $tanggal;
-                    $dokpenKenegaraan['bulan'] = $bulan;
-                    $dokpenKenegaraan['tahun'] = $tahun;
-                    $dokpenKenegaraan['id_m_jenis_disiplin_kerja'] = 6;
-                    $dokpenKenegaraan['keterangan'] = "Dispensasi";
-                    $dokpenKenegaraan['pengurangan'] = "15";
-                    $dokpenKenegaraan['status'] = "2";
-                    $dokpenKenegaraan['id_m_user_verif'] = "0";
-                    $dokpenKenegaraan['random_string'] = generateRandomString();
-                    $dokpenKenegaraan['flag_fix_tanggal'] = 0;
-                    $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
-                    $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
-                    $dokpenKenegaraan['keterangan_sistem'] = $keterangan_sistem;
-                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
-                    // dd($dokpenKenegaraan);
-
-                    // $sendWa['sendTo'] = convertPhoneNumber($lp['handphone']);
-                    // $sendWa['message'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($lp).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran *KENEGARAAN* dengan keterangan: *".$keterangan_sistem."*";
-                    // $sendWa['flag_prioritas'] = 0;
-                    // $sendWa['type'] = "text";
-                    // $this->db->insert('t_cron_wa', $sendWa);
+                    if(!isset($dokpen[$lp['user_id']])){ // ada dokpen di tanggal sama
+                        if($lp['pulang'] != null){ // absen 2x, masuk dan pulang
+                            $keterangan_sistem = ucwords("MENGIKUTI ".$namaDispen);
+                            $dokpenDispen = null;
+                            $dokpenDispen['id_m_user'] = $lp['user_id'];
+                            $dokpenDispen['tanggal'] = $tanggal;
+                            $dokpenDispen['bulan'] = $bulan;
+                            $dokpenDispen['tahun'] = $tahun;
+                            $dokpenDispen['id_m_jenis_disiplin_kerja'] = 15;
+                            $dokpenDispen['keterangan'] = "Dispensasi";
+                            $dokpenDispen['pengurangan'] = "0";
+                            $dokpenDispen['status'] = "2";
+                            $dokpenDispen['id_m_user_verif'] = "0";
+                            $dokpenDispen['random_string'] = generateRandomString();
+                            $dokpenDispen['flag_fix_tanggal'] = 0;
+                            $dokpenDispen['flag_fix_jenis_disiplin'] = 0;
+                            $dokpenDispen['flag_fix_dokumen_upload'] = 0;
+                            $dokpenDispen['keterangan_sistem'] = $keterangan_sistem;
+                            
+                            $this->db->insert('t_dokumen_pendukung', $dokpenDispen);
+                            $allDokpen[] = $dokpenDispen;
+                        }
+                    }
                 }   
             }
+
+            dd($allDokpen);
         }
 
         public function hapusKenegaraan(){

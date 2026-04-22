@@ -100,7 +100,7 @@
 								<h5 class="title-kegiatan card-title"><?=($rs['topik'])?></h5>
 							</div>
 							<div class="col-lg-12 div-button">
-								<div class="row">
+								<div class="row d-flex align-items-center">
 									<div class="col-lg-6">
 										<span class="lbl-detail-kegiatan">
 											<?=formatDateNamaBulan($rs['tanggal'])?><br>

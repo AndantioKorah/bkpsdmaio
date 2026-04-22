@@ -3043,6 +3043,74 @@
             }
         }
 
+        public function cekDispen(){
+            $tanggal = 8;
+            $bulan = 4;
+            $tahun = 2026;
+            $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
+            $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
+            $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
+
+            $namaDispen = "PASKAH NASIONAL 2026";
+            $namaMetaData = "PASKAH_NASIONAL";
+            
+            $list_pegawai = $this->db->select('b.id as user_id, a.nipbaru_ws, a.nama, b.id, c.nm_unitkerja, a.handphone, a.nama, a.gelar1, a.gelar2, d.masuk, d.pulang')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_user b', 'a.nipbaru_ws = b.username')
+                            ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                            ->join('db_sip.absen d', 'b.id = d.user_id')
+                            ->where('b.flag_active', 1)
+                            ->where('a.id_m_status_pegawai', 1)
+                            ->where_in('a.agama', [1, 2]) // khusus pegawai kristen
+                            ->where('d.tgl', $dateLengkap)
+                            ->where('d.aktivitas', 2)
+                            ->get()->result_array();
+
+            $list_dokpen = $this->db->select('id_m_user, keterangan')
+                                ->from('t_dokumen_pendukung')
+                                ->where('tanggal', $tanggal)
+                                ->where('bulan', $bulan)
+                                ->where('tahun', $tahun)
+                                ->where('flag_active', 1)
+                                ->where('status', 2)
+                                ->get()->result_array();
+
+            foreach($list_dokpen as $ld){
+                $dokpen[$ld['id_m_user']] = $ld;
+            }
+            
+            if($list_pegawai){
+                $allDokpen = null;
+                foreach($list_pegawai as $lp){
+                    if(!isset($dokpen[$lp['user_id']])){ // ada dokpen di tanggal sama
+                        if($lp['pulang'] != null){ // absen 2x, masuk dan pulang
+                            $keterangan_sistem = ucwords("MENGIKUTI ".$namaDispen);
+                            $dokpenDispen = null;
+                            $dokpenDispen['id_m_user'] = $lp['user_id'];
+                            $dokpenDispen['tanggal'] = $tanggal;
+                            $dokpenDispen['bulan'] = $bulan;
+                            $dokpenDispen['tahun'] = $tahun;
+                            $dokpenDispen['id_m_jenis_disiplin_kerja'] = 15;
+                            $dokpenDispen['keterangan'] = "Dispensasi";
+                            $dokpenDispen['pengurangan'] = "0";
+                            $dokpenDispen['status'] = "2";
+                            $dokpenDispen['id_m_user_verif'] = "0";
+                            $dokpenDispen['random_string'] = generateRandomString();
+                            $dokpenDispen['flag_fix_tanggal'] = 0;
+                            $dokpenDispen['flag_fix_jenis_disiplin'] = 0;
+                            $dokpenDispen['flag_fix_dokumen_upload'] = 0;
+                            $dokpenDispen['keterangan_sistem'] = $keterangan_sistem;
+                            
+                            $this->db->insert('t_dokumen_pendukung', $dokpenDispen);
+                            $allDokpen[] = $dokpenDispen;
+                        }
+                    }
+                }   
+            }
+
+            dd($allDokpen);
+        }
+
         public function hapusKenegaraan(){
             $tanggal = 23;
             $bulan = 9;

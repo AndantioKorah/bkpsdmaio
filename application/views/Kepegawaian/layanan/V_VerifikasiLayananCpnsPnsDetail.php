@@ -196,34 +196,17 @@
   <li>
 
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK PNS</button>
-  <li>
-
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat Akhir</button>
-  <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skp1')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP Tahun <?=$tahun_1_lalu;?></button>
   <li>
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='ijazah_cpns')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijazah saat melamar CPNS</button>
-  <li>
 
-   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='kontrak_kerja')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Kontrak Kerja / SK Pengangkatan</button>
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='pengujian_kesehatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pengujian Kesehatan</button>
   <li>
 
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='dok_pemberhentian_kerja')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Dokumen Pemutusan Hubungan Kerja/Dok Pemberhentian</button>
-  <li>
-
-  <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='surat_keterangan_kerja')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Keterangan Kerja / Paklaring</button>
+    <button onclick="getFile(file='sertifikat_latsar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Latsar</button>
   <li>
   
-   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='slip_gaji_pmk')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Slip Gaji Pengalaman Kerja / Sebelum CPNS</button>
-   <li>
 
         </li>
 
@@ -493,11 +476,10 @@
       </div>
       <div class="modal-body">
       <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
-        <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
-        <input type="hidden" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
-        <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
-        <input type="hidden" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
-        <input type="hidden" id="ijazah_cpns" name="ijazah_cpns"  value="<?php if($ijazah_cpns) echo $ijazah_cpns['id']; else echo "";?>">
+        <input type="text" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
+        <input type="text" id="pengujian_kesehatan" name="pengujian_kesehatan"  value="<?php if($pengujian_kesehatan) echo $pengujian_kesehatan['id']; else echo "";?>">
+        <input type="text" id="sertifikat_latsar" name="sertifikat_latsar"  value="<?php if($sertifikat_latsar) echo $sertifikat_latsar['id']; else echo "";?>">
+        <input type="text" id="skp1" name="skp1"  value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
@@ -682,12 +664,14 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "kontrak_kerja" || file == "dok_pemberhentian_kerja" || file == "surat_keterangan_kerja" || file == "slip_gaji_pmk"){
+        } else if(file == "pengujian_kesehatan"){
           dir = "arsiplain/";
         } else if(file == "suratpengantar"){
-          dir = "./dokumen_layanan/peninjauan_masa_kerja/";
+          dir = "./dokumen_layanan/cpns_pns/";
         } else if(file == "ijazah_cpns"){
           dir = "./arsippendidikan/";
+        } else if(file == "sertifikat_latsar"){
+          dir = "./arsipdiklat/";
         } else {
           dir = "uploads/";
         }

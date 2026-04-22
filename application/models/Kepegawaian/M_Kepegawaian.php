@@ -11899,7 +11899,9 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 33);
             } else if($id_m_layanan == 34){ 
                 $this->db->where('a.id_m_layanan', 34);
-            }     else {
+            }  else if($id_m_layanan == 35){ 
+                $this->db->where('a.id_m_layanan', 35);
+            }      else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
 
@@ -12795,9 +12797,31 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "pengujian_kesehatan"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 36)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sertifikat_latsar"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegdiklat as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.jenjang_diklat', 10)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         }     else {
          return [''];
         }
+
+     
         
         
     }
@@ -12811,7 +12835,6 @@ public function getFileForVerifLayanan()
         $datapost = $this->input->post();
         $this->db->trans_begin();
        
-
           
         $id_pengajuan = $datapost['id_pengajuan'];
         $data["status"] = $datapost["status"];
@@ -12867,6 +12890,9 @@ public function getFileForVerifLayanan()
             }
             if(isset($datapost['ijazah'])){
                 $this->verifBerkas($datapost['ijazah'], "db_pegawai.pegpendidikan");
+            }
+            if(isset($datapost['sertifikat_latsar'])){
+                $this->verifBerkas($datapost['sertifikat_latsar'], "db_pegawai.pegdiklat");
             }
 
             
@@ -12925,6 +12951,9 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         } else if($dataPengajuan[0]['id_m_layanan'] == 34){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN CUTI BESAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Cuti Besar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        }  else if($dataPengajuan[0]['id_m_layanan'] == 35){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENGANGKATAN CPNS MENJADI PNS]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Pengangkatan CPNS menjadi PNS anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        
@@ -17267,6 +17296,19 @@ public function checkListIjazahCpns($id, $id_pegawai){
         ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
         ->where('flag_active', 1)
         ->where('jenjang_diklat', 10)
+         ->where('status !=', 3)
+        ->from('db_pegawai.pegdiklat');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getSertifikatLatsarAdmin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->where('jenjang_diklat', 10)
+        ->where('status !=', 3)
         ->from('db_pegawai.pegdiklat');
         $query = $this->db->get()->row_array();
         return $query;  

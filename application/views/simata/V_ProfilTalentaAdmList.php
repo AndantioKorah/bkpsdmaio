@@ -26,8 +26,10 @@
         <thead>
             <tr>
                 <!-- <th>Jabatan Target</th> -->
-                <th>Nilai Kinerja</th>
+                <th>No</th>
                 <th>Nama</th>
+                <th>-</th>
+                <th>Nilai Kinerja</th>
                 <th>Pemeringkatan Kinerja</th>
                 <th>Nilai Asessment (50%)</th>
                 <th>Nilai Rekam Jejak (40%)</th>
@@ -37,7 +39,6 @@
                 <th>Total Nilai </th>
                 <th>Hasil Pemetaan </th>
                 <th>Rekomendasi</th>
-                <th style="display:none">eselon</th>
 				<th></th>
             </tr>
         </thead>
@@ -65,8 +66,10 @@
                 $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
             <tr data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$jenis_pengisian?>" data-kode="1"
             href="#modal_detail_profil_talenta" title="Detail" class="open-DetailPT"> 
+                <td></td>
+                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#000"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
+                <td> <span style="color:#2e4963"><?=$rs2['jabatan_sekarang'];?></span> </td>
                 <td><?=$rs2['res_kinerja'];?></td>
-                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#fff"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
                 <td><?=$rs2['res_potensial_cerdas'];?></td>
                 <td><?=$rs2['res_potensial_rj'];?></td>
@@ -74,11 +77,10 @@
                 <td><?=$rs2['res_potensial_total'];?></td>
 				<td><?= pemeringkatanKriteriaPotensial($total_nilai)?></td>
                 <td><?=($total_nilai+$rs2['res_kinerja'])/2;?></td>
-                <td><b><?= pemetaanTalenta($rs2['res_potensial_total'],$rs2['res_kinerja'],)?></b></td>
+                <td class="text-center"><b><?= pemetaanTalenta($rs2['res_potensial_total'],$rs2['res_kinerja'],)?></b></td>
                 <td>
                 <?= rekomendasi($rs2['res_potensial_total'],$rs2['res_kinerja'])  ?>
                 </td>
-                <td style="display:none"><?=$rs2['es_jabatan'];?></td>
 				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$jenis_pengisian?>" data-kode="1"
 										href="#modal_detail_profil_talenta" title="Detail" class="open-DetailPT btn btn-sm btn-info">
@@ -94,8 +96,10 @@
         <tfoot>
             <tr>
             <!-- <th>Jabatan Target</th> -->
-                <th>Nilai Kinerja</th>
+                <th>No</th>
                 <th>Nama</th>
+                <th>-</th>
+                <th>Nilai Kinerja</th>
                 <th>Pemeringkatan Kinerja</th>
                 <th>Nilai Asessment (50%)</th>
                 <th>Nilai Rekam Jejak (40%)</th>
@@ -105,7 +109,6 @@
                 <th>Total Nilai </th>
                 <th>Hasil Pemetaan</th>
                 <th>Rekomendasi</th>
-                <th style="display:none">eselon</th>
 				<th></th>
             </tr>
         </tfoot>
@@ -115,9 +118,9 @@
 </div>
 
 <script>
-	var groupColumn = 1;
+	var groupColumn = 2;
     var table = $('.table_pt_adm').DataTable({
-        order: [[9, 'desc']],
+    order: [[11, 'desc'],[10, 'desc']],
     columnDefs: [{ visible: false, targets: groupColumn},
     { "searchable": false, "targets": [11] }],
     // order: [[groupColumn, 'asc']],

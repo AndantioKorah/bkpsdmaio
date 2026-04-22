@@ -2868,6 +2868,8 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		} else if($id_m_layanan == 34){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
+		} else if($id_m_layanan == 35){
+			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		}
 	}
 
@@ -3073,7 +3075,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['dok_pemberhentian_kerja'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','100','0');	
 			$data['surat_keterangan_kerja'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','101','0');	
 			$data['slip_gaji_pmk'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','102','0');	
-			$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpns(); 	
+			$data['ijazah_cpns'] = $this->kepegawaian->getIjazahCpnsAdmin($id_peg); 	
 			render('kepegawaian/layanan/V_VerifikasiLayananPmkDetail.php', '', '', $data);
 		}  else if($layanan == 33){
 			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
@@ -3081,7 +3083,12 @@ class C_Kepegawaian extends CI_Controller
 			render('kepegawaian/layanan/V_VerifikasiLayananMutasiAsnDetail.php', '', '', $data);
 		} else if($layanan == 34){
 			render('kepegawaian/layanan/V_VerifikasiLayananCutiBesarDetail.php', '', '', $data);
-		}    
+		} else if($layanan == 35){
+			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkatAdmin('db_pegawai.pegskp',$previous1Year,$id_peg);
+			$data['pengujian_kesehatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','36','0',$id_peg);	
+			$data['sertifikat_latsar'] = $this->kepegawaian->getSertifikatLatsarAdmin($id_peg);
+			render('kepegawaian/layanan/V_VerifikasiLayananCpnsPnsDetail.php', '', '', $data);
+		}   
 		
 
 		

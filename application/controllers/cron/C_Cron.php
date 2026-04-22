@@ -182,6 +182,11 @@ class C_Cron extends CI_Controller
         // return $this->user->cekKenegaraanCustom();
     }
 
+    public function cekDispen(){
+        return $this->user->cekDispen();
+        // return $this->user->cekKenegaraanCustom();
+    }
+
     public function cekSidak(){
         return $this->general->cekSidak();
         // return $this->user->cekKenegaraanCustom();

@@ -3043,6 +3043,59 @@
             }
         }
 
+        public function cekDispen(){
+            $tanggal = 8;
+            $bulan = 4;
+            $tahun = 2026;
+            $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
+            $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
+            $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
+
+            $namaDispen = "PASKAH NASIONAL 2026";
+            $namaMetaData = "PASKAH_NASIONAL";
+            
+            $list_pegawai = $this->db->select('b.id as user_id, a.nipbaru_ws, a.nama, b.id, c.nm_unitkerja, a.handphone, a.nama, a.gelar1, a.gelar2, d.masuk, d.pulang')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_user b', 'a.nipbaru_ws = b.username')
+                            ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                            ->join('db_sip.absen d', 'b.id = d.user_id')
+                            ->where('b.flag_active', 1)
+                            ->where('a.id_m_status_pegawai', 1)
+                            ->where_in('a.agama', [1, 2]) // khusus pegawai kristen
+                            ->where('d.tgl', $dateLengkap)
+                            ->get()->result_array();
+            
+            if($list_pegawai){
+                dd($list_pegawai);
+                foreach($list_pegawai as $lp){
+                    $keterangan_sistem = ucwords("MENGIKUTI ".$namaDispen);
+                    $dokpenKenegaraan = null;
+                    $dokpenKenegaraan['id_m_user'] = $lp['user_id'];
+                    $dokpenKenegaraan['tanggal'] = $tanggal;
+                    $dokpenKenegaraan['bulan'] = $bulan;
+                    $dokpenKenegaraan['tahun'] = $tahun;
+                    $dokpenKenegaraan['id_m_jenis_disiplin_kerja'] = 6;
+                    $dokpenKenegaraan['keterangan'] = "Dispensasi";
+                    $dokpenKenegaraan['pengurangan'] = "15";
+                    $dokpenKenegaraan['status'] = "2";
+                    $dokpenKenegaraan['id_m_user_verif'] = "0";
+                    $dokpenKenegaraan['random_string'] = generateRandomString();
+                    $dokpenKenegaraan['flag_fix_tanggal'] = 0;
+                    $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
+                    $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
+                    $dokpenKenegaraan['keterangan_sistem'] = $keterangan_sistem;
+                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                    // dd($dokpenKenegaraan);
+
+                    // $sendWa['sendTo'] = convertPhoneNumber($lp['handphone']);
+                    // $sendWa['message'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($lp).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran *KENEGARAAN* dengan keterangan: *".$keterangan_sistem."*";
+                    // $sendWa['flag_prioritas'] = 0;
+                    // $sendWa['type'] = "text";
+                    // $this->db->insert('t_cron_wa', $sendWa);
+                }   
+            }
+        }
+
         public function hapusKenegaraan(){
             $tanggal = 23;
             $bulan = 9;

@@ -1440,7 +1440,7 @@
 			<a title="Verifikasi" data-bs-target="#ptalenta" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-tasks"></i> 
 				<span class="align-middle">
-				Profil Talenta
+				Rencana Suksesi
 					<i class="fa fa-chevron-down" 
 					style="
 						position: absolute;
@@ -1472,7 +1472,7 @@
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-kompetensi" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
 				<span class="align-middle">
-				Rencana Suksesi
+				Suksesor
 				</span>
 			</a>	
 		</li>

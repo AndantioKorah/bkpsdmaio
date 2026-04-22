@@ -284,6 +284,7 @@ class C_Simata extends CI_Controller
 
         $data['tinggi'] = $this->simata->getInterval(2,"Tinggi");
         $data['menengah'] = $this->simata->getInterval(2,"Menengah");
+        // dd($data['menengah']);
         $data['rendah'] = $this->simata->getInterval(2,"Rendah");
        
         $labelMenengah = ($data['menengah']['sampai'] - $data['menengah']['dari']) / 2;
@@ -449,9 +450,8 @@ class C_Simata extends CI_Controller
         if($id == 1){
             $this->load->view('simata/V_ProfilTalentaAdmList', $data);
         } else {
-            // $this->load->view('simata/V_ProfilTalentaJptList', $data);
-            $this->load->view('simata/V_list', $data);
-
+            $this->load->view('simata/V_ProfilTalentaJptList', $data);
+            // $this->load->view('simata/V_list', $data);
         }
     }
 

@@ -6009,10 +6009,13 @@ public function submitEditJabatan(){
             $id_layanan[] = 27;
          }
 
-          if($this->general_library->isHakAkses('verifikasi_pengajuan_mutasi_pindah_masuk')){
+        if($this->general_library->isHakAkses('verifikasi_pengajuan_mutasi_pindah_masuk')){
             $id_layanan[] = 28;
         }
 
+        if($this->general_library->isHakAkses('verifikasi_cpns_pns')){
+            $id_layanan[] = 35;
+        }
 
         }
 
@@ -6029,6 +6032,9 @@ public function submitEditJabatan(){
         if($this->general_library->isHakAkses('admin_pengajuan_cuti')){
             $id_layanan[] = 34;
         }
+
+      
+
    
         $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')
             ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')

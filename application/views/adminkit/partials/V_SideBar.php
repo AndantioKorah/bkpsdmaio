@@ -777,6 +777,14 @@
 				</li>
 				<?php } ?>
 
+				<?php if($this->general_library->isHakAkses('verifikasi_cpns_pns')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/35')?>">
+						<i class="align-middle me-2 far fa-circle"></i>CPNS Menjadi PNS
+					</a>
+				</li>
+				<?php } ?>
+
 				<?php if($this->general_library->isHakAkses('verifikasi_perbaikan_data_kepegawaian')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/10')?>">

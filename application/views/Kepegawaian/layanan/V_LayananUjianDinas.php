@@ -342,18 +342,19 @@ ol {
 								data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pangkat Akhir*
 								<i class="fas fa-<?php if($sk_pangkat) echo ''; else echo '';?>"></i></a>
 						</li>
-						<li>
-							<a class="<?php if($skp1){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
-								<?php if($skp1) { ?> onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)"
-								data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i
-									class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?>* <i
-									class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
-						</li>
+
+               <li>
+								<a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',3)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?>* <i
+											class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+							</li>
+
 
 						<?php if($id_m_layanan == 18 || $id_m_layanan == 19) { ?>
 						<li>
 							<a class="<?php if($ijazah){ if($ijazah['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
-								<?php if($ijazah) { ?> onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',3)"
+								<?php if($ijazah) { ?> onclick="viewBerkasPangkat('<?=$ijazah['gambarsk'];?>',7)"
 								data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i
 									class="fa fa-file-pdf"></i> Ijazah Terakhir* <i
 									class="fas fa-<?php if($ijazah) echo ''; else echo '';?>"></i></a>

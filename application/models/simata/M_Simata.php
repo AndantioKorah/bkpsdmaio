@@ -3084,9 +3084,11 @@ public function loadListProfilTalentaAdm($id,$jenis_pengisian){
                     ->join('db_siasn.m_ref_pns f', 'a.nipbaru_ws = f.nip_baru')
                     ->where('a.id_m_status_pegawai', 1)
                     ->where('b.jenjang_jabatan', $jenis_pengisian)
-                    ->where('b.res_potensial_total <', $intervalPotensial[0]['dari'])
+                     ->where('b.res_potensial_total >', $intervalPotensial[0]['dari'])
                     ->where('b.res_kinerja <', $intervalKinerja[0]['dari'])
                     ->where('b.res_kinerja >=', $intervalKinerja[1]['dari'])
+
+
 
                     ->order_by('e.eselon');
                     if($id == 1){

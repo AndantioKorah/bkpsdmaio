@@ -1829,7 +1829,10 @@
                     // if($cb['flag_ditebus'] == 0 && $cb['flag_terpenuhi'] == 0){
                         $res['code'] = 1;
                         $res['message'] = "belum lengkap bangkom";
-                        $res['list_pegawai'] = $cekBangkom;
+                        $res['list_pegawai'] = null;
+                        foreach($cekBangkom as $cb){
+                            $res['list_pegawai'][$cb['nip']] = $cb;    
+                        }
                     // }
                     //jika masih ada data di $pegawai, maka itu adalah sisa yang belum ada di t_cek_bangkom dan belum upload sama sekali
                     // unset($pegawai[$cb['nip']]);
@@ -1954,6 +1957,28 @@
                         $i++;
                     }
                 }
+            } else {
+                $tmpListPeg = null;
+                // if($this->general_library->isProgrammer()){
+                    $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+                    $i = 0;
+                    foreach($list_pegawai as $lp){
+                        if($lp['flag_terima_tpp'] == 0){
+                            unset($list_pegawai[$i]);
+                        } else {
+                            $tmpListPeg[$lp['nip']] = $lp;
+                        }
+                        $i++;
+                    }
+                    if($rs['list_pegawai']){
+                        foreach($rs['list_pegawai'] as $rlp){
+                            if(isset($tmpListPeg[$rlp['nip']])){
+                                unset($tmpListPeg[$rlp['nip']]);
+                            }
+                        }
+                    }
+                // }
+                $list_pegawai = $tmpListPeg;
             }
         }
 

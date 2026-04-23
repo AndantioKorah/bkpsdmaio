@@ -320,12 +320,13 @@ ol {
        
 			<ol class="rectangle-list">
            
-             <li>
-				<a class="<?php if($skp1) echo 'select'; else echo 'unselect';?>" <?php if($skp1) { ?>
-				onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?>* <i
-				class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
-			</li>
+           <li>
+								<a class="<?php if($skp1 && $skp1['gambarsk'] != null){ if($skp1['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($skp1 && $skp1['gambarsk'] != null) { ?>
+									onclick="viewBerkasPangkat('<?=$skp1['gambarsk'];?>',4)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SKP Tahun <?=$tahun_1_lalu;?>* <i
+											class="fas fa-<?php if($skp1) echo ''; else echo '';?>"></i></a>
+							</li>
+
               <li>
 				<a class="<?php if($pengujian_kesehatan) echo 'select'; else echo 'unselect';?>" <?php if($pengujian_kesehatan) { ?>
 				onclick="viewBerkasPangkat('<?=$pengujian_kesehatan['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"

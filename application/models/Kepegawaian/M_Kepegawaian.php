@@ -3995,6 +3995,12 @@ function getdatajab()
     $nama_skpd = $newSkpd[1];
     $jnsfung = $this->input->post('jnsfung');
 
+      $this->db->select('a.id_unitkerjaMaster')
+            ->from('db_pegawai.unitkerja a')
+            ->where('a.id_unitkerja', $id_skpd);
+            $uk_master = $this->db->get()->row_array();
+    
+
     if($id == "00"){
         $this->db->select('id_jabatanpeg, nama_jabatan');
         $this->db->where('jenis_jabatan', "Struktural");
@@ -4019,12 +4025,22 @@ function getdatajab()
             $fetched_records = $this->db->get('db_pegawai.jabatan');
             $datajab = $fetched_records->result_array();
         } else {
+            if($uk_master['id_unitkerjaMaster'] != '8020000') {
             $this->db->select('id_jabatanpeg, nama_jabatan');
             $this->db->where('jenis_jabatan', "JFU");
             $this->db->where('id_unitkerja', $id_skpd);
             $this->db->where('flag_active', 1);
             $fetched_records = $this->db->get('db_pegawai.jabatan');
             $datajab = $fetched_records->result_array();
+            } else {
+            $this->db->select('id_jabatanpeg, nama_jabatan');
+            $this->db->where('jenis_jabatan', "JFU");
+            $this->db->where('id_unitkerja', '9999001');
+            $this->db->where('flag_active', 1);
+            $fetched_records = $this->db->get('db_pegawai.jabatan');
+            $datajab = $fetched_records->result_array();
+            }
+           
         }
        
     }

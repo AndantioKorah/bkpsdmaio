@@ -618,7 +618,6 @@ class C_Kepegawaian extends CI_Controller
 			$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
 			$data['satyalencana'] = $this->kepegawaian->getDataSatyalencanaPegawai($nip);
 			$data['plt_kepsek'] = $this->kepegawaian->getDataPltKepsek($data['profil_pegawai']['id_m_user']);
-
 			
 			render('kepegawaian/V_ProfilPegawai', '', '', $data);
 		}

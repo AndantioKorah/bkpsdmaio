@@ -694,8 +694,23 @@ class C_Master extends CI_Controller
     public function deleteHardcodeNominatif($id){
         echo json_encode($this->master->deleteHardcodeNominatif($id));
     }
+    
+    public function exceptBangkom(){
+		$data['unit_kerja'] = $this->kepegawaian->getUnitKerja();
+        render('master/V_MasterExceptBangkom', '', '', $data);
+    }
 
- 
+    public function loadExceptBangkom(){
+		$data['result'] = $this->master->loadExceptBangkom();
+        $this->load->view('master/V_MasterExceptBangkomList', $data);
+    }
 
+    public function inputExceptBangkom(){
+        echo json_encode($this->master->inputExceptBangkom($this->input->post()));
+    }
+
+    public function deleteExceptBangkom($id){
+        echo json_encode($this->master->deleteExceptBangkom($id));
+    }
 
 }

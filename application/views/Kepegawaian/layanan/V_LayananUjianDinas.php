@@ -555,10 +555,10 @@ $(function(){
         }
 
         if(id_m_layanan == 18){
-        if(sk_jabatan == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        // if(sk_jabatan == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        // }
        }
 
        if(id_m_layanan == 19){

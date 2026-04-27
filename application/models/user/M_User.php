@@ -1841,11 +1841,12 @@
 
             //get jam kerja
             $jskpd = 1;
-            if(in_array($unitkerja['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS)){
-                $jskpd = 2;
-            } else if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+            if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
                 $jskpd = 4;
+            } else if(in_array($unitkerja['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS)){
+                $jskpd = 2;
             }
+            
             $jam_kerja = $this->db->select('*')
                     ->from('t_jam_kerja')
                     ->where('id_m_jenis_skpd', $jskpd)
@@ -1853,7 +1854,7 @@
                     ->where('flag_active', 1)
                     ->get()->row_array();
             $result['jam_kerja'] = $jam_kerja;
-
+            
             //cek jika ada jam kerja event
             $jam_kerja_event = $this->db->select('*')
                     ->from('t_jam_kerja')

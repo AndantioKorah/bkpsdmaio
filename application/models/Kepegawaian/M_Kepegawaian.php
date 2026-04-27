@@ -14663,11 +14663,14 @@ public function getFileForVerifLayanan()
             $target_dir	= './dokumen_layanan/mutasi_pindah_masuk/';
         } else if($id_m_layanan == 23){
             $target_dir	= './dokumen_layanan/suratpidanahukdis/';
-        }
-
+        } else if($id_m_layanan == 32){
+            $target_dir	= './dokumen_layanan/peninjauan_masa_kerja/';
+        } else if($id_m_layanan == 34){
+            $target_dir	= './dokumen_layanan/cuti_besar/';
+        } else if($id_m_layanan == 35){
+            $target_dir	= './dokumen_layanan/cpns_pns/';
+        }  
         
-        
-
 
         $this->db->trans_begin();
         $filename = str_replace(' ', '', $this->input->post('file_pengantar')); 

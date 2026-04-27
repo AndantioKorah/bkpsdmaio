@@ -363,7 +363,7 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || i
   $link = "<?=base_url();?>dokumen_layanan/peninjauan_masa_kerja/"+filename+"?v="+number;
 } else if(id_layanan == 34){
   $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
-} else if(35){
+} else if(id_layanan == 35){
   $link = "<?=base_url();?>dokumen_layanan/cpns_pns/"+filename+"?v="+number;
 }
 
@@ -390,6 +390,8 @@ if(id_layanan == 12 || id_layanan == 13){
   $link = "<?=base_url();?>dokumen_layanan/mutasi_pindah_masuk/"+filename+"?v="+number;
 } else if(id_layanan == 34){
   $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
+}  else if(id_layanan == 35){
+  $link = "<?=base_url();?>dokumen_layanan/cpns_pns/"+filename+"?v="+number;
 }  else {
   $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
 }
@@ -453,8 +455,10 @@ function ajukanKembali(id){
                                 loadListRiwayatMutasiPidahMasuk()
                                }
                                 if(id_layanan == 34){
-                                  alert()
                                 loadListRiwayatCutiBesar()
+                               }
+                               if(id_layanan == 35){
+                                loadListRiwayatCpnsPns()
                                }
 
                                
@@ -625,11 +629,16 @@ function ajukanKembali(id){
                 const myTimeout = setTimeout(loadListRiwayatLayananJabfung, 2000);
              }
 
-             alert(id_layanan)
               if(id_layanan == 23){
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 setTimeout(function() {$("#modalUbahSuket").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatSuratPidana, 2000);
+             }
+
+               if(id_layanan == 35){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#modalUbahSuket").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatCpnsPns, 2000);
              }
 
            } else {

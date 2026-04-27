@@ -476,10 +476,10 @@
       </div>
       <div class="modal-body">
       <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
-        <input type="text" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
-        <input type="text" id="pengujian_kesehatan" name="pengujian_kesehatan"  value="<?php if($pengujian_kesehatan) echo $pengujian_kesehatan['id']; else echo "";?>">
-        <input type="text" id="sertifikat_latsar" name="sertifikat_latsar"  value="<?php if($sertifikat_latsar) echo $sertifikat_latsar['id']; else echo "";?>">
-        <input type="text" id="skp1" name="skp1"  value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
+        <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
+        <input type="hidden" id="pengujian_kesehatan" name="pengujian_kesehatan"  value="<?php if($pengujian_kesehatan) echo $pengujian_kesehatan['id']; else echo "";?>">
+        <input type="hidden" id="sertifikat_latsar" name="sertifikat_latsar"  value="<?php if($sertifikat_latsar) echo $sertifikat_latsar['id']; else echo "";?>">
+        <input type="hidden" id="skp1" name="skp1"  value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">

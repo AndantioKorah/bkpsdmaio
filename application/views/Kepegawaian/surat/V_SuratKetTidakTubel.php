@@ -224,7 +224,7 @@
 	<!-- <img src="<?=base_url();?>assets/images/footer.png" alt=""> -->
 	</div>
 	<?php
-        // $this->load->view('adminkit/partials/V_FooterBsre');
+        $this->load->view('adminkit/partials/V_FooterBsre');
     ?>
 
 	<!-- <span style="margin-top:900px;">

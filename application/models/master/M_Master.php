@@ -1612,5 +1612,52 @@
 
             return $rs;
         }
+
+        public function inputExceptBangkom($data){
+            $rs = [
+                'code' => 0,
+                'message' => 'ok'
+            ];
+            
+            $exists = $this->db->select('*')
+                                ->from('t_except_bangkom')
+                                ->where('id_unitkerja', $data['id_unitkerja'])
+                                ->where('bulan', $data['bulan'])
+                                ->where('tahun', $data['tahun'])
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+            if($exists == null){
+                $data['created_by'] = $this->general_library->getId();
+                $this->db->insert('t_except_bangkom', $data);
+            }
+
+            return $rs;
+        }
+
+        public function loadExceptBangkom(){
+            return $this->db->select('a.*, b.nm_unitkerja')
+                        ->from('t_except_bangkom a')
+                        ->join('db_pegawai.unitkerja b', 'a.id_unitkerja = b.id_unitkerja')
+                        ->where('a.flag_active', 1)
+                        ->order_by('tahun', 'desc')
+                        ->order_by('bulan', 'desc')
+                        ->order_by('created_date', 'desc')
+                        ->get()->result_array();
+        }
+
+        public function deleteExceptBangkom($id){
+            $rs = [
+                'code' => 0,
+                'message' => 'ok'
+            ];
+            
+            $this->db->where('id', $id)
+                    ->update('t_except_bangkom', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            return $rs;
+        }
 	}
 ?>

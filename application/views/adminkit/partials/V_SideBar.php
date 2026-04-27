@@ -273,6 +273,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>Hardcode Nominatif
 					</a>
 				</li>
+
+				<li class="sidebar-item ">
+					<a title="Pengecualian Bangkom" class="sidebar-link sidebar-link-child" href="<?=base_url('master/pengecualian-bangkom')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengecualian Bangkom
+					</a>
+				</li>
 			</ul>
 		</li>
 		<?php } ?>

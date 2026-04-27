@@ -333,7 +333,7 @@ $(function(){
 
         <?php if(!($this->general_library->isProgrammer())){ ?>
         if ((fileSize > MaxSize) ){
-          errortoast("Maksimal Ukuran File 1 MB")
+          errortoast("Maksimal Ukuran File 2 MB")
           $(this).val('');
         }
         <?php } ?>

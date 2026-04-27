@@ -97,7 +97,7 @@
 			}
 		?>
 		<p class="judul" style="margin-top:5px;text-align: center;"><u>SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS</u><br></p>
-		<p style="margin-left:195px;">Nomor :  ${nomor_naskah}</p>
+		<p style="margin-left:195px;">Nomor :  <?= $ns;?> </p>
 	
 
 	<p>Yang nama bertanda-tangan dibawah ini :</p>
@@ -186,18 +186,18 @@
 	<table border="0" style="width:100%;margin-top:140px;">
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center"  style="width:38%;text-align: left;">Manado, ${tanggal_naskah}<br>a.n. WALI KOTA
+			<td class="center"  style="width:38%;text-align: left;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br>a.n. WALI KOTA
 				MANADO<br>Kepala Badan,</td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="width:38%;height:130px;text-align: left;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${ttd_pengirim}</td>
+			<td class="center" style="width:38%;height:130px;text-align: left;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="width:38%;text-align: left;"> ${nama_pengirim}<br>
-Pembina<br>
-NIP. ${nip_pengirim}</td>
+			<td class="center" style="width:38%;text-align: left;"> <?= getNamaPegawaiFull($kaban);?><br>
+			<?= $kaban['nm_pangkat'];?><br>
+			NIP. <?= $kaban['nipbaru'];?></td>
 		</tr>
 	</table>
 

@@ -15465,12 +15465,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $data['id_m_user'] = $dataLayanan['id_m_user'];
             $data['created_by'] = $this->general_library->getId();
             if($dataPost['id_m_layanan'] == 23){
+                $id_m_jenis_layanan = 39;
                 if($dataPost['jenis'] == 1){
                 $data['keterangan'] = "Surat Pernyataan Tidak Pernah Dijatuhun Hukuman Disiplin Tingkat Sedang/Berat a.n. ".$dataLayanan['nama'] ;
                 } else {
                 $data['keterangan'] = "Surat Pernyataan Tidak Sedang Menjalani Proses Pidana Atau Pernah dipidana a.n. ".$dataLayanan['nama'] ;
                 }
             } else {
+            $id_m_jenis_layanan = 30;
             $data['keterangan'] = "Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas a.n. ".$dataLayanan['nama'] ;
             }
             $data['ds_code'] = "^";
@@ -15480,16 +15482,20 @@ public function checkListIjazahCpns($id, $id_pegawai){
             if($dataPost['id_m_layanan'] == 23){
             if($dataPost['jenis'] == 1){
                 $data['meta_view'] = "kepegawaian/surat/V_SuratHukdis2";
+                $perihal = "SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT a.n.".getNamaPegawaiFull($dataLayanan);
             } else {
                 $data['meta_view'] = "kepegawaian/surat/V_SuratPidana";
+                $perihal = "SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA a.n.".getNamaPegawaiFull($dataLayanan);
             }
             } else {
             $data['meta_view'] = "kepegawaian/surat/V_SuratKetTidakTubel";
+            $perihal = "SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS a.n.".getNamaPegawaiFull($dataLayanan);
             }
+
             $data['nama_kolom_ds'] = "";
             $data['url_ds'] = $url2;
             $data['batch_id'] = $batchId;
-            $data['id_m_jenis_layanan'] = 39;
+            $data['id_m_jenis_layanan'] = $id_m_jenis_layanan;
             $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
 
             $this->db->insert('t_usul_ds', $data);
@@ -15520,16 +15526,22 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
            
             $dataUpdate['id_t_usul_ds'] = $id_t_usul_ds;
+             if($dataPost['id_m_layanan'] == 23){
             $dataUpdate['nomor_surat'.$dataPost['jenis']] = $dataPost['nomor_surat_siladen'];
+             } else {
+            $dataUpdate['nomor_surat1'] = $dataPost['nomor_surat_siladen'];
+             }
             // $dataUpdate['status'] = 3;
             $this->db->where('id', $id_usul)
                 ->update('t_layanan', $dataUpdate);
 
-            if($dataPost['jenis'] == 1){
-                 $perihal = "SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT a.n.".getNamaPegawaiFull($dataLayanan);
-            } else {
-                 $perihal = "SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA a.n.".getNamaPegawaiFull($dataLayanan);
-            }
+            // if($dataPost['jenis'] == 1){
+            //      $perihal = "SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT a.n.".getNamaPegawaiFull($dataLayanan);
+            // } else {
+            //      $perihal = "SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA a.n.".getNamaPegawaiFull($dataLayanan);
+            // }
+
+
             $counter = qounterNomorSurat($tahun);
             $this->db->insert('t_nomor_surat', [
                             'perihal' => $perihal,
@@ -15537,7 +15549,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             'nomor_surat' => $dataPost['nomor_surat_siladen'],
                             'created_by' => $this->general_library->getId(),
                             'tanggal_surat' => date('Y-m-d'),
-                            'id_m_jenis_layanan' =>39
+                            'id_m_jenis_layanan' => $id_m_jenis_layanan
                         ]);
            
 

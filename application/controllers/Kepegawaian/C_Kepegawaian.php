@@ -3626,7 +3626,26 @@ class C_Kepegawaian extends CI_Controller
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
 		$data['nomor_surat'] = $this->input->post('nomor_surat');
 		$data['instansi_tujuan'] = $this->input->post('instansi_tujuan');
-		// $this->load->view('kepegawaian/surat/V_SuratKetTidakTubel',$data);	
+		$data['jenis_surat'] = $this->input->post('jenis_surat');
+
+		// $this->load->view('kepegawaian/surat/V_SuratKetTidakTubel',$data);
+		$id_m_layanan = 24;
+		$data['data_layanan'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
+		$statusDS = 0;
+
+		if($data['data_layanan'][0]['nomor_surat1'] == null || $data['data_layanan'][0]['nomor_surat1'] == ""){
+		$dataNomorSurat = getNomorSuratSiladen([
+                'jenis_layanan' => 30,
+                'tahun' => date('Y'),
+                'perihal' => "Usul DS"
+            ], 0);
+		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
+		} else {
+		$statusDS = 1;
+		$data['nomor_surat'] = $data['data_layanan'][0]['nomor_surat1'];
+		}
+		
+
 		$mpdf = new \Mpdf\Mpdf([
 			'format' => 'A4',
 			'debug' => true
@@ -3665,9 +3684,12 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->showImageErrors = true;
 		$mpdf->Output($url1, 'F');
 		$mpdf->Output($url2, 'F');
+		$mpdf->Output($file_pdf, 'D');
 		$dataPost = $this->input->post();
+		$dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
+		if($statusDS == 0){
 		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
-
+		}
     }
 
 	public function downloadDraftSuketTidakTubel(){

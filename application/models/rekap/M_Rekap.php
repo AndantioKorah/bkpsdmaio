@@ -2847,6 +2847,9 @@
             $list_hukdis = $this->db->get()->result_array();
             $hukdis = null;
             if($list_hukdis){
+                if($this->general_library->isProgrammer()){
+                    dd($list_hukdis);
+                }
                 foreach($list_hukdis as $l){
                     if($l['tmt']){
                         $l['lama_potongan'] = floatval($l['lama_potongan']) - 1;
@@ -2856,8 +2859,10 @@
                         $expl = explode("-", $l['tmt']);
                         $bulan = $expl[1];
                         $min_date = $expl[0]."-".$bulan."-01"; // min. tanggal penarikan agar terbaca hukdis
-                        $rekap_date = $temp['tahun']."-".$temp['bulan']."01";
-                        
+                        $rekap_date = $temp['tahun']."-".$temp['bulan']."-01";
+                        if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197507302006041006"){
+                            dd($last_date."     ".$valid_date."      ".$rekap_date."     ".$min_date);
+                        }
                         // if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197401312010012002"){
                         //     dd($temp['bulan']." ; ".$temp['tahun']." ; ".$min_date." ; ".$valid_date);
                         // // //     dd($valid_date." ; ".$last_date);

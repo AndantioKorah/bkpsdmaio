@@ -14,10 +14,10 @@ class C_ApiLayanan extends RestController
     }
 
     public function loginAdmin_post(){
-        $parameter = validateParameter();
-        dd($parameter);
+        $parameter = validateParameter(null);
 
-        validateToken($parameter['token'], $parameter['publicKey']);
+        $validate = validateToken($parameter['token'], $parameter['publicKey']);
+        dd($validate);
     }
 
     public function getDataTpp_post(){

@@ -13,6 +13,13 @@ class C_ApiLayanan extends RestController
         $this->load->model('user/M_User', 'user');
     }
 
+    public function loginAdmin_post(){
+        $parameter = validateParameter();
+        dd($parameter);
+
+        validateToken($parameter['token'], $parameter['publicKey']);
+    }
+
     public function getDataTpp_post(){
         // validasi parameter
         $parameter = validateParameter(['nip']);

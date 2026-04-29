@@ -43,6 +43,7 @@
             <?php } ?>
             <th class="text-center">Unit Kerja</th>
             <th>TMT BUP</th>
+            <th></th>
         </thead>
         <tbody>
             <?php if($result){ $no=1; foreach($result as $rs){
@@ -90,18 +91,63 @@
                     <?php if($use_masa_kerja == 1){ ?>
                         <td class="text-center"><?=$rs['masa_kerja']?></td>
                     <?php } ?>
-                    <td class="text-left"><?=$rs['nm_unitkerja']?></td>
+                    <td class="text-left">
+                        <?=$rs['nm_unitkerja']?>
+
+                    </td>
                     <td class="text-left"><?= formatDateNamaBulan($rs['tmt_pensiun'])?></td>
                     <!-- <td class="text-left"><?= ($rs['bup'])?></td> -->
 
+                    <td>
+                    <?php if(isset($rs['gambarsk_satya'])) { ?>
+                     <button href="#modal_view_file_penghargaan" onclick="openFilePenghargaan('<?=$rs['gambarsk_satya']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                    <i class="fa fa-file-pdf"></i></button>
+                    <?php } ?>
+                   
 
+                    </td>
                 </tr>
             <?php } } ?>
         </tbody>
     </table>
 </div>
+
+<div class="modal fade" id="modal_view_file_penghargaan" data-backdrop="static">
+<div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          </div>
+        <div class="modal-body">
+        <div class="modal-body" id="modal_view_file_content">
+        <iframe id="iframe_view_file_penghargaan" style="width: 100%; height: 80vh;" src=""></iframe>
+      </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
 <script>
     $(function(){
         $('#result_all_pegawai').dataTable()
     })
+
+          async function openFilePenghargaan(filename){
+              $('#iframe_view_file_penghargaan').hide()
+              $('.iframe_loader').show()  
+              $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+
+              var number = Math.floor(Math.random() * 1000);
+              // $link = "http://siladen.manadokota.go.id/bidik/arsippenghargaan/"+filename+"?v="+number;
+              $link = "<?=base_url();?>/arsippenghargaan/"+filename+"?v="+number;
+
+              $('#iframe_view_file_penghargaan').attr('src', $link)
+                  $('#iframe_view_file_penghargaan').on('load', function(){
+                    $('.iframe_loader').hide()
+                    $(this).show()
+              })
+
+              }
+
 </script>

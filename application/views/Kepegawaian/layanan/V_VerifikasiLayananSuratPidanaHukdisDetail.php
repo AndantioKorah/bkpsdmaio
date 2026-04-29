@@ -92,21 +92,15 @@
         Batal Verif
         </button>
        <?php } ?>
-<?php if($result[0]['status_layanan'] == 1) {;?>
  <button id="btn_tolak_verifikasi" onclick="batalVerifLayanan('<?=$id_usul;?>')" type="button" class="btn btn-sm btn-danger ml-2">
         Batal Verif
         </button>
-        <?php if($result[0]['nomor_surat1'] == null) { ?>
          <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftHukdis">
         Download Surat Keterangan Hukuman Disiplin
         </button>
-         <?php } ?>
-         <?php if($result[0]['nomor_surat2'] == null) { ?>
         <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftPidana">
         Download Surat Keterangan Pidana
         </button>
-         <?php } ?>
-       <?php } ?>
         <?php if($result[0]['status_layanan'] != 0 && $result[0]['status_layanan'] != 3) { ;?>
         <button id="btn_upload_dok" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalUploadDok">
         Upload Dokumen
@@ -478,6 +472,8 @@
           <input type="hidden" class="form-control" id="jenis" name="jenis" value="1" readonly>
           <input type="hidden" class="form-control" id="id_usul_layanan" name="id_usul_layanan" value="<?=$id_usul;?>" readonly>
           <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          <input type="hidden" class="form-control" id="nomor_surat" name="nomor_surat" value="<?=$result[0]['nomor_surat1']?>" readonly>
+          <input type="hidden" class="form-control" id="nomor_surat" name="nomor_surat" value="<?=$result[0]['nomor_surat1']?>" readonly>
           
           </div> 
           <button id="btn_dwnload" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
@@ -509,6 +505,7 @@
           <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
           <input type="hidden" class="form-control" id="id_usul_layanan" name="id_usul_layanan" value="<?=$id_usul;?>" readonly>
           <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          <input type="hidden" class="form-control" id="nomor_surat" name="nomor_surat" value="<?=$result[0]['nomor_surat2']?>" readonly>
           
           </div> 
           <button id="btn_dwnload2" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>

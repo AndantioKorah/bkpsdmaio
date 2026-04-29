@@ -2662,6 +2662,10 @@
                 $this->db->where_in('e.id_pangkat', $golongan);
             }
 
+            if(isset($data['eselon'])){
+                $this->db->where_in('g.id_eselon', $data['eselon']);
+            }
+
             $result = $this->db->get()->result_array();
 
             $id_pangkat_ahli_madya = [41, 42, 43];
@@ -2687,9 +2691,29 @@
                         if($explode_masa_kerja[0] != '' && $explode_masa_kerja[0]){
                             if(floatval($explode_masa_kerja[0] >= $masa_kerja_satyalencana && floatval($explode_masa_kerja[0]) < $batas_atas)){
                                 if(!isset($result[$t['nipbaru_ws']])){
+
+
+                                  $result[$t['nipbaru_ws']] = $t;
+                                    $result[$t['nipbaru_ws']]['masa_kerja'] = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun', 'bulan']);
+                                   
+                                    $this->db->select('a.gambarsk')
+                                                    ->from('db_pegawai.pegpenghargaan a')
+                                                    ->where('a.flag_active', 1)
+                                                    ->where_in('a.id_m_satyalencana', [1,2])
+                                                    ->where('a.id_pegawai', $t['id_peg'])
+                                                    ->order_by('a.id', 'desc')
+                                                    ->limit(1);
+
+                                    $dataSatya = $this->db->get()->row_array();
+                                
                                     $result[$t['nipbaru_ws']] = $t;
                                     $result[$t['nipbaru_ws']]['masa_kerja'] = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun', 'bulan']);
-                                }
+                                    if($dataSatya){
+                                    $result[$t['nipbaru_ws']]['gambarsk_satya'] = $dataSatya['gambarsk'];
+                                    }
+                                    
+                                   
+                                    }
                             }
                         }
                        

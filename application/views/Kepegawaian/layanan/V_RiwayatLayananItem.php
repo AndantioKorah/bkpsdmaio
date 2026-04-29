@@ -97,7 +97,7 @@
           </td>
           <?php } ?>
               <td>
-              <?php if($rs['status'] == 0 AND $rs['keterangan'] == "") { ?>
+              <?php if($rs['status'] == 0) { ?>
               <button title="Hapus" onclick="deleteData('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i></button> 
               <?php } ?>
               <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16 || $rs['id_m_layanan'] == 30 || $rs['id_m_layanan'] == 31) { ?>

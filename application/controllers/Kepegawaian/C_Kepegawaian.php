@@ -3882,12 +3882,17 @@ class C_Kepegawaian extends CI_Controller
 		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
 		
-		$dataNomorSurat = getNomorSuratSiladen([
-                'jenis_layanan' => 39,
-                'tahun' => date('Y'),
-                'perihal' => "Usul DS"
-            ], 0);
-		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
+		// $dataNomorSurat = getNomorSuratSiladen([
+        //         'jenis_layanan' => 39,
+        //         'tahun' => date('Y'),
+        //         'perihal' => "Usul DS"
+        //     ], 0);
+		// $data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
+
+		$id_m_layanan = 23;
+		$data['data_layanan'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
+		$statusDS = 0;
+
 
 		
 		$data['instansi_tujuan'] = $this->input->post('instansi_tujuan');
@@ -3926,11 +3931,37 @@ class C_Kepegawaian extends CI_Controller
 		// $file_pdf = $random_number."surat_ket_tidak_hd_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	
 	    
 		if($jenis == 1){
+
+		if($data['data_layanan'][0]['nomor_surat1'] == null || $data['data_layanan'][0]['nomor_surat1'] == ""){
+		$dataNomorSurat = getNomorSuratSiladen([
+                'jenis_layanan' => 30,
+                'tahun' => date('Y'),
+                'perihal' => "Usul DS"
+            ], 0);
+		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
+		} else {
+		$statusDS = 1;
+		$data['nomor_surat'] = $data['data_layanan'][0]['nomor_surat1'];
+		}
+
 		$mpdf->adjustFontDescLineheight = 1.80;
 		$html = $this->load->view('kepegawaian/surat/V_SuratHukdis2', $data, true); 
 		$file_pdf = $random_number."surat_ket_tidak_hd_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	 	
 		}
 		if($jenis == 2){
+
+		if($data['data_layanan'][0]['nomor_surat2'] == null || $data['data_layanan'][0]['nomor_surat2'] == ""){
+		$dataNomorSurat = getNomorSuratSiladen([
+                'jenis_layanan' => 30,
+                'tahun' => date('Y'),
+                'perihal' => "Usul DS"
+            ], 0);
+		$data['nomor_surat'] = $dataNomorSurat['data']['nomor_surat'];
+		} else {
+		$statusDS = 1;
+		$data['nomor_surat'] = $data['data_layanan'][0]['nomor_surat2'];
+		}
+
 		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
 		$file_pdf = $random_number."surat_ket_pidana_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	 	
 		} 
@@ -3945,7 +3976,10 @@ class C_Kepegawaian extends CI_Controller
 		$dataPost = $this->input->post();
 		$dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
 		$dataPost['jenis'] = $jenis;
+		if($statusDS == 0){
 		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
+		}
+
 
     }
 

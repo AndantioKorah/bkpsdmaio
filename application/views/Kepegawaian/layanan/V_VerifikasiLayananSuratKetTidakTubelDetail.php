@@ -480,12 +480,14 @@
         </button>
       </div>
       <div class="modal-body">
-      <form method="post"  enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/downloadDraftSuketTidakTubel')?>" target="_blank">
-      
+      <form method="post"  enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/usulDSSuketTidakTubel')?>" target="_blank">
+      <!-- downloadDraftSuketTidakTubel -->
       <div class="form-group">
           <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
           <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
           <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
+          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          <input type="hidden" class="form-control" id="nomor_surat" name="nomor_surat" value="<?=$result[0]['nomor_surat1']?>" readonly>
 
            <label>Jenis Surat</label>
           <select onchange="myFunction()" class="form-control select2"  type="text" id="jenis_surat" name="jenis_surat" autocomplete="off"  required>

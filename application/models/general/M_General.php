@@ -2819,7 +2819,7 @@
             $expl = explode(" ", $date);
             $dateOnly = $expl[0];
             $timeOnly = $expl[1];
-            $timeOnly = "06:00";
+            // $timeOnly = "06:00";
 
             $hariLibur = $this->db->select('*')
                             ->from('t_hari_libur')

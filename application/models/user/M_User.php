@@ -2523,7 +2523,7 @@
             // dd($data);
             $result = null;
             $flag_use_masa_kerja = 0;
-            $this->db->select('a.npwp,m.nama_kelurahan,n.nama_kecamatan,o.nama_kabupaten_kota,a.tptlahir,nm_sk,k.nm_tktpendidikan,a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
+            $this->db->select('a.jk,a.npwp,m.nama_kelurahan,n.nama_kecamatan,o.nama_kabupaten_kota,a.tptlahir,nm_sk,k.nm_tktpendidikan,a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai, k.jenis as jenis_plt_plh, k.id_jabatan as id_jabatan_plt_plh, a.jabatan,
                     h.nama_status_pegawai, f.nm_statuspeg')
                     ->from('db_pegawai.pegawai a')
@@ -2674,6 +2674,7 @@
             if(isset($data['satyalencana'])){
                 $flag_use_masa_kerja = 1;
                 $masa_kerja_satyalencana = $data['satyalencana'][0];
+               
                 $batas_atas = floatval($masa_kerja_satyalencana) + 10;
                 if($batas_atas > 30){
                     $batas_atas = 100;
@@ -2696,10 +2697,15 @@
                                   $result[$t['nipbaru_ws']] = $t;
                                     $result[$t['nipbaru_ws']]['masa_kerja'] = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun', 'bulan']);
                                    
+                                     if($masa_kerja_satyalencana == 10){
+                                        $sty = 1;
+                                     } else {
+                                        $sty = 2;
+                                     }
                                     $this->db->select('a.gambarsk')
                                                     ->from('db_pegawai.pegpenghargaan a')
                                                     ->where('a.flag_active', 1)
-                                                    ->where_in('a.id_m_satyalencana', [1,2])
+                                                    ->where('a.id_m_satyalencana',$sty)
                                                     ->where('a.id_pegawai', $t['id_peg'])
                                                     ->order_by('a.id', 'desc')
                                                     ->limit(1);

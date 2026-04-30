@@ -152,9 +152,9 @@
 			<td><?= $profil_pegawai['nm_pangkat'];?></td>
 		</tr>
 		<tr>
-			<td>Jabatan</td>
-			<td style="text-align: center;">:</td>
-			<td><?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Pemerintah Kota Manado</td>
+			<td valign="top">Jabatan</td>
+			<td valign="top" style="text-align: center;">:</td>
+			<td valign="top"><?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Pemerintah Kota Manado</td>
 		</tr>
 		
 
@@ -211,10 +211,10 @@
 	</table>
 	</div>
 	<div class="footer-sk">
-	<img src="<?=base_url();?>assets/images/footer.png" alt="">
+	<!-- <img src="<?=base_url();?>assets/images/footer.png" alt=""> -->
 	</div>
 	<?php
-        // $this->load->view('adminkit/partials/V_FooterBsre');
+        $this->load->view('adminkit/partials/V_FooterBsre');
     ?>
 	<!-- <img style="width: 100%;margin-top: 90px;" src="<?=base_url();?>assets/images/footer.png" alt=""> -->
 	<!-- <span >

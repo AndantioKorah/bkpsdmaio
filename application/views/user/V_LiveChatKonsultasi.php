@@ -545,7 +545,7 @@
         $('#btn_send_message').hide()
         $('#btn_send_message_loading').show()
 
-        if(document.getElementById('upload_file').files[0].size > 1000000){
+        if(ins !== 0 && document.getElementById('upload_file').files[0].size > 1000000){
             errortoast('Max. Ukuran File adalah 1 MB')
             return false
         }

@@ -1941,7 +1941,7 @@
                                 // cari jika id unitkerja sesuai parameter, bulan dan tahun sesuai parameter
                                 // cari jika semua unitkerja, bulan dan tahun sesuai parameter
                                 // cari jika unitkerja sesuai parameter, semua bulan dan tahun sesuai
-
+            
             if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
                 
@@ -1958,27 +1958,33 @@
                     }
                 }
             } else {
-                $tmpListPeg = null;
-                // if($this->general_library->isProgrammer()){
-                    $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
-                    $i = 0;
-                    foreach($list_pegawai as $lp){
-                        if($lp['flag_terima_tpp'] == 0){
-                            unset($list_pegawai[$i]);
-                        } else {
-                            $tmpListPeg[$lp['nip']] = $lp;
+                if($data['bulan'] == "02" && $data['tahun'] == 2026){
+
+                } else {
+                    $tmpListPeg = null;
+                    // if($this->general_library->isProgrammer()){
+                        $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+                        $i = 0;
+                        foreach($list_pegawai as $lp){
+                            if($lp['flag_terima_tpp'] == 0){
+                                unset($list_pegawai[$i]);
+                            } else {
+                                $tmpListPeg[$lp['nip']] = $lp;
+                            }
+                            $i++;
                         }
-                        $i++;
-                    }
-                    if($rs['list_pegawai']){
-                        foreach($rs['list_pegawai'] as $rlp){
-                            if(isset($tmpListPeg[$rlp['nip']])){
-                                unset($tmpListPeg[$rlp['nip']]);
+                        if($rs['list_pegawai']){
+                            foreach($rs['list_pegawai'] as $rlp){
+                                if(isset($tmpListPeg[$rlp['nip']])){
+                                    unset($tmpListPeg[$rlp['nip']]);
+                                }
                             }
                         }
+                    // }
+                    // if($tmpListPeg != null){
+                        $list_pegawai = $tmpListPeg;
+                    // }
                     }
-                // }
-                $list_pegawai = $tmpListPeg;
             }
         }
 
@@ -2006,6 +2012,9 @@
 
             $tlp = null;
             //ambil kelas jabatan tiap pegawai
+            if($this->general_library->isProgrammer()){
+                // dd($list_pegawai);
+            }
             $list_pegawai = $this->getKelasJabatanPegawai($list_pegawai);
             foreach($list_pegawai as $lpw){
                 $temp_list_nip[] = $lpw['nip'];
@@ -2847,6 +2856,9 @@
             $list_hukdis = $this->db->get()->result_array();
             $hukdis = null;
             if($list_hukdis){
+                // if($this->general_library->isProgrammer()){
+                //     dd($list_hukdis);
+                // }
                 foreach($list_hukdis as $l){
                     if($l['tmt']){
                         $l['lama_potongan'] = floatval($l['lama_potongan']) - 1;
@@ -2856,8 +2868,10 @@
                         $expl = explode("-", $l['tmt']);
                         $bulan = $expl[1];
                         $min_date = $expl[0]."-".$bulan."-01"; // min. tanggal penarikan agar terbaca hukdis
-                        $rekap_date = $temp['tahun']."-".$temp['bulan']."01";
-                        
+                        $rekap_date = $temp['tahun']."-".$temp['bulan']."-01";
+                        if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197507302006041006"){
+                            dd($last_date."     ".$valid_date."      ".$rekap_date."     ".$min_date);
+                        }
                         // if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197401312010012002"){
                         //     dd($temp['bulan']." ; ".$temp['tahun']." ; ".$min_date." ; ".$valid_date);
                         // // //     dd($valid_date." ; ".$last_date);

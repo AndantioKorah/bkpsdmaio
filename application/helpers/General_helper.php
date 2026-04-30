@@ -2084,16 +2084,16 @@ function validateToken($token, $publicKey){
     $expl = explode(";", $decrypted);
 
     // cek jika token belum kadaluarsa
-    $tokenDate = new DateTime($expl[0]);
-    $expireDate = (new DateTime())->modify('-5 minutes');
-    if($tokenDate < $expireDate){
-        $helper->response([
-            'code' => RC_EXPIRED_TOKEN['rc_code'],
-            'status' => false, 
-            'message' => RC_EXPIRED_TOKEN['message'],
-            "data" => null
-        ], RC_EXPIRED_TOKEN['code']);
-    }
+    $nowDate = new DateTime();
+    $expireDate = (new DateTime($expl[0]))->modify('+5 minutes');
+    // if($nowDate > $expireDate){
+    //     $helper->response([
+    //         'code' => RC_EXPIRED_TOKEN['rc_code'],
+    //         'status' => false, 
+    //         'message' => RC_EXPIRED_TOKEN['message'],
+    //         "data" => null
+    //     ], RC_EXPIRED_TOKEN['code']);
+    // }
 
     // cek jika secret key sesuai
     $secretKey = $expl[1];    
@@ -2110,9 +2110,9 @@ function validateToken($token, $publicKey){
     return $decrypted;
 }
 
-function validateParameter($requestedParameter){
+function validateParameter($requestedParameter = null){
     $helper = &get_instance();
-    $param = $helper->input->post();        
+    $param = $helper->post();        
     if($param){
         $requestedParameter[] = "token";
         $requestedParameter[] = "publicKey";

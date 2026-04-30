@@ -754,7 +754,7 @@ class C_User extends CI_Controller
     }
 
     public function cekWaktuKerjaKonsultasi(){
-        $batasAkhir = 15;
+        $batasAkhir = 30;
         $batasAwalKonsultasi = 60;
 
         $waktuKerja = cekWaktuKerja($batasAkhir, $batasAwalKonsultasi);

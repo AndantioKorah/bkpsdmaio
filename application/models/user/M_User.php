@@ -4404,29 +4404,31 @@
             }
 
             $foldername = 'arsiplivechat/';
-            $explode = explode(".", $_FILES['file']['name']);
-            $ext = $explode[count($explode) - 1];
-            $config['upload_path'] = "./".$foldername;
-            $config['file_name'] = $data['id_t_live_chat'].generateRandomString(10, 0, null).date('ymdhis').".".$ext;
-    		$config['overwrite'] = TRUE;
-            $config['allowed_types'] = ['pdf', 'jpg', 'png', 'jpeg'];
+            if($_FILES['file']['name'] != ""){
+                $explode = explode(".", $_FILES['file']['name']);
+                $ext = $explode[count($explode) - 1];
+                $config['upload_path'] = "./".$foldername;
+                $config['file_name'] = $data['id_t_live_chat'].generateRandomString(10, 0, null).date('ymdhis').".".$ext;
+                $config['overwrite'] = TRUE;
+                $config['allowed_types'] = ['pdf', 'jpg', 'png', 'jpeg'];
 
-            $data['attachment_size'] = intval($_FILES['file']['size']);
-            if($_FILES['file']['type'] == "application/pdf"){
-                $data['is_file'] = 1;
-            } else {
-                $data['is_image'] = 1;
-            }
-            $data['url_attachment'] = $foldername.$config['file_name'];
-            $data['attachment_name'] = $config['file_name'];
-            $data['id_m_user_sender'] = $this->general_library->getId();
+                $data['attachment_size'] = intval($_FILES['file']['size']);
+                if($_FILES['file']['type'] == "application/pdf"){
+                    $data['is_file'] = 1;
+                } else {
+                    $data['is_image'] = 1;
+                }
+                $data['url_attachment'] = $foldername.$config['file_name'];
+                $data['attachment_name'] = $config['file_name'];
+                $data['id_m_user_sender'] = $this->general_library->getId();
 
-            $this->load->library('upload', $config);
-            if (!$this->upload->do_upload('file')) {
-                $rs['code'] = 1;
-    			$rs['message'] = strip_tags($this->upload->display_errors());
-                $this->db->trans_rollback();
-                return $rs;
+                $this->load->library('upload', $config);
+                if (!$this->upload->do_upload('file')) {
+                    $rs['code'] = 1;
+                    $rs['message'] = strip_tags($this->upload->display_errors());
+                    $this->db->trans_rollback();
+                    return $rs;
+                }
             }
 
             $this->db->insert('t_live_chat_detail', $data);

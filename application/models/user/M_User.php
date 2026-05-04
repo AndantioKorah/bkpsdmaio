@@ -11,6 +11,21 @@
         public function insert($tablename, $data){
             $this->db->insert($tablename, $data);
         }
+        
+        // API
+        public function getUserAdminBkpsdmWeb($username, $password){
+            $password = $this->general_library->encrypt($username, $password);
+            return $this->db->select('*')
+                            ->from('m_user a')
+                            ->join('t_hak_akses b', 'a.id = b.id_m_user AND b.flag_active = 1')
+                            ->join('m_hak_akses c', 'b.id_m_hak_akses = c.id')
+                            ->where('c.meta_name', 'admin_bkpsdm_web')
+                            ->where('a.flag_active', 1)
+                            ->where('a.username', $username)
+                            ->where('a.password', $password)
+                            ->get()->row_array();
+
+        }
 
         public function getUnitKerjaKecamatanDiknas($flag_rekap_tpp = 1){
             $result = $this->db->select('id_unitkerjamaster as id_unitkerja, concat("Sekolah ", nm_unitkerjamaster) as nm_unitkerja')

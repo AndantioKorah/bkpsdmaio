@@ -39,5 +39,17 @@ define('RC_NIP_NOT_FOUND', [
 define('RC_PARAMETER_NOT_FOUND', [
     'code' => 400,
     'rc_code' => "PNF6",
-    'message' => "Parameter Not Found"
+    'message' => "Requested Parameter Not Found"
+]);
+
+define('RC_REQUESTED_PARAMETER_NOT_FOUND', [
+    'code' => 400,
+    'rc_code' => "RPNF7",
+    'message' => "Requested Parameter Not Found"
+]);
+
+define('RC_USER_ADMIN_NOT_FOUND', [
+    'code' => 400,
+    'rc_code' => "RPNF8",
+    'message' => "User Admin Not Found"
 ]);

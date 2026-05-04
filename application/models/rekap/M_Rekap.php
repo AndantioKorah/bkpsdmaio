@@ -1784,17 +1784,19 @@
             return $res;
         }
 
-        if(in_array($param['id_unitkerja'], [3010000])){
-            $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja, a.nipbaru_ws as nip')
-                    ->from('db_pegawai.pegawai a')
-                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-                    ->where('id_m_status_pegawai', 1);
+        // buka comment ini agar diknas tidak dihitung dengan guru2
+        // if(in_array($param['id_unitkerja'], [3010000])){
+        //     $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja, a.nipbaru_ws as nip')
+        //             ->from('db_pegawai.pegawai a')
+        //             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+        //             ->where('id_m_status_pegawai', 1);
 
-            if($param['id_unitkerja'] == "3010000"){ // jika diknas, ambil semua sekolah
-                $this->db->where("b.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR b.id_unitkerja = '3010000'");
-            }
-            $list_pegawai = $this->db->get()->result_array();
-        }
+        //     if($param['id_unitkerja'] == "3010000"){ // jika diknas, ambil semua sekolah
+        //         $this->db->where("b.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR b.id_unitkerja = '3010000'");
+        //     }
+        //     $list_pegawai = $this->db->get()->result_array();
+        // }
+        // dd($list_pegawai);
         if($list_pegawai){
             // if($this->general_library->isProgrammer()){
             //     dd($param);
@@ -1804,9 +1806,10 @@
             foreach($list_pegawai as $lp){
                 $pegawai[$lp['nip']] = $lp['nip'];
             }
-            $this->db->select('a.*, b.gelar1, b.nama, b.gelar2')
+            $this->db->select('a.*, b.gelar1, b.nama, b.gelar2, c.nm_unitkerja')
                                 ->from('t_cek_bangkom a')
                                 ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->where('a.flag_ditebus', 0)
                                 ->where('a.flag_terpenuhi', 0)
                                 ->where('a.flag_exception', 0)
@@ -1815,13 +1818,14 @@
                                 ->group_by('b.nipbaru_ws');
                                 // ->where_in('b.nipbaru_ws', $pegawai)
                                 // ->get()->result_array();
-            if($param['id_unitkerja'] == "3010000"){
-                $this->db->select('c.nm_unitkerja')
-                        ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
-                        ->where("c.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR c.id_unitkerja = '3010000'");
-            } else {
+            // buka comment ini agar diknas tidak dihitung dengan guru2
+            // if($param['id_unitkerja'] == "3010000"){
+            //     $this->db->select('c.nm_unitkerja')
+            //             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+            //             ->where("c.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR c.id_unitkerja = '3010000'");
+            // } else {
                 $this->db->where_in('b.nipbaru_ws', $pegawai);
-            }
+            // }
             $cekBangkom = $this->db->get()->result_array();
             $listBelumLengkap = null;
             if($cekBangkom){
@@ -1958,7 +1962,7 @@
                     }
                 }
             } else {
-                if($data['bulan'] == "02" && $data['tahun'] == 2026){
+                if(($data['bulan'] == "02" && $data['tahun'] == 2026) || $data['id_unitkerja'] == 1000001){
 
                 } else {
                     $tmpListPeg = null;

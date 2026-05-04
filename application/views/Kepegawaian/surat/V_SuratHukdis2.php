@@ -105,7 +105,7 @@
 		<?php }  ?>
 
 
-	<p>Yang nama bertanda-tangan dibawah ini :</p>
+	<p>Yang bertanda-tangan dibawah ini :</p>
 	<table style="margin-left:-5px;width:100%;" border="0">
 		<tr>
 			<td style="width:25%;">Nama</td>
@@ -150,9 +150,9 @@
 			<td><?= $profil_pegawai['nm_pangkat'];?></td>
 		</tr>
 		<tr>
-			<td>Jabatan</td>
-			<td style="text-align: center;">:</td>
-			<td><?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Pemerintah Kota Manado</td>
+			<td valign="top">Jabatan</td>
+			<td valign="top" style="text-align: center;">:</td>
+			<td valign="top"><?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Pemerintah Kota Manado</td>
 		</tr>
 		<tr>
 			<td colspan="3"> <p class="justify" > Dalam satu tahun terakhir tidak pernah dijatuhi hukuman disiplin tingkat sedang/berat. </p> </td>
@@ -201,10 +201,10 @@
 	</table>
 	</div>
 	<div class="footer-sk">
-	<img src="<?=base_url();?>assets/images/footer.png" alt="">
+	<!-- <img src="<?=base_url();?>assets/images/footer.png" alt=""> -->
 	</div>
 	<?php
-        // $this->load->view('adminkit/partials/V_FooterBsre');
+        $this->load->view('adminkit/partials/V_FooterBsre');
     ?>
 
 	<!-- <span style="margin-top:900px;">

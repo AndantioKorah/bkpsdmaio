@@ -102,7 +102,7 @@
               <?php } ?>
               <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16 || $rs['id_m_layanan'] == 30 || $rs['id_m_layanan'] == 31) { ?>
                
-                <?php if($rs['status'] == 5) { ?>
+                <?php if($rs['status'] == 5 || $rs['status'] == 7) { ?>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
                 <button

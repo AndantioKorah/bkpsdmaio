@@ -1502,7 +1502,7 @@
     $('#div_presensi_result').html('')
     $('#div_presensi_result').append(divLoaderNavy)
     $.ajax({
-        url: '<?=base_url("user/C_User/searchDetailAbsenPegawai/1/".$profil_pegawai['id_m_user'])?>',
+        url: '<?=base_url("kepegawaian/C_Kepegawaian/searchDetailAbsenPegawai/1/".$profil_pegawai['id_m_user'])?>',
         method: 'post',
         data: $(this).serialize(),
         success: function(data){

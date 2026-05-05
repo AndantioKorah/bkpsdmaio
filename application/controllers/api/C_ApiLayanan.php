@@ -17,7 +17,37 @@ class C_ApiLayanan extends RestController
         $parameter = validateParameter(null);
 
         $validate = validateToken($parameter['token'], $parameter['publicKey']);
-        dd($validate);
+
+        $explodeValidate = explode(";", $validate);
+        $username = null;
+        $password = null;
+        if(isset($explodeValidate[2])){
+            $username = $explodeValidate[2];
+        } else {
+            $this->returnResponse(RC_REQUESTED_PARAMETER_NOT_FOUND, false, null);
+        }
+
+        if(isset($explodeValidate[3])){
+            $password = $explodeValidate[3];
+        } else {
+            $this->returnResponse(RC_REQUESTED_PARAMETER_NOT_FOUND, false, null);
+        }
+
+        $user = $this->user->getUserAdminBkpsdmWeb($username, $password);
+        if($user){
+            dd($user);
+        } else {
+            $this->returnResponse(RC_REQUESTED_PARAMETER_NOT_FOUND, false, null);
+        }
+    }
+
+    public function returnResponse($RC, $status, $data){
+        $this->response([
+            'code' => $RC['rc_code'],
+            'status' => $status, 
+            'message' => $RC['message'],
+            "data" => $data
+        ], $RC['code']); 
     }
 
     public function getDataTpp_post(){

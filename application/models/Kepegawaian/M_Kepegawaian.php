@@ -17350,6 +17350,31 @@ public function checkListIjazahCpns($id, $id_pegawai){
         $query = $this->db->get()->row_array();
         return $query;  
     }
+
+    public function getBangkomPegawai($nip,$tahun,$bulan)
+    {
+       $formattedMonth = str_pad($bulan, 2, "0", STR_PAD_LEFT);
+       $this->db->select('a.bulan,a.jumlah_jp')
+         ->from('t_cek_bangkom a')
+         ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+         ->where('a.flag_active', 1)
+         ->where('tahun', $tahun)
+         ->where('bulan_tahun <=', $tahun."-".$formattedMonth."-01")
+         ->where('a.nip', $nip)
+         ->where('b.id_m_status_pegawai', 1)
+         ->where('a.flag_ditebus', 0)
+         ->where('a.flag_terpenuhi', 0)
+         ->where('a.flag_exception', 0)
+         ->where('a.flag_active', 1)
+         ->where('b.id_m_status_pegawai', 1);
+         $dataBangkom = $this->db->get()->result_array();
+        return $dataBangkom;  
+    }
+
+
+
+
+    
     
 
 }

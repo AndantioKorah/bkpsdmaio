@@ -586,10 +586,10 @@ class C_Kepegawaian extends CI_Controller
 	}
 	
 	public function profilPegawai($nip){
-
 		if($this->general_library->cekKinerja() == null) {
             redirect('kinerja/realisasi');
         }
+		// dd($nip);
 
 		if(!$this->general_library->isProgrammer() 
 		&& !$this->general_library->isAdminAplikasi() 
@@ -601,7 +601,7 @@ class C_Kepegawaian extends CI_Controller
 		} else {
 		    $data['bidang'] = null;
 			$data['page'] = null;
-
+			
 			$id_peg = $this->general_library->getIDPegawaiByNip($nip);
 			$this->kepegawaian->updatePangkat($id_peg['id_peg']);
 		    $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
@@ -868,6 +868,7 @@ class C_Kepegawaian extends CI_Controller
 
 	
 	public function loadFormDisiplin($nip){
+		
 		$data['nip'] = $nip;
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 18);
 		$data['pdm'] = $this->kepegawaian->getDataPdmBerkas('t_pdm', 'id', 'desc', 'disiplin');
@@ -4303,6 +4304,38 @@ class C_Kepegawaian extends CI_Controller
 			$data['sertifikat_latsar'] = $this->kepegawaian->getSertifikatLatsar();
 			$this->load->view('kepegawaian/layanan/V_LayananCpnsPns', $data);
 		}
+
+	public function searchDetailAbsenPegawai($flag_edit = 0, $id_user = 0){
+        $dt = $this->input->post();
+
+        $data['flag_edit'] = $flag_edit;
+        if($flag_edit == 1){
+            $data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id_user, $dt['bulan'], $dt['tahun'], 0);
+        } else {
+           
+            $data['result'] = $this->general_library->getPaguTppPegawai($dt['bulan'], $dt['tahun']);
+        }
+
+
+        $data['nip'] = $data['result']['pagu_tpp']['nipbaru_ws'];
+        $data['result']['param'] = $dt;
+        if($dt['bulan'] == date('m') && $dt['tahun'] == date('Y') && ($id_user == $this->general_library->getId())){
+            $this->session->set_userdata('live_tpp', $data['result']);
+        }
+
+		if($this->general_library->getUserName() == $data['nip'] AND $data['result']['dataPegawai']['flag_sertifikasi'] == 1){
+		
+		$data_bangkom = $this->kepegawaian->getBangkomPegawai($data['nip'],$dt['tahun'],$dt['bulan']);
+		if($data_bangkom != null){
+			$data['result'] = null;
+		} 
+		} 
+
+        // if($this->general_library->getUserName() == '196705151994031003'){
+        //     dd(json_encode($data));
+        // }
+        return $this->load->view('user/V_DetailAbsensiPegawai', $data);
+    }
 
 
 	

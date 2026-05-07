@@ -5,6 +5,11 @@ use chriskacerguis\RestServer\RestController;
 class C_ApiLayanan extends RestController 
 // class C_Api extends CI_Controller 
 {
+
+    public $REQUEST;
+    public $RESPONSE;
+    public $URL;
+
     public function __construct()
     {
         parent::__construct();
@@ -14,6 +19,9 @@ class C_ApiLayanan extends RestController
     }
 
     public function loginAdmin_post(){
+        $this->URL = 'api/bkpsdmweb/admin/login';
+        $this->REQUEST = $this->post();
+
         $parameter = validateParameter(null);
 
         $validate = validateToken($parameter['token'], $parameter['publicKey']);
@@ -24,31 +32,35 @@ class C_ApiLayanan extends RestController
         if(isset($explodeValidate[2])){
             $username = $explodeValidate[2];
         } else {
-            $this->returnResponse(RC_REQUESTED_PARAMETER_NOT_FOUND, false, null);
+            returnResponse(RC_REQUESTED_PARAMETER_NOT_FOUND, false, null, $this->URL, $this->REQUEST);
         }
 
         if(isset($explodeValidate[3])){
             $password = $explodeValidate[3];
         } else {
-            $this->returnResponse(RC_REQUESTED_PARAMETER_NOT_FOUND, false, null);
+            returnResponse(RC_REQUESTED_PARAMETER_NOT_FOUND, false, null, $this->URL, $this->REQUEST);
         }
 
         $user = $this->user->getUserAdminBkpsdmWeb($username, $password);
         if($user){
-            dd($user);
+            returnResponse(RC_PROCESS_SUCCESS, true, $user, $this->URL, $this->REQUEST);
         } else {
-            $this->returnResponse(RC_REQUESTED_PARAMETER_NOT_FOUND, false, null);
+            returnResponse(RC_USER_ADMIN_NOT_FOUND, false, null, $this->URL, $this->REQUEST);
         }
     }
 
-    public function returnResponse($RC, $status, $data){
-        $this->response([
-            'code' => $RC['rc_code'],
-            'status' => $status, 
-            'message' => $RC['message'],
-            "data" => $data
-        ], $RC['code']); 
-    }
+    // public function returnResponse($RC, $status, $data){
+    //     $response = [
+    //         'code' => $RC['rc_code'],
+    //         'status' => $status, 
+    //         'message' => $RC['message'],
+    //         'data' => $data
+    //     ];
+
+    //     $this->user->logApiSiladen($this->URL, $this->REQUEST, $response);
+
+    //     $this->response($response, $RC['code']); 
+    // }
 
     public function getDataTpp_post(){
         // validasi parameter

@@ -15,17 +15,39 @@
         // API
         public function getUserAdminBkpsdmWeb($username, $password){
             $password = $this->general_library->encrypt($username, $password);
-            return $this->db->select('*')
+            $data = $this->db->select('a.id, d.nipbaru_ws, d.gelar1, d.gelar2, d.nama, e.nama_jabatan, d.fotopeg')
                             ->from('m_user a')
                             ->join('t_hak_akses b', 'a.id = b.id_m_user AND b.flag_active = 1')
                             ->join('m_hak_akses c', 'b.id_m_hak_akses = c.id')
+                            ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
+                            ->join('db_pegawai.jabatan e', 'd.jabatan = e.id_jabatanpeg')
                             ->where('c.meta_name', 'admin_bkpsdm_web')
                             ->where('a.flag_active', 1)
                             ->where('a.username', $username)
                             ->where('a.password', $password)
                             ->get()->row_array();
+            if($data){
+                $data['nama_pegawai_full'] = getNamaPegawaiFull($data);
+                $data['nama_pegawai'] = getNamaPegawaiFull($data, 0, 1);
+                if(file_exists("assets/fotopeg/".$data['fotopeg'])){
+                    $data['fotopeg'] = convertToBase64('assets/fotopeg/'.$data['fotopeg']);
+                } else {
+                    $data['fotopeg'] = null;
+                }
+            }
 
+            return $data;
         }
+
+        public function logApiSiladen($url, $request, $response){
+            $this->db->insert('t_log_api_siladen', [
+                'url' => $url,
+                'request' => json_encode($request),
+                'response' => json_encode($response),
+            ]);
+        }
+
+        // end of API
 
         public function getUnitKerjaKecamatanDiknas($flag_rekap_tpp = 1){
             $result = $this->db->select('id_unitkerjamaster as id_unitkerja, concat("Sekolah ", nm_unitkerjamaster) as nm_unitkerja')

@@ -1266,8 +1266,7 @@
         }
 
         //coding ini untuk mengubah penandatangan menjadi hardcode
-        if($id_unitkerja == 3016000 || // dishub, kasub sudah pensiun
-        $id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
+        if($id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
         $id_unitkerja == 3018000 || // pu, kasubag sudah pindah
         $id_unitkerja == 3020000){ //diskop, kasub sudah pensiun
             $result['kasubag'] = $result['sek'];
@@ -1931,7 +1930,9 @@
 
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
-
+        // if($this->general_library->isProgrammer()){
+        //     dd($flag_rekap_tpp);
+        // }
         if($flag_rekap_tpp == 1){
             $exceptBangkom = $this->db->select('*')
                                 ->from('t_except_bangkom')
@@ -1955,7 +1956,7 @@
                     // keluarkan yang flag_terima_tpp = 1
                     $i = 0;
                     foreach($list_pegawai as $lp){
-                        if($lp['flag_terima_tpp'] == 0){
+                        if($lp['flag_terima_tpp'] == 0 && ($flag_rekap_tpp == 1)){
                             unset($list_pegawai[$i]);
                         }
                         $i++;
@@ -1970,20 +1971,21 @@
                         $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
                         $i = 0;
                         foreach($list_pegawai as $lp){
-                            if($lp['flag_terima_tpp'] == 0){
+                            if($lp['flag_terima_tpp'] == 0 && ($flag_rekap_tpp == 1)){
                                 unset($list_pegawai[$i]);
                             } else {
                                 $tmpListPeg[$lp['nip']] = $lp;
                             }
                             $i++;
                         }
-                        if($rs['list_pegawai']){
-                            foreach($rs['list_pegawai'] as $rlp){
-                                if(isset($tmpListPeg[$rlp['nip']])){
-                                    unset($tmpListPeg[$rlp['nip']]);
-                                }
-                            }
-                        }
+                        // buka comment ini untuk membuat TPP 0 jika belum lengkap bangkom
+                        // if($rs['list_pegawai']){
+                        //     foreach($rs['list_pegawai'] as $rlp){
+                        //         if(isset($tmpListPeg[$rlp['nip']])){
+                        //             unset($tmpListPeg[$rlp['nip']]);
+                        //         }
+                        //     }
+                        // }
                     // }
                     // if($tmpListPeg != null){
                         $list_pegawai = $tmpListPeg;
@@ -1991,7 +1993,6 @@
                     }
             }
         }
-
         $list_tanggal_exclude = null;
         $temp_list_nip = null;
         if($flag_absen_aars == 1){
@@ -2873,7 +2874,8 @@
                         $bulan = $expl[1];
                         $min_date = $expl[0]."-".$bulan."-01"; // min. tanggal penarikan agar terbaca hukdis
                         $rekap_date = $temp['tahun']."-".$temp['bulan']."-01";
-                        if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197507302006041006"){
+                        if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197611272006041013" && $l['id'] == 3469){
+                            // dd($l);
                             dd($last_date."     ".$valid_date."      ".$rekap_date."     ".$min_date);
                         }
                         // if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197401312010012002"){

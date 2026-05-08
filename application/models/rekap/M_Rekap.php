@@ -1949,11 +1949,10 @@
             
             if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
-                
                 if($rs['code'] == 1){
                     return $rs;
                 } else {
-                    // keluarkan yang flag_terima_tpp = 1
+                    // keluarkan yang flag_terima_tpp = 0 jika flag_rekap_tpp == 1
                     $i = 0;
                     foreach($list_pegawai as $lp){
                         if($lp['flag_terima_tpp'] == 0 && ($flag_rekap_tpp == 1)){
@@ -1978,14 +1977,15 @@
                             }
                             $i++;
                         }
-                        // buka comment ini untuk membuat TPP 0 jika belum lengkap bangkom
-                        // if($rs['list_pegawai']){
-                        //     foreach($rs['list_pegawai'] as $rlp){
-                        //         if(isset($tmpListPeg[$rlp['nip']])){
-                        //             unset($tmpListPeg[$rlp['nip']]);
-                        //         }
-                        //     }
-                        // }
+                        if($exceptBangkom['flag_terima_tpp_semua'] == 0){
+                            if($rs['list_pegawai']){
+                                foreach($rs['list_pegawai'] as $rlp){
+                                    if(isset($tmpListPeg[$rlp['nip']])){
+                                        unset($tmpListPeg[$rlp['nip']]);
+                                    }
+                                }
+                            }
+                        }
                     // }
                     // if($tmpListPeg != null){
                         $list_pegawai = $tmpListPeg;

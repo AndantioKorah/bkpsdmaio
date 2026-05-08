@@ -287,7 +287,7 @@ $(function(){
 
     var maxDate = "2026-03-10";
 
-    var datearray = ["2025-03-17"];
+    var datearray = ["2026-04-06"];
    $('.datepicker2').datepicker({
     format: 'yyyy-mm-dd',       
     datesDisabled: datearray,
@@ -618,7 +618,7 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
               $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/checkMaxDate",
               method : "POST",
-              data : {date: tanggal, max : 3, operand : "plus"},
+              data : {date: tanggal, max : 2, operand : "plus"},
               async : false,
               dataType : 'json',
               success: function(res){

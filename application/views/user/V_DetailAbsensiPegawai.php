@@ -1,3 +1,4 @@
+<?php if($result) { ?>
 <style>
     .table_calendar, .table_calendar th, .table_calendar td{
         border: 1px solid var(--primary-color) !important;
@@ -241,7 +242,9 @@
         </tbody>
     </table>
 </div>
-
+<?php } else { ?>
+<p>Data Bangkom Belum Terpenuhi</p>
+<?php } ?>
 <script>
     function openEditModal(dates){
         // alert(dates)

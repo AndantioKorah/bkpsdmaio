@@ -70,13 +70,17 @@
     <div class="row">
         <?php foreach($result as $rs){
             $flagRead = 0; 
-            if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+            if($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
+                    || $this->general_library->isProgrammer()
+                    || $this->general_library->getId() == $rs['id_m_user_assigned']){
                 $flagRead = $rs['flag_read_admin'];
             } else {
                 $flagRead = $rs['flag_read_pegawai'];
             }
         ?>
-            <?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi') || $this->general_library->isProgrammer()){ ?>
+            <?php if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
+            || $this->general_library->isProgrammer()
+            || $this->general_library->getId() == $rs['id_m_user_assigned'])){ ?>
                 <div class="div_profil_live_chat profile_chat_<?=$rs['id']?>">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -132,20 +136,35 @@
                                         echo base_url().$src;?>" /> 
                                 </td>
                                 <td style="width: 80%;" rowspan=1>
-                                    <div class="ml-2">
-                                        <?php if($rs['flag_done'] == 0){ ?>
-                                            <span><i style="font-size: .6rem; color: green;" class="fa fa-circle"></i></span>
-                                        <?php } ?>
-                                        <span class="sp_chat_id_rw_konsul sp_chat_id_rw_konsul_admin"><?=formatNamaPegawaiLiveChat($rs)?></span>
-                                        <?php if($rs['pesan']){ ?>
+                                    <div class="ml-2" style="line-height: 17px;">
+                                        <span class="sp_chat_id_rw_konsul ellipsis_this sp_chat_id_rw_konsul_admin">
+                                            <?=$rs['flag_done'] == 0 ? '<i style="font-size: .6rem; color: green;" class="fa fa-circle"></i>' : ''?>
+                                            <?=formatNamaPegawaiLiveChat($rs)?>
+                                        </span>
+                                        <?php if($rs['pesan'] || $rs['is_image'] || $rs['is_file']){ ?>
                                             <div class="text-left">
-                                                <label style="
-                                                        color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>;
-                                                        font-weight: <?=$flagRead == 0 ? '1000 !important' : 'normal'?>
-                                                    " class="sp_last_chat_rw_konsul">
-                                                    <?=$rs['pesan']?>
-                                                </label>
+                                                <?php if($rs['pesan']){ ?>
+                                                    <label style="
+                                                            color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>;
+                                                            font-weight: <?=$flagRead == 0 ? '1000 !important' : 'normal'?>
+                                                        " class="sp_last_chat_rw_konsul">
+                                                        <?=$rs['pesan']?>
+                                                    </label>
+                                                <?php } else if($rs['is_file'] == 1){ ?>
+                                                    <i style="color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>; font-size: .75rem;" class="fa fa-image"></i>
+                                                <?php } else if($rs['is_image'] == 1){ ?>
+                                                    <i style="color: <?=$flagRead == 0 ? '#e62329 !important' : 'grey'?>; font-size: .75rem;" class="fa fa-file-pdf"></i>
+                                                <?php } ?>
                                             </div>
+                                        <?php } ?>
+                                        <?php if($rs['id_m_layanan_konsul']){ ?>
+                                            <span title="<?=$rs['nama_layanan']?>" class="ellipsis_this" style="
+                                                color: grey;
+                                                font-size: .6rem;
+                                                font-weight: bold;
+                                                font-style: italic;">
+                                                <?=$rs['nama_layanan']?>
+                                            </span>
                                         <?php } ?>
                                     </div>
                                 </td>
@@ -177,10 +196,15 @@
                                             $colorAssign = "grey";
                                         }
                                     ?>
+                                    <?php if($rs['id_m_user_assigned'] == $this->general_library->getId()){ ?>
+                                        <span
+                                            style="color: <?=$colorAssign?>"
+                                            class="sp_last_chat_date_rw_konsul"><i class="fa fa-headset"></i> Operator</span>
+                                    <?php } else { ?>
                                     <span
                                         style="color: <?=$colorAssign?>"
                                         class="sp_last_chat_date_rw_konsul"><i class="fa fa-headset"></i> <?=getNamaPegawaiFull($userAssign, 1, 1)?></span>
-                                <?php } ?>
+                                <?php } } ?>
                             </div>
                             <div class="col-lg-8 col-md-8 col-sm-8 text-right">
                                 <?php if($rs['pesan']){ ?>
@@ -194,18 +218,35 @@
                     </div>
                 </div> 
             <?php } else { ?> 
-                <div class="div_chat_konsul_item pt-2" onclick="openKonsultasiDetail('<?=$rs['id']?>')">
-                    <div class="col-lg-12 text-left">
-                        <?php if($rs['flag_done'] == 0){ ?>
-                            <span><i style="font-size: .75rem; color: green;" class="fa fa-circle"></i></span>
+                <div class="div_chat_konsul_item div_chat_item_<?=$rs['id']?> pt-2" onclick="openKonsultasiDetail('<?=$rs['id']?>')">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 text-left">
+                            <?php
+                                $colorOperator = "grey";
+                                if($rs['flag_done'] == 0){
+                                    $colorOperator = "green";    
+                                ?>
+                                <span><i style="font-size: .75rem; color: green;" class="fa fa-circle"></i></span>
+                            <?php } ?>
+                            <span class="sp_chat_id_rw_konsul">#<?=$rs['chat_id']?></span>
+                        </div>
+                        <?php if($rs['id_m_user_assigned'] == $this->general_library->getId()){ ?>
+                            <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                                <span style="padding: 2px;
+                                border: 1px solid <?=$colorOperator?>;
+                                color: <?=$colorOperator?>;
+                                font-style: italic;
+                                font-size: .65rem;
+                                font-weight: bold;">
+                                    <i class="fa fa-headset"></i> Operator</span>
+                            </div>
                         <?php } ?>
-                        <span class="sp_chat_id_rw_konsul">#<?=$rs['chat_id']?></span>
                     </div>
                     <?php if($rs['pesan']){ ?>
                         <div class="col-lg-12 text-left" style="display: flex; align-items: center; gap: 5px;">
                             <i style="display: <?=$flagRead == 1 ? 'none' : 'block'?>; font-size: .75rem; color: #e62329;" class="fa fa-circle"></i>
                             <label class="sp_last_chat_rw_konsul">
-                                <?=$rs['pesan']?>
+                                <?=$rs['pesan']?>   
                             </label>
                         </div>
                         <div class="col-lg-12 text-right">

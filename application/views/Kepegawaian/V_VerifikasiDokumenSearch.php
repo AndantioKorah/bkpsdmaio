@@ -1,7 +1,7 @@
 <?php if($result){ ?>
 
 
-
+  <div class="col-lg-12 table-responsive">
   <table class="table table-hover data_table">
     <thead>
       <th class="text-center">No</th>
@@ -55,7 +55,7 @@
       <?php } ?>
     </tbody>
   </table>
-
+</div>
   <div class="modal fade" id="edit_data" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div id="modal-dialog" ss class="modal-dialog modal-xl">
 

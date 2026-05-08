@@ -684,10 +684,15 @@ function openPresensiTab(){
           dir = "arsipskp/";
         } else if(file == "kontrak_kerja" || file == "dok_pemberhentian_kerja" || file == "surat_keterangan_kerja" || file == "slip_gaji_pmk"){
           dir = "arsiplain/";
+        } else if(file == "suratpengantar"){
+          dir = "./dokumen_layanan/peninjauan_masa_kerja/";
+        } else if(file == "ijazah_cpns"){
+          dir = "./arsippendidikan/";
         } else {
           dir = "uploads/";
         }
 
+        
   var id_usul = "<?=$id_usul;?>";
    var id_peg = "<?=$result[0]['id_peg'];?>";
    $.ajax({

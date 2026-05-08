@@ -97,12 +97,12 @@
           </td>
           <?php } ?>
               <td>
-              <?php if($rs['status'] == 0 AND $rs['keterangan'] == "") { ?>
+              <?php if($rs['status'] == 0) { ?>
               <button title="Hapus" onclick="deleteData('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i></button> 
               <?php } ?>
               <?php if($rs['id_m_layanan'] == 12 || $rs['id_m_layanan'] == 13 || $rs['id_m_layanan'] == 14 || $rs['id_m_layanan'] == 15 || $rs['id_m_layanan'] == 16 || $rs['id_m_layanan'] == 30 || $rs['id_m_layanan'] == 31) { ?>
                
-                <?php if($rs['status'] == 5) { ?>
+                <?php if($rs['status'] == 5 || $rs['status'] == 7) { ?>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
                 <button
@@ -317,6 +317,9 @@
                                 if(id_layanan == 34){
                                 loadListRiwayatCutiBesar()
                                }
+                               if(id_layanan == 35){
+                                loadListRiwayatCpnsPns()
+                               }
                                
                                
                            }, error: function(e){
@@ -360,6 +363,8 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || i
   $link = "<?=base_url();?>dokumen_layanan/peninjauan_masa_kerja/"+filename+"?v="+number;
 } else if(id_layanan == 34){
   $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
+} else if(id_layanan == 35){
+  $link = "<?=base_url();?>dokumen_layanan/cpns_pns/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)
@@ -385,6 +390,8 @@ if(id_layanan == 12 || id_layanan == 13){
   $link = "<?=base_url();?>dokumen_layanan/mutasi_pindah_masuk/"+filename+"?v="+number;
 } else if(id_layanan == 34){
   $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
+}  else if(id_layanan == 35){
+  $link = "<?=base_url();?>dokumen_layanan/cpns_pns/"+filename+"?v="+number;
 }  else {
   $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
 }
@@ -448,8 +455,10 @@ function ajukanKembali(id){
                                 loadListRiwayatMutasiPidahMasuk()
                                }
                                 if(id_layanan == 34){
-                                  alert()
                                 loadListRiwayatCutiBesar()
+                               }
+                               if(id_layanan == 35){
+                                loadListRiwayatCpnsPns()
                                }
 
                                
@@ -620,11 +629,16 @@ function ajukanKembali(id){
                 const myTimeout = setTimeout(loadListRiwayatLayananJabfung, 2000);
              }
 
-             alert(id_layanan)
               if(id_layanan == 23){
                 setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
                 setTimeout(function() {$("#modalUbahSuket").trigger( "click" );}, 1000);
                 const myTimeout = setTimeout(loadListRiwayatSuratPidana, 2000);
+             }
+
+               if(id_layanan == 35){
+                setTimeout(function() {$("#modalUbahSp").trigger( "click" );}, 1000);
+                setTimeout(function() {$("#modalUbahSuket").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatCpnsPns, 2000);
              }
 
            } else {

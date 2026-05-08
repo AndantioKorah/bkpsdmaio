@@ -699,6 +699,13 @@ function formatCurrencyWithoutRpNew($data, $decimal = 2)
     return $rs;
 }
 
+function cekWaktuKerja($max = 0){
+    $CI = &get_instance();
+    $CI->load->model('general/M_General', 'general');
+
+    return $CI->general->cekWaktuKerja($max);
+}
+
 function formatCurrencyWithoutRpWithDecimal($data, $decimal = 2)
 {
     return number_format($data, $decimal, ",", ".");
@@ -1911,37 +1918,39 @@ function pemetaanTalenta($nilaix,$nilaiy){
     $helper = &get_instance();
     $helper->load->model('simata/M_Simata', 'simata');
     $list_interval = $helper->simata->getListIntervalPotensial();
+    $list_interval_k = $helper->simata->getListIntervalKinerja();
+
 
     
     $hasil = null;
     $badge = null;
-    if($nilaix >= 77 && $nilaiy >= 85) {
-        $hasil = "IX";
+    if($nilaix >= $list_interval[0]['dari'] && $nilaiy >= $list_interval_k[0]['dari']) {
+        $hasil = "9";
        } 
-       if($nilaix >= 77 && $nilaiy >= 70 && $nilaiy < 85) {
+       if($nilaix >= $list_interval[0]['dari'] && $nilaiy >= $list_interval_k[1]['dari'] && $nilaiy < $list_interval_k[0]['dari']) {
         // print_r($nilaix."-".$nilaiy.",");
-        $hasil = "VIII";
+        $hasil = "8";
        }
-       if($nilaix >= 68 && $nilaix < 77 && $nilaiy >= 85) {
-        $hasil = "VII";
+       if($nilaix >= $list_interval[1]['dari'] && $nilaix < $list_interval[0]['dari'] && $nilaiy >= $list_interval_k[0]['dari']) {
+        $hasil = "7";
        } 
-      if($nilaix >= 77 && $nilaiy < 70) {
-        $hasil = "VI";
+      if($nilaix >= $list_interval[0]['dari'] && $nilaiy < $list_interval_k[1]['dari']) {
+        $hasil = "6";
        } 
-       if($nilaix >= 68 && $nilaix < 77 && $nilaiy >= 70 && $nilaiy < 85) {
-        $hasil = "V";
+       if($nilaix >= $list_interval[1]['dari'] && $nilaix < $list_interval[0]['dari'] && $nilaiy >= $list_interval_k[1]['dari'] && $nilaiy < $list_interval_k[0]['dari']) {
+        $hasil = "5";
       } 
-      if($nilaix < 68 && $nilaiy >= 85) {
-        $hasil = "IV";
+      if($nilaix < $list_interval[1]['dari'] && $nilaiy >= $list_interval_k[0]['dari']) {
+        $hasil = "4";
       } 
-      if($nilaix >= 68 && $nilaix < 77 && $nilaiy < 70) {
-        $hasil = "III";
+      if($nilaix >= $list_interval[1]['dari'] && $nilaix < $list_interval[0]['dari'] && $nilaiy < $list_interval_k[1]['dari']) {
+        $hasil = "3";
       }
-      if($nilaix < 68 && $nilaiy >= 70 && $nilaiy < 85) {
-        $hasil = "II";
+      if($nilaix < $list_interval[1]['dari'] && $nilaiy >= $list_interval_k[1]['dari'] && $nilaiy < $list_interval_k[0]['dari']) {
+        $hasil = "2";
       }
-      if($nilaix < 68 && $nilaiy < 70) {
-        $hasil = "I";
+      if($nilaix < $list_interval[1]['dari'] && $nilaiy < $list_interval_k[1]['dari']) {
+        $hasil = "1";
       }  
 
     return $hasil;
@@ -1951,19 +1960,22 @@ function rekomendasi($nilaix,$nilaiy){
     $helper = &get_instance();
     $helper->load->model('simata/M_Simata', 'simata');
     $list_interval = $helper->simata->getListIntervalPotensial();
-    // dd($list_interval[0]['dari']);
+    $list_interval_k = $helper->simata->getListIntervalKinerja();
 
-    
+    // dd($list_interval[2]['dari']);
+
+    $rekom = null;
     $hasil = null;
     $badge = null;
-    if($nilaix >= $list_interval[0]['dari'] && $nilaiy >= 85) {
+    if($nilaix >= $list_interval[0]['dari'] && $nilaiy >= $list_interval_k[0]['dari']) {
+        
         $hasil = "IX";
         $rekom = "1. Dipromosikan dan dipertahankan<br>
         2. Masuk Kelompok Rencana Suksesi
         Instansi/Nasional<br>
         3. Penghargaan";
        } 
-       if($nilaix >= 77 && $nilaiy >= 70 && $nilaiy < 85) {
+       if($nilaix >= $list_interval[0]['dari'] && $nilaiy >=  $list_interval_k[1]['dari'] && $nilaiy <  $list_interval_k[0]['dari']) {
         // print_r($nilaix."-".$nilaiy.",");
         $hasil = "VIII";
         $rekom = "1. Dipertahankan<br>
@@ -1972,7 +1984,7 @@ function rekomendasi($nilaix,$nilaiy){
         3. Rotasi/Perluasan jabatan<br>
         4. Bimbingan kinerja";
        }
-       if($nilaix >= 68 && $nilaix < 77 && $nilaiy >= 85) {
+       if($nilaix >= $list_interval[1]['dari'] && $nilaix < $list_interval[0]['dari'] && $nilaiy >=  $list_interval_k[0]['dari']) {
         $hasil = "VII";
         $rekom = "1. Dipertahankan <br>
         2. Masuk Kelompok Rencana Suksesi 
@@ -1981,39 +1993,39 @@ function rekomendasi($nilaix,$nilaiy){
         4. Pengembangan kompetensi <br>
         5. Tugas belajar"; 
        } 
-      if($nilaix >= 77 && $nilaiy < 70) {
+      if($nilaix >= $list_interval[0]['dari'] && $nilaiy <  $list_interval_k[1]['dari']) {
         $hasil = "VI";
         $rekom = "1. Penempatan yang sesuai<br>
         2. Bimbingan kinerja<br>
         3. Konseling kinerja
         ";
        } 
-       if($nilaix >= 68 && $nilaix < 77 && $nilaiy >= 70 && $nilaiy < 85) {
+       if($nilaix >= $list_interval[1]['dari'] && $nilaix < $list_interval[0]['dari'] && $nilaiy >=  $list_interval_k[1]['dari'] && $nilaiy <  $list_interval_k[0]['dari']) {
         $hasil = "V";
         $rekom = "1. Penempatan yang sesuai<br>
         2. Bimbingan kinerja<br>
         3. Pengembangan kompetensi";
       } 
-      if($nilaix < 68 && $nilaiy >= 85) {
+      if($nilaix < $list_interval[1]['dari'] && $nilaiy >= $list_interval_k[0]['dari']) {
         $hasil = "IV";
         $rekom = "1. Rotasi<br>
         2. Pengembangan kompetensi";
       } 
-      if($nilaix >= 68 && $nilaix < 77 && $nilaiy < 70) {
+      if($nilaix >= $list_interval[1]['dari'] && $nilaix < $list_interval[0]['dari'] && $nilaiy <  $list_interval_k[1]['dari']) {
         $hasil = "III";
         $rekom = "1. Bimbingan kinerja<br>
         2. Konseling kinerja<br>
         3. Pengembangan kompetensi<br>
         4. Penempatan yang sesuai";
       }
-      if($nilaix < 68 && $nilaiy >= 70 && $nilaiy < 85) {
+      if($nilaix < $list_interval[1]['dari'] && $nilaiy >= $list_interval_k[1]['dari'] && $nilaiy <  $list_interval_k[0]['dari']) {
         $hasil = "II";
         $rekom = "1. Bimbingan kinerja<br>
         2. Pengembangan kompetensi<br>
         3. Penempatan yang sesuai
         ";
       }
-      if($nilaix < 68 && $nilaiy < 70) {
+      if($nilaix < $list_interval[1]['dari'] && $nilaiy <  $list_interval_k[1]['dari']) {
         $hasil = "I";
         $rekom = "Diproses sesuai ketentuan peraturan
         perundangan";
@@ -2072,9 +2084,9 @@ function validateToken($token, $publicKey){
     $expl = explode(";", $decrypted);
 
     // cek jika token belum kadaluarsa
-    $tokenDate = new DateTime($expl[0]);
-    $expireDate = (new DateTime())->modify('-5 minutes');
-    if($tokenDate < $expireDate){
+    $nowDate = new DateTime();
+    $expireDate = (new DateTime($expl[0]))->modify('+5 minutes');
+    if($nowDate > $expireDate){
         $helper->response([
             'code' => RC_EXPIRED_TOKEN['rc_code'],
             'status' => false, 
@@ -2098,9 +2110,25 @@ function validateToken($token, $publicKey){
     return $decrypted;
 }
 
-function validateParameter($requestedParameter){
+function returnResponse($RC, $status, $data, $url, $request){
     $helper = &get_instance();
-    $param = $helper->input->post();        
+    $helper->load->model('user/M_User', 'm_user');
+
+    $response = [
+        'code' => $RC['rc_code'],
+        'status' => $status, 
+        'message' => $RC['message'],
+        'data' => $data
+    ];
+
+    $helper->user->logApiSiladen($url, $request, $response);
+
+    $helper->response($response, $RC['code']); 
+}
+
+function validateParameter($requestedParameter = null){
+    $helper = &get_instance();
+    $param = $helper->post();        
     if($param){
         $requestedParameter[] = "token";
         $requestedParameter[] = "publicKey";

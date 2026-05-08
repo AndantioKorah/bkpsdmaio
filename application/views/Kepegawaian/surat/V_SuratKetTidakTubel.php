@@ -97,11 +97,11 @@
 			}
 		?>
 		<p class="judul" style="margin-top:5px;text-align: center;"><u>SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS</u><br></p>
-		<p style="margin-left:195px;">Nomor :  ${nomor_naskah}</p>
+		<p style="margin-left:195px;">Nomor :  <?= $ns;?> </p>
 	
 
-	<p>Yang nama bertanda-tangan dibawah ini :</p>
-	<table style="margin-left:50px;width:100%;" border="0">
+	<p>&nbsp;Yang bertanda-tangan dibawah ini :</p>
+	<table style="width:100%;" border="0">
 		<tr>
 			<td style="width:25%;">Nama</td>
 			<td style="width:5%;text-align: center;">:</td>
@@ -112,30 +112,30 @@
 			<td style="text-align: center;">:</td>
 			<td><?= $kaban['nipbaru'];?></td>
 		</tr>
-		<tr>
+		<!-- <tr>
 			<td>Pangkat, Gol/Ruang</td>
 			<td style="text-align: center;">:</td>
 			<td><?= $kaban['nm_pangkat'];?></td>
-		</tr>
+		</tr> -->
 		<tr>
 			<td valign="top">Jabatan</td>
 			<td valign="top" style="text-align: center;">:</td>
 			<td><?= $kaban['nama_jabatan'];?></td>
 		</tr>
-        <tr>
+        <!-- <tr>
 			<td valign="top">Unit Kerja</td>
 			<td valign="top" style="text-align: center;">:</td>
 			<td><?= $kaban['nm_unitkerja'];?></td>
-		</tr>
+		</tr> -->
 
 	</table>
-
+	<br>
 
 	<span>
-		Dengan ini menerangkan bahwa :
+		&nbsp;Dengan ini menerangkan bahwa :
 	</span>
 
-	<table style="margin-left:50px;width:100%;" border="0">
+	<table style="width:100%;" border="0">
 		<tr>
 			<td style="width:25%;">Nama</td>
 			<td style="width:5%;text-align: center;">:</td>
@@ -154,15 +154,11 @@
 			<td><?= $profil_pegawai['nm_pangkat'];?></td>
 		</tr>
 		<tr>
-			<td>Jabatan</td>
-			<td style="text-align: center;">:</td>
-			<td><?= $profil_pegawai['nama_jabatan'];?></td>
+			<td valign="top">Jabatan</td>
+			<td valign="top" style="text-align: center;">:</td>
+			<td valign="top"><?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Pemerintah Kota Manado</td>
 		</tr>
-		<tr>
-			<td>Unit Kerja</td>
-			<td style="text-align: center;">:</td>
-			<td><?= $profil_pegawai['nm_unitkerja'];?></td>
-		</tr>
+		
 		
 
 	</table>
@@ -170,11 +166,11 @@
 
 	<p class="justify" >
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adalah Benar Pegawai Negeri Sipil Kota Manado dan saat ini tidak sedang menjalani 
-        Tugas Belajar/Ikatan Dinas di Pemerintah Kota Manado.</p>
+        Tugas &nbsp;Belajar/Ikatan Dinas di Pemerintah Kota Manado.</p>
 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian surat keterangan dibuat untuk kelengkapan administrasi 
     <?php if($jenis_surat == 1){ ?>
-		pindah tugas dari Pemerintah Kota Manado ke <?=$instansi_tujuan;?>.
+		pindah tugas dari Pemerintah &nbsp;Kota Manado ke <?=$instansi_tujuan;?>.
 	<?php } else { ?>
         penyesuaian/inpassing.
 	<?php }  ?>
@@ -183,21 +179,18 @@
 
      </p>
 
-	<table border="0" style="width:100%;margin-top:140px;">
+	<table border="0" style="width:100%;margin-top:100px;">
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center"  style="width:38%;text-align: left;">Manado, ${tanggal_naskah}<br>a.n. WALI KOTA
-				MANADO<br>Kepala Badan,</td>
+			<td class="center"  style="width:38%;text-align: left;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br><br></td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="width:38%;height:130px;text-align: left;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${ttd_pengirim}</td>
+			<td class="center" style="width:38%;height:130px;text-align: left;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="width:38%;text-align: left;"> ${nama_pengirim}<br>
-Pembina<br>
-NIP. ${nip_pengirim}</td>
+			<td class="center" style="width:38%;text-align: left;"> </td>
 		</tr>
 	</table>
 
@@ -224,7 +217,7 @@ NIP. ${nip_pengirim}</td>
 	<!-- <img src="<?=base_url();?>assets/images/footer.png" alt=""> -->
 	</div>
 	<?php
-        // $this->load->view('adminkit/partials/V_FooterBsre');
+        $this->load->view('adminkit/partials/V_FooterBsre');
     ?>
 
 	<!-- <span style="margin-top:900px;">

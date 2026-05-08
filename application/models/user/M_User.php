@@ -11,6 +11,43 @@
         public function insert($tablename, $data){
             $this->db->insert($tablename, $data);
         }
+        
+        // API
+        public function getUserAdminBkpsdmWeb($username, $password){
+            $password = $this->general_library->encrypt($username, $password);
+            $data = $this->db->select('a.id, d.nipbaru_ws, d.gelar1, d.gelar2, d.nama, e.nama_jabatan, d.fotopeg')
+                            ->from('m_user a')
+                            ->join('t_hak_akses b', 'a.id = b.id_m_user AND b.flag_active = 1')
+                            ->join('m_hak_akses c', 'b.id_m_hak_akses = c.id')
+                            ->join('db_pegawai.pegawai d', 'a.username = d.nipbaru_ws')
+                            ->join('db_pegawai.jabatan e', 'd.jabatan = e.id_jabatanpeg')
+                            ->where('c.meta_name', 'admin_bkpsdm_web')
+                            ->where('a.flag_active', 1)
+                            ->where('a.username', $username)
+                            ->where('a.password', $password)
+                            ->get()->row_array();
+            if($data){
+                $data['nama_pegawai_full'] = getNamaPegawaiFull($data);
+                $data['nama_pegawai'] = getNamaPegawaiFull($data, 0, 1);
+                if(file_exists("assets/fotopeg/".$data['fotopeg'])){
+                    $data['fotopeg'] = convertToBase64('assets/fotopeg/'.$data['fotopeg']);
+                } else {
+                    $data['fotopeg'] = null;
+                }
+            }
+
+            return $data;
+        }
+
+        public function logApiSiladen($url, $request, $response){
+            $this->db->insert('t_log_api_siladen', [
+                'url' => $url,
+                'request' => json_encode($request),
+                'response' => json_encode($response),
+            ]);
+        }
+
+        // end of API
 
         public function getUnitKerjaKecamatanDiknas($flag_rekap_tpp = 1){
             $result = $this->db->select('id_unitkerjamaster as id_unitkerja, concat("Sekolah ", nm_unitkerjamaster) as nm_unitkerja')
@@ -1626,8 +1663,14 @@
             ->from('db_pegawai.pegawai a')
             ->where('a.id_peg', $id_pegawai);
             return $this->db->get()->result_array();
-           
-
+        }
+        
+        public function getIdUnitKerjaMaster($id_unitkerja){
+            $this->db->select('a.id_unitkerjaMaster')
+            ->from('db_pegawai.unitkerja a')
+            ->where('a.id_unitkerja', $id_unitkerja);
+            $result = $this->db->get()->row_array();
+            return $result['id_unitkerjaMaster'];
         }
 
         public function getIDPegawaiByNip($nip){
@@ -1835,11 +1878,12 @@
 
             //get jam kerja
             $jskpd = 1;
-            if(in_array($unitkerja['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS)){
-                $jskpd = 2;
-            } else if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
+            if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){
                 $jskpd = 4;
+            } else if(in_array($unitkerja['id_unitkerja'], LIST_UNIT_KERJA_KHUSUS)){
+                $jskpd = 2;
             }
+            
             $jam_kerja = $this->db->select('*')
                     ->from('t_jam_kerja')
                     ->where('id_m_jenis_skpd', $jskpd)
@@ -1847,7 +1891,7 @@
                     ->where('flag_active', 1)
                     ->get()->row_array();
             $result['jam_kerja'] = $jam_kerja;
-
+            
             //cek jika ada jam kerja event
             $jam_kerja_event = $this->db->select('*')
                     ->from('t_jam_kerja')
@@ -2516,7 +2560,7 @@
             // dd($data);
             $result = null;
             $flag_use_masa_kerja = 0;
-            $this->db->select('a.npwp,m.nama_kelurahan,n.nama_kecamatan,o.nama_kabupaten_kota,a.tptlahir,nm_sk,k.nm_tktpendidikan,a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
+            $this->db->select('a.jk,a.npwp,m.nama_kelurahan,n.nama_kecamatan,o.nama_kabupaten_kota,a.tptlahir,nm_sk,k.nm_tktpendidikan,a.nik,a.email,a.handphone,a.tmtcpns,j.nama_bidang,a.id_peg,e.id_pangkat,c.jenis_jabatan,a.tgllahir,a.gelar1, a.gelar2, a.nama, c.nama_jabatan, b.nm_unitkerja, c.eselon, d.nm_agama, e.nm_pangkat,
                     a.nipbaru_ws, f.nm_statuspeg, a.statuspeg, f.id_statuspeg, a.tmtpangkat, a.tmtjabatan, a.id_m_status_pegawai, k.jenis as jenis_plt_plh, k.id_jabatan as id_jabatan_plt_plh, a.jabatan,
                     h.nama_status_pegawai, f.nm_statuspeg')
                     ->from('db_pegawai.pegawai a')
@@ -2655,6 +2699,10 @@
                 $this->db->where_in('e.id_pangkat', $golongan);
             }
 
+            if(isset($data['eselon'])){
+                $this->db->where_in('g.id_eselon', $data['eselon']);
+            }
+
             $result = $this->db->get()->result_array();
 
             $id_pangkat_ahli_madya = [41, 42, 43];
@@ -2663,6 +2711,7 @@
             if(isset($data['satyalencana'])){
                 $flag_use_masa_kerja = 1;
                 $masa_kerja_satyalencana = $data['satyalencana'][0];
+               
                 $batas_atas = floatval($masa_kerja_satyalencana) + 10;
                 if($batas_atas > 30){
                     $batas_atas = 100;
@@ -2680,9 +2729,34 @@
                         if($explode_masa_kerja[0] != '' && $explode_masa_kerja[0]){
                             if(floatval($explode_masa_kerja[0] >= $masa_kerja_satyalencana && floatval($explode_masa_kerja[0]) < $batas_atas)){
                                 if(!isset($result[$t['nipbaru_ws']])){
+
+
+                                  $result[$t['nipbaru_ws']] = $t;
+                                    $result[$t['nipbaru_ws']]['masa_kerja'] = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun', 'bulan']);
+                                   
+                                     if($masa_kerja_satyalencana == 10){
+                                        $sty = 1;
+                                     } else {
+                                        $sty = 2;
+                                     }
+                                    $this->db->select('a.gambarsk')
+                                                    ->from('db_pegawai.pegpenghargaan a')
+                                                    ->where('a.flag_active', 1)
+                                                    ->where('a.id_m_satyalencana',$sty)
+                                                    ->where('a.id_pegawai', $t['id_peg'])
+                                                    ->order_by('a.id', 'desc')
+                                                    ->limit(1);
+
+                                    $dataSatya = $this->db->get()->row_array();
+                                
                                     $result[$t['nipbaru_ws']] = $t;
                                     $result[$t['nipbaru_ws']]['masa_kerja'] = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun', 'bulan']);
-                                }
+                                    if($dataSatya){
+                                    $result[$t['nipbaru_ws']]['gambarsk_satya'] = $dataSatya['gambarsk'];
+                                    }
+                                    
+                                   
+                                    }
                             }
                         }
                        
@@ -2828,9 +2902,9 @@
         }
 
         public function cekKenegaraan2Custom(){
-            $tanggal = 17;
-            $bulan = 8;
-            $tahun = 2025;
+            $tanggal = 1;
+            $bulan = 4;
+            $tahun = 2026;
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -2952,9 +3026,9 @@
         }
 
         public function cekKenegaraanCustom(){
-            $tanggal = 16;
-            $bulan = 8;
-            $tahun = 2025;
+            $tanggal = 1;
+            $bulan = 4;
+            $tahun = 2026;
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -3037,6 +3111,74 @@
             }
         }
 
+        public function cekDispen(){
+            $tanggal = 8;
+            $bulan = 4;
+            $tahun = 2026;
+            $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
+            $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
+            $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
+
+            $namaDispen = "PASKAH NASIONAL 2026";
+            $namaMetaData = "PASKAH_NASIONAL";
+            
+            $list_pegawai = $this->db->select('b.id as user_id, a.nipbaru_ws, a.nama, b.id, c.nm_unitkerja, a.handphone, a.nama, a.gelar1, a.gelar2, d.masuk, d.pulang')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('m_user b', 'a.nipbaru_ws = b.username')
+                            ->join('db_pegawai.unitkerja c', 'a.skpd = c.id_unitkerja')
+                            ->join('db_sip.absen d', 'b.id = d.user_id')
+                            ->where('b.flag_active', 1)
+                            ->where('a.id_m_status_pegawai', 1)
+                            ->where_in('a.agama', [1, 2]) // khusus pegawai kristen
+                            ->where('d.tgl', $dateLengkap)
+                            ->where('d.aktivitas', 2)
+                            ->get()->result_array();
+
+            $list_dokpen = $this->db->select('id_m_user, keterangan')
+                                ->from('t_dokumen_pendukung')
+                                ->where('tanggal', $tanggal)
+                                ->where('bulan', $bulan)
+                                ->where('tahun', $tahun)
+                                ->where('flag_active', 1)
+                                ->where('status', 2)
+                                ->get()->result_array();
+
+            foreach($list_dokpen as $ld){
+                $dokpen[$ld['id_m_user']] = $ld;
+            }
+            
+            if($list_pegawai){
+                $allDokpen = null;
+                foreach($list_pegawai as $lp){
+                    if(!isset($dokpen[$lp['user_id']])){ // ada dokpen di tanggal sama
+                        if($lp['pulang'] != null){ // absen 2x, masuk dan pulang
+                            $keterangan_sistem = ucwords("MENGIKUTI ".$namaDispen);
+                            $dokpenDispen = null;
+                            $dokpenDispen['id_m_user'] = $lp['user_id'];
+                            $dokpenDispen['tanggal'] = $tanggal;
+                            $dokpenDispen['bulan'] = $bulan;
+                            $dokpenDispen['tahun'] = $tahun;
+                            $dokpenDispen['id_m_jenis_disiplin_kerja'] = 15;
+                            $dokpenDispen['keterangan'] = "Dispensasi";
+                            $dokpenDispen['pengurangan'] = "0";
+                            $dokpenDispen['status'] = "2";
+                            $dokpenDispen['id_m_user_verif'] = "0";
+                            $dokpenDispen['random_string'] = generateRandomString();
+                            $dokpenDispen['flag_fix_tanggal'] = 0;
+                            $dokpenDispen['flag_fix_jenis_disiplin'] = 0;
+                            $dokpenDispen['flag_fix_dokumen_upload'] = 0;
+                            $dokpenDispen['keterangan_sistem'] = $keterangan_sistem;
+                            
+                            $this->db->insert('t_dokumen_pendukung', $dokpenDispen);
+                            $allDokpen[] = $dokpenDispen;
+                        }
+                    }
+                }   
+            }
+
+            dd($allDokpen);
+        }
+
         public function hapusKenegaraan(){
             $tanggal = 23;
             $bulan = 9;
@@ -3080,10 +3222,10 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 10;
-            $bulan = 11;
-            $tahun = 2025;
-            $namaKegiatan = "Apel Perdana Bulan November Tahun 2025"; 
+            $tanggal = 1;
+            $bulan = 4;
+            $tahun = 2026;
+            $namaKegiatan = "Apel Perdana Bulan April Tahun 2026"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -3238,13 +3380,15 @@
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
-                    // $this->db->insert('t_doku=men_pendukung', $dokpenKenegaraan);
+                    // $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
 
-                    $sendWa['sendTo'] = convertPhoneNumber($k['handphone']);
-                    $sendWa['message'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($k).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran *KENEGARAAN* dengan keterangan: *".$k['keterangan_sistem']."*";
-                    $sendWa['flag_prioritas'] = 0;
-                    $sendWa['type'] = "text";
-                    // $this->db->insert('t_cron_wa', $sendWa);
+                    $notif['id_m_user'] = $k['user_id'];
+                    $notif['pesan'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($k).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran KENEGARAAN dengan keterangan: ".$k['keterangan_sistem']."";
+                    $notif['judul_notifikasi'] = "Pelanggaran Kenegaraan";
+                    $notif['jenis_notifikasi'] = "pelanggaran_kenegaraan";
+                    $notif['icon_color'] = "red";
+                    $notif['fa_icon'] = "fa fa-times";
+                    // $this->db->insert('t_notifikasi', $notif);
 
                     // echo "input ".$k['user_id']."\n <br>";
                 } else {
@@ -4111,10 +4255,11 @@
             }
         }
 
-        public function startKonsultasi(){
+        public function startKonsultasi($id_m_layanan_konsul = 0){
             $rs = [
                 'code' => 0,
-                'message' => null
+                'message' => null,
+                'id' => null
             ];
             
             $existsNotDone = $this->db->select('*')
@@ -4124,8 +4269,9 @@
                         ->where('flag_done', 0)
                         ->get()->row_array();
             if($existsNotDone){
-                $rs['code'] = 1;
+                $rs['code'] = 2;
                 $rs['message'] = "Tidak dapat memulai Sesi Konsultasi baru jika masih ada Sesi Konsultasi yang sedang berlangsung.";
+                $rs['id'] = $existsNotDone['id'];
                 return $rs;
             }
 
@@ -4136,13 +4282,15 @@
                         ->where('flag_rating', 0)
                         ->get()->row_array();
             if($existsNotRating){
-                $rs['code'] = 1;
+                $rs['code'] = 3;
                 $rs['message'] = "Tidak dapat memulai Sesi Konsultasi baru karena ada Sesi Konsultasi yang belum diberikan penilaian.";
+                $rs['id'] = $existsNotRating['id'];
                 return $rs;
             }
 
             $this->db->insert('t_live_chat', [
                 'id_m_user' => $this->general_library->getId(),
+                'id_m_layanan_konsul' => $id_m_layanan_konsul,
                 'chat_id' => generateRandomString(7)
             ]);
             $rs['id'] = $this->db->insert_id();
@@ -4154,7 +4302,8 @@
             $listChat = null;
             
             $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
-                        d.nipbaru_ws, h.gelar1 as gelar1_assign, h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign')
+                        d.nipbaru_ws, h.gelar1 as gelar1_assign, h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan,
+                        b.is_image, b.is_file')
                         ->from('t_live_chat a')
                         ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
                         ->join('m_user c', 'a.id_m_user = c.id')
@@ -4163,14 +4312,19 @@
                         ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
                         ->join('m_user g', 'a.id_m_user_assigned = g.id', 'left')
                         ->join('db_pegawai.pegawai h', 'g.username = h.nipbaru_ws', 'left')
+                        ->join('m_layanan_konsul i', 'a.id_m_layanan_konsul = i.id', 'left')
                         // ->where('a.id_m_user', $this->general_library->getId())
                         ->where('a.flag_active', 1)
                         ->where('c.flag_active', 1)
-                        ->order_by('a.created_date', 'desc')
+                        ->order_by('a.flag_done', 'asc')
+                        ->order_by('a.done_date', 'desc')
+                        ->order_by('b.created_date', 'desc')
                         ->group_by('a.id');
                         
             if(!$this->general_library->isHakAkses('admin_live_chat_konsultasi')){
-                $this->db->where('a.id_m_user', $this->general_library->getId());
+                $this->db->where("(a.id_m_user = ".$this->general_library->getId()." OR id_m_user_assigned = ".$this->general_library->getId().")");
+            } else {
+                $this->db->order_by('a.flag_read_admin', 'asc');
             }
 
             $listChat = $this->db->get()->result_array();
@@ -4179,21 +4333,24 @@
         }       
 
         public function reloadChatContainer($id){
-            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws')
+            $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws, g.nama_layanan')
                             ->from('t_live_chat a')
                             ->join('m_user c', 'a.id_m_user = c.id')
                             ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
                             ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
                             ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                            ->join('m_layanan_konsul g', 'a.id_m_layanan_konsul = g.id')
                             ->where('a.id', $id)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
 
-            $detail = $this->db->select('*')
-                            ->from('t_live_chat_detail')
-                            ->where('flag_active', 1)
-                            ->where('id_t_live_chat', $id)
-                            ->order_by('created_date', 'asc')
+            $detail = $this->db->select('a.*, c.gelar1, c.nama, c.gelar2')
+                            ->from('t_live_chat_detail a')
+                            ->join('m_user b', 'a.id_m_user_sender = b.id', 'left')
+                            ->join('db_pegawai.pegawai c', 'c.nipbaru_ws = b.username', 'left')
+                            ->where('a.flag_active', 1)
+                            ->where('a.id_t_live_chat', $id)
+                            ->order_by('a.created_date', 'asc')
                             ->get()->result_array();
 
             return [
@@ -4204,7 +4361,7 @@
 
         public function openKonsultasiDetail($id){
             $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws, h.gelar1 as gelar1_assign,
-                            h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign')
+                            h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan')
                             ->from('t_live_chat a')
                             ->join('m_user c', 'a.id_m_user = c.id')
                             ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
@@ -4212,6 +4369,7 @@
                             ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
                             ->join('m_user g', 'a.id_m_user_assigned = g.id', 'left')
                             ->join('db_pegawai.pegawai h', 'g.username = h.nipbaru_ws', 'left')
+                            ->join('m_layanan_konsul i', 'a.id_m_layanan_konsul = i.id')
                             ->where('a.id', $id)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
@@ -4263,7 +4421,7 @@
             ];
         }
 
-        public function sendMessageKonsultasi($data){
+        public function sendMessageKonsultasi($data, $id){
             $rs = [
                 'code' => 0,
                 'message' => null
@@ -4271,9 +4429,13 @@
 
             $this->db->trans_begin();
             
-            $data['id_t_live_chat'] = $data['id'];
-            unset($data['id']);
+            $data['id_t_live_chat'] = $id;
             
+            $chat = $this->db->select('*')
+                            ->from('t_live_chat')
+                            ->where('id', $data['id_t_live_chat'])
+                            ->get()->row_array();
+
             $updateChat = null;
             if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                 || $this->general_library->isProgrammer()
@@ -4282,6 +4444,34 @@
                 $updateChat['flag_read_pegawai'] = 0;
             } else {
                 $updateChat['flag_read_admin'] = 0;
+            }
+
+            $foldername = 'arsiplivechat/';
+            if($_FILES['file']['name'] != ""){
+                $explode = explode(".", $_FILES['file']['name']);
+                $ext = $explode[count($explode) - 1];
+                $config['upload_path'] = "./".$foldername;
+                $config['file_name'] = $data['id_t_live_chat'].generateRandomString(10, 0, null).date('ymdhis').".".$ext;
+                $config['overwrite'] = TRUE;
+                $config['allowed_types'] = ['pdf', 'jpg', 'png', 'jpeg'];
+
+                $data['attachment_size'] = intval($_FILES['file']['size']);
+                if($_FILES['file']['type'] == "application/pdf"){
+                    $data['is_file'] = 1;
+                } else {
+                    $data['is_image'] = 1;
+                }
+                $data['url_attachment'] = $foldername.$config['file_name'];
+                $data['attachment_name'] = $config['file_name'];
+                $data['id_m_user_sender'] = $this->general_library->getId();
+
+                $this->load->library('upload', $config);
+                if (!$this->upload->do_upload('file')) {
+                    $rs['code'] = 1;
+                    $rs['message'] = strip_tags($this->upload->display_errors());
+                    $this->db->trans_rollback();
+                    return $rs;
+                }
             }
 
             $this->db->insert('t_live_chat_detail', $data);
@@ -4310,10 +4500,22 @@
 
             $this->db->trans_begin();
             
+            $chats = $this->db->select('*')
+                            ->from('t_live_chat_detail')
+                            ->where('flag_active', 1)
+                            ->where('id_t_live_chat', $id)
+                            ->where('is_sender_admin', 1)
+                            ->get()->row_array();
+            if($chats != null){
+                $rs = [
+                    'code' => 1,
+                ];
+                return $rs;
+            }
+
             $this->db->where('id', $id)
                     ->update('t_live_chat', [
-                        'flag_done' => 1,
-                        'done_date' => date('Y-m-d H:i:s'),
+                        'flag_active' => 0,
                         'updated_by' => $this->general_library->getId()
                     ]);
 
@@ -4434,6 +4636,43 @@
             }
 
             return $result;
+        }
+
+        public function submitGantiJenisLayanan($id_t_live_chat = 0, $id_m_layanan_konsul){
+            $res = [
+                'code' => 0,
+                'message' => "ok",
+                'id' => $id_t_live_chat
+            ];
+
+            if($id_t_live_chat == 0){
+                // baru mulai konsul
+                $insert = $this->startKonsultasi($id_m_layanan_konsul);
+                if($insert['code'] == 0){
+                    $res['id'] = $insert['id'];
+                } else {
+                    $res = $insert;
+                }
+            } else {
+                $mKonsul = $this->db->select('*')
+                                    ->from('m_layanan_konsul')
+                                    ->where('id', $id_m_layanan_konsul)
+                                    ->get()->row_array();
+
+                $this->db->where('id', $id_t_live_chat)
+                        ->update('t_live_chat', [
+                            'id_m_layanan_konsul' => $id_m_layanan_konsul,
+                            'updated_by' => $this->general_library->getId()
+                        ]);
+
+                $this->db->insert('t_live_chat_detail', [
+                    'id_t_live_chat' => $id_t_live_chat,
+                    'pesan' => 'Admin telah mengganti Jenis Layanan Konsul menjadi '.$mKonsul['nama_layanan'],
+                    'is_sistem' => 1,
+                ]);
+            }
+
+            return $res;
         }
 
         public function cronHashFileBangkom(){

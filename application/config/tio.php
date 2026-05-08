@@ -11,6 +11,7 @@ $route['master/lock-tpp'] = 'master/C_Master/lockTpp';
 $route['master/hari-libur'] = 'master/C_Master/hariLibur';
 $route['master/jam-kerja'] = 'master/C_Master/jamKerja';
 $route['master/jenis-layanan'] = 'master/C_Master/jenisLayanan';
+$route['master/pengecualian-bangkom'] = 'master/C_Master/exceptBangkom';
 $route['pesan/send/individu'] = 'message/C_Message/individuMessage';
 $route['pesan/send/bulk'] = 'message/C_Message/bulkMessage';
 $route['master/bidang'] = 'master/C_Master/masterBidang';
@@ -138,6 +139,7 @@ $route['admin/monitoring/event/absen'] = 'dashboard/C_Dashboard/dashboardWalikot
 
 //internal API
 $route['api/get-data-tpp'] = 'api/C_ApiLayanan/getDataTpp';
+$route['api/bkpsdmweb/admin/login'] = 'api/C_ApiLayanan/loginAdmin';
 
 //BKPSDM Bacirita
 $route['bkpsdm-bacirita/kegiatan'] = 'bacirita/C_Bacirita/manageKegiatan';

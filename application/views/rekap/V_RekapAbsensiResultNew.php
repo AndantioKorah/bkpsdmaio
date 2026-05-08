@@ -1,6 +1,6 @@
 <?php if(isset($result['code']) && $result['code'] == 1){ ?>
     <div class="col-lg-12 text-center">
-        <h4 style="color: red; font-style: italic;">Dokumen TPP belum dapat didownload karena data Bangkom belum lengkap</h4>
+        <h4 style="color: red; font-style: italic;">Dokumen belum dapat didownload karena data Bangkom belum lengkap</h4>
         <button href="#modal_cek_bangkom" data-toggle="modal" onclick="openListBangkomTpp()"
             class="btn-warning btn">Lihat Data Bangkom</button>
     </div>

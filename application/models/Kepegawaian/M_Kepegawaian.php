@@ -402,6 +402,7 @@ class M_Kepegawaian extends CI_Model
             || $this->general_library->isAdminAplikasi()
             || $this->general_library->isManajemenTalenta()
             || $this->general_library->isHakAkses('akses_profil_pegawai')
+            || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN
             ||  isKasubKepegawaian($this->general_library->getNamaJabatan())){
                 $username = $nip;
                 if(!$username){
@@ -3171,8 +3172,7 @@ public function submitVerifikasiDokumen(){
     $timestamp = strtotime($mydate);
     $tahun = date("Y", $timestamp);
     $bulansertifikat = date("m", $timestamp);
-
-
+   
     // if($this->general_library->isProgrammer()){
         // dd(base_url($datapost['file_path']));
         $base64 = convertToBase64(($datapost['file_path']));
@@ -3347,8 +3347,9 @@ public function submitVerifikasiDokumen(){
     } else {
         $this->db->trans_commit();
           if($datapost['jenis_dokumen'] == "diklat") {
-            //  $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+            if($tahun >= '2026'){
             $this->general->cronCheckBangkom($bulansertifikat,$tahun, $peg['nipbaru_ws']);
+            }
             }
 
     }
@@ -3994,6 +3995,12 @@ function getdatajab()
     $nama_skpd = $newSkpd[1];
     $jnsfung = $this->input->post('jnsfung');
 
+      $this->db->select('a.id_unitkerjaMaster')
+            ->from('db_pegawai.unitkerja a')
+            ->where('a.id_unitkerja', $id_skpd);
+            $uk_master = $this->db->get()->row_array();
+    
+
     if($id == "00"){
         $this->db->select('id_jabatanpeg, nama_jabatan');
         $this->db->where('jenis_jabatan', "Struktural");
@@ -4018,12 +4025,22 @@ function getdatajab()
             $fetched_records = $this->db->get('db_pegawai.jabatan');
             $datajab = $fetched_records->result_array();
         } else {
+            if($uk_master['id_unitkerjaMaster'] != '8020000') {
             $this->db->select('id_jabatanpeg, nama_jabatan');
             $this->db->where('jenis_jabatan', "JFU");
             $this->db->where('id_unitkerja', $id_skpd);
             $this->db->where('flag_active', 1);
             $fetched_records = $this->db->get('db_pegawai.jabatan');
             $datajab = $fetched_records->result_array();
+            } else {
+            $this->db->select('id_jabatanpeg, nama_jabatan');
+            $this->db->where('jenis_jabatan', "JFU");
+            $this->db->where('id_unitkerja', '9999001');
+            $this->db->where('flag_active', 1);
+            $fetched_records = $this->db->get('db_pegawai.jabatan');
+            $datajab = $fetched_records->result_array();
+            }
+           
         }
        
     }
@@ -6008,10 +6025,13 @@ public function submitEditJabatan(){
             $id_layanan[] = 27;
          }
 
-          if($this->general_library->isHakAkses('verifikasi_pengajuan_mutasi_pindah_masuk')){
+        if($this->general_library->isHakAkses('verifikasi_pengajuan_mutasi_pindah_masuk')){
             $id_layanan[] = 28;
         }
 
+        if($this->general_library->isHakAkses('verifikasi_cpns_pns')){
+            $id_layanan[] = 35;
+        }
 
         }
 
@@ -6028,6 +6048,9 @@ public function submitEditJabatan(){
         if($this->general_library->isHakAkses('admin_pengajuan_cuti')){
             $id_layanan[] = 34;
         }
+
+      
+
    
         $this->db->select('*, a.id as id_t_layanan, a.created_date as tanggal_pengajuan')
             ->join('db_efort.m_layanan as b', 'a.id_m_layanan = b.id')
@@ -11215,6 +11238,7 @@ public function getFileForKarisKarsu()
         ->where('a.flag_active', 1)
         ->where('a.jenisjabatan', 10)
         ->where('b.jenis_jabatan', "JFT")
+        ->where('a.statusjabatan', 1)
         ->order_by('a.tmtjabatan', 'desc')
         ->order_by('id', 'desc')
         ->limit(1);
@@ -11264,6 +11288,7 @@ public function getFileForKarisKarsu()
         ->where('a.flag_active', 1)
         ->where('a.jenisjabatan', 10)
         ->where('b.jenis_jabatan', "JFT")
+        ->where('a.statusjabatan', 1)
         ->order_by('a.tmtjabatan', 'desc')
         ->order_by('id', 'desc')
         ->limit(1);
@@ -11896,7 +11921,9 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 33);
             } else if($id_m_layanan == 34){ 
                 $this->db->where('a.id_m_layanan', 34);
-            }     else {
+            }  else if($id_m_layanan == 35){ 
+                $this->db->where('a.id_m_layanan', 35);
+            }      else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
 
@@ -12286,6 +12313,7 @@ public function getFileForVerifLayanan()
                 ->where('a.flag_active', 1)
                 ->where('a.jenisjabatan', "10")
                 ->where('b.jenis_jabatan', "JFT")
+                ->where('a.statusjabatan', 1)
                 ->where('a.status !=', 3)
                 ->order_by('a.tmtjabatan', 'desc')
                 ->limit(1);
@@ -12791,9 +12819,31 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "pengujian_kesehatan"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 36)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sertifikat_latsar"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegdiklat as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.jenjang_diklat', 10)
+                ->where('a.status', 2)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         }     else {
          return [''];
         }
+
+     
         
         
     }
@@ -12807,7 +12857,6 @@ public function getFileForVerifLayanan()
         $datapost = $this->input->post();
         $this->db->trans_begin();
        
-
           
         $id_pengajuan = $datapost['id_pengajuan'];
         $data["status"] = $datapost["status"];
@@ -12863,6 +12912,9 @@ public function getFileForVerifLayanan()
             }
             if(isset($datapost['ijazah'])){
                 $this->verifBerkas($datapost['ijazah'], "db_pegawai.pegpendidikan");
+            }
+            if(isset($datapost['sertifikat_latsar'])){
+                $this->verifBerkas($datapost['sertifikat_latsar'], "db_pegawai.pegdiklat");
             }
 
             
@@ -12921,6 +12973,9 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         } else if($dataPengajuan[0]['id_m_layanan'] == 34){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN CUTI BESAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Cuti Besar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = " Surat Keterangan / Pernyataan";
+        }  else if($dataPengajuan[0]['id_m_layanan'] == 35){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENGANGKATAN CPNS MENJADI PNS]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Pengangkatan CPNS menjadi PNS anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }
        
@@ -14319,7 +14374,10 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 34){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/cuti_besar';
-            }  else {
+            } else if($id_m_layanan == 35){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/cpns_pns';
+            }   else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
 
@@ -14605,11 +14663,14 @@ public function getFileForVerifLayanan()
             $target_dir	= './dokumen_layanan/mutasi_pindah_masuk/';
         } else if($id_m_layanan == 23){
             $target_dir	= './dokumen_layanan/suratpidanahukdis/';
-        }
-
+        } else if($id_m_layanan == 32){
+            $target_dir	= './dokumen_layanan/peninjauan_masa_kerja/';
+        } else if($id_m_layanan == 34){
+            $target_dir	= './dokumen_layanan/cuti_besar/';
+        } else if($id_m_layanan == 35){
+            $target_dir	= './dokumen_layanan/cpns_pns/';
+        }  
         
-        
-
 
         $this->db->trans_begin();
         $filename = str_replace(' ', '', $this->input->post('file_pengantar')); 
@@ -15404,12 +15465,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $data['id_m_user'] = $dataLayanan['id_m_user'];
             $data['created_by'] = $this->general_library->getId();
             if($dataPost['id_m_layanan'] == 23){
+                $id_m_jenis_layanan = 39;
                 if($dataPost['jenis'] == 1){
                 $data['keterangan'] = "Surat Pernyataan Tidak Pernah Dijatuhun Hukuman Disiplin Tingkat Sedang/Berat a.n. ".$dataLayanan['nama'] ;
                 } else {
                 $data['keterangan'] = "Surat Pernyataan Tidak Sedang Menjalani Proses Pidana Atau Pernah dipidana a.n. ".$dataLayanan['nama'] ;
                 }
             } else {
+            $id_m_jenis_layanan = 30;
             $data['keterangan'] = "Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas a.n. ".$dataLayanan['nama'] ;
             }
             $data['ds_code'] = "^";
@@ -15419,16 +15482,20 @@ public function checkListIjazahCpns($id, $id_pegawai){
             if($dataPost['id_m_layanan'] == 23){
             if($dataPost['jenis'] == 1){
                 $data['meta_view'] = "kepegawaian/surat/V_SuratHukdis2";
+                $perihal = "SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT a.n.".getNamaPegawaiFull($dataLayanan);
             } else {
                 $data['meta_view'] = "kepegawaian/surat/V_SuratPidana";
+                $perihal = "SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA a.n.".getNamaPegawaiFull($dataLayanan);
             }
             } else {
             $data['meta_view'] = "kepegawaian/surat/V_SuratKetTidakTubel";
+            $perihal = "SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS a.n.".getNamaPegawaiFull($dataLayanan);
             }
+
             $data['nama_kolom_ds'] = "";
             $data['url_ds'] = $url2;
             $data['batch_id'] = $batchId;
-            $data['id_m_jenis_layanan'] = 39;
+            $data['id_m_jenis_layanan'] = $id_m_jenis_layanan;
             $data['status'] = "Menunggu DS oleh ".$pegawai['atasan']['nama_jabatan'];
 
             $this->db->insert('t_usul_ds', $data);
@@ -15459,16 +15526,22 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
            
             $dataUpdate['id_t_usul_ds'] = $id_t_usul_ds;
+             if($dataPost['id_m_layanan'] == 23){
             $dataUpdate['nomor_surat'.$dataPost['jenis']] = $dataPost['nomor_surat_siladen'];
+             } else {
+            $dataUpdate['nomor_surat1'] = $dataPost['nomor_surat_siladen'];
+             }
             // $dataUpdate['status'] = 3;
             $this->db->where('id', $id_usul)
                 ->update('t_layanan', $dataUpdate);
 
-            if($dataPost['jenis'] == 1){
-                 $perihal = "SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT a.n.".getNamaPegawaiFull($dataLayanan);
-            } else {
-                 $perihal = "SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA a.n.".getNamaPegawaiFull($dataLayanan);
-            }
+            // if($dataPost['jenis'] == 1){
+            //      $perihal = "SURAT PERNYATAAN TIDAK PERNAH DIJATUHI HUKUMAN DISIPLIN TINGKAT SEDANG/BERAT a.n.".getNamaPegawaiFull($dataLayanan);
+            // } else {
+            //      $perihal = "SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA a.n.".getNamaPegawaiFull($dataLayanan);
+            // }
+
+
             $counter = qounterNomorSurat($tahun);
             $this->db->insert('t_nomor_surat', [
                             'perihal' => $perihal,
@@ -15476,7 +15549,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                             'nomor_surat' => $dataPost['nomor_surat_siladen'],
                             'created_by' => $this->general_library->getId(),
                             'tanggal_surat' => date('Y-m-d'),
-                            'id_m_jenis_layanan' =>39
+                            'id_m_jenis_layanan' => $id_m_jenis_layanan
                         ]);
            
 
@@ -16988,10 +17061,15 @@ public function checkListIjazahCpns($id, $id_pegawai){
     }
 
           public function getListUploadBangkomSkpd(){
+
+        
+
             $bulan = $this->input->post('bulan');
             $tahun = $this->input->post('tahun');
+            $filter = $this->input->post('status');
             
-            $this->db->select('a.statuspeg,a.nama, a.gelar1, a.gelar2, b.nm_unitkerja, c.id, c.status, sum(c.jam) as total_jp')
+            if($filter != 1){
+                                $this->db->select('a.statuspeg,a.nama, a.gelar1, a.gelar2, b.nm_unitkerja, c.id, c.status, sum(c.jam) as total_jp')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                                 ->join('db_pegawai.pegdiklat c', '(a.id_peg = c.id_pegawai AND MONTH(c.tglsttpp) = "'.$bulan.'" and YEAR(c.tglsttpp) = "'.$tahun.'" and c.status = 2 and c.flag_active = 1)', 'left')
@@ -17039,7 +17117,91 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                 }
                                 }
                                 $result = $this->db->get()->result_array();
+            } else {
+            $month = $bulan;
+            $formattedMonth = str_pad($month, 2, "0", STR_PAD_LEFT);
+            $this->db->select('a.*, b.gelar1, b.nama, b.gelar2, b.statuspeg,c.nm_unitkerja, a.jumlah_jp as total_jp')
+                                ->from('t_cek_bangkom a')
+                                ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->where('a.flag_ditebus', 0)
+                                ->where('a.flag_terpenuhi', 0)
+                                ->where('a.flag_exception', 0)
+                                ->where('a.flag_active', 1)
+                                ->where('b.id_m_status_pegawai', 1)
+                                ->group_by('b.nipbaru_ws');
+                                
+                                if($this->input->post('unitkerja') == 0){
+                                    $this->db->where('bulan =', $formattedMonth);
+                                    $this->db->where('tahun =', $tahun);
+                                } else {
+                                    $this->db->where('bulan_tahun <=', $tahun."-".$formattedMonth."-01");
+                                     $this->db->where('tahun', $tahun);
+                                }
+                                // ->where('b.skpd', $this->input->post('unitkerja'));
 
+                                if($this->input->post('unitkerja') != 0){
+                                if($this->input->post('unitkerja') == 991){
+                                    $this->db->where('c.id_unitkerjamaster', '8010000');
+                                } else if($this->input->post('unitkerja') == 992){
+                                    $this->db->where('c.id_unitkerjamaster', '8020000');
+                                } else if($this->input->post('unitkerja') == 990){
+                                    $this->db->where('c.id_unitkerjamaster', '8000000');
+                                } else if($this->input->post('unitkerja') == 993){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['6000000','7005000']);
+                                } else if($this->input->post('unitkerja') == 994){
+                                    $this->db->where_not_in('c.id_unitkerjamaster', ['6000000','7005000','8010000','8020000','8000000']);
+                                }  else if($this->input->post('unitkerja') == '5001001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5001000']);
+                                } else if($this->input->post('unitkerja') == '5002001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5002000']);
+                                } else if($this->input->post('unitkerja') == '5003001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5003000']);
+                                } else if($this->input->post('unitkerja') == '5004001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5004000']);
+                                } else if($this->input->post('unitkerja') == '5005001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5005000']);
+                                } else if($this->input->post('unitkerja') == '5006001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5006000']);
+                                } else if($this->input->post('unitkerja') == '5007001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5007000']);
+                                }else if($this->input->post('unitkerja') == '5008001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5008000']);
+                                } else if($this->input->post('unitkerja') == '5009001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5009000']);
+                                } else if($this->input->post('unitkerja') == '5010001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5010001']);
+                                } else if($this->input->post('unitkerja') == '5011001'){
+                                    $this->db->where_in('c.id_unitkerjamaster', ['5011001']);
+                                }  else {
+                                $this->db->where('b.skpd', $this->input->post('unitkerja'));
+                                }
+                                }
+
+                              
+
+                                 $result = $this->db->get()->result_array();
+                                 if($result) {
+                                    foreach($result as $res){
+                                    $this->db->select('a.bulan,a.jumlah_jp')
+                                                    ->from('t_cek_bangkom a')
+                                                    ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                                                    ->where('a.flag_active', 1)
+                                                    ->where('tahun', $tahun)
+                                                    // ->where('bulan_tahun <=', $tahun."-".$formattedMonth."-01")
+                                                    ->where('a.nip', $res['nip'])
+                                                    ->where('b.id_m_status_pegawai', 1)
+                                                    ->order_by('a.bulan', 'desc');
+
+                                    $dataBangkom = $this->db->get()->result_array();
+                                    $res += ["riwayat" => $dataBangkom];
+                                    $data[] = $res;
+                                }
+                                }
+                                if(isset($data)){
+                                $result = $data;
+                                }
+            }
             return $result;
         }
 
@@ -17164,6 +17326,55 @@ public function checkListIjazahCpns($id, $id_pegawai){
         ->order_by('a.id', 'desc');
         return $this->db->get()->row_array(); 
     }
+
+        public function getSertifikatLatsar()
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('jenjang_diklat', 10)
+         ->where('status !=', 3)
+        ->from('db_pegawai.pegdiklat');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getSertifikatLatsarAdmin($id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->where('jenjang_diklat', 10)
+        ->where('status !=', 3)
+        ->from('db_pegawai.pegdiklat');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getBangkomPegawai($nip,$tahun,$bulan)
+    {
+       $formattedMonth = str_pad($bulan, 2, "0", STR_PAD_LEFT);
+       $this->db->select('a.bulan,a.jumlah_jp')
+         ->from('t_cek_bangkom a')
+         ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+         ->where('a.flag_active', 1)
+         ->where('tahun', $tahun)
+         ->where('bulan_tahun <=', $tahun."-".$formattedMonth."-01")
+         ->where('a.nip', $nip)
+         ->where('b.id_m_status_pegawai', 1)
+         ->where('a.flag_ditebus', 0)
+         ->where('a.flag_terpenuhi', 0)
+         ->where('a.flag_exception', 0)
+         ->where('a.flag_active', 1)
+         ->where('b.id_m_status_pegawai', 1);
+         $dataBangkom = $this->db->get()->result_array();
+        return $dataBangkom;  
+    }
+
+
+
+
+    
     
 
 }

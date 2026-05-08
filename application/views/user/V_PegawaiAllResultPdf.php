@@ -32,6 +32,7 @@
             <tr>
                 <td style="font-weight: bold; text-align: center;">No</td>
                 <td style="font-weight: bold; text-align: center;">Pegawai</td>
+                <td style="font-weight: bold; text-align: center;">Status Pegawai</td>
                 <td style="font-weight: bold; text-align: center;">Eselon</td>
                 <td style="font-weight: bold; text-align: center;">Unit Kerja</td>
                 <td style="font-weight: bold; text-align: center;">NIK</td>
@@ -53,6 +54,7 @@
                             <span><?=$rs['nm_pangkat']?></span><br>
                             <span><?="NIP. ".($rs['nipbaru_ws'])?></span><br>
                         </td>
+                        <td style="padding: 5px; text-align: center;"><?=$rs['nm_statuspeg']?></td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['eselon']?></td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['nm_unitkerja']?></td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['nik']?></td>

@@ -518,7 +518,8 @@
 	</div>
 </nav>
 
-<script>	
+<script>
+	let loadLiveChat = 0;
 	$(function(){
 
 	})
@@ -529,6 +530,11 @@
 	})
 
 	function toggleLiveChat(flag_wrapper = 0){
+		// if(loadLiveChat == 0){
+			$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
+				loadLiveChat = 1
+			})
+		// }
 		if(flag_wrapper == 1){
 			$('.div_live_chat').removeClass('div_live_chat_slide_in')
 			$('.div_live_chat').addClass('div_live_chat_slide_out')

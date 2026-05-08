@@ -1113,6 +1113,14 @@ class C_Kinerja extends CI_Controller
         echo json_encode($response);
     }
 
+       public function getSkpdWfa()
+    {
+        $response   = $this->kinerja->getSkpdWfa();
+        echo json_encode($response);
+    }
+
+    
+
     public function inputSasaranPrevMonth(){
         echo json_encode($this->kinerja->inputSasaranPrevMonth());
     }

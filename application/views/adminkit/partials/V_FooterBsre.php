@@ -34,7 +34,7 @@
 			</table>
 		</td>
 		<td colspan=1 style="width: 5% !important; vertical-align: middle;">
-			<img style="width: 5%;" src="<?=(base_url('assets/adminkit/img/logo-bsre.png'))?>">
+			<img style="width: 15%;" src="<?=(base_url('assets/adminkit/img/logo-bsre.png'))?>">
 		</td>
 		</tr>
 	</table>

@@ -203,7 +203,7 @@
     <button onclick="getFile('surat_keterangan_guru')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat keterangan memiliki pengalaman dalam pelaksanaan tugas guru paling singkat 2 tahun</button>
   </li>
   <?php } ?>
-  <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 ) { ?>
+  <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14) { ?>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='formasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan Tersedia Formasi</button>
   </li>
@@ -275,6 +275,10 @@
   </li>
 <?php } ?>
 <?php if($id_m_layanan == 16) { ?>
+ <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='formasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan Tersedia Formasi</button>
+  </li>
+  
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sk_mutasi_instasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Mutasi Antar Instansi</button>
   </li>

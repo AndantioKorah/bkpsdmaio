@@ -1266,8 +1266,7 @@
         }
 
         //coding ini untuk mengubah penandatangan menjadi hardcode
-        if($id_unitkerja == 3016000 || // dishub, kasub sudah pensiun
-        $id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
+        if($id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
         $id_unitkerja == 3018000 || // pu, kasubag sudah pindah
         $id_unitkerja == 3020000){ //diskop, kasub sudah pensiun
             $result['kasubag'] = $result['sek'];
@@ -1784,17 +1783,19 @@
             return $res;
         }
 
-        if(in_array($param['id_unitkerja'], [3010000])){
-            $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja, a.nipbaru_ws as nip')
-                    ->from('db_pegawai.pegawai a')
-                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
-                    ->where('id_m_status_pegawai', 1);
+        // buka comment ini agar diknas tidak dihitung dengan guru2
+        // if(in_array($param['id_unitkerja'], [3010000])){
+        //     $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja, a.nipbaru_ws as nip')
+        //             ->from('db_pegawai.pegawai a')
+        //             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+        //             ->where('id_m_status_pegawai', 1);
 
-            if($param['id_unitkerja'] == "3010000"){ // jika diknas, ambil semua sekolah
-                $this->db->where("b.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR b.id_unitkerja = '3010000'");
-            }
-            $list_pegawai = $this->db->get()->result_array();
-        }
+        //     if($param['id_unitkerja'] == "3010000"){ // jika diknas, ambil semua sekolah
+        //         $this->db->where("b.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR b.id_unitkerja = '3010000'");
+        //     }
+        //     $list_pegawai = $this->db->get()->result_array();
+        // }
+        // dd($list_pegawai);
         if($list_pegawai){
             // if($this->general_library->isProgrammer()){
             //     dd($param);
@@ -1804,23 +1805,26 @@
             foreach($list_pegawai as $lp){
                 $pegawai[$lp['nip']] = $lp['nip'];
             }
-            $this->db->select('a.*, b.gelar1, b.nama, b.gelar2')
+            $this->db->select('a.*, b.gelar1, b.nama, b.gelar2, c.nm_unitkerja')
                                 ->from('t_cek_bangkom a')
                                 ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->where('a.flag_ditebus', 0)
                                 ->where('a.flag_terpenuhi', 0)
                                 ->where('a.flag_exception', 0)
                                 ->where('a.flag_active', 1)
-                                ->where('bulan_tahun <=', $param['tahun']."-".$param['bulan']."-01");
+                                ->where('bulan_tahun <=', $param['tahun']."-".$param['bulan']."-01")
+                                ->group_by('b.nipbaru_ws');
                                 // ->where_in('b.nipbaru_ws', $pegawai)
                                 // ->get()->result_array();
-            if($param['id_unitkerja'] == "3010000"){
-                $this->db->select('c.nm_unitkerja')
-                        ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
-                        ->where("c.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR c.id_unitkerja = '3010000'");
-            } else {
+            // buka comment ini agar diknas tidak dihitung dengan guru2
+            // if($param['id_unitkerja'] == "3010000"){
+            //     $this->db->select('c.nm_unitkerja')
+            //             ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+            //             ->where("c.id_unitkerjamaster IN (8000000, 8010000, 8020000, 8030000) OR c.id_unitkerja = '3010000'");
+            // } else {
                 $this->db->where_in('b.nipbaru_ws', $pegawai);
-            }
+            // }
             $cekBangkom = $this->db->get()->result_array();
             $listBelumLengkap = null;
             if($cekBangkom){
@@ -1828,7 +1832,10 @@
                     // if($cb['flag_ditebus'] == 0 && $cb['flag_terpenuhi'] == 0){
                         $res['code'] = 1;
                         $res['message'] = "belum lengkap bangkom";
-                        $res['list_pegawai'] = $cekBangkom;
+                        $res['list_pegawai'] = null;
+                        foreach($cekBangkom as $cb){
+                            $res['list_pegawai'][$cb['nip']] = $cb;    
+                        }
                     // }
                     //jika masih ada data di $pegawai, maka itu adalah sisa yang belum ada di t_cek_bangkom dan belum upload sama sekali
                     // unset($pegawai[$cb['nip']]);
@@ -1923,7 +1930,9 @@
 
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
-
+        // if($this->general_library->isProgrammer()){
+        //     dd($flag_rekap_tpp);
+        // }
         if($flag_rekap_tpp == 1){
             $exceptBangkom = $this->db->select('*')
                                 ->from('t_except_bangkom')
@@ -1937,24 +1946,53 @@
                                 // cari jika id unitkerja sesuai parameter, bulan dan tahun sesuai parameter
                                 // cari jika semua unitkerja, bulan dan tahun sesuai parameter
                                 // cari jika unitkerja sesuai parameter, semua bulan dan tahun sesuai
-
+            
             if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+                
                 if($rs['code'] == 1){
                     return $rs;
                 } else {
                     // keluarkan yang flag_terima_tpp = 1
                     $i = 0;
                     foreach($list_pegawai as $lp){
-                        if($lp['flag_terima_tpp'] == 0){
+                        if($lp['flag_terima_tpp'] == 0 && ($flag_rekap_tpp == 1)){
                             unset($list_pegawai[$i]);
                         }
                         $i++;
                     }
                 }
+            } else {
+                if(($data['bulan'] == "02" && $data['tahun'] == 2026) || $data['id_unitkerja'] == 1000001){
+
+                } else {
+                    $tmpListPeg = null;
+                    // if($this->general_library->isProgrammer()){
+                        $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+                        $i = 0;
+                        foreach($list_pegawai as $lp){
+                            if($lp['flag_terima_tpp'] == 0 && ($flag_rekap_tpp == 1)){
+                                unset($list_pegawai[$i]);
+                            } else {
+                                $tmpListPeg[$lp['nip']] = $lp;
+                            }
+                            $i++;
+                        }
+                        // buka comment ini untuk membuat TPP 0 jika belum lengkap bangkom
+                        // if($rs['list_pegawai']){
+                        //     foreach($rs['list_pegawai'] as $rlp){
+                        //         if(isset($tmpListPeg[$rlp['nip']])){
+                        //             unset($tmpListPeg[$rlp['nip']]);
+                        //         }
+                        //     }
+                        // }
+                    // }
+                    // if($tmpListPeg != null){
+                        $list_pegawai = $tmpListPeg;
+                    // }
+                    }
             }
         }
-
         $list_tanggal_exclude = null;
         $temp_list_nip = null;
         if($flag_absen_aars == 1){
@@ -1979,6 +2017,9 @@
 
             $tlp = null;
             //ambil kelas jabatan tiap pegawai
+            if($this->general_library->isProgrammer()){
+                // dd($list_pegawai);
+            }
             $list_pegawai = $this->getKelasJabatanPegawai($list_pegawai);
             foreach($list_pegawai as $lpw){
                 $temp_list_nip[] = $lpw['nip'];
@@ -2820,6 +2861,9 @@
             $list_hukdis = $this->db->get()->result_array();
             $hukdis = null;
             if($list_hukdis){
+                // if($this->general_library->isProgrammer()){
+                //     dd($list_hukdis);
+                // }
                 foreach($list_hukdis as $l){
                     if($l['tmt']){
                         $l['lama_potongan'] = floatval($l['lama_potongan']) - 1;
@@ -2829,8 +2873,11 @@
                         $expl = explode("-", $l['tmt']);
                         $bulan = $expl[1];
                         $min_date = $expl[0]."-".$bulan."-01"; // min. tanggal penarikan agar terbaca hukdis
-                        $rekap_date = $temp['tahun']."-".$temp['bulan']."01";
-                        
+                        $rekap_date = $temp['tahun']."-".$temp['bulan']."-01";
+                        if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197611272006041013" && $l['id'] == 3469){
+                            // dd($l);
+                            dd($last_date."     ".$valid_date."      ".$rekap_date."     ".$min_date);
+                        }
                         // if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197401312010012002"){
                         //     dd($temp['bulan']." ; ".$temp['tahun']." ; ".$min_date." ; ".$valid_date);
                         // // //     dd($valid_date." ; ".$last_date);
@@ -3691,6 +3738,7 @@
         // dd($skpd);
         $param['id_unitkerja'] = $skpd[0];
         $param['nm_unitkerja'] = $skpd[1];
+        
         return $this->buildDataAbsensi($param, 1, $flag_alpha, 0, $flag_rekap_tpp, $flag_penerima_tpp);
         
         // $list_data_absen = $this->db->select('a.*, c.*, b.username as nip')

@@ -1158,6 +1158,8 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             return $this->db->get()->result_array();
         }
 
+        
+
         // public function getPenilaianPegawaiAdm(){
         //      $this->db->select('a.*,b.nama')
         //                     ->from('db_simata.t_penilaian a')
@@ -3011,7 +3013,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
        }
 
         
-public function loadListProfilTalentaAdm($id,$jenis_pengisian){
+public function loadListProfilTalentaAdm_bu($id,$jenis_pengisian){
      $this->db->select('f.pns_id,a.*,b.*,e.nama_jabatan,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
      where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang')
     //  $this->db->select('f.pns_id,`a`.nama, a.nipbaru,a.nipbaru_ws,
@@ -3028,6 +3030,8 @@ public function loadListProfilTalentaAdm($id,$jenis_pengisian){
                     ->where('a.id_m_status_pegawai', 1)
                     ->where('b.jenjang_jabatan', $jenis_pengisian)
                     // ->where_in('e.eselon', ["III A"])
+                    //  ->where('b.res_potensial_total >=', 80)
+                    //  ->where('b.res_kinerja >=', 80)
                     ->order_by('e.eselon');
                     // ->group_by('a.id_peg');
                     if($id == 1){
@@ -3036,6 +3040,88 @@ public function loadListProfilTalentaAdm($id,$jenis_pengisian){
                         $this->db->where_in('e.eselon', ["II A","II B"]);
                     }
     return $this->db->get()->result_array();
+}
+
+public function loadListProfilTalentaAdm($id,$jenis_pengisian){
+    $this->db->select('*')
+                ->from('db_simata.m_interval_penilaian a')
+                ->where('a.id_m_unsur_penilaian', 1)
+                ->where('a.flag_active', 1);
+    $intervalKinerja = $this->db->get()->result_array();
+
+    $this->db->select('*')
+                ->from('db_simata.m_interval_penilaian a')
+                ->where('a.id_m_unsur_penilaian', 2)
+                ->where('a.flag_active', 1);
+    $intervalPotensial = $this->db->get()->result_array();
+
+
+   $this->db->select('f.pns_id,a.*,b.*,e.nama_jabatan,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+     where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang,
+     (res_kinerja + res_potensial_total ) as total')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg','left')
+                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
+                    ->join('db_siasn.m_ref_pns f', 'a.nipbaru_ws = f.nip_baru')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where('b.jenjang_jabatan', $jenis_pengisian)
+                    ->where('b.res_potensial_total >=', $intervalPotensial[0]['dari'])
+                    ->where('b.res_kinerja >=', $intervalKinerja[0]['dari'])
+                    ->order_by('e.eselon');
+                    if($id == 1){
+                        $this->db->where_in('e.eselon', ["III A","III B"]);
+                    }else if($id == 2){
+                        $this->db->where_in('e.eselon', ["II A","II B"]);
+                    }
+     $kotak9 = $this->db->get()->result_array();
+
+     $this->db->select('f.pns_id,a.*,b.*,e.nama_jabatan,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+     where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang,
+     (res_kinerja + res_potensial_total ) as total')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg','left')
+                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
+                    ->join('db_siasn.m_ref_pns f', 'a.nipbaru_ws = f.nip_baru')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where('b.jenjang_jabatan', $jenis_pengisian)
+                     ->where('b.res_potensial_total >', $intervalPotensial[0]['dari'])
+                    ->where('b.res_kinerja <', $intervalKinerja[0]['dari'])
+                    ->where('b.res_kinerja >=', $intervalKinerja[1]['dari'])
+
+
+
+                    ->order_by('e.eselon');
+                    if($id == 1){
+                        $this->db->where_in('e.eselon', ["III A","III B"]);
+                    }else if($id == 2){
+                        $this->db->where_in('e.eselon', ["II A","II B"]);
+                    }
+     $kotak8 = $this->db->get()->result_array();
+
+     $this->db->select('f.pns_id,a.*,b.*,e.nama_jabatan,e.eselon as es_jabatan,(SELECT d.nama_jabatan from db_pegawai.jabatan as d
+     where a.jabatan = d.id_jabatanpeg limit 1) as jabatan_sekarang,
+     (res_kinerja + res_potensial_total ) as total')
+                    ->from('db_pegawai.pegawai a')
+                    ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg','left')
+                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
+                    ->join('db_siasn.m_ref_pns f', 'a.nipbaru_ws = f.nip_baru')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where('b.jenjang_jabatan', $jenis_pengisian)
+                    ->where('b.res_potensial_total >=', $intervalPotensial[1]['dari'])
+                    ->where('b.res_potensial_total <', $intervalPotensial[0]['dari'])
+                    ->where('b.res_kinerja >=', $intervalKinerja[0]['dari'])
+                    ->order_by('e.eselon');
+                    if($id == 1){
+                        $this->db->where_in('e.eselon', ["III A","III B"]);
+                    }else if($id == 2){
+                        $this->db->where_in('e.eselon', ["II A","II B"]);
+                    }
+     $kotak7 = $this->db->get()->result_array();
+
+     $kotak78 = array_merge($kotak7,$kotak8);
+     $rencanasuksesi = array_merge($kotak78,$kotak9);
+     return $rencanasuksesi;
+
 }
 
 function getPegawaiNilaiKinerjaPT($nip){

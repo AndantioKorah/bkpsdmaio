@@ -11,7 +11,7 @@
          <div class="row">
                   <div class="col-lg-12">
                                 <label>Pilih Unit Kerja</label>
-                                <select class="form-control select2-navy" 
+                                <select class="form-control select2-navy" style="width: 100%" 
                                     id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
                                     <?php $i = 0; foreach($unitkerja as $u){ $i++; ?>
                                         <option <?=$u['id_unitkerja'] == $this->general_library->getUnitKerjaPegawai() ? 'selected' : ''?>
@@ -19,12 +19,12 @@
                                     <?php } ?>
                                 </select>
                             </div>
+
         <?php } else { ?>
             <div class="row">
               <div class="col-lg-12">
                             <label class="label-filter">Unit Kerja</label>
-                            <div class="">
-                                <select class="form-control select2-navy" 
+                                <select class="form-control select2-navy" style="width: 100%" 
                                     id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
                                     <option value="0" selected>Semua</option>
                                     <?php foreach($unitkerja as $u){ ?>
@@ -35,8 +35,9 @@
                                     <option value="992" >Semua SMP</option>
                                     <option value="993" >Semua UPTD Dinas kesehatan</option>
                                 </select>
-                            </div>
                         </div>
+                          
+              
             <?php } ?>
 
                <div class="form-group" >
@@ -62,7 +63,18 @@
                  <option <?=date('m') == 11 ? 'selected' : '';?> value="11">November</option>
                  <option <?=date('m') == 12 ? 'selected' : '';?> value="12">Desember</option>
                  </select>
-  </div>
+                </div>
+
+    <div class="form-group" >
+    <label for="exampleFormControlInput1">Status</label>
+    <select class="form-control select2-navy customInput" style="width: 100%"
+                 id="bulan" data-dropdown-css-class="select2-navy" name="status">
+               
+                                    <option value="0" selected>Semua</option>
+                                    <option value="1" >Belum terpenuhi untuk pengurusan TPP</option>
+                 </select>
+    </div>
+
                 
                 <div class="col-lg-12 col-md-9" style="margin-top: 28px;">
                     <button type="submit" class="btn btn-block btn-navy float-right"><i class="fa fa-search"></i> Cari</button>

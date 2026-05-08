@@ -273,6 +273,12 @@
 						<i class="align-middle me-2 far fa-circle"></i>Hardcode Nominatif
 					</a>
 				</li>
+
+				<li class="sidebar-item ">
+					<a title="Pengecualian Bangkom" class="sidebar-link sidebar-link-child" href="<?=base_url('master/pengecualian-bangkom')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Pengecualian Bangkom
+					</a>
+				</li>
 			</ul>
 		</li>
 		<?php } ?>
@@ -773,6 +779,14 @@
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/34')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Cuti Besar
+					</a>
+				</li>
+				<?php } ?>
+
+				<?php if($this->general_library->isHakAkses('verifikasi_cpns_pns')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/35')?>">
+						<i class="align-middle me-2 far fa-circle"></i>CPNS Menjadi PNS
 					</a>
 				</li>
 				<?php } ?>
@@ -1440,7 +1454,7 @@
 			<a title="Verifikasi" data-bs-target="#ptalenta" data-bs-toggle="collapse" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-tasks"></i> 
 				<span class="align-middle">
-				Profil Talenta
+				Rencana Suksesi
 					<i class="fa fa-chevron-down" 
 					style="
 						position: absolute;
@@ -1472,7 +1486,7 @@
 			<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-kompetensi" class="sidebar-link">
 			<i class="align-middle me-2 fa fa-fw fa fa-users"></i> 
 				<span class="align-middle">
-				Rencana Suksesi
+				Suksesor
 				</span>
 			</a>	
 		</li>
@@ -1560,7 +1574,10 @@
 			<li class="sidebar-header">
 				BKPSDM Bacirita
 			</li>
-			<?php if($this->general_library->isHakAkses('admin_bkpsdm_bacirita') || $this->general_library->isProgrammer()){?>
+			<?php if(
+					$this->general_library->isHakAkses('admin_bkpsdm_bacirita') ||
+					$this->general_library->isProgrammer()
+				){?>
 				<li class="sidebar-item">
 					<a title="Admin BKPSDM Bacirita" href="<?=base_url();?>bkpsdm-bacirita/kegiatan" class="sidebar-link">
 					<i class="align-middle me-2 fa fa-fw fa fa-user"></i> 

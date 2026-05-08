@@ -14,6 +14,8 @@
         <h4>LIVE ABSEN</h4>
         <!-- <h2><?=$agenda['judul']?></h2> -->
         <!-- <h4><?=formatDateNamaBulan($agenda['tgl'])?></h4> -->
+        <h5><?=$result ? count($result)." Pegawai" : ""?></h5>
+        <h5>Last Refresh: <?=formatDateNamaBulanWithTime(date('Y-m-d H:i:s'))?></h5>
     </div>
 </div>
 <table class="table table_dashboard_live">

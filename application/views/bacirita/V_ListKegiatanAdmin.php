@@ -24,7 +24,7 @@
 		font-size: 1rem !important;
 		display: -webkit-box; /* Required for older browser compatibility */
 		-webkit-box-orient: vertical; /* Required for older browser compatibility */
-		-webkit-line-clamp: 5; /* Limits text to 3 lines */
+		-webkit-line-clamp: 2; /* Limits text to 3 lines */
 		overflow: hidden;
 		text-overflow: ellipsis; /* Ensures the ellipsis appears */
 	}
@@ -100,7 +100,7 @@
 								<h5 class="title-kegiatan card-title"><?=($rs['topik'])?></h5>
 							</div>
 							<div class="col-lg-12 div-button">
-								<div class="row">
+								<div class="row d-flex align-items-center">
 									<div class="col-lg-6">
 										<span class="lbl-detail-kegiatan">
 											<?=formatDateNamaBulan($rs['tanggal'])?><br>

@@ -398,6 +398,7 @@ class C_User extends CI_Controller
         if($flag_edit == 1){
             $data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id_user, $dt['bulan'], $dt['tahun'], 0);
         } else {
+           
             $data['result'] = $this->general_library->getPaguTppPegawai($dt['bulan'], $dt['tahun']);
         }
         $data['nip'] = $data['result']['pagu_tpp']['nipbaru_ws'];
@@ -699,8 +700,8 @@ class C_User extends CI_Controller
         $this->load->view('user/V_LiveChatKonsultasi', $data);
     }
 
-    public function sendMessageKonsultasi(){
-        echo json_encode($this->user->sendMessageKonsultasi($this->input->post()));
+    public function sendMessageKonsultasi($id){
+        echo json_encode($this->user->sendMessageKonsultasi($this->input->post(), $id));
     }
 
     public function endKonsultasi($id){
@@ -736,10 +737,39 @@ class C_User extends CI_Controller
         echo json_encode($this->user->assignOperator());
     }
 
-    public function loadLayananKonsultasi($id){
+    public function loadLayananKonsultasi($id = 0, $flagGantiLayanan = 0){
         $data['id'] = $id;
+        $data['data'] = $this->user->openKonsultasiDetail($id);
+        $data['flagGantiLayanan'] = $flagGantiLayanan;
         $data['jenis_layanan'] = $this->user->loadLayananKonsultasi();
         $this->load->view('user/V_LiveChatJenisLayananKonsul', $data);
+    }
+
+    public function loadLiveChat(){
+        $this->load->view('user/V_LiveChat', null);
+    }
+
+    public function submitGantiJenisLayanan($id_t_live_chat = 0, $id_m_layanan_konsul){
+        echo json_encode($this->user->submitGantiJenisLayanan($id_t_live_chat, $id_m_layanan_konsul));
+    }
+
+    public function cekWaktuKerjaKonsultasi(){
+        $batasAkhir = 30;
+        $batasAwalKonsultasi = 60;
+
+        $waktuKerja = cekWaktuKerja($batasAkhir, $batasAwalKonsultasi);
+        switch($waktuKerja['code']){
+            case 1: $waktuKerja['message'] = "Konsultasi Online tidak dapat dilakukan di Hari Libur";
+                break;
+            case 2: $waktuKerja['message'] = "Konsultasi Online tidak dapat dilakukan di Hari Sabtu atau Minggu";
+                break;
+            case 3: $waktuKerja['message'] = "Batas waktu Konsultasi Online adalah ".$batasAkhir." menit sebelum Jam Pulang";
+                break;
+            case 4: $waktuKerja['message'] = "Waktu Konsultasi Online adalah ".$batasAwalKonsultasi." menit setelah Jam Masuk";
+                break;
+            default: $waktuKerja['message'] = "";
+        }
+        echo json_encode($waktuKerja);
     }
 
 }

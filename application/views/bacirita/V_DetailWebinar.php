@@ -63,6 +63,9 @@
         top: -70%;
         transform: translateY(-50%);
     }
+
+
+
 </style>
 <a href="<?=base_url('bacirita/list-webinar')?>">
     <button type="button" class="btn btn-sm btn-primary"> <i class="fa fa-arrow-left"></i> Kembali</button>
@@ -75,7 +78,14 @@
 				<h3><b>WEBINAR <?= strtoupper(getNamaBulan($month));?> <?=date('Y');?></b></h3>
 				<h4><i><?= strtoupper($webinar['topik']);?></i></h4>
                 <br>
-                <h4><b>(<?=$webinar['jumlah_jp']?> JP)</b> Badan Kepegawaian dan Pengembangan Sumber Daya Manusia</h4>
+                <h4><b>(<?=$webinar['jumlah_jp']?> JP)</b> 
+                <?php if($webinar['id'] == 6) { ?>
+                Dinas Perindustrian dan Perdagangan
+                <?php } else { ?>
+                Badan Kepegawaian dan Pengembangan Sumber Daya Manusia
+                <?php } ?>
+
+            </h4>
                 <?= formatDateNamaBulan($webinar['tanggal']);?>  <?= substr($webinar['jam_mulai'], 0, 8);?> - <?= substr($webinar['jam_selesai'], 0, 8);?> <br>
 
                 <?php 
@@ -277,7 +287,7 @@
                         (formatTimeAbsen($webinar['jam_mulai']) >= date('H:i:s') && formatTimeAbsen($webinar['jam_selesai']) <= date('H:i:s'))) || 
                         $webinar['flag_buka_absen'] == 1){ ?>
                         <?php if($webinar['flag_absen'] == 0 && date('H:i:s') < formatTimeAbsen($webinar['jam_batas_absensi'])){ ?>
-                            <button onclick= "presensiKegiatan()"   type="button" class="btn mt-3 btn-dark"> Presensi Seminar</button>
+                            <button onclick= "presensiKegiatan()"  id="btn_presensi"  type="button" class="btn mt-3 btn-dark"> Presensi Seminar</button>
                             <?php } ?>
                         <?php } ?>
 
@@ -313,17 +323,25 @@
     <tr>
       <td>Zoom Meeting <br>ID : <?=$webinar['meeting_id_zoom'];?> Passcode : <?=$webinar['passcode_zoom'];?></td>
       <td>
-        <a href="<?=$webinar['link_zoom'];?>" target="_blank">
-        <?=$webinar['link_zoom'];?></i>
+        <a class="btn btn-info btn-sm" href="<?=$webinar['link_zoom'];?>" role="button" target="_blank">
+            <?=$webinar['link_zoom'];?>
         </a>
     </td>
     </tr>
     <tr>
       <td>Youtube</td>
        <td>
-      <a href="<?=$webinar['link_youtube'];?>" target="_blank">
-     <?=$webinar['link_youtube'];?></i>
-      </a>
+        <a class="btn btn-info btn-sm" href="<?=$webinar['link_youtube'];?>" role="button" target="_blank">
+            <?=$webinar['link_youtube'];?>
+        </a>
+    </td>
+    </tr>
+    <tr>
+      <td>Facebook</td>
+       <td>
+        <a class="btn btn-info btn-sm" href="<?=$webinar['link_facebook'];?>" role="button" target="_blank">
+            <?=$webinar['link_facebook'];?>
+        </a>
     </td>
     </tr>
      </tbody>
@@ -459,6 +477,9 @@
     function presensiKegiatan(){
         var id_webinar = "<?=$webinar['id_kegiatan'];?>"
         var id_m_user = "<?=$this->general_library->getId();?>"
+        document.getElementById('btn_presensi').disabled = true;
+        $('#btn_presensi').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+
                    if(confirm('Absen Seminar?')){
                        $.ajax({
                            url: '<?=base_url("bacirita/C_Bacirita/presensiKegiatan/")?>'+id_webinar+'/'+id_m_user,

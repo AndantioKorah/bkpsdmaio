@@ -61,6 +61,8 @@
                 <td style="font-weight: bold; text-align: center; width: 20%;">Nama Pasangan</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Alamat</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">NPWP</td>
+                <td style="font-weight: bold; text-align: center; width: 20%;">Jenis Kelamin</td>
+
 
                 
 
@@ -116,6 +118,7 @@
                                 <?php } ?>    
                       </td>
                         <td style="padding: 10px; text-align: left;"><?='`'.($rs['npwp'])?></td>
+                        <td style="padding: 10px; text-align: left;"><?=($rs['jk'])?></td>
 
                       
 

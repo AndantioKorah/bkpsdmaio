@@ -28,7 +28,7 @@
     Keterangan : <br> 
     - Foto bersama teman adalah foto gandeng dengan teman saat melakukan presensi pada aplikasi AARS yang discreenshot lalu diupload sebagai bukti. <b  style="color:red">Jam absensi dari teman pegawai akan dijadikan jam absensi untuk pegawai yang melakukan pengajuan</b><br>
     - Jika menggunakan foto, kirim foto tersebut ke nomor Whatsapp Siladen <b>(0895355011333)</b> setelah itu discreenshot dan diupload sebagai bukti.<br>
-    - Maksimal Peninjauan Absensi per pegawai hanya 8 kali bulan ini.
+    - Maksimal Peninjauan Absensi per pegawai hanya 2 kali bulan ini.
     </span>
     <div class="row ml-2">
     <div class="col-lg-6">
@@ -575,43 +575,71 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
         $('#tanggal_absensi').on('change', function(){
         var curentdate = "<?= date('Y-m-d');?>"
          var tanggal =  $('#tanggal_absensi').val()
-            <?php  if( $this->general_library->getIdUnitKerjaPegawai() != '3018000'){ ?>
+            
+          //     $.ajax({
+          //     url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataWfa",
+          //     method : "POST",
+          //     data : {tanggal: tanggal},
+          //     async : false,
+          //     dataType : 'json',
+          //     success: function(ress){
+          //       if(tanggal != '2026-03-16'){
+          //       if(ress == 1){
+          //         <?php  if( $this->general_library->getIdUnitKerjaPegawai() == '5009001'){ ?>
+          //         $('#jenis_absensi').val('')
+          //         document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+          //          if (opt.value == "2") {
+          //             opt.disabled = true;
+          //           }
+          //          });
+          //         <?php } else { ?>
+          //          $('#btn_upload').hide()
+          //          $('#ket').show()
+          //          $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+          //         <?php } ?>
+
+          //          $('#btn_upload').hide()
+          //          $('#ket').show()
+          //          $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+          //       } else {
+          //       $('#btn_upload').show()
+          //       $('#ket').hide()
+          //       }
+          //      } else {
+          //       $('#btn_upload').show()
+          //       $('#ket').hide()
+          //      }
+          //     }
+          // });
+            var today = new Date(tanggal);
+            var dayIndex = today.getDay(); 
             $.ajax({
-              url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataWfa",
+              url : "<?php echo base_url();?>kinerja/C_Kinerja/getSkpdWfa",
               method : "POST",
               data : {tanggal: tanggal},
               async : false,
               dataType : 'json',
               success: function(ress){
-                if(tanggal != '2026-03-16'){
+                if(tanggal >= '2026-04-10'){
+                if(dayIndex == 5){
                 if(ress == 1){
-                  // <?php  if( $this->general_library->getIdUnitKerjaPegawai() == '5009001'){ ?>
-                  // $('#jenis_absensi').val('')
-                  // document.querySelectorAll("#jenis_absensi option").forEach(opt => {
-                  //  if (opt.value == "2") {
-                  //     opt.disabled = true;
-                  //   }
-                  //  });
-                  // <?php } else { ?>
-                  //  $('#btn_upload').hide()
-                  //  $('#ket').show()
-                  //  $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
-                  // <?php } ?>
-
                    $('#btn_upload').hide()
                    $('#ket').show()
-                   $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+                   $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFH</b>')
                 } else {
                 $('#btn_upload').show()
                 $('#ket').hide()
                 }
-               } else {
+                } else {
                 $('#btn_upload').show()
                 $('#ket').hide()
-               }
+                }
+                } else {
+                $('#btn_upload').show()
+                $('#ket').hide()
+              }
               }
           });
-          <?php } ?>
 
        
             $("#jenis_absensi").prop('disabled',false);

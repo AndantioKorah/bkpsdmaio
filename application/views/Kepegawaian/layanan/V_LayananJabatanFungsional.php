@@ -525,6 +525,12 @@ ol {
                 </li>
               <?php } ?>
               <?php if($id_m_layanan == 16) { ?>
+              	<li>
+								<a class="<?php if($formasi){ if($formasi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($formasi) { ?>
+									onclick="viewBerkasPangkat('<?=$formasi['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> Surat Pernyataan Tersedia Formasi* <i
+											class="fas fa-<?php if($formasi) echo ''; else echo '';?>"></i></a>
+							</li>
                 <li>
                 <a class="<?php if($pak) echo 'select'; else echo 'unselect';?>" <?php if($pak) { ?>
                 onclick="viewBerkasPangkat('<?=$pak['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
@@ -900,6 +906,11 @@ $(function(){
         }
         
         if(id_m_layanan == 16){
+
+        if(formasi == ""){
+            errortoast(' Berkas Belum Lengkap')
+            return false;
+        }
         if(pak == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

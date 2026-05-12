@@ -86,31 +86,40 @@
                 <?php } ?>
 
             </h4>
-                <?= formatDateNamaBulan($webinar['tanggal']);?>  <?= substr($webinar['jam_mulai'], 0, 8);?> - <?= substr($webinar['jam_selesai'], 0, 8);?> <br>
+                <?= formatDateNamaBulan($webinar['tanggal']);?>  <?= substr($webinar['jam_mulai'], 0, 8);?> - <?php   $jamSelesai = formatTimeAbsen($webinar['jam_selesai']);
+                
+                    if($jamSelesai == "00:00") echo "Selesai"; else echo substr($webinar['jam_selesai'], 0, 8) ?> <br>
 
                 <?php 
                 $badgeStatusDaftar = "btn-info";
 			    $statusDaftar = "<i class='fa fa-plus'></i> Daftar Webinar";
 			    $onclick = "daftar()";
                 $stylePresensi = "-";
-			
-			    if($webinar['tanggal'] == date('Y-m-d')){ 
-				if(date('H:i:s') < $webinar['jam_mulai']) {
-                    $badgeStatusDaftar = "btn-info";
-                    $statusDaftar = "<i class='fa fa-plus'></i> Daftar Webinar";
-				}
-				if(date('H:i:s') > $webinar['jam_mulai']) {
-                    if(date('H:i:s') > $webinar['jam_batas_pendaftaran']) {
-                        $badgeStatusDaftar = "btn-danger";
-                        $statusDaftar = "Pendaftaran telah ditutup";
-                        $onclick = "-";
-                    } 
-                }
-				if(date('H:i:s') > $webinar['jam_selesai']) {
+
+                     $jamSelesai = formatTimeAbsen($webinar['jam_selesai']);
+               
+				if($jamSelesai == "00:00") {
                     $badgeStatusDaftar = "btn-success";
                     $statusDaftar = "Selesai";
                     $onclick = "-";
 				} 
+                
+			
+			    if($webinar['tanggal'] == date('Y-m-d')){ 
+				if(date('H:i:s') < $webinar['jam_batas_pendaftaran']) {
+                    $badgeStatusDaftar = "btn-info";
+                    $statusDaftar = "<i class='fa fa-plus'></i> Daftar Webinar";
+                    $onclick = "daftar()";
+				}
+				
+                if(date('H:i:s') > $webinar['jam_batas_pendaftaran']) {
+                        $badgeStatusDaftar = "btn-danger";
+                        $statusDaftar = "Pendaftaran telah ditutup";
+                        $onclick = "-";
+                } 
+                
+
+           
                 
                 // if(date('H:i:s') < $webinar['jam_buka_absensi']) {
                 //     $stylePresensi ="display:none;";
@@ -119,18 +128,17 @@
                 // if(date('H:i:s') > $webinar['jam_batas_absensi']) {
                 //     $stylePresensi ="display:none;";
 				// }
-
                 if($webinar['flag_buka_absen'] == 0) {
                     $stylePresensi ="display:none;";
 				}
 
 
 			    }
-                if(date('Y-m-d') > $webinar['tanggal']){ 
-                    $badgeStatusDaftar = "btn-success";
-                    $statusDaftar = "Selesai";
-                    $onclick = "-";
-                }
+                // if(date('Y-m-d') > $webinar['tanggal']){ 
+                //     $badgeStatusDaftar = "btn-success";
+                //     $statusDaftar = "Selesai";
+                //     $onclick = "-";
+                // }
 
                 ?>
                 
@@ -447,12 +455,13 @@
     })
 
     function daftar(){
-        document.getElementById('btn_daftar').disabled = true;
-        $('#btn_daftar').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+       
 
         var id_webinar = "<?=$webinar['id_kegiatan'];?>"
         var id_m_user = "<?=$this->general_library->getId();?>"
                    if(confirm('Daftar Webinar?')){
+                     document.getElementById('btn_daftar').disabled = true;
+                     $('#btn_daftar').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
                        $.ajax({
                            url: '<?=base_url("bacirita/C_Bacirita/submitDaftarKegiatan/")?>'+id_webinar+'/'+id_m_user,
                            method: 'post',

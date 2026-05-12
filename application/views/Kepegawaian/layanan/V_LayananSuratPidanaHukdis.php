@@ -483,6 +483,7 @@ function viewBerkasPangkat(filename,id){
       var doc = pdf_surat_pengantar.value.split('.')
       var extension = doc[doc.length - 1]
 
+
       if (extension != "pdf"){
         errortoast("Harus File PDF")
         $(this).val('');
@@ -499,13 +500,15 @@ function viewBerkasPangkat(filename,id){
       var fileSize = this.files[0].size/1024;
       var MaxSize = 1024
 
-      var doc = pdf_surat_pengantar.value.split('.')
+      var doc = pdf_surat_hd.value.split('.')
       var extension = doc[doc.length - 1]
+      
 
       if (extension != "pdf"){
         errortoast("Harus File PDF")
         $(this).val('');
       }
+      
 
       if (fileSize > MaxSize ){
         errortoast("Maksimal Ukuran File 1 MB")
@@ -519,7 +522,7 @@ function viewBerkasPangkat(filename,id){
       var fileSize = this.files[0].size/1024;
       var MaxSize = 1024
 
-      var doc = pdf_surat_pengantar.value.split('.')
+      var doc = pdf_surat_pidana.value.split('.')
       var extension = doc[doc.length - 1]
 
       if (extension != "pdf"){

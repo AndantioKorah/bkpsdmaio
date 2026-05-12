@@ -2143,12 +2143,26 @@ class M_Kepegawaian extends CI_Model
                                         ->get()->result_array();
 
             if($cekArsip) {
-            // dd($cekArsip[0]['id']);
+                if($this->input->post('jenis_arsip') != 11){
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
             $dataInsert['gambarsk']         = $filename;
             $this->db->where('id', $cekArsip[0]['id'])
                 ->update('db_pegawai.pegarsip', $dataInsert);
+                } else {
+            $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
+            $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
+            $dataInsert['gambarsk']         = $filename;
+            $dataInsert['created_by']      = $this->general_library->getId();
+            $dataInsert['tahun']      = $this->input->post('arsip_tahun');
+            $dataInsert['status']      = 2;
+            if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
+                $dataInsert['status']      = 2;
+                $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
+                $dataInsert['id_m_user_verif']      = $this->general_library->getId();
+                }
+            $result = $this->db->insert('db_pegawai.pegarsip', $dataInsert);
+                }
             } else {
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
@@ -5768,7 +5782,6 @@ public function submitEditJabatan(){
        public function submitEditArsipLain(){
 
         $datapost = $this->input->post();
-      
         $this->db->trans_begin();
         $target_dir = './arsiplain/';
         $filename = str_replace(' ', '', $this->input->post('gambarsk')); 
@@ -5816,6 +5829,9 @@ public function submitEditJabatan(){
             // ]);
            
             $id = $datapost['id'];
+            if(isset($datapost['arsip_tahun_edit'])){
+            $data["tahun"] = $datapost['arsip_tahun_edit'];
+            }
             $data["gambarsk"] = $filename;
             $this->db->where('id', $id)
                     ->update('db_pegawai.pegarsip', $data);
@@ -5823,7 +5839,14 @@ public function submitEditJabatan(){
 		}
         } else {
             $id = $datapost['id'];
+            if(isset($datapost['arsip_tahun_edit'])){
+            $data["tahun"] = $datapost['arsip_tahun_edit'];
+            $this->db->where('id', $id)
+                    ->update('db_pegawai.pegarsip', $data);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            } else {
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
         }
 
         if($this->db->trans_status() == FALSE){

@@ -349,7 +349,7 @@
 
             // ->where('a.tmtgjberkala !=', '0000-00-00')
             ->where_not_in('b.id_unitkerjamaster', [0000000, 7000000, 9050000])
-            ->order_by('a.tmtgjberkala');
+            ->order_by('a.tmtgjberkalaberikut');
 
             if($data['eselon'] != "0"){
                 $this->db->where('c.eselon', $data['eselon']);

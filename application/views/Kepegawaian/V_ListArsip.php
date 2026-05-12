@@ -19,7 +19,7 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?php if($rs['name'] == "") echo $rs['nama_sk']; else echo $rs['keterangan'];?></td>
+              <td class="text-left"><?php if($rs['name'] == "") echo $rs['nama_sk']; else echo $rs['keterangan'];?> <?php if($rs['id_dokumen'] == "11") echo "(".$rs['tahun'].")";?></td>
               <td class="text-left">
                 <?php if($rs['gambarsk'] != "") {
                   $flagShowButtonArsip = 1;

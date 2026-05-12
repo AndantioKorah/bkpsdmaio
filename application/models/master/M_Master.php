@@ -1659,5 +1659,20 @@
 
             return $rs;
         }
+
+        public function changeFlagTerimaSemua($id, $state){
+            $rs = [
+                'code' => 0,
+                'message' => 'ok'
+            ];
+            
+            $this->db->where('id', $id)
+                    ->update('t_except_bangkom', [
+                        'flag_terima_tpp_semua' => $state,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            return $rs;
+        }
 	}
 ?>

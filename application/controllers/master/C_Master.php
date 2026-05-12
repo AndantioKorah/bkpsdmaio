@@ -713,4 +713,9 @@ class C_Master extends CI_Controller
         echo json_encode($this->master->deleteExceptBangkom($id));
     }
 
+    public function changeFlagTerimaSemua($id, $state){
+        echo json_encode($this->master->changeFlagTerimaSemua($id, $state));
+    }
+
+
 }

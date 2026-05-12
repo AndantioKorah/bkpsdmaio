@@ -336,31 +336,31 @@ ol {
             	<a class="<?php if($ibel){ if($ibel['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($ibel) { ?> onclick="viewBerkasPangkat('<?=$ibel['gambarsk'];?>',4)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
-                    Ijin Belajar* <i class="fas fa-<?php if($ibel) echo ''; else echo '';?>"></i></a>
+                    Ijin Belajar* (Upload di menu Profil Bagian Asrip Lainnya) <i class="fas fa-<?php if($ibel) echo ''; else echo '';?>"></i></a>
             </li>
             <li>
             	<a class="<?php if($transkrip){ if($transkrip['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($transkrip) { ?> onclick="viewBerkasPangkat('<?=$transkrip['gambarsk'];?>',4)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
-                    Transkrip Nilai* <i class="fas fa-<?php if($transkrip) echo ''; else echo '';?>"></i></a>
+                    Transkrip Nilai* (Upload di menu Profil Bagian Asrip Lainnya) <i class="fas fa-<?php if($transkrip) echo ''; else echo '';?>"></i></a>
             </li>
             <li>
             	<a class="<?php if($akreditasi_prodi){ if($akreditasi_prodi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($akreditasi_prodi) { ?> onclick="viewBerkasPangkat('<?=$akreditasi_prodi['gambarsk'];?>',4)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
-                    Akreditasi Program Studi* <i class="fas fa-<?php if($akreditasi_prodi) echo ''; else echo '';?>"></i></a>
+                    Akreditasi Program Studi* (Upload di menu Profil Bagian Asrip Lainnya) <i class="fas fa-<?php if($akreditasi_prodi) echo ''; else echo '';?>"></i></a>
             </li>
             <li>
             	<a class="<?php if($pangkalandata){ if($pangkalandata['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($pangkalandata) { ?> onclick="viewBerkasPangkat('<?=$pangkalandata['gambarsk'];?>',4)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
-                    Tampilan Layar Pangkalan Data Forlap Dikti* <i class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
+                    Tampilan Layar Pangkalan Data Forlap Dikti* (Upload di menu Profil Bagian Asrip Lainnya) <i class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
             </li>
              <li>
             	<a class="<?php if($sertifikat_profesi){ if($sertifikat_profesi['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($sertifikat_profesi) { ?> onclick="viewBerkasPangkat('<?=$sertifikat_profesi['gambarsk'];?>',4)"
             		data-toggle="modal" data-target="#exampleModal" <?php } ?>> <i class="fa fa-file-pdf"></i> 
-                    Sertifikat Profesi <i class="fas fa-<?php if($sertifikat_profesi) echo ''; else echo '';?>"></i></a>
+                    Sertifikat Profesi (Upload di menu Profil Bagian Asrip Lainnya) <i class="fas fa-<?php if($sertifikat_profesi) echo ''; else echo '';?>"></i></a>
             </li>
 						</ol>
 					</div>

@@ -118,6 +118,12 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
       <option value="105">SURAT PERNYATAAN / Surat Pernyataan</option>   
       <?php } ?>
 		</select>
+
+    <div class="form-group div_tahun" style="display:none;">
+    <label>Tahun</label>
+    <input class="form-control yearpicker" type="text" id="arsip_tahun" name="arsip_tahun" autocomplete="off"  />
+  </div>
+  
   </div>
 
 
@@ -203,7 +209,23 @@ $(function(){
 		allowClear: true,
 	});
     loadListArsip()
-    })
+    
+  
+  
+  })
+
+   var currentDate = new Date();
+    var Year = currentDate.getFullYear();
+    var end = new Date('01-01-'+Year);
+  
+  $('.yearpicker').datepicker({
+    format: 'yyyy',
+    viewMode: "years", 
+    minViewMode: "years",
+    orientation: 'bottom',
+    endDate: end,
+    autoclose: true
+    });
 
     $('.datepicker').datepicker({
         format: 'yyyy-mm-dd',
@@ -213,6 +235,17 @@ $(function(){
     autoclose: true
 });
 
+ $('#jenis_arsip').change(function() {
+        // Code to run when the value changes
+        var selectedValue = $(this).val(); // Get the new value
+        if(selectedValue == '11'){
+          $('.div_tahun').show()
+        } else {
+          $('.div_tahun').hide()
+        }
+    });
+   
+
     
         $('#upload_form_arsip_lainnya').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
@@ -221,11 +254,24 @@ $(function(){
         var formvalue = $('#upload_form_arsip_lainnya');
         var form_data = new FormData(formvalue[0]);
         var ins = document.getElementById('pdf_file_arsip_lainnya').files.length;
-        
+        var jenis_arsip = $('#jenis_arsip').val()
+       
+
+        if(jenis_arsip == 11){
+           var tahun = $('#arsip_tahun').val()
+           if(tahun == null || tahun == ""){
+            errortoast('Tahun Masih Kosong')
+            return false;
+           }
+        }
+
         if(ins == 0){
         errortoast("Silahkan upload file terlebih dahulu");
         return false;
         }
+
+
+
        
         document.getElementById('btn_upload_arsip').disabled = true;
         $('#btn_upload_arsip').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')

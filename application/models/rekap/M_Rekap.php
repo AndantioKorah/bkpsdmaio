@@ -1420,7 +1420,9 @@
                 }
             }
         }
-
+        // if($this->general_library->isProgrammer()){
+        //     dd($unitkerja);
+        // }
         if($unitkerja['nip_kepalaskpd_hardcode']){
             $tempresult['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                 e.nama_jabatan, e.kepalaskpd, e.eselon, d.id_unitkerjamaster')
@@ -1441,10 +1443,10 @@
                 $result['kepsek'] = $tempresult['kepalaskpd'];
                 $result['kepsek']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
             } else {
-                if(!$result['kepalaskpd']){
+                // if(!$result['kepalaskpd']){
                     $result['kepalaskpd'] = $tempresult['kepalaskpd'];
                     $result['kepalaskpd']['nama_jabatan'] = $tempresult['kepalaskpd']['nama_jabatan'];
-                }
+                // }
             }
         }
 

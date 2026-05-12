@@ -66,7 +66,7 @@ class C_Rekap extends CI_Controller
 
         $skpd = explode(";", $param['skpd']);
         if($this->general_library->getIdUnitKerjaMaster($skpd[0]) == '8010000' || $this->general_library->getIdUnitKerjaMaster($skpd[0]) == '8020000'){
-            $flag_rekap_tpp = 1;
+            // $flag_rekap_tpp = 1;
         }
 
 

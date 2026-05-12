@@ -2086,14 +2086,14 @@ function validateToken($token, $publicKey){
     // cek jika token belum kadaluarsa
     $nowDate = new DateTime();
     $expireDate = (new DateTime($expl[0]))->modify('+5 minutes');
-    // if($nowDate > $expireDate){
-    //     $helper->response([
-    //         'code' => RC_EXPIRED_TOKEN['rc_code'],
-    //         'status' => false, 
-    //         'message' => RC_EXPIRED_TOKEN['message'],
-    //         "data" => null
-    //     ], RC_EXPIRED_TOKEN['code']);
-    // }
+    if($nowDate > $expireDate){
+        $helper->response([
+            'code' => RC_EXPIRED_TOKEN['rc_code'],
+            'status' => false, 
+            'message' => RC_EXPIRED_TOKEN['message'],
+            "data" => null
+        ], RC_EXPIRED_TOKEN['code']);
+    }
 
     // cek jika secret key sesuai
     $secretKey = $expl[1];    
@@ -2108,6 +2108,22 @@ function validateToken($token, $publicKey){
     }
 
     return $decrypted;
+}
+
+function returnResponse($RC, $status, $data, $url, $request){
+    $helper = &get_instance();
+    $helper->load->model('user/M_User', 'm_user');
+
+    $response = [
+        'code' => $RC['rc_code'],
+        'status' => $status, 
+        'message' => $RC['message'],
+        'data' => $data
+    ];
+
+    $helper->user->logApiSiladen($url, $request, $response);
+
+    $helper->response($response, $RC['code']); 
 }
 
 function validateParameter($requestedParameter = null){

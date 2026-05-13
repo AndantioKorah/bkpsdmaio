@@ -54,7 +54,7 @@ class C_Rekap extends CI_Controller
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
 
-    public function readAbsensiAars($flag_alpha = 0, $flag_rekap_tpp = 0){
+    public function readAbsensiAars($flag_alpha = 0, $flag_rekap_tpp = 1){
         $param = $this->input->post();
         if($flag_alpha == 1){
             $param = [
@@ -88,7 +88,7 @@ class C_Rekap extends CI_Controller
             $data['nama_file'] = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.xls';
             $this->session->set_userdata('rekap_absen_aars', $data);
         }
-        
+        // dd($data);
         $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
     }
 

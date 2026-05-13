@@ -399,11 +399,15 @@
 	|| $this->general_library->isWalikota()
 	|| $this->general_library->isGuest()
 	){ ?>
+	
+	<?php if(!$this->general_library->isGuest()) { ?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>database">
 				<i class="fa fa-database"></i> <span class="align-middle">Database</span>
 			</a>
 		</li>
+		<?php } ?>
+
 		<?php if($this->general_library->isHakAkses('laporan_jumlah_asn')) { ?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>kepegawaian/C_Kepegawaian/laporan">

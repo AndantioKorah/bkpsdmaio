@@ -399,11 +399,15 @@
 	|| $this->general_library->isWalikota()
 	|| $this->general_library->isGuest()
 	){ ?>
+	
+	<?php if(!$this->general_library->isGuest()) { ?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>database">
 				<i class="fa fa-database"></i> <span class="align-middle">Database</span>
 			</a>
 		</li>
+		<?php } ?>
+
 		<?php if($this->general_library->isHakAkses('laporan_jumlah_asn')) { ?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>kepegawaian/C_Kepegawaian/laporan">
@@ -997,9 +1001,9 @@
 			<?php } ?>
 			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
 			<li class="sidebar-item ">
-				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
+				<!-- <a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Presensi
-				</a>
+				</a> -->
 			</li>
 			<?php } ?>
 			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>		

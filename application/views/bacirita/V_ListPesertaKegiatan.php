@@ -13,6 +13,10 @@
 				font-size: .8rem;
 			}
 		</style>
+		<form action="<?=base_url('bacirita/C_Bacirita/downloadRekapPeserta/'.$result[0]['id_t_kegiatan'])?>" target="_blank" method="post">
+			<button id="btn_download" class="btn btn-sm btn-danger mb-2"><i class="fa fa-download"></i> Download Rekap Peserta</button>
+		</form>
+		<!-- <button id="btn_download_loading" disabled style="display: none;" class="btn btn-sm btn-danger mb-2"><i class="fa fa-spin fa-spinner"></i> Loading...</button> -->
 		<table class="table table-sm table-hover table-striped" id="table_list_peserta">
 			<thead>
 				<th class="text-center">No</th>
@@ -53,6 +57,19 @@
 
 			function openSertifikat(link){
 				
+			}
+
+			function downloadRekapPeserta(id){
+				// $('#btn_download').hide()
+				// $('#btn_download_loading').show()
+				$.ajax({
+					url: '<?=base_url("bacirita/C_Bacirita/downloadRekapPeserta/")?>'+id,
+					method: 'post',
+					data: $(this).serialize(),
+					success: function(data){
+					}, error: function(e){
+					}
+				})
 			}
 		</script>
 	<?php } else { ?>

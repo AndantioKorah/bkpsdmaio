@@ -355,6 +355,9 @@ class C_Rekap extends CI_Controller
         $param['id_unitkerja'] = $skpd[0];
 
         $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0], $param['bulan'], $param['tahun']);
+        // if($this->general_library->isProgrammer()){
+        //     dd($data['pegawai']);
+        // }
         $pagu_tpp = $this->kinerja->countPaguTpp([
             'id_unitkerja' => $flag_sekolah_kecamatan == 0 ? $data['param']['id_unitkerja'] : $pd_group,
             'bulan' => $data['param']['bulan'],

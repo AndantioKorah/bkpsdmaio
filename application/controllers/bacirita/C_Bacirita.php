@@ -99,4 +99,29 @@ class C_Bacirita extends CI_Controller
         $this->load->view('bacirita/V_ListPesertaKegiatan', $data);
     }
 
+    public function downloadRekapPeserta($id){
+        $data['result'] = $this->bacirita->loadPesertaKegiatan($id, 1);
+        $html = $this->load->view('bacirita/V_RekapListPesertaKegiatan', $data, true);
+        $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
+        $this->mpdf->AddPage(
+            'L', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        ); // margin footer
+        // $this->mpdf->setFooter('{PAGENO}');
+        $filename = 'Rekap Peserta '.$data['result'][0]['topik'].'_'.date('ymdhis').'.pdf';
+        $folder = "arsipbkpsdmbacirita";
+        $this->mpdf->WriteHTML($html);
+        $this->mpdf->Output($filename, 'D'); // download force
+        // $this->mpdf->Output($folder.'/'.$filename, 'F'); // download force
+    }
+
 }

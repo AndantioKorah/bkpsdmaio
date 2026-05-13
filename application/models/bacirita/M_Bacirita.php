@@ -905,17 +905,22 @@ class M_Bacirita extends CI_Model
         return $res;
     }
 
-    public function loadPesertaKegiatan($id){
-        return $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, e.nama_jabatan, d.nm_unitkerja, f.nm_pangkat, c.nipbaru_ws')
+    public function loadPesertaKegiatan($id, $flag_rekap = 0){
+        $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, e.nama_jabatan, d.nm_unitkerja, f.nm_pangkat, c.nipbaru_ws, g.topik')
                     ->from('db_bacirita.t_peserta_kegiatan a')
                     ->join('m_user b', 'a.id_m_user = b.id')
                     ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                     ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
                     ->join('db_pegawai.jabatan e', 'c.jabatan = e.id_jabatanpeg')
                     ->join('db_pegawai.pangkat f', 'c.pangkat = f.id_pangkat')
+                    ->join('db_bacirita.t_kegiatan g', 'a.id_t_kegiatan = g.id')
                     ->where('a.id_t_kegiatan', $id)
-                    ->where('a.flag_active', 1)
-                    ->order_by('a.created_date', 'desc')
-                    ->get()->result_array();
+                    ->where('a.flag_active', 1);
+        if($flag_rekap == 1){
+            $this->db->order_by('a.created_date', 'asc');
+        } else {
+            $this->db->order_by('a.created_date', 'desc');
+        }
+        return $this->db->get()->result_array();
     }
 }

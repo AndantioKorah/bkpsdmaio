@@ -1001,9 +1001,9 @@
 			<?php } ?>
 			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()){ ?>
 			<li class="sidebar-item ">
-				<!-- <a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
+				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/presensi-pegawai')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Presensi
-				</a> -->
+				</a>
 			</li>
 			<?php } ?>
 			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->isHakAkses('verifikasi_pendataan_mandiri')){ ?>		

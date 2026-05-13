@@ -54,7 +54,7 @@
         $('#result_search').html('')
         $('#result_search').append(divLoaderNavy)
         $.ajax({
-            url: '<?=base_url("user/C_User/searchDetailAbsenPegawai")?>',
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/searchDetailAbsenPegawai")?>',
             method: 'post',
             // data: $(this).serialize(),
             data: $(this).serialize(),

@@ -4675,6 +4675,41 @@
             return $res;
         }
 
+        public function cronCheckLiveChat(){
+            $data = $this->db->select('a.*, b.created_date as date_send_message')
+                        ->from('t_live_chat a')
+                        ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id')
+                        ->where('a.flag_done', 0)
+                        ->where('b.is_sender_admin', 1)
+                        ->where('a.flag_active', 1)
+                        ->where('b.flag_active', 1)
+                        ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $lastInsert = 0;
+                    $diff = countDiffDateLengkap($d['date_send_message'], date('Y-m-d H:i:s'), ['jam']);
+                    $expl = explode(" ", trim($diff));
+                    if($expl[1] == "jam"){
+                        if($expl[0] >= 2){
+                            $this->db->insert('t_live_chat_detail', [
+                                'id_t_live_chat' => $d['id'],
+                                'is_sender_admin' => 0,
+                                'is_sistem' => 1,
+                                'pesan' => 'dikarenakan tidak ada respon lebih dari 2 jam, sistem secara otomatis telah menyelesaikan Sesi Konsultasi Anda. Silahkan memberikan rating sebelum memulai Sesi Konsultasi yang baru.'
+                            ]);
+                            $lastInsert = $this->db->insert_id();
+                            $this->db->where('id', $d['id'])
+                                    ->update('t_live_chat', [
+                                        'flag_done' => 1,
+                                        'done_date' => date('Y-m-d H:i:s'),
+                                        'last_id_t_live_chat_detail' => $lastInsert
+                                    ]);
+                        }
+                    }
+                }
+            }
+        }
+
         public function cronHashFileBangkom(){
             $data = $this->db->select('*')
                             ->from('db_pegawai.pegdiklat')

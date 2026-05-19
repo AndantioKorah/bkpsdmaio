@@ -43,11 +43,13 @@ class C_Cron extends CI_Controller
     }
 
     public function cronDsBulkTte(){
-        // $this->cronRiwayatJabatanSiasn();
-
         // $this->general->logCron('cronDsBulkTte');
 		// $this->layanan->cronBulkDs();
 	}
+
+    public function cronCheckLiveChat(){
+        $this->user->cronCheckLiveChat();
+    }
 
     public function updateSisaCuti($id, $operand){
 		// $this->kepegawaian->updateSisaCuti($id, $operand);

@@ -197,9 +197,13 @@
 			1. Wali Kota Manado (sebagai laporan);<br>
 			2. Wakil Wali Kota Manado;<br>
 			3. Sekretaris Daerah Kota Manado;<br>
-			<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
+				<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
 				4. Kepala Dinas Pendidikan dan Kebudayaan Kota Manado;<br>
-			<?php } else { ?>
+			<?php } else if(substr($profil_pegawai['nm_unitkerja'], 0, 9) == "Kelurahan")  { ?>
+				4. Lurah <?= substr($profil_pegawai['nm_unitkerja'], 9) ;?> Kota Manado;<br>
+			<?php } else if(substr($profil_pegawai['nm_unitkerja'], 0, 9) == "Kecamatan")  { ?>
+				4. Camat <?= substr($profil_pegawai['nm_unitkerja'], 9) ;?> Kota Manado;<br>
+			<?php } else  { ?>
 				4. Kepala <?= $profil_pegawai['nm_unitkerja'];?> Kota Manado;<br>
 			<?php } ?>
 			5. Arsip.

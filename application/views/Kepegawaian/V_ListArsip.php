@@ -59,12 +59,15 @@
                 onclick="loadEditArsipLain('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailCuti btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
                 <?php } ?>
                     <?php if($rs['id_dokumen'] != 105) { ?>
+                     <?php if($rs['flag_allow_delete'] == 1) { ?>
                 <button onclick="deleteArsip('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-                   <?php } ?>
+                    <?php } ?>
+                <?php } ?>
 
               <?php if($kode == 1) { ?>
                 <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
               <?php if($rs['id_dokumen'] != 105) { ?>
+                <?php if($rs['flag_allow_delete'] == 1) { ?>
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
@@ -73,6 +76,7 @@
                 <?php } ?>
                 <?php } ?>
                 <?php } ?>
+                   <?php } ?>
                 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <!-- <button onclick="deleteArsip('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>  -->

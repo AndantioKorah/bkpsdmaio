@@ -87,6 +87,11 @@ class C_Kepegawaian extends CI_Controller
 		$this->load->view('kepegawaian/V_ListSkp', $data);
 	}
 
+		public function loadListPak($id_peg){
+		$data['result'] = $this->kepegawaian->getPak($id_peg);
+		$this->load->view('kepegawaian/V_ListPak', $data);
+	}
+
 	public function loadListBerkasPns($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getBerkasPns($nip,$kode);
 		// dd($data);

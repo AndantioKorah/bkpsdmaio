@@ -4889,5 +4889,26 @@
 
             return $rs;
         }
+
+        public function inputSumpahJanji(){
+            $data = $this->db->select('b.nipbaru_ws, c.id, b.id_peg, b.nama')
+                        ->from('t_temp_sumpah_janji a')
+                        ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                        ->join('db_pegawai.pegarsip c', 'b.id_peg = c.id_pegawai AND c.id_dokumen = 106 AND c.flag_active = 1', 'left')
+                        ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    if($d['id'] == null){
+                        $this->db->insert('db_pegawai.pegarsip', [
+                            'nama_sk' => "SURAT PERNYATAAN PELANTIKAN PPPK DALAM JABATAN FUNGSIONAL",
+                            'gambarsk' => "JAFUNG_180526_".$d['nipbaru_ws']."_sign.pdf",
+                            'id_pegawai' => $d['id_peg'],
+                            'status' => 2,
+                            'id_dokumen' => 106
+                        ]);
+                    }
+                }
+            }
+        }
 	}
 ?>

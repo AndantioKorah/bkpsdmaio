@@ -2011,6 +2011,9 @@
                     // }
                     }
             }
+            if($rs['code'] == 1){
+                return $rs;
+            }
         }
         $list_tanggal_exclude = null;
         $temp_list_nip = null;

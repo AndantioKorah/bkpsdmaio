@@ -521,7 +521,9 @@
 <script>
 	let loadLiveChat = 0;
 	$(function(){
-
+		$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
+			// loadLiveChat = 1
+		})
 	})
 
 	$('#liveChatIcon').on('click', function(e){
@@ -531,9 +533,6 @@
 
 	function toggleLiveChat(flag_wrapper = 0){
 		// if(loadLiveChat == 0){
-			$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
-				loadLiveChat = 1
-			})
 		// }
 		if(flag_wrapper == 1){
 			$('.div_live_chat').removeClass('div_live_chat_slide_in')

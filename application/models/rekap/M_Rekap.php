@@ -2013,8 +2013,11 @@
             }
             if($rs['code'] == 1){
                 return $rs;
+            } else {
+                $list_pegawai = $rs['list_pegawai'];
             }
         }
+        
         $list_tanggal_exclude = null;
         $temp_list_nip = null;
         if($flag_absen_aars == 1){

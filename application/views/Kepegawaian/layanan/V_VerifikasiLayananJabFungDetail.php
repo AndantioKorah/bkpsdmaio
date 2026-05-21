@@ -215,9 +215,12 @@
     <button onclick="getFile(file='skp2')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SKP <?=$tahun_2_lalu;?></button>
     </li> 
   <?php } ?>
-  <li class="nav-item nav-item-layanan" role="presentation">
+  <!-- <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='pak')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">PAK </button>
-  </li>
+  </li> -->
+  <li class="nav-item nav-item-layanan" role="presentation">
+                <button onclick="loadFormSkp()" class="nav-link nav-link-layanan" id="pills-skp-tab" data-bs-toggle="pill" data-bs-target="#pills-skp" type="button" role="tab" aria-controls="pills-cuti" aria-selected="false">PAK</button>
+    </li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='peta_jabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peta Jabatan</button>
   </li>
@@ -543,7 +546,7 @@
 <span id="ket"></span>
 <div id="divloader" class="col-lg-12 text-center">
 </div>
-<h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i> LOADING...</h5>
+<h5 style="display: none;"  class="text-center iframe_loader"><i class="fa fa-spin fa-spinner"></i>a LOADING...</h5>
             <!-- <iframe style="display: none; width: 100vh; height: 80vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	 -->
             <iframe style="display: none; width: 100%;height: 90vh;" type="application/pdf"  id="view_file_verif"  frameborder="0" ></iframe>	
           </div>
@@ -552,7 +555,10 @@
 <style>
 </style>
 
-
+ <div class="tab-pane fade" id="pills-skp" role="tabpanel" aria-labelledby="pills-skp-tab">
+                <div id="form_skp"></div>
+              </div>
+              
 
 <!-- Modal -->
 <div class="modal fade" id="modelVerif" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1041,5 +1047,22 @@ function kirimBkad(id,status){
               }
 
               });
+
+
+   function loadFormSkp(){
+    var id_peg = "<?=$result[0]['id_peg'];?>";
+    $('#form_skp').html('')
+    $('#form_skp').append(divLoaderNavy)
+    $('#form_skp').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPak/")?>'+id_peg+'/1', function(){
+      $('#loader').hide()
+    })
+
+
+            // $('#form_skp').html(' ')
+            //   $('#form_skp').append(divLoaderNavy)
+            //   $('#form_skp').load('<?=base_url('kepegawaian/C_Kepegawaian/loadFormSkp/')?>'+nip, function(){
+            //   $('#loader').hide()    
+            //   })
+          }
 
 </script>

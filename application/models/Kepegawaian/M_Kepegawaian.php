@@ -668,6 +668,22 @@ class M_Kepegawaian extends CI_Model
                             return $query;
         }
 
+            function getPak($id_peg){
+             $this->db->select('*,CONCAT(d.nama_dokumen, '.' , " / ", d.keterangan) AS name')
+                            ->from('m_user a')
+                            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                            ->join('db_pegawai.pegarsip c', 'b.id_peg = c.id_pegawai')
+                            ->join('m_dokumen d', 'c.id_dokumen = d.id_dokumen', 'left')
+                            ->where('c.id_pegawai', $id_peg)
+                            ->where('c.flag_active', 1)
+                            ->where('a.flag_active', 1)
+                             ->where('c.id_dokumen', 11)
+                            ->order_by('c.created_date','desc');
+                            $query = $this->db->get()->result_array();
+                            return $query;
+        }
+
+
         function getBerkasPns($nip,$kode){
             $this->db->select('*')
                            ->from('m_user a')
@@ -2143,13 +2159,13 @@ class M_Kepegawaian extends CI_Model
                                         ->get()->result_array();
 
             if($cekArsip) {
-                if($this->input->post('jenis_arsip') != 11){
+            if($this->input->post('jenis_arsip') != 11){
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
             $dataInsert['gambarsk']         = $filename;
             $this->db->where('id', $cekArsip[0]['id'])
                 ->update('db_pegawai.pegarsip', $dataInsert);
-                } else {
+            } else {
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
             $dataInsert['gambarsk']         = $filename;
@@ -2162,7 +2178,7 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
             $result = $this->db->insert('db_pegawai.pegarsip', $dataInsert);
-                }
+            }
             } else {
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');

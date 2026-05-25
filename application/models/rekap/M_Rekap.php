@@ -1468,7 +1468,7 @@
         }
 
         if($this->general_library->isProgrammer()){
-            dd($result);
+            // dd($result);
         }
 
         return $result;
@@ -2907,8 +2907,8 @@
                         $min_date = $expl[0]."-".$bulan."-01"; // min. tanggal penarikan agar terbaca hukdis
                         $rekap_date = $temp['tahun']."-".$temp['bulan']."-01";
                         if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197611272006041013" && $l['id'] == 3469){
-                            // dd($l);
-                            dd($last_date."     ".$valid_date."      ".$rekap_date."     ".$min_date);
+                            // dd(json_encode($list_hukdis));
+                            // dd($last_date."     ".$valid_date."      ".$rekap_date."     ".$min_date);
                         }
                         // if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197401312010012002"){
                         //     dd($temp['bulan']." ; ".$temp['tahun']." ; ".$min_date." ; ".$valid_date);

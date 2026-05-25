@@ -618,7 +618,8 @@
 
 <body>
   <?php if($this->general_library->isProgrammer() ||
-  $this->general_library->getId() == 87){ ?>
+  $this->general_library->getId() == 87 ||
+  $this->general_library->isPegawaiBkpsdm()){ ?>
     <div class="div_live_chat div_live_chat_slide_out">
       <?php // $this->load->view('user/V_LiveChat', null) ?>
     </div>

@@ -1949,6 +1949,7 @@
 
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
+        $tempListPegawai = $list_pegawai;
         // if($this->general_library->isProgrammer()){
         //     dd($flag_rekap_tpp);
         // }
@@ -1965,7 +1966,7 @@
                                 // cari jika id unitkerja sesuai parameter, bulan dan tahun sesuai parameter
                                 // cari jika semua unitkerja, bulan dan tahun sesuai parameter
                                 // cari jika unitkerja sesuai parameter, semua bulan dan tahun sesuai
-            
+
             if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
                 if($rs['code'] == 1){
@@ -1982,7 +1983,7 @@
                 }
             } else {
                 if(($data['bulan'] == "02" && $data['tahun'] == 2026) || $data['id_unitkerja'] == 1000001){
-
+                    $list_pegawai = $tempListPegawai;
                 } else {
                     $tmpListPeg = null;
                     // if($this->general_library->isProgrammer()){
@@ -2009,12 +2010,18 @@
                     // if($tmpListPeg != null){
                         $list_pegawai = $tmpListPeg;
                     // }
+                    $explodeSkpd = explode(";", $data['skpd']);
+                    if(stringStartWith('SD', $explodeSkpd[1]) ||
+                        stringStartWith('SMP', $explodeSkpd[1]) || 
+                        stringStartWith('TK', $explodeSkpd[1]) ||
+                        stringStartWith('Sekolah Kecamatan', $explodeSkpd[1])){
+                            if($rs['code'] == 1){
+                                return $rs;
+                            } else {
+                                $list_pegawai = $rs['list_pegawai'];
+                            }
                     }
-            }
-            if($rs['code'] == 1){
-                return $rs;
-            } else {
-                $list_pegawai = $rs['list_pegawai'];
+                }
             }
         }
         

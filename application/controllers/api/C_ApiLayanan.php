@@ -90,12 +90,22 @@ class C_ApiLayanan extends RestController
         }
 
         $data = $this->general_library->getPaguTppPegawaiByIdPegawai($pegawai['id'], $bulan, $tahun, 0);
-
+        $result = [
+            'pagu_tpp' => formatCurrencyWithoutRpNew($data['pagu_tpp']['pagu_tpp'], 0),
+            'capaian_tpp' => formatCurrencyWithoutRpNew($data['capaian_tpp'], 0),
+            'presentase_capaian_tpp' => formatCurrencyWithoutRpNew($data['presentase_capaian_tpp'], 0),
+            'pagu_disiplin_kerja' => formatCurrencyWithoutRpNew($data['pagu_dk'], 0),
+            'capaian_disiplin_kerja' => formatCurrencyWithoutRpNew($data['capaian_dk'], 0),
+            'presentase_capaian_disiplin_kerja' => formatCurrencyWithoutRpNew($data['presentase_dk'], 0),
+            'pagu_penilaian_kinerja' => formatCurrencyWithoutRpNew($data['pagu_pk'], 0),
+            'capaian_penilaian_kinerja' => formatCurrencyWithoutRpNew($data['capaian_pk'], 0),
+            'presentase_capaian_penilaian_kinerja' => formatCurrencyWithoutRpNew($data['presentase_pk'], 0),
+        ];
         $this->response([
             'code' => RC_PROCESS_SUCCESS['rc_code'],
             'status' => true,
             'message' => RC_PROCESS_SUCCESS['message'],
-            "data" => $data
+            "data" => $result,
         ], RC_PROCESS_SUCCESS['code']);
     }
 

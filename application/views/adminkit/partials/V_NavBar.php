@@ -320,7 +320,9 @@
 			
 
 			<!-- live chat -->
-			<?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 87){ ?>
+			<?php if($this->general_library->isProgrammer() ||
+			$this->general_library->getId() == 87 ||
+			$this->general_library->isPegawaiBkpsdm()){ ?>
 				<li class="nav-item">
 					<div class="position-relative">
 						<a class="nav-icon" href="#" id="liveChatIcon">
@@ -522,6 +524,7 @@
 	let loadLiveChat = 0;
 	$(function(){
 		$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
+			console.log('asdasd')
 			// loadLiveChat = 1
 		})
 	})

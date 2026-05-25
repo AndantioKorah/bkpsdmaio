@@ -4436,6 +4436,15 @@
                             ->where('id', $data['id_t_live_chat'])
                             ->get()->row_array();
 
+            if($chat['flag_done'] == 1){
+                $rs = [
+                    'code' => 1,
+                    'message' => "Sesi Konsultasi sudah berakhir, pesan tidak dapat dikirimkan"
+                ];
+                $this->db->trans_rollback();
+                return $rs;
+            }
+
             $updateChat = null;
             if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                 || $this->general_library->isProgrammer()

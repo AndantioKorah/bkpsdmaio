@@ -141,6 +141,11 @@ class C_Cron extends CI_Controller
         // $this->cronSyncBangkomToSiasn();
     }
 
+    public function cronAsyncManual(){
+        $this->general->logCron('cronAsync');
+        $this->general->cronAsync();
+    }
+
     public function cronAsync(){
         // $this->general->logCron('cronAsync');
         // $this->general->cronAsync();

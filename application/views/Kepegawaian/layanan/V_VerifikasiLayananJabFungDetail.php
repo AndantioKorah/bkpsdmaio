@@ -1051,6 +1051,12 @@ function kirimBkad(id,status){
 
    function loadFormSkp(){
     var id_peg = "<?=$result[0]['id_peg'];?>";
+
+    $('#view_file_verif').hide()
+    // $('.iframe_loader').show()  
+    // $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    $('#ket').html('');
+
     $('#form_skp').html('')
     $('#form_skp').append(divLoaderNavy)
     $('#form_skp').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListPak/")?>'+id_peg+'/1', function(){

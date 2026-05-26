@@ -1065,9 +1065,8 @@ class C_Kepegawaian extends CI_Controller
 		// $this->load->library('pdf');
 		$data['result'] = $this->kepegawaian->getDataUsulLayanan($id_usul,$jenis_layanan);
 		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
-		$this->load->view('kepegawaian/surat/V_SuratPidana', $data);
+		// $this->load->view('kepegawaian/surat/V_SuratPidana', $data);
   			
-
 		$this->load->library('pdfgenerator');
         
         // filename dari pdf ketika didownload
@@ -3547,7 +3546,7 @@ class C_Kepegawaian extends CI_Controller
 
 	
 		public function downloadDraftPidanaHukdis(){
-
+		
 		$nip = $this->input->post('nip');
 		$jenis = $this->input->post('jenis');
 		$data['nomor_pertek'] = $this->input->post('nomor_pertek');
@@ -3583,7 +3582,7 @@ class C_Kepegawaian extends CI_Controller
 		$file_pdf = $random_number."surat_hukdis_".$data['profil_pegawai']['nipbaru_ws'];  	
 		}
 		if($jenis == 2){
-		$html = $this->load->view('kepegawaian/surat/V_SuratPidana', $data, true); 
+		$html = $this->load->view('kepegawaian/surat/V_SuratPidana2', $data, true); 
 		$file_pdf = $random_number."surat_pidana_".$data['profil_pegawai']['nipbaru_ws'];  	
 		} 
 		$mpdf->WriteHTML($html);
@@ -3690,7 +3689,10 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->showImageErrors = true;
 		$mpdf->Output($url1, 'F');
 		$mpdf->Output($url2, 'F');
-		$mpdf->Output($file_pdf, 'D');
+		// $mpdf->Output($file_pdf, 'D');
+		$this->load->helper(array('url','download'));
+		force_download($url1,NULL);
+
 		$dataPost = $this->input->post();
 		$dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
 		if($statusDS == 0){
@@ -3978,14 +3980,16 @@ class C_Kepegawaian extends CI_Controller
 		$mpdf->showImageErrors = true;
 		$mpdf->Output($url1, 'F');
 		$mpdf->Output($url2, 'F');
-		$mpdf->Output($file_pdf, 'D');
+		// $mpdf->Output($file_pdf, 'D');
+		$this->load->helper(array('url','download'));
+		force_download($url1,NULL);
+		
 		$dataPost = $this->input->post();
 		$dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
 		$dataPost['jenis'] = $jenis;
 		if($statusDS == 0){
 		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
 		}
-
 
     }
 

@@ -215,10 +215,10 @@
 	</table>
 	</div>
 	<div class="footer-sk">
-	<!-- <img src="<?=base_url();?>assets/images/footer.png" alt=""> -->
+	<img src="<?=base_url();?>assets/images/footer.png" alt="">
 	</div>
 	<?php
-        $this->load->view('adminkit/partials/V_FooterBsre');
+        // $this->load->view('adminkit/partials/V_FooterBsre');
     ?>
 	<!-- <img style="width: 100%;margin-top: 90px;" src="<?=base_url();?>assets/images/footer.png" alt=""> -->
 	<!-- <span >

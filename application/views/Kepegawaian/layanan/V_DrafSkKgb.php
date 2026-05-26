@@ -294,7 +294,7 @@
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="width:38%;height:100px;text-align: center;"></td>
+			<td class="center" style="width:38%;height:100px;text-align: center;">^</td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>

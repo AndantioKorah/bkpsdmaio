@@ -69,7 +69,16 @@ class C_Rekap extends CI_Controller
             // $flag_rekap_tpp = 1;
         }
 
-
+        $flag_rekap_tpp = 0;
+        $explodeSkpd = explode(";", $param['skpd']);
+        if(stringStartWith('SD', $explodeSkpd[1]) ||
+            stringStartWith('SMP', $explodeSkpd[1]) || 
+            stringStartWith('TK', $explodeSkpd[1]) ||
+            stringStartWith('Sekolah Kecamatan', $explodeSkpd[1])){
+                $flag_rekap_tpp = 1;
+                // hanya sekolah yang dibuat flag_rekap_tpp = 1 karena sertifikasi menggunakan rekap absensi
+        }
+        // dd($flag_rekap_tpp);
         $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha, $flag_rekap_tpp, 0);
         if($flag_alpha == 1){
             dd($data['result']);

@@ -141,6 +141,11 @@ class C_Cron extends CI_Controller
         // $this->cronSyncBangkomToSiasn();
     }
 
+    public function cronAsyncManual(){
+        $this->general->logCron('cronAsync');
+        $this->general->cronAsync();
+    }
+
     public function cronAsync(){
         // $this->general->logCron('cronAsync');
         // $this->general->cronAsync();
@@ -313,27 +318,28 @@ class C_Cron extends CI_Controller
 
     public function funcTest($str = ""){
         // $this->general->editPdf();
-        dd(cekWaktuKerja(0));
+        // dd(cekWaktuKerja(0));
         // $this->user->insertPesertaBkpsdmBacirita();
 
         // dd($this->general_library->getDataKabanBkpsdm());
         // $randomString = generateRandomString(30, 1, 't_file_ds'); 
         // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
-        $contentQr = "https://docs.google.com/spreadsheets/d/1ksMYI1i0duXJOQCb46yIB-RmSK-CDNf5oQRvpsOYjDo/edit?gid=0#gid=0";
-        $res['qr'] = generateQr($contentQr);
-        echo "<img style='width: 300px; height: 300px;' src='".$res['qr']."'></img>";
+        // $contentQr = "https://docs.google.com/spreadsheets/d/1ksMYI1i0duXJOQCb46yIB-RmSK-CDNf5oQRvpsOYjDo/edit?gid=0#gid=0";
+        // $res['qr'] = generateQr($contentQr);
+        // echo "<img style='width: 300px; height: 300px;' src='".$res['qr']."'></img>";
         // $this->load->view('adminkit/partials/V_TemplateTte', $res);
 
         // dd(generateRandomString(16));
 
-        // $date = date("Y-m-d H:i:s");
-        // $nip = "199502182020121013";
-        // $publickKey = "AARS_251016378";
-        // $secretKey = "mb8V34s8xtxqEFVP";
-        // $string = $date.";".$secretKey;
+        $date = date("Y-m-d H:i:s");
+        $nip = "199502182020121013";
+        $publickKey = "AARS_251016378";
+        $secretKey = "mb8V34s8xtxqEFVP";
 
-        // $encrypted = AESEncrypt($string, $publickKey, $secretKey);
-        // dd("token: ".$encrypted);
+        $string = $date.";".$secretKey;
+
+        $encrypted = AESEncrypt($string, $publickKey, $secretKey);
+        dd($encrypted);
         // dd(AESDecrypt($encrypted, $secretKey));
     }
 

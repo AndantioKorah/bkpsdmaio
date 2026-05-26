@@ -320,7 +320,9 @@
 			
 
 			<!-- live chat -->
-			<?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 87){ ?>
+			<?php if($this->general_library->isProgrammer() ||
+			$this->general_library->getId() == 87 ||
+			$this->general_library->isPegawaiBkpsdm()){ ?>
 				<li class="nav-item">
 					<div class="position-relative">
 						<a class="nav-icon" href="#" id="liveChatIcon">
@@ -521,7 +523,10 @@
 <script>
 	let loadLiveChat = 0;
 	$(function(){
-
+		$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
+			console.log('asdasd')
+			// loadLiveChat = 1
+		})
 	})
 
 	$('#liveChatIcon').on('click', function(e){
@@ -531,9 +536,6 @@
 
 	function toggleLiveChat(flag_wrapper = 0){
 		// if(loadLiveChat == 0){
-			$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
-				loadLiveChat = 1
-			})
 		// }
 		if(flag_wrapper == 1){
 			$('.div_live_chat').removeClass('div_live_chat_slide_in')

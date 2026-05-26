@@ -1468,7 +1468,7 @@
         }
 
         if($this->general_library->isProgrammer()){
-            dd($result);
+            // dd($result);
         }
 
         return $result;
@@ -1949,6 +1949,7 @@
 
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
+        $tempListPegawai = $list_pegawai;
         // if($this->general_library->isProgrammer()){
         //     dd($flag_rekap_tpp);
         // }
@@ -1957,15 +1958,14 @@
                                 ->from('t_except_bangkom')
                                 ->where('flag_active', 1)
                                 ->where("
-                                    (id_unitkerja = '".$data['id_unitkerja']."' AND bulan = '".intval($data['bulan'])."' AND tahun = '".intval($data['tahun'])."') OR
-                                    (id_unitkerja = '0' AND bulan = '".intval($data['bulan'])."' AND tahun = '".intval($data['tahun'])."') OR
-                                    (id_unitkerja = '".$data['id_unitkerja']."' AND bulan = '0' AND tahun = '0')
+                                    (id_unitkerja = '".$data['id_unitkerja']."' AND bulan = '".intval($data['bulan'])."' AND tahun = '".intval($data['tahun'])."' AND flag_active = 1) OR
+                                    (id_unitkerja = '0' AND bulan = '".intval($data['bulan'])."' AND tahun = '".intval($data['tahun'])."' AND flag_active = 1) OR
+                                    (id_unitkerja = '".$data['id_unitkerja']."' AND bulan = '0' AND tahun = '0' AND flag_active = 1)
                                 ")
                                 ->get()->row_array();
                                 // cari jika id unitkerja sesuai parameter, bulan dan tahun sesuai parameter
                                 // cari jika semua unitkerja, bulan dan tahun sesuai parameter
                                 // cari jika unitkerja sesuai parameter, semua bulan dan tahun sesuai
-            
             if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
                 $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
                 if($rs['code'] == 1){
@@ -1980,11 +1980,23 @@
                         $i++;
                     }
                 }
+                $explodeSkpd = explode(";", $data['skpd']);
+                if(stringStartWith('SD', $explodeSkpd[1]) ||
+                    stringStartWith('SMP', $explodeSkpd[1]) || 
+                    stringStartWith('TK', $explodeSkpd[1]) ||
+                    stringStartWith('Sekolah Kecamatan', $explodeSkpd[1])){
+                        if($rs['code'] == 1){
+                            return $rs;
+                        } else {
+                            $list_pegawai = $rs['list_pegawai'];
+                        }
+                }
             } else {
                 if(($data['bulan'] == "02" && $data['tahun'] == 2026) || $data['id_unitkerja'] == 1000001){
-
+                    $list_pegawai = $tempListPegawai;
                 } else {
                     $tmpListPeg = null;
+                    $temp = $list_pegawai;
                     // if($this->general_library->isProgrammer()){
                         $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
                         $i = 0;
@@ -2009,9 +2021,17 @@
                     // if($tmpListPeg != null){
                         $list_pegawai = $tmpListPeg;
                     // }
+                    $explodeSkpd = explode(";", $data['skpd']);
+                    if(stringStartWith('SD', $explodeSkpd[1]) ||
+                        stringStartWith('SMP', $explodeSkpd[1]) || 
+                        stringStartWith('TK', $explodeSkpd[1]) ||
+                        stringStartWith('Sekolah Kecamatan', $explodeSkpd[1])){
+                        $list_pegawai = $temp;       
                     }
+                }
             }
         }
+        
         $list_tanggal_exclude = null;
         $temp_list_nip = null;
         if($flag_absen_aars == 1){
@@ -2894,8 +2914,8 @@
                         $min_date = $expl[0]."-".$bulan."-01"; // min. tanggal penarikan agar terbaca hukdis
                         $rekap_date = $temp['tahun']."-".$temp['bulan']."-01";
                         if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197611272006041013" && $l['id'] == 3469){
-                            // dd($l);
-                            dd($last_date."     ".$valid_date."      ".$rekap_date."     ".$min_date);
+                            // dd(json_encode($list_hukdis));
+                            // dd($last_date."     ".$valid_date."      ".$rekap_date."     ".$min_date);
                         }
                         // if($this->general_library->isProgrammer() && $l['nipbaru_ws'] == "197401312010012002"){
                         //     dd($temp['bulan']." ; ".$temp['tahun']." ; ".$min_date." ; ".$valid_date);

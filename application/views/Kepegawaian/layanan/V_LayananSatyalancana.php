@@ -264,7 +264,6 @@ ol {
   }
 </style>
 
-<?php if($pesan == null ) { ?>
 
 <div class="row">
 <div class="col-lg-12 mt-3">
@@ -361,7 +360,7 @@ ol {
             <?php if($id_m_layanan == 37) { ?> 
 			<li>
 				<a class="<?php if($satyalancana_10) echo 'select'; else echo 'unselect';?>" <?php if($satyalancana_10) { ?>
-				onclick="viewBerkasPangkat('<?=$satyalancana_10['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+				onclick="viewBerkasPangkat('<?=$satyalancana_10['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> Satyalancana Karya Satya 10 Tahun <i
 				class="fas fa-<?php if($satyalancana_10) echo ''; else echo '';?>"></i></a>
 			</li>
@@ -369,13 +368,13 @@ ol {
             <?php if($id_m_layanan == 38) { ?> 
             <li>
 				<a class="<?php if($satyalancana_10) echo 'select'; else echo 'unselect';?>" <?php if($satyalancana_10) { ?>
-				onclick="viewBerkasPangkat('<?=$satyalancana_10['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+				onclick="viewBerkasPangkat('<?=$satyalancana_10['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> Satyalancana Karya Satya 10 Tahun <i
 				class="fas fa-<?php if($satyalancana_10) echo ''; else echo '';?>"></i></a>
 			</li>
             <li>
 				<a class="<?php if($satyalancana_20) echo 'select'; else echo 'unselect';?>" <?php if($satyalancana_20) { ?>
-				onclick="viewBerkasPangkat('<?=$satyalancana_20['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+				onclick="viewBerkasPangkat('<?=$satyalancana_20['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> Satyalancana Karya Satya 20 Tahun <i
 				class="fas fa-<?php if($satyalancana_20) echo ''; else echo '';?>"></i></a>
 			</li>
@@ -390,7 +389,16 @@ ol {
 
 		  <!-- <button type="submit" class="btn btn-primary float-right ">Ajukan</button> -->
           <?php if($status_layanan['status'] == 1) { ;?>
-					<button type="submit" class="btn btn-primary float-right ">Ajukan</button>
+
+          <?php if($pesan == null ) { ?>
+		  <button type="submit" class="btn btn-primary float-right ">Ajukan</button>
+          <?php } else { ?>
+          <center>
+          <b style="color:red;">
+          <?= $pesan;?>
+         </b>
+         </center>
+          <?php } ?>
           <?php } else { ?>
             <p>
               <h4>
@@ -442,9 +450,7 @@ ol {
 	</div>
 </div>
 
-<?php } else { ?>
-<?=$pesan;?>
-<?php } ?>
+
 
 <script>
 var id_m_layanan = "<?=$id_m_layanan;?>"
@@ -551,7 +557,9 @@ function viewBerkasPangkat(filename,id){
         $link = "<?=base_url();?>/arsipberkaspns/"+filename+"?v="+number;
     } else if(id == 6){
         $link = "<?=base_url();?>/arsipjabatan/"+filename+"?v="+number;
-    }  else {
+    } else if(id == 7){
+        $link = "<?=base_url();?>/arsippenghargaan/"+filename+"?v="+number;
+    }   else {
         $link = "<?=base_url();?>/arsiplain/"+filename+"?v="+number;
     }  
    

@@ -61,8 +61,10 @@
                   <td class="text-left"><?=$rs['keterangan']?></td>
               <?php } ?>
             <td>
+            <?php if($rs['file_pengantar']) { ?>
             <button href="#modal_view_file" onclick="openFilePengantar('<?=$rs['file_pengantar']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
             <i class="fa fa-file-pdf"></i></button>
+            <?php } ?>
             </td>
             <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25 || $m_layanan == 26 || $m_layanan == 28) { ?>
           <td class="text-left">

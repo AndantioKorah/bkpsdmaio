@@ -133,7 +133,12 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
   
   <div class="form-group" style="display:nonex" id="nama_peg">
     <label>Nama Penghargaan</label>
-    <input class="form-control customInput" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan"  />
+    <input class="form-control customInput" type="text" id="nm_pegpenghargaan" name="nm_pegpenghargaan" list="sat" />
+     <datalist id="sat">
+        <option >Satyalancana Karya Satya 10 Tahun</option>
+        <option >Satyalancana Karya Satya 20 Tahun</option>
+        <option >Satyalancana Karya Satya 30 Tahun</option>
+      </datalist>
   </div>
 
   <div class="form-group">

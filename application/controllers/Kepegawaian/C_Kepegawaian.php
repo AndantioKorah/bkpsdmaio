@@ -623,6 +623,7 @@ class C_Kepegawaian extends CI_Controller
 			$data['pendidikan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.tktpendidikan', 'id_tktpendidikan', 'asc');
 			$data['satyalencana'] = $this->kepegawaian->getDataSatyalencanaPegawai($nip);
 			$data['plt_kepsek'] = $this->kepegawaian->getDataPltKepsek($data['profil_pegawai']['id_m_user']);
+			$data['satyalencana'] = $this->kepegawaian->getDataSatyalencanaPegawai($nip);
 			
 			render('kepegawaian/V_ProfilPegawai', '', '', $data);
 		}
@@ -665,6 +666,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['mbidang'] = $this->kepegawaian->getMasterBidang($data['profil_pegawai']['skpd']);
 
 		$data['layananSelesai'] = $this->kepegawaian->cekLayananSelesai();
+		$data['satyalencana'] = $this->kepegawaian->getDataSatyalencanaPegawai($this->general_library->getUserName());
+
 		// dd($data['layananSelesai']);
 		// dd(1);
 
@@ -2828,6 +2831,10 @@ class C_Kepegawaian extends CI_Controller
 		if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16){
 			$data['nm_layanan'] = "JABATAN FUNGSIONAL";
 		}
+
+		if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){
+			$data['nm_layanan'] = "SATYALANCANA KARYA SATYA";
+		}
 		
 		$data['id_m_layanan'] = $id_m_layanan;
 
@@ -2873,6 +2880,8 @@ class C_Kepegawaian extends CI_Controller
 		} else if($id_m_layanan == 34){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		} else if($id_m_layanan == 35){
+			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
+		} else if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		}
 	}
@@ -3092,7 +3101,20 @@ class C_Kepegawaian extends CI_Controller
 			$data['pengujian_kesehatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','36','0',$id_peg);	
 			$data['sertifikat_latsar'] = $this->kepegawaian->getSertifikatLatsarAdmin($id_peg);
 			render('kepegawaian/layanan/V_VerifikasiLayananCpnsPnsDetail.php', '', '', $data);
-		}   
+		} else if($layanan == 36 || $layanan == 37 || $layanan == 38){
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_peg);
+		    $data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
+			if($layanan == 37){
+			$data['satyalancana_10'] = $this->kepegawaian->getDokumenSatyalancanaAdmin(1,$id_peg); 
+			} else if($layanan == 38){
+			$data['satyalancana_10'] = $this->kepegawaian->getDokumenSatyalancanaAdmin(1,$id_peg); 
+			$data['satyalancana_20'] = $this->kepegawaian->getDokumenSatyalancanaAdmin(2,$id_peg); 
+			}
+			$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
+			$data['drh'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','35','0',$id_peg);	
+
+			render('kepegawaian/layanan/V_VerifikasiLayananSatyalancanaDetail.php', '', '', $data);
+		}     
 		
 
 		
@@ -4366,31 +4388,31 @@ class C_Kepegawaian extends CI_Controller
 
 		if($id_layanan == 36){
 		if($masakerjabulan < 120) {
-			$data['pesan'] = 'Masa Kerja belum 10 Tahun';			
+			$data['pesan'] = 'Masa Kerja belum 10 Tahun, belum bisa pengajuan layanan';			
 		}
 		$data['satyalancana_10'] = $this->kepegawaian->getDokumenSatyalancana(1); 
 		if($data['satyalancana_10']){
-			$data['pesan'] = 'Sudah ada penghargaan Sayatlancana 10 Tahun';
+			$data['pesan'] = 'Sudah ada penghargaan Satyalancana Karya Satya 10 Tahun';
 		}
 		}
 
 		if($id_layanan == 37){
 		if($masakerjabulan < 240) {
-			$data['pesan'] = 'Masa Kerja belum 20 Tahun';			
+			$data['pesan'] = 'Masa Kerja belum 20 Tahun, belum bisa pengajuan layanan';			
 		}
 		$data['satyalancana_20'] = $this->kepegawaian->getDokumenSatyalancana(2); 
 		if($data['satyalancana_20']){
-			$data['pesan'] = 'Sudah ada penghargaan Sayatlancana 30 Tahun';
+			$data['pesan'] = 'Sudah ada penghargaan Satyalancana Karya Satya 30 Tahun';
 		}
 		}
 
 		if($id_layanan == 38){
 		if($masakerjabulan < 360) {
-			$data['pesan'] = 'Masa Kerja belum 30 Tahun';			
+			$data['pesan'] = 'Masa Kerja belum 30 Tahun, belum bisa pengajuan layanan';			
 		}
 		$data['satyalancana_30'] = $this->kepegawaian->getDokumenSatyalancana(3); 
 		if($data['satyalancana_30']){
-			$data['pesan'] = 'Sudah ada penghargaan Sayatlancana 30 Tahun';
+			$data['pesan'] = 'Sudah ada penghargaan Satyalancana Karya Satya 30 Tahun';
 		}
 		}
 

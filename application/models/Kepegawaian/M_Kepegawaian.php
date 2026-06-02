@@ -14416,7 +14416,10 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 35){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/cpns_pns';
-            }   else {
+            } else if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/sayatalancana';
+            }    else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
 
@@ -17408,6 +17411,57 @@ public function checkListIjazahCpns($id, $id_pegawai){
          ->where('b.id_m_status_pegawai', 1);
          $dataBangkom = $this->db->get()->result_array();
         return $dataBangkom;  
+    }
+
+      public function getDokumenSatyalancana($id)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('status !=', 3)
+        ->where('id_m_satyalencana', $id)
+        ->order_by('id', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.pegpenghargaan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function insertUsulLayananSatyalancana($id_m_layanan){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+        $this->db->trans_begin();
+   
+            $cek =  $this->db->select('*')
+                ->from('t_layanan a')
+                ->where('a.id_m_user', $this->general_library->getId())
+                ->where('a.flag_active', 1)
+                ->where('a.id_m_layanan', $id_m_layanan)
+                ->where('a.status', 0)
+                ->get()->result_array();
+        // dd($cek);
+            if($cek){
+                $res = array('msg' => 'Masih ada usul layanan yang belum disetujui', 'success' => false);
+            } else {
+                $dataUsul['id_m_user']      = $this->general_library->getId();
+                $dataUsul['created_by']      = $this->general_library->getId();
+                $dataUsul['id_m_layanan']      = $id_m_layanan;
+                $this->db->insert('db_efort.t_layanan', $dataUsul);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+   
+        if ($this->db->trans_status() === FALSE)
+        {
+                $this->db->trans_rollback();
+        }
+        else
+        {
+                $this->db->trans_commit();
+        }
+        return $res;
+
+       
     }
 
 

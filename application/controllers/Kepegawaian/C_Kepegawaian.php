@@ -4346,6 +4346,82 @@ class C_Kepegawaian extends CI_Controller
         return $this->load->view('user/V_DetailAbsensiPegawai', $data);
     }
 
+	public function satyalancana($id_layanan){
+
+		$data['pesan'] = null;	
+		$tahun = substr($this->general_library->getUserName(), 8, 4);
+                        $bulan = substr($this->general_library->getUserName(), 12, 2);
+                        $tmt = $tahun.'-'.$bulan.'-01';
+                        $masa_kerja = countDiffDateLengkap(date('Y-m-d'), $tmt, ['tahun']);
+                        $explode_masa_kerja = explode(" ", trim($masa_kerja));
+		$date1 = $tmt;
+        $date2 = date('Y-m-d');
+        $ts1 = strtotime($date1);
+        $ts2 = strtotime($date2);
+        $year1 = date('Y', $ts1);
+        $year2 = date('Y', $ts2);
+        $month1 = date('m', $ts1);
+        $month2 = date('m', $ts2);
+        $masakerjabulan = (($year2 - $year1) * 12) + ($month2 - $month1);
+
+		if($id_layanan == 36){
+		if($masakerjabulan < 120) {
+			$data['pesan'] = 'Masa Kerja belum 10 Tahun';			
+		}
+		$data['satyalancana_10'] = $this->kepegawaian->getDokumenSatyalancana(1); 
+		if($data['satyalancana_10']){
+			$data['pesan'] = 'Sudah ada penghargaan Sayatlancana 10 Tahun';
+		}
+		}
+
+		if($id_layanan == 37){
+		if($masakerjabulan < 240) {
+			$data['pesan'] = 'Masa Kerja belum 20 Tahun';			
+		}
+		$data['satyalancana_20'] = $this->kepegawaian->getDokumenSatyalancana(2); 
+		if($data['satyalancana_20']){
+			$data['pesan'] = 'Sudah ada penghargaan Sayatlancana 30 Tahun';
+		}
+		}
+
+		if($id_layanan == 38){
+		if($masakerjabulan < 360) {
+			$data['pesan'] = 'Masa Kerja belum 30 Tahun';			
+		}
+		$data['satyalancana_30'] = $this->kepegawaian->getDokumenSatyalancana(3); 
+		if($data['satyalancana_30']){
+			$data['pesan'] = 'Sudah ada penghargaan Sayatlancana 30 Tahun';
+		}
+		}
+
+			$currentYear = date('Y'); 
+			$previous1Year = $currentYear - 1;   
+			$previous2Year = $currentYear - 2; 
+			$data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiun(); 
+			$data['tahun_1_lalu'] = $previous1Year;
+			$data['skp1'] = $this->kepegawaian->getDokumenForLayananPangkat('db_pegawai.pegskp',$previous1Year);
+			$data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegberkaspns','0','1');        
+			$data['id_m_layanan'] = $id_layanan;
+			$data['m_layanan'] = $this->kepegawaian->getMlayanan($id_layanan);
+			$data['nm_layanan'] = $data['m_layanan']['nama_layanan'];
+
+			if($id_layanan == 37){
+			$data['satyalancana_10'] = $this->kepegawaian->getDokumenSatyalancana(1); 
+			} else if($id_layanan == 38){
+			$data['satyalancana_10'] = $this->kepegawaian->getDokumenSatyalancana(1); 
+			$data['satyalancana_20'] = $this->kepegawaian->getDokumenSatyalancana(2); 
+			}
+			$data['sk_jabatan'] = $this->kepegawaian->getDokumenJabatanForPensiun(); 
+			$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
+			$data['drh'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','35','0');	
+			$this->load->view('kepegawaian/layanan/V_LayananSatyalancana', $data);
+		}
+
+		public function insertUsulLayananSatyalancana($id_m_layanan)
+	{ 
+		echo json_encode( $this->kepegawaian->insertUsulLayananSatyalancana($id_m_layanan));
+	}
+
 
 	
 

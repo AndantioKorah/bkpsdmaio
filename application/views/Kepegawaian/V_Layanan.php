@@ -285,7 +285,11 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/CpnsPns/")?>'+val, function(){
       $('#loader').hide()
     })
-    } else {
+    } else if(val == 36 || val == 37 || val == 38) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/satyalancana/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    }else {
       $('#form_layanan').html('')
     }
 

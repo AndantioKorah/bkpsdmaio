@@ -787,6 +787,15 @@
 				</li>
 				<?php } ?>
 
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('verifikasi_pengajuan_satyalancana')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/36')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Satyalancana 
+					</a>
+				</li>
+				<?php } ?>
+
+
 				<?php if($this->general_library->isHakAkses('verifikasi_cpns_pns')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/35')?>">

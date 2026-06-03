@@ -102,7 +102,11 @@ class C_Rekap extends CI_Controller
     }
 
     public function downloadRekapAbsensiAars($flag_pdf = 0){
+       
+
         $data = $this->session->userdata('rekap_absen_aars');
+        $this->rekap->saveLogDownloadAbsen($data);
+
         $data['flag_print'] = 1;
         if($flag_pdf == 1){
             $data['flag_pdf'] = 1;

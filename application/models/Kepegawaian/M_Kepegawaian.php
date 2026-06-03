@@ -258,6 +258,7 @@ class M_Kepegawaian extends CI_Model
         }
 
         public function searchDokumenUsul($data){
+           
             // $tanggal = explodeRangeDate($data['tanggal']);
             // $tanggal_awal = explode("-", $tanggal[0]);
             // $taw = $tanggal_awal[0].'-'.$tanggal_awal[2].'-'.$tanggal_awal[1];
@@ -265,7 +266,7 @@ class M_Kepegawaian extends CI_Model
             // $tanggal_akhir = explode("-", $tanggal[1]);
             // $tak = $tanggal_akhir[0].'-'.$tanggal_akhir[2].'-'.$tanggal_akhir[1];
 
-            $this->db->select('a.*, b.*, c.nm_unitkerja, a.id as id_dokumen, a.created_date as tgl_usul')
+            $query = $this->db->select('a.*, b.*, c.nm_unitkerja, a.id as id_dokumen, a.created_date as tgl_usul')
                         ->from('db_pegawai.'.$data['jenisdokumen'].' a')
                         ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
@@ -342,7 +343,44 @@ class M_Kepegawaian extends CI_Model
             }
 
             // $res = $this->db->get()->result_array();
-            return $this->db->get()->result_array();
+
+            $query =  $this->db->get()->result_array();
+
+            $list_data = null;
+            $total = 0;
+            if($query){
+            foreach($query as $res){
+                // dd($res['id']);
+                   $data_cari[] = $res['id'];
+            }
+            $list_data = json_encode($data_cari); 
+            $total = count($data_cari);
+            }
+            $params = [
+                'list_data' => $list_data,
+                'total'  => $total,
+                'id_unitkerja'  => $data['unitkerja'],
+                'tabel'  => $data['jenisdokumen']
+            ];
+            $this->saveLogPencarianDiklat($params);
+
+            return $query;
+
+
+            //  if($data['jenisdokumen'] == "pegdiklat"){
+
+            //  }
+
+        }
+
+        public function saveLogPencarianDiklat($params){
+        $data = array('id_m_user' => $this->general_library->getId(), 
+                      'total' => $params['total'],
+                      'list_data' => $params['list_data'],
+                      'id_unitkerja' => $params['id_unitkerja'],
+                       'tabel' => $params['tabel']
+        );
+        $result = $this->db->insert('t_log_pencarian_verif_pdm', $data);
         }
 
 

@@ -4707,7 +4707,7 @@
                                 'id_t_live_chat' => $d['id'],
                                 'is_sender_admin' => 0,
                                 'is_sistem' => 1,
-                                'pesan' => 'dikarenakan tidak ada respon lebih dari 2 jam, sistem secara otomatis telah menyelesaikan Sesi Konsultasi Anda. Silahkan memberikan rating sebelum memulai Sesi Konsultasi yang baru.'
+                                'pesan' => 'dikarenakan tidak ada respon lebih dari 60 menit, sistem secara otomatis telah menyelesaikan Sesi Konsultasi Anda. Silahkan berikan rating sebelum memulai Sesi Konsultasi yang baru.'
                             ]);
                             $lastInsert = $this->db->insert_id();
                             $this->db->where('id', $d['id'])

@@ -5141,5 +5141,14 @@
         return $result;
     }
 
+    public function saveLogDownloadAbsen($data){
+        $insert_data['id_m_user'] = $this->general_library->getId();
+        $insert_data['id_unitkerja'] = $data['result']['id_unitkerja'];
+        $insert_data['bulan'] = $data['result']['bulan'];
+        $insert_data['tahun'] = $data['result']['tahun'];
+        $insert_data['created_by'] = $this->general_library->getId();
+        $this->db->insert('t_log_download_absen', $insert_data);
+    }
+
 }
 ?>

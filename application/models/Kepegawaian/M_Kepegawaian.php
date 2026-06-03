@@ -346,21 +346,23 @@ class M_Kepegawaian extends CI_Model
 
             $query =  $this->db->get()->result_array();
 
-
-            if($data['jenisdokumen'] == "pegdiklat"){
-            $list_pegawai = null;
+            $list_data = null;
             $total = 0;
             if($query){
             foreach($query as $res){
-                   $pegawai[] = $res['nipbaru_ws'];
+                // dd($res['id']);
+                   $data_cari[] = $res['id'];
             }
-            $list_pegawai = json_encode($pegawai); 
-            $total = count($pegawai);
+            $list_data = json_encode($data_cari); 
+            $total = count($data_cari);
             }
-            
-            
-            $this->saveLogPencarianDiklat($total,$list_pegawai);
-            }
+            $params = [
+                'list_data' => $list_data,
+                'total'  => $total,
+                'id_unitkerja'  => $data['unitkerja'],
+                'tabel'  => $data['jenisdokumen']
+            ];
+            $this->saveLogPencarianDiklat($params);
 
             return $query;
 
@@ -371,12 +373,14 @@ class M_Kepegawaian extends CI_Model
 
         }
 
-        public function saveLogPencarianDiklat($total,$list_pegawai){
+        public function saveLogPencarianDiklat($params){
         $data = array('id_m_user' => $this->general_library->getId(), 
-                      'total' => $total,
-                      'list_pegawai' => $list_pegawai
+                      'total' => $params['total'],
+                      'list_data' => $params['list_data'],
+                      'id_unitkerja' => $params['id_unitkerja'],
+                       'tabel' => $params['tabel']
         );
-        $result = $this->db->insert('t_log_pencarian_diklat', $data);
+        $result = $this->db->insert('t_log_pencarian_verif_pdm', $data);
         }
 
 

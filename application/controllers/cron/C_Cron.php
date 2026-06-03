@@ -36,6 +36,7 @@ class C_Cron extends CI_Controller
 
     public function cronSendWa(){
         $this->cronSyncBangkomPerData();
+        $this->cronCheckLiveChat();
         // $this->general->logCron('cronSendWa');
         // $this->general->cronSendWa();
         // dd('asdd');
@@ -49,6 +50,7 @@ class C_Cron extends CI_Controller
 
     public function cronCheckLiveChat(){
         $this->user->cronCheckLiveChat();
+        $this->general->logCron('cronCheckLiveChat');
     }
 
     public function updateSisaCuti($id, $operand){

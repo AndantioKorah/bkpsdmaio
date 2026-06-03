@@ -159,6 +159,17 @@
 		z-index: 1;
 		right: 0;
 	}
+
+	.icon_okta{
+		width: 35px;
+		opacity: .85;
+	}
+
+	.icon_okta:hover{
+		opacity: 1;
+		transition: .2s;
+		cursor: pointer;
+	}
 </style>
 
 <?php
@@ -326,7 +337,8 @@
 				<li class="nav-item">
 					<div class="position-relative">
 						<a class="nav-icon" href="#" id="liveChatIcon">
-							<i class="align-middle" data-feather="message-circle"></i>
+							<img class="icon_okta" src="<?=base_url('assets/img/okta-icon.png')?>" />
+							<!-- <i class="align-middle" data-feather="message-circle"></i> -->
 						</a>
 					</div>
 				</li>
@@ -523,9 +535,6 @@
 <script>
 	let loadLiveChat = 0;
 	$(function(){
-		$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
-			// loadLiveChat = 1
-		})
 	})
 
 	$('#liveChatIcon').on('click', function(e){
@@ -539,13 +548,18 @@
 		if(flag_wrapper == 1){
 			$('.div_live_chat').removeClass('div_live_chat_slide_in')
 			$('.div_live_chat').addClass('div_live_chat_slide_out')
+			$('#video_perkenalan_okta')[0].pause()
 		} else {
 			if(!$('.div_live_chat').hasClass('div_live_chat_slide_in')){
 				$('.div_live_chat').removeClass('div_live_chat_slide_out')
 				$('.div_live_chat').addClass('div_live_chat_slide_in')
+				$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
+					// loadLiveChat = 1
+				})
 			} else {
 				$('.div_live_chat').removeClass('div_live_chat_slide_in')
 				$('.div_live_chat').addClass('div_live_chat_slide_out')
+		        $('#video_perkenalan_okta')[0].pause()
 			}
 		}
 	}

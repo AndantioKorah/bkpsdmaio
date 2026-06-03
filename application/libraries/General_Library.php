@@ -11,6 +11,7 @@ class General_library
     public $hakAkses;
     public $params;
     public $bios_serial_num;
+    public $flag_read_eula_live_chat;
 
     public function __construct()
     {
@@ -30,6 +31,7 @@ class General_library
         if($this->nikita->session->userdata('user_logged_in')){
             $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
             $this->hakAkses = $this->nikita->session->userdata('list_hak_akses');
+            $this->flag_read_eula_live_chat = isset($this->nikita->session->userdata('user_logged_in')[0]['flag_read_eula_live_chat']) ? $this->nikita->session->userdata('user_logged_in')[0]['flag_read_eula_live_chat'] : 0;
             // $this->kabanBkpsdm = $this->nikita->kepegawaian->getDataKabanBkd();
         }
     }
@@ -40,6 +42,20 @@ class General_library
 
     public function getUserLoggedIn(){
         return $this->userLoggedIn;
+    }
+
+    public function setReadEulaLiveChat($state){
+        $this->flag_read_eula_live_chat = $state;
+    }
+
+    public function getFlagReadEulaLiveChat(){
+        if($this->flag_read_eula_live_chat == 0){
+            $dataUser = $this->nikita->m_general->getOne('m_user', 'id', $this->getId(), '1');
+            $this->flag_read_eula_live_chat = $dataUser['flag_read_eula_live_chat'];
+            return $this->flag_read_eula_live_chat;
+        } else {
+            return 1;
+        }
     }
 
     public function listHakAkses(){

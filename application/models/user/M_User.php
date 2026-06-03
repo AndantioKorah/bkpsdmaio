@@ -4693,13 +4693,16 @@
                         ->where('a.flag_active', 1)
                         ->where('b.flag_active', 1)
                         ->get()->result_array();
+            // dd($data);
             if($data){
                 foreach($data as $d){
                     $lastInsert = 0;
-                    $diff = countDiffDateLengkap($d['date_send_message'], date('Y-m-d H:i:s'), ['jam']);
-                    $expl = explode(" ", trim($diff));
-                    if($expl[1] == "jam"){
-                        if($expl[0] >= 2){
+                    $diff = strtotime(date('Y-m-d H:i:s')) - strtotime($d['date_send_message']);
+                    // $diff = countDiffDateLengkap($d['date_send_message'], date('Y-m-d H:i:s'), ['jam']);
+                    // $expl = explode(" ", trim($diff));
+                    // dd($diff);
+                    // if($expl[1] == "jam"){
+                        if($diff / 3600 >= 1){
                             $this->db->insert('t_live_chat_detail', [
                                 'id_t_live_chat' => $d['id'],
                                 'is_sender_admin' => 0,
@@ -4714,7 +4717,7 @@
                                         'last_id_t_live_chat_detail' => $lastInsert
                                     ]);
                         }
-                    }
+                    // }
                 }
             }
         }
@@ -4918,6 +4921,16 @@
                     }
                 }
             }
+        }
+
+        public function liveChatEulaAgree(){
+            $this->db->where('id', $this->general_library->getId())
+                    ->update('m_user', [
+                        'flag_read_eula_live_chat' => 1,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+            $this->general_library->setReadEulaLiveChat(1);
+            // echo "<script>console.log('flag eula live chat: ".$this->general_library->getFlagReadEulaLiveChat()."')</script>";
         }
 	}
 ?>

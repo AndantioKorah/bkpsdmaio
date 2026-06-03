@@ -749,12 +749,17 @@ class C_User extends CI_Controller
         $this->load->view('user/V_LiveChat', null);
     }
 
+    public function loadEulaLiveChat(){
+        $data['result'] = null;
+        $this->load->view('user/V_LiveChatEula', $data);
+    }
+
     public function submitGantiJenisLayanan($id_t_live_chat = 0, $id_m_layanan_konsul){
         echo json_encode($this->user->submitGantiJenisLayanan($id_t_live_chat, $id_m_layanan_konsul));
     }
 
     public function cekWaktuKerjaKonsultasi(){
-        $batasAkhir = 30;
+        $batasAkhir = 60;
         $batasAwalKonsultasi = 60;
 
         $waktuKerja = cekWaktuKerja($batasAkhir, $batasAwalKonsultasi);
@@ -770,6 +775,10 @@ class C_User extends CI_Controller
             default: $waktuKerja['message'] = "";
         }
         echo json_encode($waktuKerja);
+    }
+
+    public function liveChatEulaAgree(){
+        $this->user->liveChatEulaAgree();
     }
 
 }

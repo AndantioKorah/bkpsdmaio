@@ -1283,18 +1283,31 @@ class M_Kepegawaian extends CI_Model
         } else if($this->input->post('pegpenghargaan')){
             $pegpenghargaan = $this->input->post('pegpenghargaan');
 
-            if($pegpenghargaan == 4) {
-            $dataInsert['nm_pegpenghargaan'] = $this->input->post('nm_pegpenghargaan');
-            } else if($pegpenghargaan == 1) {
-            $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 10 tahun";
-            }  else if($pegpenghargaan == 2) {
-            $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 20 tahun";
-            } else if($pegpenghargaan == 3) {
-            $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 30 tahun";
+            // if($pegpenghargaan == 4) {
+            // } else if($pegpenghargaan == 1) {
+            // $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 10 tahun";
+            // }  else if($pegpenghargaan == 2) {
+            // $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 20 tahun";
+            // } else if($pegpenghargaan == 3) {
+            // $dataInsert['nm_pegpenghargaan'] = "Satyalencana Karya Satya 30 tahun";
+            // }
+
+            $id_m_satyalencana = null;
+            if($this->input->post('nm_pegpenghargaan') == "Satyalancana Karya Satya 10 Tahun"){
+                $id_m_satyalencana = 1; 
             }
-            
+            if($this->input->post('nm_pegpenghargaan') == "Satyalancana Karya Satya 20 Tahun"){
+                $id_m_satyalencana = 2; 
+            }
+            if($this->input->post('nm_pegpenghargaan') == "Satyalancana Karya Satya 30 Tahun"){
+                $id_m_satyalencana = 3; 
+            }
+
+
+
+            $dataInsert['nm_pegpenghargaan'] = $this->input->post('nm_pegpenghargaan');
             $dataInsert['id_pegawai']      = $id_peg;
-            $dataInsert['id_m_satyalencana']      = $this->input->post('pegpenghargaan');
+            $dataInsert['id_m_satyalencana']      = $id_m_satyalencana;
             $dataInsert['lingkup_penghargaan'] =  $this->input->post('pegpenghargaan');
             $dataInsert['nosk']      = $this->input->post('nosk');
             $dataInsert['tglsk']      = $this->input->post('tglsk');
@@ -6086,6 +6099,12 @@ public function submitEditJabatan(){
 
         if($this->general_library->isHakAkses('admin_pengajuan_cuti')){
             $id_layanan[] = 34;
+        }
+
+        if($this->general_library->isHakAkses('verifikasi_pengajuan_satyalancana')){
+            $id_layanan[] = 36;
+            $id_layanan[] = 37;
+            $id_layanan[] = 38;
         }
 
       
@@ -11919,6 +11938,7 @@ public function searchPengajuanLayanan($id_m_layanan){
             ->join('m_user d', 'a.id_m_user = d.id')
             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+            ->join('m_layanan g', 'a.id_m_layanan = g.id')
             
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
@@ -11962,6 +11982,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 34);
             }  else if($id_m_layanan == 35){ 
                 $this->db->where('a.id_m_layanan', 35);
+            } else if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){ 
+               $this->db->where_in('a.id_m_layanan', [36,37,38]);
             }      else {
                 $this->db->where('a.id_m_layanan', 99);
             } 
@@ -12209,6 +12231,16 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 65)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "drh"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 35)
                 ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
@@ -12874,8 +12906,26 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.jenjang_diklat', 10)
-                ->where('a.status', 2)
+               ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "satyalancana_10"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegpenghargaan as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_m_satyalencana', 1)
+                ->where('a.status !=', 3)
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }  else if($this->input->post('file') == "satyalancana_20"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegpenghargaan as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_m_satyalencana', 2)
+                ->where('a.status !=', 3)
                 ->limit(1);
                 return $this->db->get()->result_array();
         }     else {
@@ -12906,7 +12956,7 @@ public function getFileForVerifLayanan()
         $this->db->where('id', $id_pengajuan)
                 ->update('t_layanan', $data);
 
-        $dataPengajuan = $this->db->select('*, c.id as id_pengajuan, c.created_date as tanggal_usul')
+        $dataPengajuan = $this->db->select('*, a.id as id_user, c.id as id_pengajuan, c.created_date as tanggal_usul')
                 ->from('m_user a')
                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                 ->join('t_layanan c', 'a.id = c.id_m_user')
@@ -12955,6 +13005,9 @@ public function getFileForVerifLayanan()
             if(isset($datapost['sertifikat_latsar'])){
                 $this->verifBerkas($datapost['sertifikat_latsar'], "db_pegawai.pegdiklat");
             }
+             if(isset($datapost['satyalancana_10'])){
+                $this->verifBerkas($datapost['satyalancana_10'], "db_pegawai.pegpenghargaan");
+            }
 
             
         $tambahan = "";
@@ -13000,22 +13053,25 @@ public function getFileForVerifLayanan()
             $jenislayanan = " Surat Keterangan / Pernyataan";
         }  else if($dataPengajuan[0]['id_m_layanan'] == 25){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN TUGAS BELAJAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Tugas Belajar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
-            $jenislayanan = " Surat Keterangan / Pernyataan";
+            $jenislayanan = " Tugas Belajar";
         } else if($dataPengajuan[0]['id_m_layanan'] == 26){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN TUGAS BELAJAR BIAYA MANDIRI]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Tugas Belajar Biaya Mandiri anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
-            $jenislayanan = " Surat Keterangan / Pernyataan";
+            $jenislayanan = " Tugas Belajar";
         } else if($dataPengajuan[0]['id_m_layanan'] == 28){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN MUTASI PINDAH MASUK]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Mutasi Pindah Masuk anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
-            $jenislayanan = " Surat Keterangan / Pernyataan";
+            $jenislayanan = " Mutasi Pindah Masuk";
         } else if($dataPengajuan[0]['id_m_layanan'] == 32){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENINJAUAN MASA KERJA]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Peninjauan Masa Kerja anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
-            $jenislayanan = " Surat Keterangan / Pernyataan";
+            $jenislayanan = " Peninjauan Masa Kerja";
         } else if($dataPengajuan[0]['id_m_layanan'] == 34){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN CUTI BESAR]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Cuti Besar anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
-            $jenislayanan = " Surat Keterangan / Pernyataan";
+            $jenislayanan = " Cuti Besar";
         }  else if($dataPengajuan[0]['id_m_layanan'] == 35){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN PENGANGKATAN CPNS MENJADI PNS]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Pengangkatan CPNS menjadi PNS anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
-            $jenislayanan = " Surat Keterangan / Pernyataan";
+            $jenislayanan = " CPNS ke PNS";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 36 || $dataPengajuan[0]['id_m_layanan'] == 37 || $dataPengajuan[0]['id_m_layanan'] == 38){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - LAYANAN SATYALANCANA KARYA SATYA]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Satyalancana Karya Satya anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Satyalancana Karya Satya";
         }
        
         $cronWaNextVerifikator = [
@@ -13026,6 +13082,19 @@ public function getFileForVerifLayanan()
                     'created_by' => $this->general_library->getId()
                 ];
         $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+
+        $notifikasi = [
+                    'id_m_user' => $dataPengajuan[0]['id_user'],
+                    'jenis_notifikasi' => 'notifikasi_layanan',
+                    'judul_notifikasi' => 'Notifikasi layanan',
+                    'pesan' =>  $message,
+                    'link_href' =>  'notifikasi-pegawai',
+                    'fa_icon'  =>  'fa fa-times',
+                    'icon_color' =>  'green',
+                    'flag_read'  =>  0,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_notifikasi', $notifikasi);
 
         if($this->db->trans_status() == FALSE){
             $this->db->trans_rollback();
@@ -14416,7 +14485,10 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 35){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/cpns_pns';
-            }   else {
+            } else if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/sayatalancana';
+            }    else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
 
@@ -17408,6 +17480,71 @@ public function checkListIjazahCpns($id, $id_pegawai){
          ->where('b.id_m_status_pegawai', 1);
          $dataBangkom = $this->db->get()->result_array();
         return $dataBangkom;  
+    }
+
+      public function getDokumenSatyalancana($id)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('flag_active', 1)
+        ->where('status !=', 3)
+        ->where('id_m_satyalencana', $id)
+        ->order_by('id', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.pegpenghargaan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function getDokumenSatyalancanaAdmin($id,$id_peg)
+    {
+        $this->db->select('*')
+        ->where('id_pegawai', $id_peg)
+        ->where('flag_active', 1)
+        ->where('status !=', 3)
+        ->where('id_m_satyalencana', $id)
+        ->order_by('id', 'desc')
+        ->limit(1)
+        ->from('db_pegawai.pegpenghargaan');
+        $query = $this->db->get()->row_array();
+        return $query;  
+    }
+
+    public function insertUsulLayananSatyalancana($id_m_layanan){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+        $this->db->trans_begin();
+   
+            $cek =  $this->db->select('*')
+                ->from('t_layanan a')
+                ->where('a.id_m_user', $this->general_library->getId())
+                ->where('a.flag_active', 1)
+                ->where('a.id_m_layanan', $id_m_layanan)
+                ->where('a.status', 0)
+                ->get()->result_array();
+        // dd($cek);
+            if($cek){
+                $res = array('msg' => 'Masih ada usul layanan yang belum disetujui', 'success' => false);
+            } else {
+                $dataUsul['id_m_user']      = $this->general_library->getId();
+                $dataUsul['created_by']      = $this->general_library->getId();
+                $dataUsul['id_m_layanan']      = $id_m_layanan;
+                $this->db->insert('db_efort.t_layanan', $dataUsul);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+   
+        if ($this->db->trans_status() === FALSE)
+        {
+                $this->db->trans_rollback();
+        }
+        else
+        {
+                $this->db->trans_commit();
+        }
+        return $res;
+
+       
     }
 
 

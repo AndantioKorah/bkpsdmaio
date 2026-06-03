@@ -3062,7 +3062,7 @@ public function loadListProfilTalentaAdm($id,$jenis_pengisian){
                     ->from('db_pegawai.pegawai a')
                     ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg','left')
                     ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
-                    ->join('db_siasn.m_ref_pns f', 'a.nipbaru_ws = f.nip_baru')
+                    ->join('db_siasn.m_ref_pns f', 'a.nipbaru_ws = f.nip_baru','left')
                     ->where('a.id_m_status_pegawai', 1)
                     ->where('b.jenjang_jabatan', $jenis_pengisian)
                     ->where('b.res_potensial_total >=', $intervalPotensial[0]['dari'])

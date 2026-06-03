@@ -5,6 +5,9 @@
           <th class="text-left">Nama</th>
           <th class="text-left">Unit Kerja</th>
           <th class="text-center">Tanggal Pengajuan</th>
+           <?php if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38) { ?>
+            <th class="text-center">Layanan</th>
+          <?php } ?>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
           <th></th>
@@ -19,6 +22,9 @@
                <span>NIP. <?=$rs['nipbaru_ws']?></span> </td>
               <td class="text-left"><?=$rs['nm_unitkerja']?></td>
               <td class="text-left"><?= formatDateNamaBulan($rs['tanggal_pengajuan'])?></td>
+                 <?php if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38) { ?>
+           <td class="text-left"><?=$rs['nama_layanan']?></td>
+          <?php } ?>
               <td class="text-left">
               <span class="badge badge-<?php if($rs['status_pengajuan'] == '1' || $rs['status_pengajuan'] == '4') echo "success"; else if($rs['status_pengajuan'] == '2') echo "danger"; else echo "primary";?>"><?php if($rs['status_pengajuan'] == '1') echo "Diterima"; else if($rs['status_pengajuan'] == '2') echo "Ditolak"; else if($rs['status_pengajuan'] == '3') echo "Selesai"; else echo "Menunggu Verifikasi BKPSDM";?>
               </span>

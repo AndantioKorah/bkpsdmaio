@@ -156,7 +156,7 @@
 		<tr>
 			<td valign="top">Jabatan</td>
 			<td valign="top" style="text-align: center;">:</td>
-			<td valign="top"><?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Pemerintah Kota Manado</td>
+			<td valign="top"><?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Kota Manado</td>
 		</tr>
 		
 		
@@ -186,7 +186,7 @@
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center" style="width:38%;height:130px;text-align: left;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td class="center" style="width:38%;height:130px;text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>

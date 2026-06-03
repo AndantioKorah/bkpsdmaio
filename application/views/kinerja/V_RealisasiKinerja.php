@@ -77,12 +77,12 @@
 
   <div class="form-group">
     <label for="exampleFormControlTextarea1">Detail Kegiatan</label>
-    <textarea class="form-control" style="margin-bottom:10px;" id="deskripsi_kegiatan" name="deskripsi_kegiatan" rows="3" required></textarea>
+    <textarea class="form-control"  style="margin-bottom:10px;" id="deskripsi_kegiatan" name="deskripsi_kegiatan" rows="3" required></textarea>
   </div>
 
    <div class="form-group">
     <label>Realisasi Target (Kuantitas)</label>
-    <input  class="form-control customInput" type="number" autocomplete="off" id="target_kuantitas" name="target_kuantitas" onkeyup="cekJumlahTarget()" required/>
+    <input  class="form-control customInput" type="number" min=0 autocomplete="off" id="target_kuantitas" name="target_kuantitas" onkeyup="cekJumlahTarget()" required/>
   </div>
   
   <div class="form-group">
@@ -634,6 +634,17 @@
         // Set value of the file input to our new files list
         e.target.files = dataTransfer.files;
     });
+
+
+  
+     function cekJumlahTarget(){
+
+      var target_kuantitas = $('#target_kuantitas').val(); 
+      if(target_kuantitas == "0" || target_kuantitas < 0) {
+          errortoast("Realisasi Target tidak boleh 0")
+          $('#target_kuantitas').val(null); 
+      }
+    }
 
     
 </script>

@@ -524,7 +524,6 @@
 	let loadLiveChat = 0;
 	$(function(){
 		$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
-			console.log('asdasd')
 			// loadLiveChat = 1
 		})
 	})

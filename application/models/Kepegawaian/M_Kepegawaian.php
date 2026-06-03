@@ -10182,7 +10182,7 @@ public function submitEditJabatan(){
             $rs = $result;
         } else if($data['status'] == 'belum_input_nomor_surat'){
             foreach($result as $r){
-                if(!$r['id_t_nomor_surat']){
+                if(!$r['id_t_nomor_surat'] && $r['flag_ds_cuti'] == 0){
                     $rs[] = $r;
                 }
             }

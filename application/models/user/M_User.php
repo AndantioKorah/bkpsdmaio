@@ -4361,7 +4361,7 @@
 
         public function openKonsultasiDetail($id){
             $chat = $this->db->select('a.*, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan, d.nipbaru_ws, h.gelar1 as gelar1_assign,
-                            h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan')
+                            h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan, d.jk')
                             ->from('t_live_chat a')
                             ->join('m_user c', 'a.id_m_user = c.id')
                             ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
@@ -4428,7 +4428,6 @@
             ];
 
             $this->db->trans_begin();
-            
             $data['id_t_live_chat'] = $id;
             
             $chat = $this->db->select('*')

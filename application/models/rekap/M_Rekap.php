@@ -1284,6 +1284,7 @@
         if($id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
         $id_unitkerja == 3018000 || // pu, kasubag sudah pindah
         $id_unitkerja == 3020000 || //diskop, kasub sudah pensiun
+        $id_unitkerja == 4012000 || //baperida, kasub masih kosong
         $id_unitkerja == 4021000){ // bencana, kasub sudah pensiun
             $result['kasubag'] = $result['sek'];
         } else if($id_unitkerja == 4014000){
@@ -1326,19 +1327,6 @@
                                     ->get()->row_array();
 
             $result['kasubag']['nama_jabatan'] = "Kepala Sub Bagian Umum dan Kepegawaian"; 
-        } else if($id_unitkerja == 1010200){ // kesra
-            $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
-                                    ->from('db_pegawai.pegawai a')
-                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
-                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
-                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
-                                    ->where('a.nipbaru_ws', '197101032009021001')
-                                    ->where('id_m_status_pegawai', 1)
-                                    ->get()->row_array();
-
-            $result['kepalaskpd']['nama_jabatan'] = "Kepala Bagian Kerja Sama"; 
         } else if($id_unitkerja == 5002001){ // kec. tuminting
             $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                     e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')

@@ -64,7 +64,7 @@
         <div class="row p-4">
             <div class="col-lg-12 text-center" style="height: 100%;">
                 <div class="row" id="div_start_konsultasi">
-                    <center><img src="<?=base_url('assets/img/icon-siladen-new.png')?>" style="width: 100px;" /></center>
+                    <center><img src="<?=base_url('assets/img/okta-icon-live-chat-container.png')?>" style="width: 100px;" /></center>
                     <br>
                     <!-- <button class="mt-3 btn btn-info btn_konsultasi">Mulai Konsultasi</button>
                     <button style="display:none;" class="mt-3 btn btn-info btn_konsultasi_loader"><i class="fa fa-spinner"></i> Menunggu...</button> -->
@@ -84,7 +84,7 @@
         <div class="row p-4">
             <div class="col-lg-12 text-center" style="height: 100%;">
                 <div class="row" id="div_start_konsultasi">
-                    <center><img src="<?=base_url('assets/img/icon-siladen-new.png')?>" style="width: 100px;" /></center>
+                    <center><img src="<?=base_url('assets/img/okta-icon-live-chat-container.png')?>" style="width: 100px;" /></center>
                     <br>
                     <button class="mt-3 btn btn-info btn_konsultasi">Mulai Konsultasi</button>
                     <button style="display:none;" class="mt-3 btn btn-info btn_konsultasi_loader"><i class="fa fa-spinner"></i> Menunggu...</button>

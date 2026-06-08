@@ -6124,6 +6124,12 @@ public function submitEditJabatan(){
             $id_layanan[] = 35;
         }
 
+        if($this->general_library->isHakAkses('verifikasi_pengajuan_satyalancana')){
+            $id_layanan[] = 36;
+            $id_layanan[] = 37;
+            $id_layanan[] = 38;
+        }
+
         }
 
        
@@ -6140,11 +6146,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 34;
         }
 
-        if($this->general_library->isHakAkses('verifikasi_pengajuan_satyalancana')){
-            $id_layanan[] = 36;
-            $id_layanan[] = 37;
-            $id_layanan[] = 38;
-        }
+
 
       
 

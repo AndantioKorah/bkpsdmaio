@@ -338,21 +338,21 @@ ol {
             <li>
 				<a class="<?php if($sk_jabatan) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan) { ?>
 				onclick="viewBerkasPangkat('<?=$sk_jabatan['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan* <i
 				class="fas fa-<?php if($sk_jabatan) echo ''; else echo '';?>"></i></a>
 			</li>
 
              <li>
 				<a class="<?php if($sk_cpns) echo 'select'; else echo 'unselect';?>" <?php if($sk_cpns) { ?>
 				onclick="viewBerkasPangkat('<?=$sk_cpns['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> SK CPNS* <i
 				class="fas fa-<?php if($sk_cpns) echo ''; else echo '';?>"></i></a>
 			</li>
 
 
             <li>
 				<a class="<?php if($drh) echo 'select'; else echo 'unselect';?>" <?php if($drh) { ?>
-				onclick="viewBerkasPangkat('<?=$drh['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
+				onclick="viewBerkasPangkat('<?=$drh['gambarsk'];?>',8)" data-toggle="modal" data-target="#exampleModal"
 				<?php } ?>> <i class="fa fa-file-pdf"></i> Daftar Riwayat Hidup* (Download pada profil Siladen masing-masing ditandatangangi dan diupload pada bagian arsip lainnya) <i
 				class="fas fa-<?php if($drh) echo ''; else echo '';?>"></i></a>
 			</li>
@@ -361,7 +361,7 @@ ol {
 			<li>
 				<a class="<?php if($satyalancana_10) echo 'select'; else echo 'unselect';?>" <?php if($satyalancana_10) { ?>
 				onclick="viewBerkasPangkat('<?=$satyalancana_10['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> Satyalancana Karya Satya 10 Tahun <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Satyalancana Karya Satya 10 Tahun* <i
 				class="fas fa-<?php if($satyalancana_10) echo ''; else echo '';?>"></i></a>
 			</li>
             <?php } ?>
@@ -369,13 +369,13 @@ ol {
             <li>
 				<a class="<?php if($satyalancana_10) echo 'select'; else echo 'unselect';?>" <?php if($satyalancana_10) { ?>
 				onclick="viewBerkasPangkat('<?=$satyalancana_10['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> Satyalancana Karya Satya 10 Tahun <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Satyalancana Karya Satya 10 Tahun* <i
 				class="fas fa-<?php if($satyalancana_10) echo ''; else echo '';?>"></i></a>
 			</li>
             <li>
 				<a class="<?php if($satyalancana_20) echo 'select'; else echo 'unselect';?>" <?php if($satyalancana_20) { ?>
 				onclick="viewBerkasPangkat('<?=$satyalancana_20['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> Satyalancana Karya Satya 20 Tahun <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Satyalancana Karya Satya 20 Tahun* <i
 				class="fas fa-<?php if($satyalancana_20) echo ''; else echo '';?>"></i></a>
 			</li>
             <?php } ?>

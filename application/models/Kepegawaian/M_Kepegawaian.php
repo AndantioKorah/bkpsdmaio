@@ -12492,6 +12492,7 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.ijazah_cpns', 1)
+                  ->where('a.status !=', 3)
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -12500,6 +12501,7 @@ public function getFileForVerifLayanan()
                 ->from('db_pegawai.pegpendidikan as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
+                ->where('a.status !=', 3)
                 ->order_by('a.tahunlulus', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
@@ -12508,6 +12510,7 @@ public function getFileForVerifLayanan()
                 ->from('db_pegawai.pegpendidikan as a')
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
+                ->where('a.status !=', 3)
                 ->order_by('a.tglijasah', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();

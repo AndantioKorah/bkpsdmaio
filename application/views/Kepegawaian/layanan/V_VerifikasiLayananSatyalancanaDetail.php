@@ -483,18 +483,18 @@
       </div>
       <div class="modal-body">
       <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
-        <input type="text" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
-        <input type="text" id="drh" name="pengujian_kesehatan"  value="<?php if($drh) echo $drh['id']; else echo "";?>">
-        <input type="text" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
-        <input type="text" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
-        <input type="text" id="sk_jabatan" name="sk_jabatan"  value="<?php if($sk_jabatan) echo $sk_jabatan['id']; else echo "";?>">
+        <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
+        <input type="hidden" id="drh" name="pengujian_kesehatan"  value="<?php if($drh) echo $drh['id']; else echo "";?>">
+        <input type="hidden" id="sk_pangkat" name="sk_pangkat"  value="<?php if($sk_pangkat) echo $sk_pangkat['id']; else echo "";?>">
+        <input type="hidden" id="sk_cpns" name="sk_cpns"  value="<?php if($sk_cpns) echo $sk_cpns['id']; else echo "";?>">
+        <input type="hidden" id="sk_jabatan" name="sk_jabatan"  value="<?php if($sk_jabatan) echo $sk_jabatan['id']; else echo "";?>">
        
             <?php if($id_m_layanan == 37) { ?> 
-			<input type="text" id="satyalancana_10" name="satyalancana_10" value="<?php if($satyalancana_10) echo $satyalancana_10['id']; else echo "";?>">
+			<input type="hidden" id="satyalancana_10" name="satyalancana_10" value="<?php if($satyalancana_10) echo $satyalancana_10['id']; else echo "";?>">
             <?php } ?>
             <?php if($id_m_layanan == 38) { ?> 
-			<input type="text" id="satyalancana_10" name="satyalancana_10" value="<?php if($satyalancana_10) echo $satyalancana_10['id']; else echo "";?>">
-			<input type="text" id="satyalancana_20" name="satyalancana_20" value="<?php if($satyalancana_20) echo $satyalancana_20['id']; else echo "";?>">
+			<input type="hidden" id="satyalancana_10" name="satyalancana_10" value="<?php if($satyalancana_10) echo $satyalancana_10['id']; else echo "";?>">
+			<input type="hidden" id="satyalancana_20" name="satyalancana_20" value="<?php if($satyalancana_20) echo $satyalancana_20['id']; else echo "";?>">
             <?php } ?>
 
       <div class="mb-3">

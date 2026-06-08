@@ -3516,8 +3516,9 @@ public function batalSubmitVerifikasiDokumen(){
     $tahun = date("Y", $timestamp);
     $bulan = date("m", $timestamp);
      // $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+     if($tahun >= '2026'){
      $this->general->cronCheckBangkom($bulan,$tahun, $peg['nipbaru_ws']);
-
+     }
     }
 
  
@@ -6123,6 +6124,12 @@ public function submitEditJabatan(){
             $id_layanan[] = 35;
         }
 
+        if($this->general_library->isHakAkses('verifikasi_pengajuan_satyalancana')){
+            $id_layanan[] = 36;
+            $id_layanan[] = 37;
+            $id_layanan[] = 38;
+        }
+
         }
 
        
@@ -6139,11 +6146,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 34;
         }
 
-        if($this->general_library->isHakAkses('verifikasi_pengajuan_satyalancana')){
-            $id_layanan[] = 36;
-            $id_layanan[] = 37;
-            $id_layanan[] = 38;
-        }
+
 
       
 
@@ -11604,11 +11607,17 @@ public function getFileForKarisKarsu()
 
         $this->db->trans_begin();
 
+       
+
+
         $tabel = $this->input->post('tabel');
         $id_peg = $this->input->post('id_pegawai');
         $data_verif['status'] = $status;
         $data_verif['keterangan'] = $this->input->post('keterangan');
-                
+            
+        
+   
+
 
         $this->db->where('id', $id)
             ->update($tabel, $data_verif);
@@ -11626,6 +11635,25 @@ public function getFileForKarisKarsu()
         if($tabel == "db_pegawai.peggajiberkala"){
             $this->updateBerkala($id_peg);
         }
+
+        if($tabel == "db_pegawai.pegdiklat"){
+            // dd(1);
+             $bangkom = $this->db->select('a.nipbaru_ws,b.*')
+                        ->from('db_pegawai.pegawai a')
+                        ->join('db_pegawai.pegdiklat b', 'a.id_peg = b.id_pegawai')
+                        ->where('b.flag_active', 1)
+                        ->where('b.id', $id)
+                        ->get()->row_array();
+            $mydate = $bangkom['tglsttpp'];
+            $timestamp = strtotime($mydate);
+            $tahun = date("Y", $timestamp);
+            $bulan = date("m", $timestamp);
+                    if($tahun >= '2026'){
+                    $this->general->cronCheckBangkom($bulan,$tahun, $bangkom['nipbaru_ws']);
+                    }
+         }
+
+        
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();

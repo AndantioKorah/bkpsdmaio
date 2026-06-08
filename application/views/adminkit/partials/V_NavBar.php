@@ -548,7 +548,9 @@
 		if(flag_wrapper == 1){
 			$('.div_live_chat').removeClass('div_live_chat_slide_in')
 			$('.div_live_chat').addClass('div_live_chat_slide_out')
-			$('#video_perkenalan_okta')[0].pause()
+			if($('#video_perkenalan_okta').length) {
+					$('#video_perkenalan_okta')[0].pause()
+			}
 		} else {
 			if(!$('.div_live_chat').hasClass('div_live_chat_slide_in')){
 				$('.div_live_chat').removeClass('div_live_chat_slide_out')
@@ -559,7 +561,9 @@
 			} else {
 				$('.div_live_chat').removeClass('div_live_chat_slide_in')
 				$('.div_live_chat').addClass('div_live_chat_slide_out')
-		        $('#video_perkenalan_okta')[0].pause()
+				if($('#video_perkenalan_okta').length) {
+					$('#video_perkenalan_okta')[0].pause()
+				}
 			}
 		}
 	}

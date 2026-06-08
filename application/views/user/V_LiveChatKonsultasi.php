@@ -272,39 +272,44 @@
                 box-shadow: 0 -10px 10px -10px rgba(0, 0, 0, 0.5);
                 border-radius: 10px 10px 0 0;
             ">
-                <div class="col-lg-12 div_quick_message">
-                    <span id="sp_tampil_response_cepat" class="sp-response-cepat" style="
-                        font-weight: bold;
-                        font-size: .65rem;
-                        cursor: pointer;
-                    ">Tampilkan Response Cepat <i class="fa fa-chevron-up"></i></span>
-                    <span id="sp_simpan_response_cepat" class="sp-response-cepat" style="
-                        font-weight: bold;
-                        font-size: .65rem;
-                        cursor: pointer;
-                        display: none;
-                    ">Sembunyikan <i class="fa fa-chevron-down"></i></span>
-                    <div id="div_list_quick_message" style="display: none;" class="col-lg-12">
-                        <div class="row">
-                            <center>
-                            <div class="col-lg-12 item_quick_message">
-                                <a onclick="sendQuickResponseMessage('quick_message_1')" id="quick_message_1">Selamat <?=greeting()?> <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> <?=getNamaPegawaiFull($result['chat'], 0, 1)?>, ada yang bisa kami bantu?</a>
+                <?php if($this->general_library->isProgrammer() ||
+                    $this->general_library->isHakAkses('admin_live_chat_konsultasi') ||
+                    $this->general_library->getId() == $result['chat']['id_m_user_assigned']
+                    ) {?>
+                    <div class="col-lg-12 div_quick_message">
+                        <span id="sp_tampil_response_cepat" class="sp-response-cepat" style="
+                            font-weight: bold;
+                            font-size: .65rem;
+                            cursor: pointer;
+                        ">Tampilkan Response Cepat <i class="fa fa-chevron-up"></i></span>
+                        <span id="sp_simpan_response_cepat" class="sp-response-cepat" style="
+                            font-weight: bold;
+                            font-size: .65rem;
+                            cursor: pointer;
+                            display: none;
+                        ">Sembunyikan <i class="fa fa-chevron-down"></i></span>
+                        <div id="div_list_quick_message" style="display: none;" class="col-lg-12">
+                            <div class="row">
+                                <center>
+                                <div class="col-lg-12 item_quick_message">
+                                    <a onclick="sendQuickResponseMessage('quick_message_1')" id="quick_message_1">Selamat <?=greeting()?> <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> <?=getNamaPegawaiFull($result['chat'], 0, 1)?>, ada yang bisa kami bantu?</a>
+                                </div>
+                                <div class="col-lg-12 item_quick_message">
+                                    <a onclick="sendQuickResponseMessage('quick_message_2')" id="quick_message_2">Baik <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?>, silahkan menunggu untuk kami tindak lanjuti.</a>
+                                </div>
+                                <div class="col-lg-12 item_quick_message">
+                                    <a onclick="sendQuickResponseMessage('quick_message_3')" id="quick_message_3">Apakah penjelasan yang diberikan sudah jelas? Apakah masih ada yang ingin ditanyakan?</a>
+                                </div>
+                                <div class="col-lg-12 item_quick_message">
+                                    <a onclick="sendQuickResponseMessage('quick_message_4')" id="quick_message_4">
+                                        Terima kasih <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> <?=getNamaPegawaiFull($result['chat'], 0, 1)?> sudah menghubungi BKPSDM. Semoga penjelasan yang diberikan dapat membantu kendala yang <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> temui.<br><br>Mohon berkenan untuk memberikan penilaian dan komentar serta masukkan jika ada yang <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> rasakan masih kurang.
+                                    </a>
+                                </div>
+                                </center>
                             </div>
-                            <div class="col-lg-12 item_quick_message">
-                                <a onclick="sendQuickResponseMessage('quick_message_2')" id="quick_message_2">Baik <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?>, silahkan menunggu untuk kami tindak lanjuti.</a>
-                            </div>
-                            <div class="col-lg-12 item_quick_message">
-                                <a onclick="sendQuickResponseMessage('quick_message_3')" id="quick_message_3">Apakah penjelasan yang diberikan sudah jelas? Apakah masih ada yang ingin ditanyakan?</a>
-                            </div>
-                            <div class="col-lg-12 item_quick_message">
-                                <a onclick="sendQuickResponseMessage('quick_message_4')" id="quick_message_4">
-                                    Terima kasih <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> <?=getNamaPegawaiFull($result['chat'], 0, 1)?> sudah menghubungi BKPSDM. Semoga penjelasan yang diberikan dapat membantu kendala yang <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> temui.<br><br>Mohon berkenan untuk memberikan penilaian dan komentar serta masukkan jika ada yang <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> rasakan masih kurang.
-                                </a>
-                            </div>
-                            </center>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
                 <div class="col-lg-12" style="
                     width: 90%;">
                     <div class="row"

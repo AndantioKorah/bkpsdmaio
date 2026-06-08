@@ -109,7 +109,7 @@
                 $userAssign = [
                     'nama' => $result['chat']['nama_assign'],  
                     'gelar1' => $result['chat']['gelar1_assign'],  
-                    'gelar2' => $result['chat']['gelar2_assign'],  
+                    'gelar2' => $result['chat']['gelar2_assign'],
                 ];
             }
     ?>

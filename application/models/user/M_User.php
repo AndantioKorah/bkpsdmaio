@@ -4701,7 +4701,7 @@
                     // $expl = explode(" ", trim($diff));
                     // dd($diff);
                     // if($expl[1] == "jam"){
-                        if($diff / 3600 >= 1){
+                        if($diff / 1800 >= 1){
                             $this->db->insert('t_live_chat_detail', [
                                 'id_t_live_chat' => $d['id'],
                                 'is_sender_admin' => 0,

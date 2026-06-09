@@ -124,4 +124,9 @@ class C_Bacirita extends CI_Controller
         // $this->mpdf->Output($folder.'/'.$filename, 'F'); // download force
     }
 
+    public function downloadRekapPesertaExcel($id){
+        $data['result'] = $this->bacirita->loadPesertaKegiatan($id, 1);
+        $this->load->view('bacirita/V_RekapListPesertaKegiatanExcel', $data);
+    }
+
 }

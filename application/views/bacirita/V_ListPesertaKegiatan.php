@@ -13,9 +13,18 @@
 				font-size: .8rem;
 			}
 		</style>
-		<form action="<?=base_url('bacirita/C_Bacirita/downloadRekapPeserta/'.$result[0]['id_t_kegiatan'])?>" target="_blank" method="post">
-			<button id="btn_download" class="btn btn-sm btn-danger mb-2"><i class="fa fa-download"></i> Download Rekap Peserta</button>
+		
+
+		<div style="display: flex; gap: 15px; align-items: center;">
+ 		 <form action="<?=base_url('bacirita/C_Bacirita/downloadRekapPeserta/'.$result[0]['id_t_kegiatan'])?>" target="_blank" method="post">
+			<button id="btn_download" class="btn btn-sm btn-danger mb-2"><i class="fa fa-download"></i> Download Rekap Peserta (PDF)</button>
 		</form>
+		<form action="<?=base_url('bacirita/C_Bacirita/downloadRekapPesertaExcel/'.$result[0]['id_t_kegiatan'])?>" target="_blank" method="post">
+				<button id="btn_download" class="btn btn-sm btn-success mb-2"><i class="fa fa-download"></i> Download Rekap Peserta (Excel)</button>
+		</form>
+		</div>
+
+
 		<!-- <button id="btn_download_loading" disabled style="display: none;" class="btn btn-sm btn-danger mb-2"><i class="fa fa-spin fa-spinner"></i> Loading...</button> -->
 		<table class="table table-sm table-hover table-striped" id="table_list_peserta">
 			<thead>

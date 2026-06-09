@@ -4421,6 +4421,28 @@
             ];
         }
 
+        public function cekWaktuKerjaKonsultasi(){
+            $batasAkhir = BATAS_DETIK_AWAL_KONSULTASI;
+            $batasAwalKonsultasi = BATAS_DETIK_AKHIR_KONSULTASI;
+
+            $waktuKerja = cekWaktuKerja($batasAkhir, $batasAwalKonsultasi);
+            $batasAkhirMenit = $batasAkhir / 60;
+            $batasAwalMenit = $batasAwalKonsultasi / 60;
+            switch($waktuKerja['code']){
+                case 1: $waktuKerja['message'] = "Konsultasi Online tidak dapat dilakukan di Hari Libur";
+                    break;
+                case 2: $waktuKerja['message'] = "Konsultasi Online tidak dapat dilakukan di Hari Sabtu atau Minggu";
+                    break;
+                case 3: $waktuKerja['message'] = "Batas waktu Konsultasi Online adalah ".$batasAkhirMenit." menit sebelum Jam Pulang";
+                    break;
+                case 4: $waktuKerja['message'] = "Waktu Konsultasi Online adalah ".$batasAwalMenit." menit setelah Jam Masuk";
+                    break;
+                default: $waktuKerja['message'] = "";
+            }
+
+            return ($waktuKerja);
+        }
+
         public function sendMessageKonsultasi($data, $id){
             $rs = [
                 'code' => 0,
@@ -4440,6 +4462,14 @@
                     'code' => 1,
                     'message' => "Sesi Konsultasi sudah berakhir, pesan tidak dapat dikirimkan"
                 ];
+                $this->db->trans_rollback();
+                return $rs;
+            }
+
+            $cekWaktuKonsul = $this->cekWaktuKerjaKonsultasi();
+            if($cekWaktuKonsul['code'] != 0){
+                $rs = $cekWaktuKonsul;
+                $rs['code'] = 1;
                 $this->db->trans_rollback();
                 return $rs;
             }
@@ -4696,27 +4726,71 @@
             if($data){
                 foreach($data as $d){
                     $lastInsert = 0;
-                    $diff = strtotime(date('Y-m-d H:i:s')) - strtotime($d['date_send_message']);
-                    // $diff = countDiffDateLengkap($d['date_send_message'], date('Y-m-d H:i:s'), ['jam']);
-                    // $expl = explode(" ", trim($diff));
-                    // dd($diff);
-                    // if($expl[1] == "jam"){
-                        if($diff / 1800 >= 1){
-                            $this->db->insert('t_live_chat_detail', [
-                                'id_t_live_chat' => $d['id'],
-                                'is_sender_admin' => 0,
-                                'is_sistem' => 1,
-                                'pesan' => 'dikarenakan tidak ada respon lebih dari 60 menit, sistem secara otomatis telah menyelesaikan Sesi Konsultasi Anda. Silahkan berikan rating sebelum memulai Sesi Konsultasi yang baru.'
-                            ]);
-                            $lastInsert = $this->db->insert_id();
-                            $this->db->where('id', $d['id'])
-                                    ->update('t_live_chat', [
-                                        'flag_done' => 1,
-                                        'done_date' => date('Y-m-d H:i:s'),
-                                        'last_id_t_live_chat_detail' => $lastInsert
-                                    ]);
-                        }
-                    // }
+                    $explode = explode(' ', date('Y-m-d H:i:s'));
+                    $dateOnly = $explode[0];
+
+                    $jam_kerja = null;
+                    $jam_kerja_event = $this->db->select('*')
+                                            ->from('t_jam_kerja')
+                                            ->where('id_m_jenis_skpd', 1)
+                                            ->where('flag_event', 2)
+                                            ->where('berlaku_dari >=', $dateOnly)
+                                            ->where('berlaku_sampai <=', $dateOnly)
+                                            ->where('flag_active', 1)
+                                            ->order_by('created_date')
+                                            ->get()->row_array();
+                    if($jam_kerja_event){
+                        $jam_kerja = $jam_kerja_event;
+                    } else {
+                        $jam_kerja = $this->db->select('*')
+                            ->from('t_jam_kerja')
+                            ->where('id_m_jenis_skpd', 1)
+                            ->where('flag_event', 0)
+                            ->where('flag_active', 1)
+                            ->order_by('created_date')
+                            ->get()->row_array();
+                    }
+
+                    // ambil batas waktu masuk dan pulang
+                    $batasWaktuPulang = $jam_kerja['wfo_pulang'];
+                    $batasWaktuMasuk = $jam_kerja['wfo_masuk'];
+                    if(getNamaHari($dateOnly) == "Jumat"){
+                        $batasWaktuPulang = $jam_kerja['wfoj_pulang'];
+                        $batasWaktuMasuk = $jam_kerja['wfoj_masuk'];
+                    }
+
+                    $endDate = new DateTime($d['date_send_message']);
+                    $endDate->modify('+'.BATAS_DETIK_REPLY_KONSULTASI.' seconds');
+                    $endDate = $endDate->format('Y-m-d H:i:s');
+                    //hitung waktu pesan jika 30 menit ke depan melebihi jam pulang
+                    
+                    $endDateReply = $endDate;
+                    if(strtotime($endDate) > strtotime($dateOnly." ".$batasWaktuPulang)){ // jika melebihi
+                        // dd($endDate."   ".$batasWaktuPulang);
+                        $diff = strtotime($dateOnly." ".$batasWaktuPulang) - strtotime($d['date_send_message']);
+                        $newEndDateReply = new DateTime($dateOnly." ".$batasWaktuMasuk);
+                        $newEndDateReply->modify('+1 days'); // tambah 1 hari
+                        $newEndDateReply->modify('+'.BATAS_DETIK_AWAL_KONSULTASI.' seconds'); // tambah 1 jam waktu konsultasi
+                        $newEndDateReply->modify('+'.$diff.' seconds');// tambah sisa waktu dari hari sebelumnya
+                        $endDateReply = $newEndDateReply->format('Y-m-d H:i:s');
+                        // dd($newEndDateReply);
+                    }
+
+                    if(date('Y-m-d H:i:s') >= $endDateReply){
+                        $this->db->insert('t_live_chat_detail', [
+                            'id_t_live_chat' => $d['id'],
+                            'is_sender_admin' => 0,
+                            'is_sistem' => 1,
+                            'pesan' => 'dikarenakan tidak ada respon lebih dari 60 menit, sistem secara otomatis telah menyelesaikan Sesi Konsultasi Anda. Silahkan berikan rating sebelum memulai Sesi Konsultasi yang baru.'
+                        ]);
+                        $lastInsert = $this->db->insert_id();
+                        $this->db->where('id', $d['id'])
+                                ->update('t_live_chat', [
+                                    'flag_done' => 1,
+                                    'done_date' => date('Y-m-d H:i:s'),
+                                    'last_id_t_live_chat_detail' => $lastInsert
+                                ]);
+                    }
                 }
             }
         }

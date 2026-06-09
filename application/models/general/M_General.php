@@ -2831,13 +2831,27 @@
                 $res['code'] = 1;
                 $res['message'] = 'Hari Libur';
             } else {
-                $jam_kerja = $this->db->select('*')
-                    ->from('t_jam_kerja')
-                    ->where('id_m_jenis_skpd', 1)
-                    ->where('flag_event', 0)
-                    ->where('flag_active', 1)
-                    ->order_by('created_date')
-                    ->get()->row_array();
+                $jam_kerja = null;
+                $jam_kerja_event = $this->db->select('*')
+                                        ->from('t_jam_kerja')
+                                        ->where('id_m_jenis_skpd', 1)
+                                        ->where('flag_event', 2)
+                                        ->where('berlaku_dari >=', $dateOnly)
+                                        ->where('berlaku_sampai <=', $dateOnly)
+                                        ->where('flag_active', 1)
+                                        ->order_by('created_date')
+                                        ->get()->row_array();
+                if($jam_kerja_event){
+                    $jam_kerja = $jam_kerja_event;
+                } else {
+                    $jam_kerja = $this->db->select('*')
+                        ->from('t_jam_kerja')
+                        ->where('id_m_jenis_skpd', 1)
+                        ->where('flag_event', 0)
+                        ->where('flag_active', 1)
+                        ->order_by('created_date')
+                        ->get()->row_array();
+                }
 
                 if(getNamaHari($dateOnly) == "Sabtu" || getNamaHari($dateOnly) == "Minggu"){
                     $res['code'] = 2;

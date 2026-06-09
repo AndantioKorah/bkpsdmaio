@@ -617,13 +617,17 @@
 </head>
 
 <body>
-  <?php if($this->general_library->isProgrammer() ||
-  $this->general_library->getId() == 87 ||
-  $this->general_library->isPegawaiBkpsdm()){ ?>
+  <?php
+    // if($this->general_library->isProgrammer() ||
+    // $this->general_library->getId() == 87 ||
+    // $this->general_library->isPegawaiBkpsdm()){
+  ?>
     <div class="div_live_chat div_live_chat_slide_out">
       <?php // $this->load->view('user/V_LiveChat', null) ?>
     </div>
-  <?php } ?>
+  <?php 
+    // }
+  ?>
 	<div class="wrapper wrapper-all">
 		<nav id="sidebar" class="sidebar js-sidebar">
 			<div class="sidebar-content js-simplebar">

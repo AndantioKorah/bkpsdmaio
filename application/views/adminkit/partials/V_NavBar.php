@@ -331,9 +331,11 @@
 			
 
 			<!-- live chat -->
-			<?php if($this->general_library->isProgrammer() ||
-			$this->general_library->getId() == 87 ||
-			$this->general_library->isPegawaiBkpsdm()){ ?>
+			<?php
+				// if($this->general_library->isProgrammer() ||
+				// $this->general_library->getId() == 87 ||
+				// $this->general_library->isPegawaiBkpsdm()){
+			?>
 				<li class="nav-item">
 					<div class="position-relative">
 						<a class="nav-icon" href="#" id="liveChatIcon">
@@ -342,7 +344,7 @@
 						</a>
 					</div>
 				</li>
-			<?php } ?>
+			<?php // } ?>
 
 			<!-- notif  -->
 			<?php // if($this->general_library->isPegawaiBkpsdm()) { ?>

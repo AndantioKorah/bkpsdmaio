@@ -271,7 +271,11 @@
                 margin-bottom: 8px;
                 box-shadow: 0 -10px 10px -10px rgba(0, 0, 0, 0.5);
                 border-radius: 10px 10px 0 0;
-            ">
+            "
+            class="<?= !$this->general_library->isProgrammer() &&
+                    !$this->general_library->isHakAkses('admin_live_chat_konsultasi') &&
+                    $this->general_library->getId() != $result['chat']['id_m_user_assigned'] ? "pt-2" : ""?>"
+            >
                 <?php if($this->general_library->isProgrammer() ||
                     $this->general_library->isHakAkses('admin_live_chat_konsultasi') ||
                     $this->general_library->getId() == $result['chat']['id_m_user_assigned']
@@ -677,6 +681,7 @@
                 let rs = JSON.parse(data)
                 if(rs.code == 1){
                     errortoast(rs.message)
+                    $('#pesan').val('')
                 } else {
                     reloadLiveChatContainer('<?=$result['chat']['id']?>')
                     $('#pesan').val('')

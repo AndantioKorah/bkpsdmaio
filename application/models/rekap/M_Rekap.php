@@ -1997,7 +1997,10 @@
                             }
                             $i++;
                         }
-                        if($exceptBangkom['flag_terima_tpp_semua'] == 0){
+                        // if($this->general_library->isProgrammer()){
+                        //     dd($rs);
+                        // }
+                        if($exceptBangkom['flag_terima_tpp_semua'] == 0 && $rs['code'] == 1){
                             if($rs['list_pegawai']){
                                 foreach($rs['list_pegawai'] as $rlp){
                                     if(isset($tmpListPeg[$rlp['nip']])){

@@ -4813,19 +4813,27 @@
                     $endDate = new DateTime($d['date_send_message']);
                     $endDate->modify('+'.BATAS_DETIK_REPLY_KONSULTASI.' seconds');
                     $endDate = $endDate->format('Y-m-d H:i:s');
-                    //hitung waktu pesan jika 30 menit ke depan melebihi jam pulang
                     
+                    //hitung waktu pesan jika 30 menit ke depan melebihi jam pulang
+                    $batasAkhirKonsul = new DateTime($dateOnly." ".$batasWaktuPulang);
+                    $batasAkhirKonsul->modify('-'.BATAS_DETIK_AKHIR_KONSULTASI.' seconds');
+                    $batasAkhirKonsul = $batasAkhirKonsul->format('Y-m-d H:i:s');
+
                     $endDateReply = $endDate;
-                    if(strtotime($endDate) > strtotime($dateOnly." ".$batasWaktuPulang)){ // jika melebihi
+                    if(strtotime($endDate) > strtotime($batasAkhirKonsul)){ // jika melebihi
                         // dd($endDate."   ".$batasWaktuPulang);
-                        $diff = strtotime($dateOnly." ".$batasWaktuPulang) - strtotime($d['date_send_message']);
+                        $diff = strtotime($batasAkhirKonsul) - strtotime($d['date_send_message']);
+                        // dd($d['date_send_message']."   ".$diff);
                         $newEndDateReply = new DateTime($dateOnly." ".$batasWaktuMasuk);
+                        $newDiff = BATAS_DETIK_REPLY_KONSULTASI - $diff;
+                        // dd($newDiff);
                         $newEndDateReply->modify('+1 days'); // tambah 1 hari
-                        $newEndDateReply->modify('+'.BATAS_DETIK_AWAL_KONSULTASI.' seconds'); // tambah 1 jam waktu konsultasi
-                        $newEndDateReply->modify('+'.$diff.' seconds');// tambah sisa waktu dari hari sebelumnya
+                        $newEndDateReply->modify('+'.BATAS_DETIK_AWAL_KONSULTASI.' seconds'); // tambah 1 jam waktu konsultasi dibuka
+                        $newEndDateReply->modify('+'.$newDiff.' seconds');// tambah sisa waktu dari hari sebelumnya
                         $endDateReply = $newEndDateReply->format('Y-m-d H:i:s');
                         // dd($newEndDateReply);
                     }
+                    // dd($endDateReply);
                     if(strtotime(date('Y-m-d H:i:s')) >= strtotime($endDateReply)){
                         $batasWaktu = BATAS_DETIK_REPLY_KONSULTASI / 60;
                         $this->db->insert('t_live_chat_detail', [

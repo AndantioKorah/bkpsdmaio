@@ -36,7 +36,6 @@ class C_Cron extends CI_Controller
 
     public function cronSendWa(){
         $this->cronSyncBangkomPerData();
-        $this->cronCheckLiveChat();
         // $this->general->logCron('cronSendWa');
         // $this->general->cronSendWa();
         // dd('asdd');
@@ -103,6 +102,7 @@ class C_Cron extends CI_Controller
     public function cronHashFileBangkom(){
         // $this->user->cronHashFileBangkom();
         $this->general->logCron('cronHashFileBangkom');
+        $this->cronCheckLiveChat();
     }
 
     public function cronSyncBangkomPerDataDownload(){
@@ -265,6 +265,10 @@ class C_Cron extends CI_Controller
 
     public function addFileSkPPPK(){
         return $this->user->addFileSkPPPK();
+    }
+
+    public function addFileSkPns(){
+        return $this->user->addFileSkPns();
     }
 
     public function updateJabatanPegBaru(){

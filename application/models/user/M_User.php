@@ -3972,6 +3972,56 @@
             dd('done');
         }
 
+        public function addFileSkPns(){
+            $cpns = $this->db->select("a.*, b.id_peg")
+                        ->from('t_temp_data_cpns a')
+                        ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                        ->get()->result_array();
+            
+            $exists = $this->db->select('*')
+                        ->from('db_pegawai.pegberkaspns')
+                        ->where('flag_active', 1)
+                        ->where('jenissk', 2)
+                        ->where('id_pegawai LIKE "PEG202512%"')
+                        ->get()->result_array();
+
+            if($exists){
+                foreach($exists as $e){
+                    $listExists[$e['id_pegawai']] = $e;
+                }
+            }
+
+            foreach($cpns as $c){
+                if(!isset($listExists[$c['id_peg']])){
+                    $input = null;
+                    $input = [];
+                    $input['id_pegawai'] = $c['id_peg'];
+                    $input['jenissk'] = 2;
+                    $input['status'] = 2;
+                    $input['tanggal_verif'] = date('Y-m-d H:i:s');
+                    $input['gambarsk'] = "SKPNS010626_".$c['nip'].".pdf";
+                    // dd($input);
+                    $this->db->insert('db_pegawai.pegberkaspns', $input);
+                    echo "input ".$c['nip']."\n<br>";
+                } else {
+                    echo "skip 'cause exists ".$c['nip']."\n<br>";
+                }
+            }
+
+            // foreach($cpns as $c){
+            //     $input = [];
+            //     $input['id_pegawai'] = $c['id_peg'];
+            //     $input['jenissk'] = 3;
+            //     $input['status'] = 2;
+            //     // $input['gambarsk'] = "SPMT_".$c['nipbaru_ws']."_sign.pdf";
+            //     // $input['gambarsk'] = "SK_".$c['nipbaru_ws']."_".$c['nama'].".pdf";
+            //     $input['tanggal_verif'] = date('Y-m-d H:i:s');
+            //     $this->db->insert('db_pegawai.pegberkaspns', $input);
+            // }
+
+            dd('done');
+        }
+
         public function addFileSpmtCpns(){
             $cpns = $this->db->select("a.*")
                         ->from('db_pegawai.pegawai a')
@@ -4422,8 +4472,8 @@
         }
 
         public function cekWaktuKerjaKonsultasi(){
-            $batasAkhir = BATAS_DETIK_AWAL_KONSULTASI;
-            $batasAwalKonsultasi = BATAS_DETIK_AKHIR_KONSULTASI;
+            $batasAkhir = BATAS_DETIK_AWAL_KONSULTASI / 60;
+            $batasAwalKonsultasi = BATAS_DETIK_AKHIR_KONSULTASI / 60;
 
             $waktuKerja = cekWaktuKerja($batasAkhir, $batasAwalKonsultasi);
             $batasAkhirMenit = $batasAkhir / 60;
@@ -4512,6 +4562,7 @@
                 }
             }
 
+            $data['pesan'] = trim($data['pesan']);
             $this->db->insert('t_live_chat_detail', $data);
             $last_id = $this->db->insert_id();
             $updateChat['last_id_t_live_chat_detail'] = $last_id;
@@ -4775,13 +4826,13 @@
                         $endDateReply = $newEndDateReply->format('Y-m-d H:i:s');
                         // dd($newEndDateReply);
                     }
-
-                    if(date('Y-m-d H:i:s') >= $endDateReply){
+                    if(strtotime(date('Y-m-d H:i:s')) >= strtotime($endDateReply)){
+                        $batasWaktu = BATAS_DETIK_REPLY_KONSULTASI / 60;
                         $this->db->insert('t_live_chat_detail', [
                             'id_t_live_chat' => $d['id'],
                             'is_sender_admin' => 0,
                             'is_sistem' => 1,
-                            'pesan' => 'dikarenakan tidak ada respon lebih dari 60 menit, sistem secara otomatis telah menyelesaikan Sesi Konsultasi Anda. Silahkan berikan rating sebelum memulai Sesi Konsultasi yang baru.'
+                            'pesan' => 'dikarenakan tidak ada respon lebih dari '.$batasWaktu.' menit, sistem secara otomatis telah menyelesaikan Sesi Konsultasi Anda. Silahkan berikan rating sebelum memulai Sesi Konsultasi yang baru.'
                         ]);
                         $lastInsert = $this->db->insert_id();
                         $this->db->where('id', $d['id'])

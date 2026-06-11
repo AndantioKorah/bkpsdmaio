@@ -68,7 +68,9 @@
         }
     </style>
     <div class="row">
-        <?php foreach($result as $rs){
+        <?php
+        $totalUnread = 0;
+        foreach($result as $rs){
             $flagRead = 0; 
             if($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
@@ -76,6 +78,9 @@
                 $flagRead = $rs['flag_read_admin'];
             } else {
                 $flagRead = $rs['flag_read_pegawai'];
+            }
+            if($flagRead == 1){
+                $totalUnread++;
             }
         ?>
             <?php if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 

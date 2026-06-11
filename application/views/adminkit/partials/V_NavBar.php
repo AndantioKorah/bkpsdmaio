@@ -339,6 +339,17 @@
 				<li class="nav-item">
 					<div class="position-relative">
 						<a class="nav-icon" href="#" id="liveChatIcon">
+							<!-- <span class="indicator" id="live_chat_total_unread" style="
+								color: white;
+								font-weight: bold;
+								/* font-size: .5rem;
+								padding: 5px;
+								border-radius: 50%; */
+								background-color: red;
+								z-index: 10;
+								left: 40px;
+							"
+							>3</span> -->
 							<img class="icon_okta" src="<?=base_url('assets/img/okta-icon.png')?>" />
 							<!-- <i class="align-middle" data-feather="message-circle"></i> -->
 						</a>

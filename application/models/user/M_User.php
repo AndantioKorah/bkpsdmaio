@@ -4472,10 +4472,11 @@
         }
 
         public function cekWaktuKerjaKonsultasi(){
-            $batasAkhir = BATAS_DETIK_AWAL_KONSULTASI / 60;
-            $batasAwalKonsultasi = BATAS_DETIK_AKHIR_KONSULTASI / 60;
-
+            $batasAkhir = BATAS_DETIK_AWAL_KONSULTASI;
+            $batasAwalKonsultasi = BATAS_DETIK_AKHIR_KONSULTASI;
+            // dd($batasAwalKonsultasi);
             $waktuKerja = cekWaktuKerja($batasAkhir, $batasAwalKonsultasi);
+            // dd($batasAkhir."   ".$batasAwalKonsultasi);
             $batasAkhirMenit = $batasAkhir / 60;
             $batasAwalMenit = $batasAwalKonsultasi / 60;
             switch($waktuKerja['code']){

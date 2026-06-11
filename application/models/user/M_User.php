@@ -5065,5 +5065,46 @@
             $this->general_library->setReadEulaLiveChat(1);
             // echo "<script>console.log('flag eula live chat: ".$this->general_library->getFlagReadEulaLiveChat()."')</script>";
         }
+
+        public function countTotalUnreadLiveChat(){
+            $total_operator_layanan = 0;
+            $total = 0;
+
+            if($this->general_library->isProgrammer()
+                || $this->general_library->isHakAkses('admin_live_chat_konsultasi')){ //jika programmer atau admin, ambil semua
+                    $temp = $this->db->select('count(a.id) as total')
+                                    ->from('t_live_chat a')
+                                    ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                                    ->where('a.flag_active', 1)
+                                    ->where('flag_read_admin', 0)
+                                    ->where('a.flag_done', 0)
+                                    ->get()->row_array();
+                    $total = $temp ? $temp['total'] : 0;
+            } else { // jika bukan
+                if($this->general_library->isPegawaiBkpsdm()){
+                    $temp = $this->db->select('count(a.id) as total')
+                                    ->from('t_live_chat a')
+                                    ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                                    ->where('a.flag_active', 1)
+                                    ->where('flag_read_admin', 0)
+                                    ->where('a.flag_done', 0)
+                                    ->where('a.id_m_user_assigned', $this->general_library->getId())
+                                    ->get()->row_array();
+                    $total_operator_layanan = $temp ? $temp['total'] : 0;
+                }
+                $temp = $this->db->select('count(a.id) as total')
+                        ->from('t_live_chat a')
+                        ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                        ->where('a.flag_active', 1)
+                        ->where('flag_read_pegawai', 0)
+                        ->where('a.flag_done', 0)
+                        ->where('a.id_m_user', $this->general_library->getId())
+                        ->get()->row_array();
+                $total = $temp ? $temp['total'] : 0;
+            }
+
+            $total += $total_operator_layanan;
+            return ['total' => $total];
+        }
 	}
 ?>

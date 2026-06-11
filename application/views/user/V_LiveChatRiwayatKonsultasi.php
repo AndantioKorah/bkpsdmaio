@@ -79,7 +79,7 @@
             } else {
                 $flagRead = $rs['flag_read_pegawai'];
             }
-            if($flagRead == 1){
+            if($flagRead == 0){
                 $totalUnread++;
             }
         ?>
@@ -279,6 +279,10 @@
         <?php } ?>
     </div>
     <script>
+        $(function(){
+            
+        })
+
         function onHoverChat(id){
             // $('.div_profil_live_chat').hide()
             // $('.profile_chat_'+id).show()

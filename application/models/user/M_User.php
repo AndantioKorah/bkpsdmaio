@@ -3972,6 +3972,56 @@
             dd('done');
         }
 
+        public function addFileSkPns(){
+            $cpns = $this->db->select("a.*, b.id_peg")
+                        ->from('t_temp_data_cpns a')
+                        ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+                        ->get()->result_array();
+            
+            $exists = $this->db->select('*')
+                        ->from('db_pegawai.pegberkaspns')
+                        ->where('flag_active', 1)
+                        ->where('jenissk', 2)
+                        ->where('id_pegawai LIKE "PEG202512%"')
+                        ->get()->result_array();
+
+            if($exists){
+                foreach($exists as $e){
+                    $listExists[$e['id_pegawai']] = $e;
+                }
+            }
+
+            foreach($cpns as $c){
+                if(!isset($listExists[$c['id_peg']])){
+                    $input = null;
+                    $input = [];
+                    $input['id_pegawai'] = $c['id_peg'];
+                    $input['jenissk'] = 2;
+                    $input['status'] = 2;
+                    $input['tanggal_verif'] = date('Y-m-d H:i:s');
+                    $input['gambarsk'] = "SKPNS010626_".$c['nip'].".pdf";
+                    // dd($input);
+                    $this->db->insert('db_pegawai.pegberkaspns', $input);
+                    echo "input ".$c['nip']."\n<br>";
+                } else {
+                    echo "skip 'cause exists ".$c['nip']."\n<br>";
+                }
+            }
+
+            // foreach($cpns as $c){
+            //     $input = [];
+            //     $input['id_pegawai'] = $c['id_peg'];
+            //     $input['jenissk'] = 3;
+            //     $input['status'] = 2;
+            //     // $input['gambarsk'] = "SPMT_".$c['nipbaru_ws']."_sign.pdf";
+            //     // $input['gambarsk'] = "SK_".$c['nipbaru_ws']."_".$c['nama'].".pdf";
+            //     $input['tanggal_verif'] = date('Y-m-d H:i:s');
+            //     $this->db->insert('db_pegawai.pegberkaspns', $input);
+            // }
+
+            dd('done');
+        }
+
         public function addFileSpmtCpns(){
             $cpns = $this->db->select("a.*")
                         ->from('db_pegawai.pegawai a')
@@ -4424,8 +4474,9 @@
         public function cekWaktuKerjaKonsultasi(){
             $batasAkhir = BATAS_DETIK_AWAL_KONSULTASI;
             $batasAwalKonsultasi = BATAS_DETIK_AKHIR_KONSULTASI;
-
+            // dd($batasAwalKonsultasi);
             $waktuKerja = cekWaktuKerja($batasAkhir, $batasAwalKonsultasi);
+            // dd($batasAkhir."   ".$batasAwalKonsultasi);
             $batasAkhirMenit = $batasAkhir / 60;
             $batasAwalMenit = $batasAwalKonsultasi / 60;
             switch($waktuKerja['code']){
@@ -4512,6 +4563,7 @@
                 }
             }
 
+            $data['pesan'] = trim($data['pesan']);
             $this->db->insert('t_live_chat_detail', $data);
             $last_id = $this->db->insert_id();
             $updateChat['last_id_t_live_chat_detail'] = $last_id;
@@ -4762,26 +4814,34 @@
                     $endDate = new DateTime($d['date_send_message']);
                     $endDate->modify('+'.BATAS_DETIK_REPLY_KONSULTASI.' seconds');
                     $endDate = $endDate->format('Y-m-d H:i:s');
-                    //hitung waktu pesan jika 30 menit ke depan melebihi jam pulang
                     
+                    //hitung waktu pesan jika 30 menit ke depan melebihi jam pulang
+                    $batasAkhirKonsul = new DateTime($dateOnly." ".$batasWaktuPulang);
+                    $batasAkhirKonsul->modify('-'.BATAS_DETIK_AKHIR_KONSULTASI.' seconds');
+                    $batasAkhirKonsul = $batasAkhirKonsul->format('Y-m-d H:i:s');
+
                     $endDateReply = $endDate;
-                    if(strtotime($endDate) > strtotime($dateOnly." ".$batasWaktuPulang)){ // jika melebihi
+                    if(strtotime($endDate) > strtotime($batasAkhirKonsul)){ // jika melebihi
                         // dd($endDate."   ".$batasWaktuPulang);
-                        $diff = strtotime($dateOnly." ".$batasWaktuPulang) - strtotime($d['date_send_message']);
+                        $diff = strtotime($batasAkhirKonsul) - strtotime($d['date_send_message']);
+                        // dd($d['date_send_message']."   ".$diff);
                         $newEndDateReply = new DateTime($dateOnly." ".$batasWaktuMasuk);
+                        $newDiff = BATAS_DETIK_REPLY_KONSULTASI - $diff;
+                        // dd($newDiff);
                         $newEndDateReply->modify('+1 days'); // tambah 1 hari
-                        $newEndDateReply->modify('+'.BATAS_DETIK_AWAL_KONSULTASI.' seconds'); // tambah 1 jam waktu konsultasi
-                        $newEndDateReply->modify('+'.$diff.' seconds');// tambah sisa waktu dari hari sebelumnya
+                        $newEndDateReply->modify('+'.BATAS_DETIK_AWAL_KONSULTASI.' seconds'); // tambah 1 jam waktu konsultasi dibuka
+                        $newEndDateReply->modify('+'.$newDiff.' seconds');// tambah sisa waktu dari hari sebelumnya
                         $endDateReply = $newEndDateReply->format('Y-m-d H:i:s');
                         // dd($newEndDateReply);
                     }
-
-                    if(date('Y-m-d H:i:s') >= $endDateReply){
+                    // dd($endDateReply);
+                    if(strtotime(date('Y-m-d H:i:s')) >= strtotime($endDateReply)){
+                        $batasWaktu = BATAS_DETIK_REPLY_KONSULTASI / 60;
                         $this->db->insert('t_live_chat_detail', [
                             'id_t_live_chat' => $d['id'],
                             'is_sender_admin' => 0,
                             'is_sistem' => 1,
-                            'pesan' => 'dikarenakan tidak ada respon lebih dari 60 menit, sistem secara otomatis telah menyelesaikan Sesi Konsultasi Anda. Silahkan berikan rating sebelum memulai Sesi Konsultasi yang baru.'
+                            'pesan' => 'dikarenakan tidak ada respon lebih dari '.$batasWaktu.' menit, sistem secara otomatis telah menyelesaikan Sesi Konsultasi Anda. Silahkan berikan rating sebelum memulai Sesi Konsultasi yang baru.'
                         ]);
                         $lastInsert = $this->db->insert_id();
                         $this->db->where('id', $d['id'])
@@ -5004,6 +5064,47 @@
                     ]);
             $this->general_library->setReadEulaLiveChat(1);
             // echo "<script>console.log('flag eula live chat: ".$this->general_library->getFlagReadEulaLiveChat()."')</script>";
+        }
+
+        public function countTotalUnreadLiveChat(){
+            $total_operator_layanan = 0;
+            $total = 0;
+
+            if($this->general_library->isProgrammer()
+                || $this->general_library->isHakAkses('admin_live_chat_konsultasi')){ //jika programmer atau admin, ambil semua
+                    $temp = $this->db->select('count(a.id) as total')
+                                    ->from('t_live_chat a')
+                                    ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                                    ->where('a.flag_active', 1)
+                                    ->where('flag_read_admin', 0)
+                                    ->where('a.flag_done', 0)
+                                    ->get()->row_array();
+                    $total = $temp ? $temp['total'] : 0;
+            } else { // jika bukan
+                if($this->general_library->isPegawaiBkpsdm()){
+                    $temp = $this->db->select('count(a.id) as total')
+                                    ->from('t_live_chat a')
+                                    ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                                    ->where('a.flag_active', 1)
+                                    ->where('flag_read_admin', 0)
+                                    ->where('a.flag_done', 0)
+                                    ->where('a.id_m_user_assigned', $this->general_library->getId())
+                                    ->get()->row_array();
+                    $total_operator_layanan = $temp ? $temp['total'] : 0;
+                }
+                $temp = $this->db->select('count(a.id) as total')
+                        ->from('t_live_chat a')
+                        ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                        ->where('a.flag_active', 1)
+                        ->where('flag_read_pegawai', 0)
+                        ->where('a.flag_done', 0)
+                        ->where('a.id_m_user', $this->general_library->getId())
+                        ->get()->row_array();
+                $total = $temp ? $temp['total'] : 0;
+            }
+
+            $total += $total_operator_layanan;
+            return ['total' => $total];
         }
 	}
 ?>

@@ -2812,6 +2812,14 @@
         }
 
         public function cekWaktuKerja($maxMin = 0, $minMin = 0){
+            if($minMin == 0){
+                $minMin = BATAS_DETIK_AKHIR_KONSULTASI;
+            }
+
+            if($maxMin == 0){
+                $maxMin = BATAS_DETIK_AWAL_KONSULTASI;
+            }
+
             $res['code'] = 0;
             $res['message'] = "";
 
@@ -2861,19 +2869,22 @@
                     if(getNamaHari($dateOnly) == "Jumat"){
                         $jamMasuk = $jam_kerja['wfoj_masuk'];
                     }
-                    $diff = (strtotime($jamMasuk) - strtotime($timeOnly)) / 60;
-                    if($diff > $minMin){
+                    $waktuAwalKonsul = new DateTime($dateOnly." ".$jamMasuk);
+                    $waktuAwalKonsul->modify('+'.$minMin.' seconds');
+                    $waktuAwalKonsul = $waktuAwalKonsul->format('Y-m-d H:i:s');
+                    if(strtotime(date('Y-m-d H:i:s')) < strtotime($waktuAwalKonsul)){
                         $res['code'] = 4;
                         $res['message'] = "Waktu minimum adalah ".$minMin." setelah waktu masuk";
-                        return $res;
                     }
 
                     $jamPulang = $jam_kerja['wfo_pulang'];
                     if(getNamaHari($dateOnly) == "Jumat"){
                         $jamPulang = $jam_kerja['wfoj_pulang'];
                     }
-                    $diff = (strtotime($jamPulang) - strtotime($timeOnly)) / 60;
-                    if($diff < $maxMin){
+                    $waktuAkhirKonsul = new DateTime($dateOnly." ".$jamPulang);
+                    $waktuAkhirKonsul->modify('-'.$maxMin.' seconds');
+                    $waktuAkhirKonsul = $waktuAkhirKonsul->format('Y-m-d H:i:s');
+                    if(strtotime(date('Y-m-d H:i:s')) > strtotime($waktuAkhirKonsul)){
                         $res['code'] = 3;
                         $res['message'] = "Waktu maksimal adalah ".$maxMin." sebelum waktu pulang";
                     }

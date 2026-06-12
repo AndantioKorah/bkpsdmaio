@@ -766,4 +766,8 @@ class C_User extends CI_Controller
         $this->user->liveChatEulaAgree();
     }
 
+    public function countTotalUnreadLiveChat(){
+        echo json_encode($this->user->countTotalUnreadLiveChat());
+    }
+
 }

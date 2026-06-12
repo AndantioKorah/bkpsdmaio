@@ -758,6 +758,7 @@ var TableFilter = (function() {
 }
 
 $(function(){
+  countTotalUnreadLiveChat()
   $(".daterangepickerthis").daterangepicker({
       showDropdowns: true
   });
@@ -862,6 +863,26 @@ $(function(){
     orientation: 'bottom',
     autoclose: true
 });
+
+function countTotalUnreadLiveChat(){
+  $.ajax({
+    url: '<?=base_url("user/C_User/countTotalUnreadLiveChat")?>',
+    method: 'post',
+    data: null,
+    success: function(data){
+      let rs = JSON.parse(data)
+      if(parseInt(rs.total) > 0){
+        $('#live_chat_total_unread').html(rs.total)
+        $('#live_chat_total_unread').show()
+      } else {
+        $('#live_chat_total_unread').hide()
+        $('#live_chat_total_unread').html('0')
+      }
+    }, error: function(e){
+        errortoast('Terjadi Kesalahan')
+    }
+  })
+}
 
 $('.datepicker').datepicker({
     format: 'yyyy',

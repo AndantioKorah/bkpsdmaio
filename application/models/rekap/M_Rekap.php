@@ -1779,7 +1779,7 @@
     //     }
     // }
 
-    public function cekBangkomBulanan($param, $unitkerja = 0, $list_pegawai = null){
+    public function cekBangkomBulanan($param, $unitkerja = 0, $list_pegawai = null, $flag_rekap_tpp = 0){
         $res = [
             'code' => 0,
             'message' => 'ok',
@@ -1813,6 +1813,9 @@
             foreach($list_pegawai as $lp){
                 $pegawai[$lp['nip']] = $lp['nip'];
             }
+            // if($this->general_library->isProgrammer()){
+            //     dd($param);
+            // }
             $this->db->select('a.*, b.gelar1, b.nama, b.gelar2, c.nm_unitkerja')
                                 ->from('t_cek_bangkom a')
                                 ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
@@ -1833,6 +1836,9 @@
             // } else {
                 $this->db->where_in('b.nipbaru_ws', $pegawai);
             // }
+            if(stringStartWith('sekolah_', $param['skpd']) && $flag_rekap_tpp == 1){
+                $this->db->where('b.flag_terima_tpp', 1);
+            }
             $cekBangkom = $this->db->get()->result_array();
             $listBelumLengkap = null;
             if($cekBangkom){
@@ -1956,7 +1962,7 @@
                                 // cari jika semua unitkerja, bulan dan tahun sesuai parameter
                                 // cari jika unitkerja sesuai parameter, semua bulan dan tahun sesuai
             if($exceptBangkom == null){ // jika tidak ada data, maka cek bangkom bulanan
-                $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+                $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai, $flag_penerima_tpp);
                 if($rs['code'] == 1){
                     return $rs;
                 } else {
@@ -1987,7 +1993,7 @@
                     $tmpListPeg = null;
                     $temp = $list_pegawai;
                     // if($this->general_library->isProgrammer()){
-                        $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai);
+                        $rs = $this->cekBangkomBulanan($data, 0, $list_pegawai, $flag_penerima_tpp);
                         $i = 0;
                         foreach($list_pegawai as $lp){
                             if($lp['flag_terima_tpp'] == 0 && ($flag_rekap_tpp == 1)){
@@ -1997,7 +2003,10 @@
                             }
                             $i++;
                         }
-                        if($exceptBangkom['flag_terima_tpp_semua'] == 0){
+                        // if($this->general_library->isProgrammer()){
+                        //     dd($rs);
+                        // }
+                        if($exceptBangkom['flag_terima_tpp_semua'] == 0 && $rs['code'] == 1){
                             if($rs['list_pegawai']){
                                 foreach($rs['list_pegawai'] as $rlp){
                                     if(isset($tmpListPeg[$rlp['nip']])){

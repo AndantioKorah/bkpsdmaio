@@ -447,7 +447,7 @@ class M_Kepegawaian extends CI_Model
                     $username = $this->general_library->getUserName();
                 }
             }
-            $this->db->select('a.tmtpangkat,e.kelas_jabatan,e.jenis_jabatan,a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
+            $this->db->select('s.nm_unitkerjamaster,a.tmtpangkat,e.kelas_jabatan,e.jenis_jabatan,a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
             c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
             (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
@@ -473,6 +473,7 @@ class M_Kepegawaian extends CI_Model
                 ->join('m_sub_bidang p', 'l.id_m_sub_bidang = p.id','left')
                 ->join('m_status_pegawai q', 'a.id_m_status_pegawai = q.id','left')
                 ->join('m_kabupaten_kota r', 'a.id_m_kabupaten_kota = r.id','left')
+                ->join('db_pegawai.unitkerjamaster s', 'f.id_unitkerjamaster = s.id_unitkerjamaster','left')
                 ->where('a.nipbaru_ws', $username)
                 ->where('l.flag_active', 1)
                 ->limit(1);
@@ -597,7 +598,7 @@ class M_Kepegawaian extends CI_Model
                             ->join('db_pegawai.eselon e','c.eselon = e.id_eselon','left')
                             ->where('a.username', $nip)
                             ->where('a.flag_active', 1)
-                            ->where_in('c.flag_active', [1,2])
+                            ->where_in('c.flag_active', [1])
                             ->order_by('c.tmtjabatan','desc');
                             if($kode == 1){
                                 $this->db->where('c.status', 2);
@@ -12442,8 +12443,19 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "skjabatan" || $this->input->post('file') == "sk_jabatan_fungsional"){
-            $this->db->select('a.gambarsk')
+        } else if($this->input->post('file') == "skjabatan"){
+        $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegjabatan as a')
+                ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.statusjabatan', 1)
+                ->where('a.status !=', 3)
+                ->order_by('a.tmtjabatan', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sk_jabatan_fungsional"){
+        $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegjabatan as a')
                 ->join('db_pegawai.jabatan b', 'b.id_jabatanpeg = a.id_jabatan')
                 ->where('a.id_pegawai', $id_peg)

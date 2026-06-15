@@ -24,28 +24,32 @@
                 <?php if($rs['gambarsk'] != "") {
                   $flagShowButtonArsip = 1;
                   $messageCpns = null;
-                  $kelengkapan = $this->general_library->getKelengkapanBerkasCpns();
-                  if($rs['id_dokumen'] == 34){
-                    if($kelengkapan['done'] == true){
-                      $flagShowButtonArsip = 1;
-                    } else {
-                      $flagShowButtonArsip = 0;
-                      $messageCpns = $kelengkapan['message'];
-                    }
-                  }
+                  // $kelengkapan = $this->general_library->getKelengkapanBerkasCpns();
+                  // if($rs['id_dokumen'] == 34){
+                  //   if($kelengkapan['done'] == true){
+                  //     $flagShowButtonArsip = 1;
+                  //   } else {
+                  //     $flagShowButtonArsip = 1;
+                  //     // $messageCpns = $kelengkapan['message'];
+                  //     $messageCpns = null;
+
+                  //   }
+                  // }
                   // if($this->general_library->isPPPKbaru() && $rs['id_dokumen'] == 34){ // hilangkan tombol jika CPNS dan belum tanggal 2 Juni 2025 untuk SPMT
                   //   $flagShowButtonArsip = 0;
                   //   $messageCpns = "File SPMT dapat didownload pada tanggal 1 September 2025 jam 10 pagi";
                   // }
                 ?>
-                  <?php if($flagShowButtonArsip == 1){ ?>
+                 <button href="#modal_view_file_arsip" onclick="openFileArsip('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                    <i class="fa fa-file-pdf"></i></button>
+                  <!-- <?php if($flagShowButtonArsip == 1){ ?>
                     <button href="#modal_view_file_arsip" onclick="openFileArsip('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                     <i class="fa fa-file-pdf"></i></button>
                   <?php } ?>
                   <?php if($messageCpns){ ?>
                     <span style="font-size: .75rem; color: red; font-weight: bold;"><i><?=$messageCpns?></i></span>
                   <?php } ?>
-                <?php } ?>
+                <?php } ?> -->
               </td>
               <td>
 

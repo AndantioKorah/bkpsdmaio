@@ -1,6 +1,6 @@
 <?php
 
-    $filename = 'DATA Jumlah ASN Kota Manado '.formatDateNamaBulan(date('Y-m-d')).'.xls';
+    $filename = 'Rekap Peserta '.$result[0]['topik'].'_'.date('ymdhis').'.xls';
     header("Content-type: application/vnd-ms-excel");
     header("Content-Disposition: attachment; filename=$filename");
 ?>

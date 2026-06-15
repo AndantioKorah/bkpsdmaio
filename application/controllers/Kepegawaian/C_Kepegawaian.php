@@ -200,6 +200,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function loadListArsip($nip,$kode = null){
 		$data['result'] = $this->kepegawaian->getArsip($nip,$kode);
+		// dd($data);
 		$data['kode'] = $kode;
 		$data['nip'] = $nip;
 		$this->load->view('kepegawaian/V_ListArsip', $data);

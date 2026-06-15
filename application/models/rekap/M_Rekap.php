@@ -1074,7 +1074,7 @@
                     $result['kapus'] = $lp;
                     $result['flag_puskesmas'] = 1;
                 } else if(stringStartWith('Rumah Sakit', $unitkerja['nm_unitkerja'])){ // jika RS
-                    $result['kadis'] = $lp;
+                    $result['kepalaskpd'] = $lp;
                     $result['flag_rs'] = 1;
                 } else {
                     $result['kepalaskpd'] = $lp;
@@ -1100,7 +1100,7 @@
                 $result['sek'] = $lp;
             }
         }
-
+        
         $list_pegawai_unor_induk = null;
         if(in_array($unitkerja['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ // jika sekolah, cari kepalaskpd, bendahara dan kasubag umum di diknas
             $result['flag_sekolah'] = 1;
@@ -1235,19 +1235,20 @@
                                     ->where('a.nipbaru_ws', '198811072010012001')
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array(); 
-
-            $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                f.id as id_m_user, a.flag_bendahara,
-                e.nama_jabatan, e.kepalaskpd')
-                                    ->from('db_pegawai.pegawai a')
-                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
-                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
-                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                    ->join('m_user f', 'a.nipbaru_ws = f.username')
-                                    ->where('a.nipbaru_ws', '198505302005011001')
-                                    ->where('id_m_status_pegawai', 1)
-                                    ->get()->row_array();
-            $result['kepalaskpd']['nama_jabatan'] = "Kepala Dinas Kesehatan";
+            if($result['flag_puskesmas'] == 1){
+                $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                    f.id as id_m_user, a.flag_bendahara,
+                    e.nama_jabatan, e.kepalaskpd')
+                                        ->from('db_pegawai.pegawai a')
+                                        ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                        ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                        ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                        ->join('m_user f', 'a.nipbaru_ws = f.username')
+                                        ->where('a.nipbaru_ws', '198505302005011001')
+                                        ->where('id_m_status_pegawai', 1)
+                                        ->get()->row_array();
+                $result['kepalaskpd']['nama_jabatan'] = "Kepala Dinas Kesehatan";
+            }
             // kasubag ambil sek krna kasubag smntra cuti
             if($id_unitkerja != 7005020
             && $id_unitkerja != 7005010){
@@ -1279,7 +1280,7 @@
                 $result['kadis']['nama_jabatan'] = "Kepala Dinas Kesehatan";
             }
         }
-
+        
         //coding ini untuk mengubah penandatangan menjadi hardcode
         if($id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
         $id_unitkerja == 3018000 || // pu, kasubag sudah pindah
@@ -1456,9 +1457,9 @@
             }
         }
 
-        if($this->general_library->isProgrammer()){
-            // dd($result);
-        }
+        // if($this->general_library->isProgrammer()){
+        //     dd($result);
+        // }
 
         return $result;
     }

@@ -4450,10 +4450,12 @@
                 )
                 && $chat['flag_read_admin'] == 0){
                     // jika admin yang buka chat, ubah flag_read_admin jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
+                    $update['flag_read_admin'] = 1;
+                    if($this->general_library->getId() == $chat['id_m_user_assigned']){
+                        $update['flag_read_admin_only'] = 1;
+                    }
                     $this->db->where('id', $chat['id'])
-                        ->update('t_live_chat', [
-                            'flag_read_admin' => 1,
-                        ]);
+                        ->update('t_live_chat', $update);
 
                     $this->db->where('id_t_live_chat', $chat['id'])
                             ->where('read_date', null)
@@ -4997,6 +4999,20 @@
                 'is_sistem' => 1
             ]);
 
+            $assignedOperator = $this->db->select('b.gelar1, b.gelar2, b.nama')
+                                    ->from('m_user a')
+                                    ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                    ->where('a.id', $dataInput['id_m_user'])
+                                    ->where('a.flag_active', 1)
+                                    ->get()->row_array();
+
+            $this->db->insert('t_live_chat_detail', [
+                'id_t_live_chat' => $dataInput['id_t_live_chat'],
+                'pesan' => getNamaPegawaiFull($assignedOperator).' telah dipilih Admin sebagai Operator Layanan Teknis',
+                'is_sistem' => 1,
+                'flag_only_admin' => 1
+            ]);
+
             $lastId = $this->db->insert_id();
 
             $this->db->where('id', $dataInput['id_t_live_chat'])
@@ -5005,7 +5021,8 @@
                         'assigned_date' => date('Y-m-d H:i:s'),
                         'id_m_user_assigned_by' => $this->general_library->getId(),
                         'updated_by' => $this->general_library->getId(),
-                        'last_id_t_live_chat_detail' => $lastId
+                        'last_id_t_live_chat_detail' => $lastId,
+                        'flag_read_admin_only' => 0
                     ]);
 
             // tambahkan notifikasi kepada user yang diassigned
@@ -5086,7 +5103,7 @@
                                     ->from('t_live_chat a')
                                     ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
                                     ->where('a.flag_active', 1)
-                                    ->where('flag_read_admin', 0)
+                                    ->where("(a.flag_read_admin = 0 OR a.flag_read_admin_only = 0)")
                                     ->where('a.flag_done', 0)
                                     ->where('a.id_m_user_assigned', $this->general_library->getId())
                                     ->get()->row_array();

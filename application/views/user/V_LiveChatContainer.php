@@ -43,13 +43,26 @@
                 <?=($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                 || $this->general_library->isProgrammer()
                 || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==count($result['detail']) ? "margin-admin-bottom div_chat_last_item" : ""?>
-            " style="line-height: 15px;">
-                <span style="color: var(--primary-color); margin-bottom: 0; font-size: .6rem; font-style: italic; font-weight: bold;">
-                    <?=trim(formatDateNotifikasi($rd['created_date'], 1))?><br>
-                </span>
-                <span style="color: var(--primary-color); font-size: .75rem; font-style: italic; font-weight: bold;">
-                    <?=$rd['pesan']?>
-                </span>
+                "style="line-height: 15px;">
+                <?php if($rd['flag_only_admin'] == 1){ ?>
+                    <span style="
+                        font-size: .65rem;
+                        font-weight: bold;
+                        color: beige;
+                        padding: 5px;
+                        border-radius: 5px;
+                        background-color: #dc3545;
+                    ">
+                        <?=$rd['pesan']?>
+                    </span>
+                <?php } else { ?>
+                    <span style="color: var(--primary-color); margin-bottom: 0; font-size: .6rem; font-style: italic; font-weight: bold;">
+                        <?=trim(formatDateNotifikasi($rd['created_date'], 1))?><br>
+                    </span>
+                    <span style="color: var(--primary-color); font-size: .75rem; font-style: italic; font-weight: bold;">
+                        <?=$rd['pesan']?>
+                    </span>
+                <?php } ?>
             </div>
         <?php } else { ?>
             <div class="col-lg-12 mb-2

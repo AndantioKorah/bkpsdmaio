@@ -44,7 +44,11 @@
                 || $this->general_library->isProgrammer()
                 || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==count($result['detail']) ? "margin-admin-bottom div_chat_last_item" : ""?>
                 "style="line-height: 15px;">
-                <?php if($rd['flag_only_admin'] == 1){ ?>
+                <?php if($rd['flag_only_admin'] == 1 && (
+                    $this->general_library->isHakAkses('admin_live_chat_konsultasi') 
+                || $this->general_library->isProgrammer()
+                || $this->general_library->getId() == $result['chat']['id_m_user_assigned']
+                )){ ?>
                     <span style="
                         font-size: .65rem;
                         font-weight: bold;

@@ -906,7 +906,13 @@
                             $result[$i]['kelas_jabatan'] = 7;
                         }
                     }
-                }
+                } else if($d['id_unitkerja'] == 3030000){ // jika PTSP, ahli madya kelas jabatan 11
+                    $explode_nama_jabatan = explode(" ", $d['nama_jabatan']);
+                    if($explode_nama_jabatan[count($explode_nama_jabatan)-2] == "Ahli" &&
+                        $explode_nama_jabatan[count($explode_nama_jabatan)-1] == "Madya"){
+                        $result[$i]['kelas_jabatan'] = 11;
+                    }
+                } 
 
                 if(isset($d['id_jabatan_tambahan']) && $d['id_jabatan_tambahan']){ // jika ada jabatan tambahan
                     if(isset($d['nama_jabatan_tambahan'])){

@@ -503,10 +503,7 @@ $(function(){
         }
         } 
         if(id_m_layanan == 38){
-        if(satyalancana_10 == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-        }
+        
         if(satyalancana_20 == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

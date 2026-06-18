@@ -297,8 +297,12 @@
             });
         }
     </script>
-<?php } else { ?> 
-    <div class="col-lg-12 text-center">
-        <i><h4>Belum ada Riwayat Konsultasi</h4></i>
+<?php } else { ?>
+    <div class="col-lg-12 text-center p-3">
+        <?php if(isset($flag_search)){ ?>
+            <i><h6>Data Tidak Ditemukan</h6></i>
+        <?php } else { ?>
+            <i><h6>Belum ada Riwayat Konsultasi</h6></i>
+        <?php } ?>
     </div>
 <?php } ?>

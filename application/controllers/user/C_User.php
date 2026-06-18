@@ -770,4 +770,17 @@ class C_User extends CI_Controller
         echo json_encode($this->user->countTotalUnreadLiveChat());
     }
 
+    public function loadSearchRiwayatKonsul(){
+        $data['skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        $data['jenis_layanan'] = $this->user->loadLayananKonsultasi();
+        $this->load->view('user/V_LiveChatSearchRiwayatKonsul', $data);
+    }
+
+    public function searchRiwayatKonsul(){
+        $data['result'] = $this->user->searchRiwayatKonsul();
+        $data['flag_search'] = 1;
+        $this->load->view('user/V_LiveChatRiwayatKonsultasi', $data);
+        // dd($data);
+    }
+
 }

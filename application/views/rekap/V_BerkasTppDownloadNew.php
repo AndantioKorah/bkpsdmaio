@@ -99,6 +99,9 @@
                     // else if($pegawai['flag_rs'] == 1){
                     //     $data_header['kepalaskpd'] = $pegawai['kadis'];
                     // }
+                    // if($this->general_library->isProgrammer()){
+                    //     dd($data_header);
+                    // }
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
             </div>

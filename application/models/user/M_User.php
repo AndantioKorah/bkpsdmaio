@@ -4450,10 +4450,12 @@
                 )
                 && $chat['flag_read_admin'] == 0){
                     // jika admin yang buka chat, ubah flag_read_admin jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
+                    $update['flag_read_admin'] = 1;
+                    if($this->general_library->getId() == $chat['id_m_user_assigned']){
+                        $update['flag_read_admin_only'] = 1;
+                    }
                     $this->db->where('id', $chat['id'])
-                        ->update('t_live_chat', [
-                            'flag_read_admin' => 1,
-                        ]);
+                        ->update('t_live_chat', $update);
 
                     $this->db->where('id_t_live_chat', $chat['id'])
                             ->where('read_date', null)
@@ -4997,6 +4999,20 @@
                 'is_sistem' => 1
             ]);
 
+            $assignedOperator = $this->db->select('b.gelar1, b.gelar2, b.nama')
+                                    ->from('m_user a')
+                                    ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                    ->where('a.id', $dataInput['id_m_user'])
+                                    ->where('a.flag_active', 1)
+                                    ->get()->row_array();
+
+            $this->db->insert('t_live_chat_detail', [
+                'id_t_live_chat' => $dataInput['id_t_live_chat'],
+                'pesan' => getNamaPegawaiFull($assignedOperator).' telah dipilih Admin sebagai Operator Layanan Teknis',
+                'is_sistem' => 1,
+                'flag_only_admin' => 1
+            ]);
+
             $lastId = $this->db->insert_id();
 
             $this->db->where('id', $dataInput['id_t_live_chat'])
@@ -5005,7 +5021,8 @@
                         'assigned_date' => date('Y-m-d H:i:s'),
                         'id_m_user_assigned_by' => $this->general_library->getId(),
                         'updated_by' => $this->general_library->getId(),
-                        'last_id_t_live_chat_detail' => $lastId
+                        'last_id_t_live_chat_detail' => $lastId,
+                        'flag_read_admin_only' => 0
                     ]);
 
             // tambahkan notifikasi kepada user yang diassigned
@@ -5086,7 +5103,7 @@
                                     ->from('t_live_chat a')
                                     ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
                                     ->where('a.flag_active', 1)
-                                    ->where('flag_read_admin', 0)
+                                    ->where("(a.flag_read_admin = 0 OR a.flag_read_admin_only = 0)")
                                     ->where('a.flag_done', 0)
                                     ->where('a.id_m_user_assigned', $this->general_library->getId())
                                     ->get()->row_array();
@@ -5105,6 +5122,52 @@
 
             $total += $total_operator_layanan;
             return ['total' => $total];
+        }
+
+        public function searchRiwayatKonsul(){
+            $param = $this->input->post();
+            $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
+                        d.nipbaru_ws, h.gelar1 as gelar1_assign, h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan,
+                        b.is_image, b.is_file')
+                        ->from('t_live_chat a')
+                        ->join('t_live_chat_detail b', 'a.last_id_t_live_chat_detail = b.id', 'left')
+                        ->join('m_user c', 'a.id_m_user = c.id')
+                        ->join('db_pegawai.pegawai d', 'c.username = d.nipbaru_ws')
+                        ->join('db_pegawai.unitkerja e', 'd.skpd = e.id_unitkerja')
+                        ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg')
+                        ->join('m_user g', 'a.id_m_user_assigned = g.id', 'left')
+                        ->join('db_pegawai.pegawai h', 'g.username = h.nipbaru_ws', 'left')
+                        ->join('m_layanan_konsul i', 'a.id_m_layanan_konsul = i.id', 'left')
+                        // ->where('a.id_m_user', $this->general_library->getId())
+                        ->where('a.flag_active', 1)
+                        ->where('c.flag_active', 1)
+                        ->order_by('a.flag_done', 'asc')
+                        ->order_by('a.done_date', 'desc')
+                        ->order_by('b.created_date', 'desc')
+                        ->group_by('a.id');
+
+            if($param['status'] != "semua"){
+                $this->db->where('a.flag_done', $param['status']);
+            }
+
+            if($param['skpd'] != "0"){
+                $this->db->where('e.id_unitkerja', $param['skpd']);
+            }
+
+            if($param['jenis_layanan'] != "0"){
+                $this->db->where('a.id_m_layanan_konsul', $param['jenis_layanan']);
+            }
+
+            if($param['search'] != ""){
+                $this->db->where("(
+                    (d.nama LIKE '%".$param['search']."%') OR
+                    (h.nama LIKE '%".$param['search']."%') OR
+                    (f.nama_jabatan LIKE '%".$param['search']."%') OR
+                    (d.nipbaru_ws LIKE '%".$param['search']."%')
+                )");
+            }
+
+            return $this->db->get()->result_array();
         }
 	}
 ?>

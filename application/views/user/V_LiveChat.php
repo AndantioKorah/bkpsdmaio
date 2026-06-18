@@ -57,6 +57,30 @@
         transition: .2s;
         cursor: pointer;
     }
+
+    .icon_search_riwayat_konsul:hover{
+        transition: .2s;
+        color: var(--primary-color);
+        font-size: 1rem;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: lightgreen;
+    }
+
+    .icon_search_riwayat_konsul_actived{
+        color: var(--primary-color);
+        font-size: 1rem;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: lightgreen;
+    }
+
+    .div_riwayat_chat{
+        max-height: 70vh;
+        overflow-y: auto;
+    }
 </style>
 
 <div class="container_live_chat">
@@ -71,7 +95,14 @@
                     <div class="col-lg-12 div_riwayat_live_chat div_riwayat_live_chat_admin">
                         <div class="row">
                             <div class="col-lg-12 pt-3" style="border-bottom: 1px solid grey;">
-                                <h4>Admin Konsultasi Online</h4>
+                                <div class="row">
+                                    <div class="col-lg-10 text-left">
+                                        <h5>Admin Konsultasi Online</h5>
+                                    </div>
+                                    <div class="col-lg-2 text-center" style="margin-top: -3px;">
+                                        <span class="icon_search_riwayat_konsul" style="font-size: .75rem;"><i class="fa fa-search"></i></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-lg-12 div_riwayat_chat"></div>
                         </div>
@@ -150,6 +181,15 @@
         <?php } else { ?>
             loadRiwayatChat()
         <?php } ?>
+    })
+
+    $('.icon_search_riwayat_konsul').on('click', function(){
+        showPopupLiveChat('Cari Riwayat Konsultasi')
+        $('.popup_body').html('')
+        $('.popup_body').append(divLoaderNavy)
+        $('.popup_body').load('<?=base_url("user/C_User/loadSearchRiwayatKonsul/")?>', function(){
+            $('#loader').hide()
+        })
     })
 
     function loadEulaLiveChat(){

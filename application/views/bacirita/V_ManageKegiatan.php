@@ -152,7 +152,7 @@
 				<h4>List Kegiatan</h4>
 				<hr>
 			</div>
-			<div id="div_list_kegiatan" class="col-lg-12">
+			<div id="div_list_kegiatan" class="row">
 			</div>
 		</div>
 	</div>
@@ -173,6 +173,7 @@
     </div>
   </div>
 <script>
+	var limitLoadKegiatan = 5;
 	$(function(){
 		$('#tipe_kegiatan').select2()
 		refreshDatePicker()
@@ -204,12 +205,29 @@
 		})
 	}
 
-	function loadListKegiatan(id){
-		$('#div_list_kegiatan').html()
-		$('#div_list_kegiatan').append(divLoaderNavy)
-		$('#div_list_kegiatan').load('<?=base_url("bacirita/C_Bacirita/loadListKegiatan/")?>'+id, function(){
-			$('#loader').hide()
-		})
+	function loadListKegiatan(tab = 'all', startId = 0){
+		// console.log(tab);
+		// return false
+		$.ajax({
+            url: '<?=base_url("bacirita/C_Bacirita/loadListKegiatan/")?>'+tab,
+			method: 'POST',
+			data: {
+				limit: 4,
+				startId: startId
+			},
+			success: function(data){
+				if(startId == 0){
+					$('#div_list_kegiatan').html('')
+					$('#div_list_kegiatan').append(divLoaderNavy)
+					$('#loader').hide()
+					$('#div_list_kegiatan').html(data)
+				} else {
+					$('#div_list_kegiatan').append(data)
+				}
+			}, error: function(e){
+				errortoast('Terjadi Kesalahan')
+			}
+        })
 	}
 
 	$('#form_input_kegiatan').on('submit', function(e){
@@ -233,7 +251,7 @@
                     $('#topik').val('')
 					$('#div_form_input_kegiatan').hide()
 					successtoast('Data berhasil disimpan')
-					loadListKegiatan()
+					loadListKegiatan('all')
                 } else {
                     errortoast(resp.message)
                 }

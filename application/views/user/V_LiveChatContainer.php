@@ -59,7 +59,7 @@
                     ">
                         <?=$rd['pesan']?>
                     </span>
-                <?php } else { ?>
+                <?php } else if($rd['flag_only_admin'] != 1) { ?>
                     <span style="color: var(--primary-color); margin-bottom: 0; font-size: .6rem; font-style: italic; font-weight: bold;">
                         <?=trim(formatDateNotifikasi($rd['created_date'], 1))?><br>
                     </span>

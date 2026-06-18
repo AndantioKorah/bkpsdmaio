@@ -58,24 +58,65 @@
 		top: -10px;
 		font-size: .8rem;
 	}
+
+	.card-load-more{
+		min-height: 100px;
+		max-height: 300px;
+		text-align: center;
+		border: 3px dashed #647589;
+		color: var(--primary-color);
+		border-radius: 5px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		opacity: .8;
+		line-height: 20px;
+		font-size: .85rem;
+		font-weight: bold;
+	}
+
+	.card-load-more:hover{
+		font-weight: bold;
+		opacity: 1;
+		cursor: pointer;
+	}
 </style>
-<?php if($result){ ?>
-	<div class="row">
+<?php if($result){
+	$i = 1;	
+	// dd(count($result)."   ".$dataLimit);
+?>
+	<!-- <div class="row"> -->
 		<?php foreach($result as $rs){
-			$srcImage = "assets/img/logo-bkpsdm-bacirita.png";
-			if($rs['url_banner'] && file_exists($rs['url_banner'])){
-				$srcImage = $rs['url_banner'];
-			}
+			if($dataLimit != 0 && (count($result) > $dataLimit) && $i == $dataLimit+1){
+		?>
+			<div class="div-load-more col-lg-3 col-md-3 col-sm-3 p-3">
+				<div class="card card-load-more">
+					<div class="card-load-more-label">
+						<i class="fa fa-redo"></i><br>
+						Muat Lebih Banyak
+					</div>
+					<div class="card-load-more-loading" style="display: none;">
+						<i class="fa fa-2x fa-spin fa-spinner"></i><br>
+						Memuat Data....
+					</div>
+				</div>
+			</div>
+		<?php 
+			} else {
+				$srcImage = "assets/img/logo-bkpsdm-bacirita.png";
+				if($rs['url_banner'] && file_exists($rs['url_banner'])){
+					$srcImage = $rs['url_banner'];
+				}
 
-			$jamSelesai = formatTimeAbsen($rs['jam_selesai']);
-			if($jamSelesai == "00:00"){
-				$jamSelesai = "Selesai";
-			}
+				$jamSelesai = formatTimeAbsen($rs['jam_selesai']);
+				if($jamSelesai == "00:00"){
+					$jamSelesai = "Selesai";
+				}
 
-			$badgeKegiatan = "badge-info";
-			if($rs['id_m_tipe_kegiatan'] == 2){ // jika umum
-				$badgeKegiatan = "badge-success";
-			}
+				$badgeKegiatan = "badge-info";
+				if($rs['id_m_tipe_kegiatan'] == 2){ // jika umum
+					$badgeKegiatan = "badge-success";
+				}
 		?>
 			<div class="col-lg-3 col-md-3 col-sm-3 p-3">
 				<div class="card card-list-kegiatan">
@@ -117,22 +158,23 @@
 					</div>
 				</div>
 			</div>
-		<?php } ?>
-	</div>
+		<?php } $i++; } ?>
+	<!-- </div> -->
 <?php } ?>
 
 <script>
-	
+	$('.card-load-more-label').on('click', function(){
+		$(this).hide()
+		$('.card-load-more-loading').show()
+		loadListKegiatan('all', '<?=$result[$dataLimit]['id']?>')
+		$('.div-load-more').hide()
+	})
+
 	function openDetailModal(id){
 		$('#modal_detail_kegiatan_content').html('')
 		$('#modal_detail_kegiatan_content').append(divLoaderNavy)
 		$('#modal_detail_kegiatan_content').load('<?=base_url("bacirita/C_Bacirita/modalLoadDetailKegiatan/")?>'+id, function(){
 			$('#loader').hide()
 		})
-
-
-
 	}
-
-
 </script>

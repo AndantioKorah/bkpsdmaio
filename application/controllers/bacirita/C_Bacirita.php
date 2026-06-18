@@ -25,6 +25,10 @@ class C_Bacirita extends CI_Controller
 
     public function loadListKegiatan($id){
         $data['result'] = $this->bacirita->loadListKegiatan($id);
+        $data['dataLimit'] = $data['result']['limit'];
+        $data['startId'] = $data['result']['startId'];
+        $data['result'] = $data['result']['res'];
+        // dd($data);
         $this->load->view('bacirita/V_ListKegiatanAdmin', $data);
     }
 
@@ -44,6 +48,9 @@ class C_Bacirita extends CI_Controller
 
      public function loadListWebinar($tab){
         $data['result'] = $this->bacirita->loadListKegiatan($tab);
+        $data['dataLimit'] = $data['result']['limit'];
+        $data['startId'] = $data['result']['startId'];
+        $data['result'] = $data['result']['res'];
         $this->load->view('bacirita/V_ListWebinar', $data);
     }
 

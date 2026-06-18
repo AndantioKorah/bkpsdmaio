@@ -295,17 +295,17 @@
                         <div id="div_list_quick_message" style="display: none;" class="col-lg-12">
                             <div class="row">
                                 <center>
-                                <div class="col-lg-12 item_quick_message">
-                                    <a onclick="sendQuickResponseMessage('quick_message_1')" id="quick_message_1">Selamat <?=greeting()?> <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> <?=getNamaPegawaiFull($result['chat'], 0, 1)?>, ada yang bisa kami bantu?</a>
+                                <div onclick="sendQuickResponseMessage('quick_message_1')" class="col-lg-12 item_quick_message">
+                                    <a id="quick_message_1">Selamat <?=greeting()?> <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> <?=getNamaPegawaiFull($result['chat'], 0, 1)?>, ada yang bisa kami bantu?</a>
                                 </div>
-                                <div class="col-lg-12 item_quick_message">
-                                    <a onclick="sendQuickResponseMessage('quick_message_2')" id="quick_message_2">Baik <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?>, silahkan menunggu untuk kami tindak lanjuti.</a>
+                                <div onclick="sendQuickResponseMessage('quick_message_2')" class="col-lg-12 item_quick_message">
+                                    <a id="quick_message_2">Baik <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?>, silahkan menunggu untuk kami tindak lanjuti.</a>
                                 </div>
-                                <div class="col-lg-12 item_quick_message">
-                                    <a onclick="sendQuickResponseMessage('quick_message_3')" id="quick_message_3">Apakah penjelasan yang diberikan sudah jelas? Apakah masih ada yang ingin ditanyakan?</a>
+                                <div onclick="sendQuickResponseMessage('quick_message_3')" class="col-lg-12 item_quick_message">
+                                    <a id="quick_message_3">Apakah penjelasan yang diberikan sudah jelas? Apakah masih ada yang ingin ditanyakan?</a>
                                 </div>
-                                <div class="col-lg-12 item_quick_message">
-                                    <a onclick="sendQuickResponseMessage('quick_message_4')" id="quick_message_4">
+                                <div onclick="sendQuickResponseMessage('quick_message_4')" class="col-lg-12 item_quick_message">
+                                    <a id="quick_message_4">
                                         Terima kasih <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> <?=getNamaPegawaiFull($result['chat'], 0, 1)?> sudah menghubungi BKPSDM. Semoga penjelasan yang diberikan dapat membantu kendala yang <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> temui.<br><br>Mohon berkenan untuk memberikan penilaian dan komentar serta masukkan jika ada yang <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> rasakan masih kurang.
                                     </a>
                                 </div>

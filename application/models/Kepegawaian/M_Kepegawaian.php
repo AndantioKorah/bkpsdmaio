@@ -13495,6 +13495,12 @@ public function getFileForVerifLayanan()
         $id_dok = $this->input->post('id_dokumen');
         $create_nama_file =  $this->prosesName($id_dok);
         $target_dir = null;
+
+        if($id_dok == 101){
+         $dataFile['nama_file'] =  "-";
+		 $result		        = $this->insertUploadSkLayanan($dataFile);
+         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+        } else {
         if($this->input->post('id_dokumen') == 4){
             $target_dir						= './arsipelektronik/';
         } else if($this->input->post('id_dokumen') == 7){
@@ -13557,6 +13563,8 @@ public function getFileForVerifLayanan()
 			$result		        = $this->insertUploadSkLayanan($dataFile);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
 		}
+
+        }
     
     if($this->db->trans_status() == FALSE){
         $this->db->trans_rollback();
@@ -13749,9 +13757,9 @@ public function getFileForVerifLayanan()
                     ->where('a.id', $id)
                     ->get()->row_array();
                 
-                $datains["dokumen_layanan"] = $data['nama_file'];
+                // $datains["dokumen_layanan"] = $data['nama_file'];
                 $datains["status"] = 3;
-                $url_file = "arsippeningkatanpenambahangelar/".$data['nama_file'];
+                // $url_file = "arsippeningkatanpenambahangelar/".$data['nama_file'];
                 $this->db->where('id', $id)
                 ->update('t_layanan', $datains);
 
@@ -13767,7 +13775,7 @@ public function getFileForVerifLayanan()
                         'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                         'message' => $caption,
                         'filename' => "SK_Peningkatan_Pendidikan_Penambahan_Gelar.pdf",
-                        'fileurl' => $url_file,
+                        // 'fileurl' => $url_file,
                         'type' => 'document',
                         'jenis_layanan' => 'Perbaikan Data'
                     ];

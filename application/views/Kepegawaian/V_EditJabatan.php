@@ -398,10 +398,13 @@ $('#form_edit_jabatann').on('submit', function(e){
         $(this).val('');
         }
 
-        if (fileSize > MaxSize ){
-        errortoast("Maksimal Ukuran File 2 MB")
-        $(this).val('');
+        <?php if(!($this->general_library->isAdminAplikasi())){ ?>
+        if ((fileSize > MaxSize) ){
+          errortoast("Maksimal Ukuran File 2 MB")
+          $(this).val('');
         }
+        <?php } ?>
+
 
         });
 

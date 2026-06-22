@@ -706,11 +706,14 @@ $(function(){
           $(this).val('');
         }
 
-        if (fileSize > MaxSize ){
+        <?php if(!($this->general_library->isAdminAplikasi())){ ?>
+        if ((fileSize > MaxSize) ){
           errortoast("Maksimal Ukuran File 2 MB")
           $(this).val('');
         }
+        <?php } ?>
 
+      
         });
 
         $('.yearpicker').datepicker({

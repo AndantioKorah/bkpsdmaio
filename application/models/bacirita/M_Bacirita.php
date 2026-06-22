@@ -16,6 +16,15 @@ class M_Bacirita extends CI_Model
     }
 
     public function loadListKegiatan($tab){
+        $inputPost = $this->input->post();
+        $limit = 0;
+        $startId = 0;
+        if(isset($inputPost['limit'])){
+            $limit = $inputPost['limit'];
+            if(isset($inputPost['startId'])){
+                $startId = $inputPost['startId'];
+            }
+        }
         $res = null;
         $data = $this->db->select('a.*, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_t_peserta_kegiatan,
                     (
@@ -46,19 +55,23 @@ class M_Bacirita extends CI_Model
                     ->join("db_bacirita.t_peserta_kegiatan d", "a.id = d.id_t_kegiatan AND d.flag_active = 1 AND d.id_m_user = '".$this->general_library->getId()."'", "left")
                     ->where('a.flag_active', 1)
                     ->group_by('a.id')
-                    ->order_by('a.tanggal', 'desc')
-                    ->get()->result_array();
-        if($tab == "all"){
-            $res = $data;
-        } else if($tab == "personal"){
-            foreach($data as $d){
-                if($d['id_t_peserta_kegiatan']){
-                    $res[] = $d;
-                } 
-            }
+                    ->order_by('a.tanggal', 'desc');
+                    // ->get()->result_array();
+        if($tab == "personal"){
+            $this->db->where('d.id IS NOT NULL');
         }
 
-        return $res;
+        if($limit != 0){
+            $this->db->limit($limit+1);
+        }
+
+        if($startId != 0){
+            $this->db->where('a.id <=', $startId);
+        }
+
+        $res = $this->db->get()->result_array();
+
+        return ['res' => $res, 'startId' => $startId, 'limit' => $limit];
     }
 
     public function saveDataKegiatan($data){

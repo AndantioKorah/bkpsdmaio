@@ -567,7 +567,13 @@ class M_Bacirita extends CI_Model
             $res['message'] = 'Mohon maaf, Anda sudah terdaftar untuk kegiatan ini sebelumnya.';
             $res['success'] = false;
         } else {
-            $this->insert('db_bacirita.t_peserta_kegiatan', $data);
+            $check = $this->checkActivity($data['id_t_kegiatan'], $data['id_m_user'], "penfaftaran");
+            if($check['code'] == 0){
+                $this->insert('db_bacirita.t_peserta_kegiatan', $data);
+            } else {
+                $this->db->trans_rollback();
+                return $check;
+            }
         }
 
         if($this->db->trans_status() == FALSE){
@@ -602,15 +608,19 @@ class M_Bacirita extends CI_Model
             $res['message'] = 'Presensi Webinar Belum dibuka';
             $res['success'] = false;
         } else {
+            $check = $this->checkActivity($id_kegiatan, $this->general_library->getId(), "absen");
+            if($check['code'] == 0){
+                $data["flag_absen"] = 1;
+                $data["date_absen"] = date('Y-m-d H:i:s');
+                $data["updated_by"] = $this->general_library->getId();
 
-        $data["flag_absen"] = 1;
-        $data["date_absen"] = date('Y-m-d H:i:s');
-        $data["updated_by"] = $this->general_library->getId();
-
-        $this->db->where('id_t_kegiatan', $id_kegiatan)
-                 ->where('id_m_user', $id_m_user)
-                 ->update('db_bacirita.t_peserta_kegiatan', $data);
-
+                $this->db->where('id_t_kegiatan', $id_kegiatan)
+                        ->where('id_m_user', $id_m_user)
+                        ->update('db_bacirita.t_peserta_kegiatan', $data);
+            } else {
+                $this->db->trans_rollback();
+                return $check;
+            }
         }
      
        
@@ -647,6 +657,11 @@ class M_Bacirita extends CI_Model
                                 ->where('a.flag_active', 1)
                                 ->where('b.flag_active', 1)
                                 ->get()->row_array();
+        if(!$kegiatan){
+            $res['code'] = 1;
+            $res['message'] = 'Data Kegiatan tidak ditemukan';
+            return $res;
+        }
 
         if($activity == "generate_sertifikat"){
             if($kegiatan['flag_download_sertifikat'] == 0){
@@ -666,6 +681,37 @@ class M_Bacirita extends CI_Model
                 $res['message'] = 'Mohon maaf, sertifikat sudah digenerate sebelumnya.';
                 return $res;
             }
+
+            if($peserta['flag_absen'] == 0){
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, Anda belum melakukan absensi, sertifikat tidak dapat digenerate.';
+                return $res;
+            }
+        } else if($activity == "pendaftaran"){
+            $batasDaftar = new DateTime($kegiatan['tanggal_batas_pendaftaran']." ".$kegiatan['jam_batas_pendaftaran']);
+            $now = new DateTime('Y-m-d H:i:s');
+            if(strtotime($now) > strtotime($batasDaftar)){
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, pendaftaran telah ditutup karena sudah melebihi batas waktu pendaftaran.';
+                return $res;
+            }
+        } else if($activity == "absen"){
+            if(!$peserta){
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, Anda tidak terdaftar sebagai peserta.';
+                return $res;
+            }
+
+            $batasAwalAbsen = new DateTime($kegiatan['tanggal_batas_absensi']." ".$kegiatan['jam_buka_absensi']);
+            $batasAkhirAbsen = new DateTime($kegiatan['tanggal_batas_absensi']." ".$kegiatan['jam_batas_absensi']);
+            $now = new DateTime('Y-m-d H:i:s');
+            if(strtotime($now) >= strtotime($batasAwalAbsen) && strtotime($now) <= strtotime($batasAkhirAbsen)){
+                
+            } else {
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, pendaftaran telah ditutup karena sudah melebihi batas waktu pendaftaran.';
+                return $res;
+            }            
         }
 
         $res['data']['kegiatan'] = $kegiatan;

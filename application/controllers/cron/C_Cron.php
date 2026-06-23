@@ -23,6 +23,10 @@ class C_Cron extends CI_Controller
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->helper('url_helper');
         $this->load->helper('form');
+        // if(!$this->general_library->isNotMenu()){
+        //     dd($_SERVER);
+        //     redirect('logout');
+        // };
     }
 
     public function cronRekapAbsen()
@@ -323,6 +327,7 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
+        dd('asd');
         // $this->general->editPdf();
         // dd(cekWaktuKerja(0));
         // $this->user->insertPesertaBkpsdmBacirita();

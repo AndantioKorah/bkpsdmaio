@@ -567,7 +567,7 @@ class M_Bacirita extends CI_Model
             $res['message'] = 'Mohon maaf, Anda sudah terdaftar untuk kegiatan ini sebelumnya.';
             $res['success'] = false;
         } else {
-            $check = $this->checkActivity($data['id_t_kegiatan'], $data['id_m_user'], "penfaftaran");
+            $check = $this->checkActivity($data['id_t_kegiatan'], $data['id_m_user'], "pendaftaran");
             if($check['code'] == 0){
                 $this->insert('db_bacirita.t_peserta_kegiatan', $data);
             } else {
@@ -688,9 +688,9 @@ class M_Bacirita extends CI_Model
                 return $res;
             }
         } else if($activity == "pendaftaran"){
-            $batasDaftar = new DateTime($kegiatan['tanggal_batas_pendaftaran']." ".$kegiatan['jam_batas_pendaftaran']);
-            $now = new DateTime('Y-m-d H:i:s');
-            if(strtotime($now) > strtotime($batasDaftar)){
+            $batasDaftar = date($kegiatan['tanggal_batas_pendaftaran']." ".$kegiatan['jam_batas_pendaftaran']);
+            $now = date('Y-m-d H:i:s');
+            if($now > $batasDaftar){
                 $res['code'] = 1;
                 $res['message'] = 'Mohon maaf, pendaftaran telah ditutup karena sudah melebihi batas waktu pendaftaran.';
                 return $res;
@@ -702,14 +702,14 @@ class M_Bacirita extends CI_Model
                 return $res;
             }
 
-            $batasAwalAbsen = new DateTime($kegiatan['tanggal_batas_absensi']." ".$kegiatan['jam_buka_absensi']);
-            $batasAkhirAbsen = new DateTime($kegiatan['tanggal_batas_absensi']." ".$kegiatan['jam_batas_absensi']);
-            $now = new DateTime('Y-m-d H:i:s');
-            if(strtotime($now) >= strtotime($batasAwalAbsen) && strtotime($now) <= strtotime($batasAkhirAbsen)){
-                
+            $batasAwalAbsen = date($kegiatan['tanggal_batas_absensi']." ".$kegiatan['jam_buka_absensi']);
+            $batasAkhirAbsen = date($kegiatan['tanggal_batas_absensi']." ".$kegiatan['jam_batas_absensi']);
+            $now = date('Y-m-d H:i:s');
+            if($now >= $batasAwalAbsen && $now <= $batasAkhirAbsen){
+
             } else {
                 $res['code'] = 1;
-                $res['message'] = 'Mohon maaf, pendaftaran telah ditutup karena sudah melebihi batas waktu pendaftaran.';
+                $res['message'] = 'Mohon maaf, absen telah ditutup karena sudah melebihi batas waktu absen.';
                 return $res;
             }            
         }

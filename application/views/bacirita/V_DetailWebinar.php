@@ -473,6 +473,8 @@
                             setTimeout(function() {location.reload();}, 1000);
                             } else {
                             errortoast(result.message)
+                             document.getElementById('btn_daftar').disabled = false;
+                            $('#btn_daftar').html('<i class="fa fa-plus"></i> Daftar Webinar')
                             return false;
                             } 
                                

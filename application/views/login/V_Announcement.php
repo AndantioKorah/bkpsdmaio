@@ -3,6 +3,14 @@
     <?php if($this->general_library->isProgrammer()){
       // dd($announcement[0]);
     } ?>
-    <img id="announcement_image" style="max-height: 75vh; max-width: 90vw;" src="<?=base_url($announcement[0]['url_file'])?>" />
+
+    <?php
+    $total_data = count($announcement);
+    $maxrandom = $total_data - 1;
+    $number = random_int(0, $maxrandom)
+    ?>
+    <img id="announcement_image" style="max-height: 75vh; max-width: 90vw;" src="<?=base_url($announcement[$number]['url_file'])?>" />
+  
   </center>
 </div>
+

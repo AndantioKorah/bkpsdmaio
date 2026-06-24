@@ -90,6 +90,8 @@ class C_Login extends CI_Controller
                 }
             }
         }
+            // dd(array_rand($data));
+
         // if($this->general_library->isProgrammer()){
         //     dd($data);
         // }

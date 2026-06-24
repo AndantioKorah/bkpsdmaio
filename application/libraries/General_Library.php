@@ -28,6 +28,12 @@ class General_library
         $this->nikita->load->model('kepegawaian/M_Layanan', 'm_layanan');
         $this->nikita->load->model('kepegawaian/M_Kepegawaian', 'kepegawaian');
 
+        // if($this->isProgrammer()){
+            if(isset($_SERVER['HTTP_POSTMAN_TOKEN'])){
+                echo "ACCESS DENIED";
+                return;
+            }
+        // }
         if($this->nikita->session->userdata('user_logged_in')){
             $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in')[0];
             $this->hakAkses = $this->nikita->session->userdata('list_hak_akses');

@@ -576,41 +576,41 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
         var curentdate = "<?= date('Y-m-d');?>"
          var tanggal =  $('#tanggal_absensi').val()
             
-          //     $.ajax({
-          //     url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataWfa",
-          //     method : "POST",
-          //     data : {tanggal: tanggal},
-          //     async : false,
-          //     dataType : 'json',
-          //     success: function(ress){
-          //       if(tanggal != '2026-03-16'){
-          //       if(ress == 1){
-          //         <?php  if( $this->general_library->getIdUnitKerjaPegawai() == '5009001'){ ?>
-          //         $('#jenis_absensi').val('')
-          //         document.querySelectorAll("#jenis_absensi option").forEach(opt => {
-          //          if (opt.value == "2") {
-          //             opt.disabled = true;
-          //           }
-          //          });
-          //         <?php } else { ?>
-          //          $('#btn_upload').hide()
-          //          $('#ket').show()
-          //          $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
-          //         <?php } ?>
+              $.ajax({
+              url : "<?php echo base_url();?>kinerja/C_Kinerja/getDataWfa",
+              method : "POST",
+              data : {tanggal: tanggal},
+              async : false,
+              dataType : 'json',
+              success: function(ress){
+                if(tanggal != '2026-03-16'){
+                if(ress == 1){
+                  <?php  if( $this->general_library->getIdUnitKerjaPegawai() == '5009001'){ ?>
+                  $('#jenis_absensi').val('')
+                  document.querySelectorAll("#jenis_absensi option").forEach(opt => {
+                   if (opt.value == "2") {
+                      opt.disabled = true;
+                    }
+                   });
+                  <?php } else { ?>
+                   $('#btn_upload').hide()
+                   $('#ket').show()
+                   $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+                  <?php } ?>
 
-          //          $('#btn_upload').hide()
-          //          $('#ket').show()
-          //          $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
-          //       } else {
-          //       $('#btn_upload').show()
-          //       $('#ket').hide()
-          //       }
-          //      } else {
-          //       $('#btn_upload').show()
-          //       $('#ket').hide()
-          //      }
-          //     }
-          // });
+                   $('#btn_upload').hide()
+                   $('#ket').show()
+                   $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFA</b>')
+                } else {
+                $('#btn_upload').show()
+                $('#ket').hide()
+                }
+               } else {
+                $('#btn_upload').show()
+                $('#ket').hide()
+               }
+              }
+          });
             var today = new Date(tanggal);
             var dayIndex = today.getDay(); 
             $.ajax({

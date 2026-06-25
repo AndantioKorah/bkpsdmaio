@@ -534,7 +534,7 @@ class M_Bacirita extends CI_Model
     public function loadDetailWebinar($id){
         return $this->db->select('a.*, d.flag_absen, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_daftar, d.flag_generate_sertifikat,
                     d.url_sertifikat as url_sertifikat_peserta, d.date_absen, d.date_generate_sertifikat')
-                    ->from('db_bacirita.t_kegiatan a')
+                    ->from('db_bacirita.t_kegiatanx a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
                     ->join('db_bacirita.t_peserta_kegiatan d', '(a.id = d.id_t_kegiatan  and d.id_m_user = "'.$this->general_library->getId().'" and d.flag_active = 1)', 'left')

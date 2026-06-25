@@ -57,6 +57,30 @@
         transition: .2s;
         cursor: pointer;
     }
+
+    .icon_search_riwayat_konsul:hover{
+        transition: .2s;
+        color: var(--primary-color);
+        font-size: 1rem;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: lightgreen;
+    }
+
+    .icon_search_riwayat_konsul_actived{
+        color: var(--primary-color);
+        font-size: 1rem;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: lightgreen;
+    }
+
+    .div_riwayat_chat{
+        max-height: 70vh;
+        overflow-y: auto;
+    }
 </style>
 
 <div class="container_live_chat">
@@ -64,14 +88,21 @@
         <div class="row p-4">
             <div class="col-lg-12 text-center" style="height: 100%;">
                 <div class="row" id="div_start_konsultasi">
-                    <center><img src="<?=base_url('assets/img/icon-siladen-new.png')?>" style="width: 100px;" /></center>
+                    <center><img src="<?=base_url('assets/img/okta-icon-live-chat-container.png')?>" style="width: 100px;" /></center>
                     <br>
                     <!-- <button class="mt-3 btn btn-info btn_konsultasi">Mulai Konsultasi</button>
                     <button style="display:none;" class="mt-3 btn btn-info btn_konsultasi_loader"><i class="fa fa-spinner"></i> Menunggu...</button> -->
                     <div class="col-lg-12 div_riwayat_live_chat div_riwayat_live_chat_admin">
                         <div class="row">
                             <div class="col-lg-12 pt-3" style="border-bottom: 1px solid grey;">
-                                <h4>Admin Konsultasi Online</h4>
+                                <div class="row">
+                                    <div class="col-lg-10 text-left">
+                                        <h5>Admin Konsultasi Online</h5>
+                                    </div>
+                                    <div class="col-lg-2 text-center" style="margin-top: -3px;">
+                                        <span class="icon_search_riwayat_konsul" style="font-size: .75rem;"><i class="fa fa-search"></i></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-lg-12 div_riwayat_chat"></div>
                         </div>
@@ -84,7 +115,7 @@
         <div class="row p-4">
             <div class="col-lg-12 text-center" style="height: 100%;">
                 <div class="row" id="div_start_konsultasi">
-                    <center><img src="<?=base_url('assets/img/icon-siladen-new.png')?>" style="width: 100px;" /></center>
+                    <center><img src="<?=base_url('assets/img/okta-icon-live-chat-container.png')?>" style="width: 100px;" /></center>
                     <br>
                     <button class="mt-3 btn btn-info btn_konsultasi">Mulai Konsultasi</button>
                     <button style="display:none;" class="mt-3 btn btn-info btn_konsultasi_loader"><i class="fa fa-spinner"></i> Menunggu...</button>
@@ -110,12 +141,27 @@
 <div class="popup_live_chat_container">
     <div class="popup_live_chat_body p-3">
         <div class="row">
+            <div id="icon_okta_eula" style="display: none;" class="col-lg-12 text-center">
+                <video id="video_perkenalan_okta" width="100%" style="
+                    border-radius: 10px;
+                    box-shadow: 5px 7px 11px -1px rgba(53,45,45,0.75);
+                    -webkit-box-shadow: 5px 7px 11px -1px rgba(53,45,45,0.75);
+                    -moz-box-shadow: 5px 7px 11px -1px rgba(53,45,45,0.75);
+                " controls playsinline>
+                    <source src="<?=base_url('assets/video/perkenalan-okta.mp4')?>" type="video/mp4">
+                    <!-- <source src="your-video.webm" type="video/webm"> -->
+                    Your browser does not support the video tag.
+                </video>
+                <!-- <img style="
+                        width: 150px;
+                    " src="<?=base_url('assets/img/okta-icon-live-chat-container.png')?>" /> -->
+            </div>
             <div class="col-lg-12 popup_header d-flex align-items-center">
                 <div class="col-lg-11 col-md-11 col-sm-11">
                     <span class="popup_title">POP UP DIV</span>
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1">
-                    <span class=""><i style="cursor:pointer;" onclick="hidePopupLiveChat()" class="fa fa-times"></i></span>
+                    <span id="button_close_popup_live_chat" class=""><i style="cursor:pointer;" onclick="hidePopupLiveChat()" class="fa fa-times"></i></span>
                 </div>
             </div>
             <div class="col-lg-12">
@@ -130,18 +176,46 @@
 <script>
     var cekWaktuKerja;
     $(function(){
-        loadRiwayatChat()
+        <?php if($this->general_library->getFlagReadEulaLiveChat() == 0){?>
+            loadEulaLiveChat()
+        <?php } else { ?>
+            loadRiwayatChat()
+        <?php } ?>
     })
 
-    function showPopupLiveChat(title = ""){
-        if(title != ""){
-            $('.popup_title').html(title)
-        }
+    $('.icon_search_riwayat_konsul').on('click', function(){
+        showPopupLiveChat('Cari Riwayat Konsultasi')
+        $('.popup_body').html('')
+        $('.popup_body').append(divLoaderNavy)
+        $('.popup_body').load('<?=base_url("user/C_User/loadSearchRiwayatKonsul/")?>', function(){
+            $('#loader').hide()
+        })
+    })
+
+    function loadEulaLiveChat(){
+        showPopupLiveChat("", 0)
+        $('#video_perkenalan_okta')[0].play()
+        $('#icon_okta_eula').show()
+        $('.popup_body').html('')
+        $('.popup_body').append(divLoaderNavy)
+        $('.popup_body').load('<?=base_url("user/C_User/loadEulaLiveChat")?>', function(){
+            $('#loader').hide()
+        })
+    }
+
+    function showPopupLiveChat(title = "", flag_show_button_close = 1){
+        // if(title != ""){
+        $('.popup_title').html(title)
+        // }
         $('.popup_live_chat_container').show(300)
         $('.container_live_chat').addClass('overlay_for_popup')
+        if(flag_show_button_close == 0){
+            $('#button_close_popup_live_chat').hide()
+        }
     }
 
     function hidePopupLiveChat(){
+        $('#icon_okta_eula').hide()
         $('.popup_live_chat_container').hide(300)
         $('.container_live_chat').removeClass('overlay_for_popup')
     }

@@ -67,6 +67,38 @@
         align-items: center;
         padding: 0;
     }
+
+    .div_quick_message:hover span{
+        /* color: green; */
+    }
+
+    .item_quick_message{
+        width: 90%;
+        background-color: white;
+        border: 1px solid grey;
+        border-radius: 5px;
+        color: black;
+        font-size: .7rem;
+        font-weight: bold;
+        text-align: left;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    .item_quick_message:hover{
+        width: 90%;
+        background-color: var(--primary-color);
+        border: 1px solid grey;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .sp-response-cepat:hover{
+        color: green;
+        transition: .2s;
+    }
 </style>
 <div class="col-lg-7 col-md-7 col-sm-7 text-left">
     <span style="cursor:pointer;" class="sp_chat_id_chatkonsul btn_back_chatkonsul"><i class="fa fa-chevron-left"></i></span>
@@ -77,7 +109,7 @@
                 $userAssign = [
                     'nama' => $result['chat']['nama_assign'],  
                     'gelar1' => $result['chat']['gelar1_assign'],  
-                    'gelar2' => $result['chat']['gelar2_assign'],  
+                    'gelar2' => $result['chat']['gelar2_assign'],
                 ];
             }
     ?>
@@ -239,8 +271,50 @@
                 margin-bottom: 8px;
                 box-shadow: 0 -10px 10px -10px rgba(0, 0, 0, 0.5);
                 border-radius: 10px 10px 0 0;
-            ">
-                <div class="col-lg-12 mt-2" style="
+            "
+            class="<?= !$this->general_library->isProgrammer() &&
+                    !$this->general_library->isHakAkses('admin_live_chat_konsultasi') &&
+                    $this->general_library->getId() != $result['chat']['id_m_user_assigned'] ? "pt-2" : ""?>"
+            >
+                <?php if($this->general_library->isProgrammer() ||
+                    $this->general_library->isHakAkses('admin_live_chat_konsultasi') ||
+                    $this->general_library->getId() == $result['chat']['id_m_user_assigned']
+                    ) {?>
+                    <div class="col-lg-12 div_quick_message">
+                        <span id="sp_tampil_response_cepat" class="sp-response-cepat" style="
+                            font-weight: bold;
+                            font-size: .65rem;
+                            cursor: pointer;
+                        ">Tampilkan Response Cepat <i class="fa fa-chevron-up"></i></span>
+                        <span id="sp_simpan_response_cepat" class="sp-response-cepat" style="
+                            font-weight: bold;
+                            font-size: .65rem;
+                            cursor: pointer;
+                            display: none;
+                        ">Sembunyikan <i class="fa fa-chevron-down"></i></span>
+                        <div id="div_list_quick_message" style="display: none;" class="col-lg-12">
+                            <div class="row">
+                                <center>
+                                <div onclick="sendQuickResponseMessage('quick_message_1')" class="col-lg-12 item_quick_message">
+                                    <a id="quick_message_1">Selamat <?=greeting()?> <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> <?=getNamaPegawaiFull($result['chat'], 0, 1)?>, ada yang bisa kami bantu?</a>
+                                </div>
+                                <div onclick="sendQuickResponseMessage('quick_message_2')" class="col-lg-12 item_quick_message">
+                                    <a id="quick_message_2">Baik <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?>, silahkan menunggu untuk kami tindak lanjuti.</a>
+                                </div>
+                                <div onclick="sendQuickResponseMessage('quick_message_3')" class="col-lg-12 item_quick_message">
+                                    <a id="quick_message_3">Apakah penjelasan yang diberikan sudah jelas? Apakah masih ada yang ingin ditanyakan?</a>
+                                </div>
+                                <div onclick="sendQuickResponseMessage('quick_message_4')" class="col-lg-12 item_quick_message">
+                                    <a id="quick_message_4">
+                                        Terima kasih <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> <?=getNamaPegawaiFull($result['chat'], 0, 1)?> sudah menghubungi BKPSDM. Semoga penjelasan yang diberikan dapat membantu kendala yang <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> temui.<br><br>Mohon berkenan untuk memberikan penilaian dan komentar serta masukkan jika ada yang <?=$result['chat']['jk'] == "Perempuan" ? "ibu" : "bapak"?> rasakan masih kurang.
+                                    </a>
+                                </div>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div class="col-lg-12" style="
                     width: 90%;">
                     <div class="row"
                         style="
@@ -419,6 +493,18 @@
         reloadLiveChatContainer('<?=$result['chat']['id']?>')
     })
 
+    $('#sp_tampil_response_cepat').on('click', function(){
+        $('#div_list_quick_message').show()
+        $('#sp_tampil_response_cepat').hide()
+        $('#sp_simpan_response_cepat').show()
+    })
+
+    $('#sp_simpan_response_cepat').on('click', function(){
+        $('#div_list_quick_message').hide()
+        $('#sp_tampil_response_cepat').show()
+        $('#sp_simpan_response_cepat').hide()
+    })
+
     $('#upload_file').change(function(){
         if (this.files && this.files.length > 0) {
             if(this.files[0].size > 1000000){
@@ -531,6 +617,35 @@
         backToStartView()
     })
 
+    function sendQuickResponseMessage(id){
+        $('#pesan').val($('#'+id).html())
+        $('#form_send_message').submit()
+        $('#sp_simpan_response_cepat').click()
+        // $.ajax({
+        //     url: '<?=base_url("user/C_User/sendMessageKonsultasi/".$result['chat']['id'])?>',
+        //     method: 'POST',
+        //     data: {
+        //         'pesan' : $('#'+id).html(),
+        //     },
+        //     success: function(data){
+        //         let rs = JSON.parse(data)
+        //         if(rs.code == 1){
+        //             errortoast(rs.message)
+        //         } else {
+        //             $('#sp_simpan_response_cepat').click()
+        //             reloadLiveChatContainer('<?=$result['chat']['id']?>')
+        //             // $('#pesan').val('')
+        //         }
+        //         // $(this).show()
+        //         // $('#btn_cancel_add_file').click()
+        //         // $('#btn_send_message').show()
+        //         // $('#btn_send_message_loading').hide()
+        //     }, error: function(e){
+        //         errortoast('Terjadi Kesalahan')
+        //     }
+        // })
+    }
+
     $('#form_send_message').on('submit', function(e){
         e.preventDefault()
         // $('#btn_send_message').click()
@@ -555,7 +670,7 @@
             method: "POST",
             contentType: false,  
             cache: false,  
-            processData:false, 
+            processData: false, 
             // data: {
             //     'id' : '<?=$result['chat']['id']?>',
             //     'pesan' : $('#pesan').val(),
@@ -566,6 +681,7 @@
                 let rs = JSON.parse(data)
                 if(rs.code == 1){
                     errortoast(rs.message)
+                    $('#pesan').val('')
                 } else {
                     reloadLiveChatContainer('<?=$result['chat']['id']?>')
                     $('#pesan').val('')

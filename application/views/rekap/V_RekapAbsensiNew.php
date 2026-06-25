@@ -39,7 +39,7 @@
                                             <?php if($this->general_library->isProgrammer() 
                                             || $this->general_library->isAdminAplikasi() 
                                             || $this->general_library->isGuest() 
-
+                                            || $this->general_library->isHakAkses('rekap_absensi_aars')    
                                             || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
                                             <option value="<?=$uk['id_unitkerja'].';'.$uk['nm_unitkerja']?>">
                                                 <?=$uk['nm_unitkerja']?>

@@ -45,8 +45,10 @@
       </div>
 
       <div class="col-lg-2">
-        <label for="inputPassword6" class="col-form-label"> Nip Lama </label>
+        <label for="inputPassword6"  class="col-form-label"> Nip Lama</label>
       </div>
+
+
       <div class="col-lg-10">
         <input type="text" id="niplama" name="niplama" class="form-control">
       </div>
@@ -55,10 +57,8 @@
         <label for="inputPassword6" class="col-form-label"> Nip Baru </label>
       </div>
       <div class="col-lg-10">
-        <input type="text" id="nipbaru" name="nipbaru" class="form-control" required>
+        <input type="text" id="nipbaru" name="nipbaru" class="form-control no-space" required>
       </div>
-
-
 
       <div class="col-lg-2">
         <label for="inputPassword6" class="col-form-label"> Tempat / Tanggal Lahir </label>
@@ -347,6 +347,20 @@ $('#form_profil').on('submit', function(e){
             }
         })
     })
+
+         const inputField = document.getElementById('niplama');
+
+      inputField.addEventListener('input', function() {
+        // Replace all spaces (\s) globally (g) with nothing
+        this.value = this.value.replace(/\s/g, '');
+      });
+
+      const inputField2 = document.getElementById('nipbaru');
+
+      inputField2.addEventListener('input', function() {
+        // Replace all spaces (\s) globally (g) with nothing
+        this.value = this.value.replace(/\s/g, '');
+      });
 
     </script>
 

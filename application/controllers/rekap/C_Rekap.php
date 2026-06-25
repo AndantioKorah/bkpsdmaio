@@ -54,7 +54,7 @@ class C_Rekap extends CI_Controller
         render('rekap/V_RekapAbsensiNew', '', '', $data);
     }
 
-    public function readAbsensiAars($flag_alpha = 0, $flag_rekap_tpp = 0){
+    public function readAbsensiAars($flag_alpha = 0, $flag_rekap_tpp = 1){
         $param = $this->input->post();
         if($flag_alpha == 1){
             $param = [
@@ -69,7 +69,16 @@ class C_Rekap extends CI_Controller
             // $flag_rekap_tpp = 1;
         }
 
-
+        $flag_rekap_tpp = 0;
+        $explodeSkpd = explode(";", $param['skpd']);
+        if(stringStartWith('SD', $explodeSkpd[1]) ||
+            stringStartWith('SMP', $explodeSkpd[1]) || 
+            stringStartWith('TK', $explodeSkpd[1]) ||
+            stringStartWith('Sekolah Kecamatan', $explodeSkpd[1])){
+                $flag_rekap_tpp = 1;
+                // hanya sekolah yang dibuat flag_rekap_tpp = 1 karena sertifikasi menggunakan rekap absensi
+        }
+        // dd($flag_rekap_tpp);
         $data['result'] = $this->rekap->readAbsensiAars($param, $flag_alpha, $flag_rekap_tpp, 0);
         if($flag_alpha == 1){
             dd($data['result']);
@@ -88,12 +97,16 @@ class C_Rekap extends CI_Controller
             $data['nama_file'] = 'Rekap Absensi '.$data['skpd'].' Bulan '.$data['periode'].'.xls';
             $this->session->set_userdata('rekap_absen_aars', $data);
         }
-        
+        // dd($data);
         $this->load->view('rekap/V_RekapAbsensiResultNew', $data);
     }
 
     public function downloadRekapAbsensiAars($flag_pdf = 0){
+       
+
         $data = $this->session->userdata('rekap_absen_aars');
+        $this->rekap->saveLogDownloadAbsen($data);
+
         $data['flag_print'] = 1;
         if($flag_pdf == 1){
             $data['flag_pdf'] = 1;
@@ -355,6 +368,9 @@ class C_Rekap extends CI_Controller
         $param['id_unitkerja'] = $skpd[0];
 
         $data['pegawai'] = $this->rekap->getDataPenandatangananBerkasTpp($skpd[0], $param['bulan'], $param['tahun']);
+        if($this->general_library->isProgrammer()){
+            // dd($data['pegawai']);
+        }
         $pagu_tpp = $this->kinerja->countPaguTpp([
             'id_unitkerja' => $flag_sekolah_kecamatan == 0 ? $data['param']['id_unitkerja'] : $pd_group,
             'bulan' => $data['param']['bulan'],
@@ -423,9 +439,9 @@ class C_Rekap extends CI_Controller
             } else {
                 $html = $this->load->view('rekap/V_BerkasTppDownload', $data, true);
             }
-            if($this->general_library->isProgrammer()){
-                // dd($html);
-            }
+            // if($this->general_library->isProgrammer()){
+            //     dd($html);
+            // }
             // if($data['param']['id_unitkerja'] == '1030550'){
             //     dd($html);   
             // }

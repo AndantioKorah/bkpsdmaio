@@ -58,7 +58,7 @@
               <td>
               <div class="btn-group" role="group" aria-label="Basic example">
               <?php if($kode == 1) { ?>
-                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() ) { ?>
 
                 <button 
                 data-toggle="modal" 
@@ -95,9 +95,13 @@
               <?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
               <button onclick="verifDokumen(1, '<?=$rs['id']?>','db_pegawai.pegdiklat','<?=$rs['id_peg']?>')"  class="btn_tolak_<?=$rs['id']?> btn btn-sm btn-dark" title="Batal Verif"><i class=" fa fa-times"></i></button>
               <button disabled style="display: none;" id="btn_loading_<?=$rs['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
-             
+               <?php if($rs['status'] == 3) { ?>
+             <?php } ?>
               <?php } ?>
               <?php } ?>
+                <?php if($rs['status'] == 3) { ?>
+              <button onclick="deleteData('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
+             <?php } ?>
               </td>
               <?php } ?>
             </tr>

@@ -95,9 +95,13 @@
                     } else if($pegawai['flag_puskesmas'] == 1){
                         $data_header['kepalaskpd'] = $pegawai['kasubag'];
                         $data_header['kasubag'] = $pegawai['kapus'];
-                    } else if($pegawai['flag_rs'] == 1){
-                        $data_header['kepalaskpd'] = $pegawai['kadis'];
                     }
+                    // else if($pegawai['flag_rs'] == 1){
+                    //     $data_header['kepalaskpd'] = $pegawai['kadis'];
+                    // }
+                    // if($this->general_library->isProgrammer()){
+                    //     dd($data_header);
+                    // }
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
             </div>
@@ -162,9 +166,10 @@
                     } else if($pegawai['flag_puskesmas'] == 1){
                         $data_header['kepalaskpd'] = $pegawai['kasubag'];
                         $data_header['kasubag'] = $pegawai['kapus'];
-                    } else if($pegawai['flag_rs'] == 1){
-                        $data_header['kepalaskpd'] = $pegawai['kadis'];
                     }
+                    // else if($pegawai['flag_rs'] == 1){
+                    //     $data_header['kepalaskpd'] = $pegawai['kadis'];
+                    // }
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
             </div>
@@ -239,9 +244,10 @@
                     } else if($pegawai['flag_puskesmas'] == 1){
                         $data_header['kepalaskpd'] = $pegawai['kasubag'];
                         $data_header['kasubag'] = $pegawai['kapus'];
-                    } else if($pegawai['flag_rs'] == 1){
-                        $data_header['kepalaskpd'] = $pegawai['kadis'];
                     }
+                    // else if($pegawai['flag_rs'] == 1){
+                    //     $data_header['kepalaskpd'] = $pegawai['kadis'];
+                    // }
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
             </div>
@@ -301,9 +307,10 @@
                     } else if($pegawai['flag_puskesmas'] == 1){
                         $data_header['kepalaskpd'] = $pegawai['kasubag'];
                         $data_header['kasubag'] = $pegawai['kapus'];
-                    } else if($pegawai['flag_rs'] == 1){
-                        $data_header['kepalaskpd'] = $pegawai['kadis'];
                     }
+                    // else if($pegawai['flag_rs'] == 1){
+                    //     $data_header['kepalaskpd'] = $pegawai['kadis'];
+                    // }
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
             </div>
@@ -405,9 +412,10 @@
                     } else if($pegawai['flag_puskesmas'] == 1){
                         $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                         $data_header['kasubag'] = $pegawai['bendahara'];
-                    } else if($pegawai['flag_rs'] == 1){
-                        $data_header['kepalaskpd'] = $pegawai['kadis'];
                     }
+                    // else if($pegawai['flag_rs'] == 1){
+                    //     $data_header['kepalaskpd'] = $pegawai['kadis'];
+                    // }
                     // dd($data_header);
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
@@ -517,6 +525,8 @@
                     } else if($pegawai['flag_bagian'] == 1){
                         $data_header['kepalaskpd'] = $pegawai['setda'];
                         $data_header['kasubag'] = $pegawai['bendahara_setda'];
+                    } else if($pegawai['flag_rs'] == 1){
+                        $data_header['kepalaskpd'] = $pegawai['kadis'];
                     }
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                 ?>
@@ -737,6 +747,8 @@
                     } else if($pegawai['flag_bagian'] == 1){
                         $data_header['kepalaskpd'] = $pegawai['setda'];
                         $data_header['kasubag'] = $pegawai['bendahara_setda'];
+                    } else if($pegawai['flag_rs'] == 1){
+                        $data_header['kepalaskpd'] = $pegawai['kadis'];
                     }
                     // dd($data_header);
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
@@ -830,6 +842,8 @@
                     } else if($pegawai['flag_bagian'] == 1){
                         $data_header['kepalaskpd'] = $pegawai['setda'];
                         $data_header['kasubag'] = $pegawai['bendahara_setda'];
+                    } else if($pegawai['flag_rs'] == 1){
+                        $data_header['kepalaskpd'] = $pegawai['kadis'];
                     }
                     // dd($data_header);
                     $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
@@ -849,7 +863,7 @@
                     if($pegawai['flag_puskesmas'] == 1){
                         $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
                     } else if($pegawai['flag_rs'] == 1){
-                        $data_header['kepalabkpsdm'] = $pegawai['kadis'];
+                        $data_rekap['kepalabkpsdm'] = $pegawai['kadis'];
                     }
                     $this->load->view('rekap/V_SuratPengantar', $data_rekap);
                 ?>
@@ -863,7 +877,7 @@
                     if($pegawai['flag_puskesmas'] == 1){
                         $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
                     } else if($pegawai['flag_rs'] == 1){
-                        $data_header['kepalabkpsdm'] = $pegawai['kadis'];
+                        $data_rekap['kepalabkpsdm'] = $pegawai['kadis'];
                     }
                     $this->load->view('rekap/V_SalinanSuratPengantar', $data_rekap);
                 ?>
@@ -966,9 +980,10 @@
                         } else if($pegawai['flag_puskesmas'] == 1){
                             $data_header['kepalaskpd'] = $pegawai['kepalaskpd'];
                             $data_header['kasubag'] = $pegawai['bendahara'];
-                        } else if($pegawai['flag_rs'] == 1){
-                            $data_header['kepalaskpd'] = $pegawai['kadis'];
                         }
+                        // else if($pegawai['flag_rs'] == 1){
+                        //     $data_header['kepalaskpd'] = $pegawai['kadis'];
+                        // }
                         // dd($data_header);
                         $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
                     ?>
@@ -1078,6 +1093,8 @@
                         } else if($pegawai['flag_bagian'] == 1){
                             $data_header['kepalaskpd'] = $pegawai['setda'];
                             $data_header['kasubag'] = $pegawai['bendahara_setda'];
+                        } else if($pegawai['flag_rs'] == 1){
+                            $data_header['kepalaskpd'] = $pegawai['kadis'];
                         }
                         // dd($data_header);
                         $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
@@ -1299,6 +1316,8 @@
                         } else if($pegawai['flag_bagian'] == 1){
                             $data_header['kepalaskpd'] = $pegawai['setda'];
                             $data_header['kasubag'] = $pegawai['bendahara_setda'];
+                        } else if($pegawai['flag_rs'] == 1){
+                            $data_header['kepalaskpd'] = $pegawai['kadis'];
                         }
                         // dd($data_header);
                         $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
@@ -1392,6 +1411,8 @@
                         } else if($pegawai['flag_bagian'] == 1){
                             $data_header['kepalaskpd'] = $pegawai['setda'];
                             $data_header['kasubag'] = $pegawai['bendahara_setda'];
+                        } else if($pegawai['flag_rs'] == 1){
+                            $data_header['kepalaskpd'] = $pegawai['kadis'];
                         }
                         // dd($data_header);
                         $this->load->view('rekap/V_BerkasTppDownloadFooter', $data_header);
@@ -1413,7 +1434,7 @@
                         if($pegawai['flag_puskesmas'] == 1){
                             $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
                         } else if($pegawai['flag_rs'] == 1){
-                            $data_header['kepalabkpsdm'] = $pegawai['kadis'];
+                            $data_rekap['kepalabkpsdm'] = $pegawai['kadis'];
                         }
                         $this->load->view('rekap/V_SuratPengantar', $data_rekap);
                     ?>
@@ -1427,7 +1448,7 @@
                         if($pegawai['flag_puskesmas'] == 1){
                             $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
                         } else if($pegawai['flag_rs'] == 1){
-                            $data_header['kepalabkpsdm'] = $pegawai['kadis'];
+                            $data_rekap['kepalabkpsdm'] = $pegawai['kadis'];
                         }
                         $this->load->view('rekap/V_SalinanSuratPengantar', $data_rekap);
                     ?>

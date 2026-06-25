@@ -749,27 +749,38 @@ class C_User extends CI_Controller
         $this->load->view('user/V_LiveChat', null);
     }
 
+    public function loadEulaLiveChat(){
+        $data['result'] = null;
+        $this->load->view('user/V_LiveChatEula', $data);
+    }
+
     public function submitGantiJenisLayanan($id_t_live_chat = 0, $id_m_layanan_konsul){
         echo json_encode($this->user->submitGantiJenisLayanan($id_t_live_chat, $id_m_layanan_konsul));
     }
 
     public function cekWaktuKerjaKonsultasi(){
-        $batasAkhir = 30;
-        $batasAwalKonsultasi = 60;
+        echo json_encode($this->user->cekWaktuKerjaKonsultasi());
+    }
 
-        $waktuKerja = cekWaktuKerja($batasAkhir, $batasAwalKonsultasi);
-        switch($waktuKerja['code']){
-            case 1: $waktuKerja['message'] = "Konsultasi Online tidak dapat dilakukan di Hari Libur";
-                break;
-            case 2: $waktuKerja['message'] = "Konsultasi Online tidak dapat dilakukan di Hari Sabtu atau Minggu";
-                break;
-            case 3: $waktuKerja['message'] = "Batas waktu Konsultasi Online adalah ".$batasAkhir." menit sebelum Jam Pulang";
-                break;
-            case 4: $waktuKerja['message'] = "Waktu Konsultasi Online adalah ".$batasAwalKonsultasi." menit setelah Jam Masuk";
-                break;
-            default: $waktuKerja['message'] = "";
-        }
-        echo json_encode($waktuKerja);
+    public function liveChatEulaAgree(){
+        $this->user->liveChatEulaAgree();
+    }
+
+    public function countTotalUnreadLiveChat(){
+        echo json_encode($this->user->countTotalUnreadLiveChat());
+    }
+
+    public function loadSearchRiwayatKonsul(){
+        $data['skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        $data['jenis_layanan'] = $this->user->loadLayananKonsultasi();
+        $this->load->view('user/V_LiveChatSearchRiwayatKonsul', $data);
+    }
+
+    public function searchRiwayatKonsul(){
+        $data['result'] = $this->user->searchRiwayatKonsul();
+        $data['flag_search'] = 1;
+        $this->load->view('user/V_LiveChatRiwayatKonsultasi', $data);
+        // dd($data);
     }
 
 }

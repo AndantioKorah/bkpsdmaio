@@ -154,7 +154,14 @@
 		<tr>
 			<td valign="top">Jabatan</td>
 			<td valign="top" style="text-align: center;">:</td>
-			<td valign="top"><?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Pemerintah Kota Manado</td>
+			<td valign="top">
+				<?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah" || substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") { ?>
+				<?= substr($profil_pegawai['nama_jabatan'], 0, 5);?> <?= substr($profil_pegawai['nm_unitkerja'], 9);?> Kota Manado
+				<?php } else { ?>
+ 				<?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Pemerintah Kota Manado
+				
+				<?php } ?>
+			</td>
 		</tr>
 		
 
@@ -197,9 +204,19 @@
 			1. Wali Kota Manado (sebagai laporan);<br>
 			2. Wakil Wali Kota Manado;<br>
 			3. Sekretaris Daerah Kota Manado;<br>
-			<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
+				<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
 				4. Kepala Dinas Pendidikan dan Kebudayaan Kota Manado;<br>
-			<?php } else { ?>
+				
+			   <?php } else if(substr($profil_pegawai['nm_unitkerja'], 0, 9) == "Kelurahan")  { ?>
+				<?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") { ?>
+				4. Camat <?= substr($profil_pegawai['nm_unitkerjamaster'], 9) ;?> Kota Manado;<br>
+				<?php } else { ?>
+				4. Lurah <?= substr($profil_pegawai['nm_unitkerja'], 9) ;?> Kota Manado;<br>
+				<?php } ?>
+
+			<?php } else if(substr($profil_pegawai['nm_unitkerja'], 0, 9) == "Kecamatan")  { ?>
+				4. Camat <?= substr($profil_pegawai['nm_unitkerja'], 9) ;?> Kota Manado;<br>
+			<?php } else  { ?>
 				4. Kepala <?= $profil_pegawai['nm_unitkerja'];?> Kota Manado;<br>
 			<?php } ?>
 			5. Arsip.
@@ -211,10 +228,10 @@
 	</table>
 	</div>
 	<div class="footer-sk">
-	<!-- <img src="<?=base_url();?>assets/images/footer.png" alt=""> -->
+	<img src="<?=base_url();?>assets/images/footer.png" alt="">
 	</div>
 	<?php
-        $this->load->view('adminkit/partials/V_FooterBsre');
+        // $this->load->view('adminkit/partials/V_FooterBsre');
     ?>
 	<!-- <img style="width: 100%;margin-top: 90px;" src="<?=base_url();?>assets/images/footer.png" alt=""> -->
 	<!-- <span >

@@ -25,6 +25,10 @@ class C_Bacirita extends CI_Controller
 
     public function loadListKegiatan($id){
         $data['result'] = $this->bacirita->loadListKegiatan($id);
+        $data['dataLimit'] = $data['result']['limit'];
+        $data['startId'] = $data['result']['startId'];
+        $data['result'] = $data['result']['res'];
+        // dd($data);
         $this->load->view('bacirita/V_ListKegiatanAdmin', $data);
     }
 
@@ -44,6 +48,9 @@ class C_Bacirita extends CI_Controller
 
      public function loadListWebinar($tab){
         $data['result'] = $this->bacirita->loadListKegiatan($tab);
+        $data['dataLimit'] = $data['result']['limit'];
+        $data['startId'] = $data['result']['startId'];
+        $data['result'] = $data['result']['res'];
         $this->load->view('bacirita/V_ListWebinar', $data);
     }
 
@@ -97,6 +104,36 @@ class C_Bacirita extends CI_Controller
     public function loadPesertaKegiatan($id){
         $data['result'] = $this->bacirita->loadPesertaKegiatan($id);
         $this->load->view('bacirita/V_ListPesertaKegiatan', $data);
+    }
+
+    public function downloadRekapPeserta($id){
+        $data['result'] = $this->bacirita->loadPesertaKegiatan($id, 1);
+        $html = $this->load->view('bacirita/V_RekapListPesertaKegiatan', $data, true);
+        $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
+        $this->mpdf->AddPage(
+            'L', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        ); // margin footer
+        // $this->mpdf->setFooter('{PAGENO}');
+        $filename = 'Rekap Peserta '.$data['result'][0]['topik'].'_'.date('ymdhis').'.pdf';
+        $folder = "arsipbkpsdmbacirita";
+        $this->mpdf->WriteHTML($html);
+        $this->mpdf->Output($filename, 'D'); // download force
+        // $this->mpdf->Output($folder.'/'.$filename, 'F'); // download force
+    }
+
+    public function downloadRekapPesertaExcel($id){
+        $data['result'] = $this->bacirita->loadPesertaKegiatan($id, 1);
+        $this->load->view('bacirita/V_RekapListPesertaKegiatanExcel', $data);
     }
 
 }

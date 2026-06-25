@@ -7,6 +7,13 @@
     <input  class="form-control my-image-field" type="file" id="pdf_file_edit_arsip_lain" name="file"   />
   </div>
 
+  <?php if($arsip[0]['id_dokumen'] == 11){ ?>
+ <div class="form-group div_tahun">
+    <label>Tahun</label>
+    <input class="form-control yearpicker" value="<?= $arsip[0]['tahun'];?>" type="text" id="arsip_tahun_edit" name="arsip_tahun_edit" autocomplete="off"  />
+  </div>
+  <?php } ?>
+
   <div class="form-group col-lg-12">
     <br>
      <button class="btn btn-block btn-primary float-right"  id="btn_edit_arsipl"><i class="fa fa-save"></i> SIMPAN</button>
@@ -21,6 +28,19 @@ $(function(){
 		allowClear: true,
 	});
 })
+
+ var currentDate = new Date();
+    var Year = currentDate.getFullYear();
+    var end = new Date('01-01-'+Year);
+  
+  $('.yearpicker').datepicker({
+    format: 'yyyy',
+    viewMode: "years", 
+    minViewMode: "years",
+    orientation: 'bottom',
+    endDate: end,
+    autoclose: true
+    });
    
 
 $('.datepicker').datepicker({
@@ -39,10 +59,24 @@ $('#form_edit_arsip_lain').on('submit', function(e){
      var formvalue = $('#form_edit_arsip_lain');
      var form_data = new FormData(formvalue[0]);
      var ins = document.getElementById('pdf_file_edit_arsip_lain').files.length;
-    
+     var jenis_arsip = "<?= $arsip[0]['id_dokumen'];?>";
+
+        if(jenis_arsip == 11){
+           var tahun = $('#arsip_tahun_edit').val()
+           if(tahun == null || tahun == ""){
+            errortoast('Tahun Masih Kosong')
+            return false;
+           }
+        }
+
+      // if(ins == 0){
+      //   errortoast("Silahkan upload file terlebih dahulu");
+      //   return false;
+      //   }
+
      document.getElementById('btn_edit_arsipl').disabled = true;
      $('#btn_edit_arsipl').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
-   
+
      $.ajax({  
      url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditArsipLain")?>",
      method:"POST",  

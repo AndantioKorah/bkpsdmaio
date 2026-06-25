@@ -1317,6 +1317,48 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
         }
 
         function getPenghargaan($id){
+            $this->db->select('*')
+                ->from('db_pegawai.pegpenghargaan a')
+                ->where('a.id_pegawai', $id)
+                ->where('a.status', 2)
+                ->where('a.flag_active', 1);
+            $penghargaan =  $this->db->get()->result_array();
+
+            $id_penghargaan = null;
+            $qty1 = 0;
+            $qty2 = 0;
+            $qty3 = 0;
+            $qty4 = 0;
+         
+            foreach ($penghargaan as $peng) {
+               if($peng['pemberi'] == 1 ){ 
+                $qty1++;
+               } 
+               if($peng['pemberi'] == 2 ){ 
+                $qty2++;
+               } 
+               if($peng['pemberi'] == 3 ){ 
+                $qty3++;
+               } 
+               if($peng['pemberi'] == 4 ){ 
+                $qty4++;
+               } 
+            }
+           
+            if($qty1 != 0){
+                $id_penghargaan = 111; 
+            } else if($qty2 != 0) {
+                $id_penghargaan = 112;
+            } else if($qty3 != 0) {
+                $id_penghargaan = 113;
+            } else if($qty4 != 0) {
+                $id_penghargaan = 114;
+            }
+
+            return $id_penghargaan;
+        }
+
+        function getPenghargaan2($id){
             $this->db->select('a.lingkup_penghargaan')
                 ->from('db_pegawai.pegpenghargaan a')
                 ->where('a.id_pegawai', $id)
@@ -2017,7 +2059,6 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             ->where_in('a.flag_active', [1,2])
             ->order_by('a.tmtjabatan', 'asc');
         $jabatan = $this->db->get()->result_array();
-        // dd($jabatan);
         $eselon_peg =0;
         $tglawal = null;
         $tglakhir = null;
@@ -2183,10 +2224,9 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
 
 
         $jabatan = $this->db->get()->result_array();
-         
+      
         $bulan = $jabatan[0]['masa_kerja'];
         $years = $bulan / 12;
-       
          if(in_array($eselonpegawai, $eselon)){
               
            if($eselonpegawai == "II B" || $eselonpegawai == "II A" AND  $jenis_pengisian == 3){
@@ -2194,40 +2234,50 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 $id_masakerja = 101;
             } else if($years >= 3 AND $years < 5){
                 $id_masakerja = 102;
-            } else if($years <= 2){
+            } else if($years >= 2){
                 $id_masakerja = 103;
+            } else if($years <= 2){
+                $id_masakerja = 104;
             } 
            } else if($eselonpegawai == "III B" || $eselonpegawai == "III A" AND  $jenis_pengisian == 3){
             if($years >= 5){
-                $id_masakerja = 101;
+                $id_masakerja = 129;
             } else if($years >= 3 AND $years < 5){
-                $id_masakerja = 102;
-            } else if($years <= 2){
-                $id_masakerja = 103;
+                $id_masakerja = 130;
+            } else if($years >= 2){
+                $id_masakerja = 131;
+            }  else if($years <= 2){
+                $id_masakerja = 132;
             } 
            } else if($eselonpegawai == "III B" || $eselonpegawai == "III A" AND  $jenis_pengisian == 2){
             if($years >= 5){
                 $id_masakerja = 101;
             } else if($years >= 3 AND $years < 5){
                 $id_masakerja = 102;
-            } else if($years <= 2){
+            } else if($years >= 2){
                 $id_masakerja = 103;
+            } else if($years <= 2){
+                $id_masakerja = 104;
             } 
            } else if($eselonpegawai == "IV A" || $eselonpegawai == "IV B" AND  $jenis_pengisian == 2){
-             if($years >= 5){
-                $id_masakerja = 101;
+            if($years >= 5){
+                $id_masakerja = 129;
             } else if($years >= 3 AND $years < 5){
-                $id_masakerja = 102;
-            } else if($years <= 2){
-                $id_masakerja = 103;
+                $id_masakerja = 130;
+            } else if($years >= 2){
+                $id_masakerja = 131;
+            }  else if($years <= 2){
+                $id_masakerja = 132;
             } 
            } else if($eselonpegawai == "IV A" || $eselonpegawai == "IV B" AND  $jenis_pengisian == 1){
             if($years >= 5){
                 $id_masakerja = 101;
             } else if($years >= 3 AND $years < 5){
                 $id_masakerja = 102;
-            } else if($years <= 2){
+            } else if($years >= 2){
                 $id_masakerja = 103;
+            } else if($years <= 2){
+                $id_masakerja = 104;
             } 
            }
 
@@ -2240,7 +2290,6 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 $id_masakerja = 103;
             } 
          } 
-        //  dd($id_masakerja);
         //  $id_masakerja = null;
     return $id_masakerja;   
     }
@@ -3062,7 +3111,7 @@ public function loadListProfilTalentaAdm($id,$jenis_pengisian){
                     ->from('db_pegawai.pegawai a')
                     ->join('db_simata.t_penilaian b', 'a.id_peg = b.id_peg','left')
                     ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg','left')
-                    ->join('db_siasn.m_ref_pns f', 'a.nipbaru_ws = f.nip_baru')
+                    ->join('db_siasn.m_ref_pns f', 'a.nipbaru_ws = f.nip_baru','left')
                     ->where('a.id_m_status_pegawai', 1)
                     ->where('b.jenjang_jabatan', $jenis_pengisian)
                     ->where('b.res_potensial_total >=', $intervalPotensial[0]['dari'])
@@ -3070,6 +3119,7 @@ public function loadListProfilTalentaAdm($id,$jenis_pengisian){
                     ->order_by('e.eselon');
                     if($id == 1){
                         $this->db->where_in('e.eselon', ["III A","III B"]);
+                        // $this->db->where_in('e.eselon', ["III A"]);
                     }else if($id == 2){
                         $this->db->where_in('e.eselon', ["II A","II B"]);
                     }

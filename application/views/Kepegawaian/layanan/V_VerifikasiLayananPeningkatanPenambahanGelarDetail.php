@@ -136,11 +136,11 @@
         </button>
         <?php } ?>
         <?php if($result[0]['status_layanan'] == 3) { ?>
-        <button onclick="deleteFile('<?=$id_usul;?>',null,<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
-        <i class="fa fa-file-trash"></i> Hapus File</button>
+        <!-- <button onclick="deleteFile('<?=$id_usul;?>',null,<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
+        <i class="fa fa-file-trash"></i> Hapus File</button> -->
         <?php } ?>
-        <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
-        <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
+        <!-- <button id="btn_lihat_dok" href="#modal_view_file" onclick="openFilePangkat('<?=$result[0]['dokumen_layanan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+        <i class="fa fa-file-pdf"></i> Lihat Dokumen</button> -->
   
 
 
@@ -578,18 +578,18 @@
 
           <div class="form-group mt-2">
           <div class="row g-3 align-items-center" >
-          <div class="col-lg-2">
+          <!-- <div class="col-lg-2">
           	<label for="inputPassword6" class="col-form-label">Dokumen</label>
           </div>
           <div class="col-lg-10">
           <input type="file" class="form-control"  id="pdf_file_dok" name="file"> 
-          </div>
+          </div> -->
           
           </div>
           <!-- <label >Dokumen Layanan</label>
           <input type="file" class="form-control"  id="pdf_file_dok" name="file"> -->
           </div>
-          <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
+          <button id="btn_uploadkgb" class="btn btn-primary float-right mt-4"  id=""><i class="fa fa-save"></i> Simpan</button>
         </form>
       </div>
     </div>
@@ -920,12 +920,12 @@ function kirimBkad(id,status){
         e.preventDefault();
         var formvalue = $('#upload_dok_form');
         var form_data = new FormData(formvalue[0]);
-        var ins = document.getElementById('pdf_file_dok').files.length;
+        // var ins = document.getElementById('pdf_file_dok').files.length;
        
-        if(ins == 0){
-        errortoast("Silahkan upload file terlebih dahulu");
-        return false;
-        }
+        // if(ins == 0){
+        // errortoast("Silahkan upload file terlebih dahulu");
+        // return false;
+        // }
 
       
         $.ajax({  

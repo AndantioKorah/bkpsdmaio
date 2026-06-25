@@ -138,7 +138,7 @@ $route['admin/monitoring/cron-ds'] = 'admin/C_Admin/monitoringDs';
 $route['admin/monitoring/event/absen'] = 'dashboard/C_Dashboard/dashboardWalikota';
 
 //internal API
-$route['api/get-data-tpp'] = 'api/C_ApiLayanan/getDataTpp';
+$route['api/tpp/get'] = 'api/C_ApiLayanan/getDataTpp';
 $route['api/bkpsdmweb/admin/login'] = 'api/C_ApiLayanan/loginAdmin';
 
 //BKPSDM Bacirita

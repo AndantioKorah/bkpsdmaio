@@ -68,7 +68,9 @@
         }
     </style>
     <div class="row">
-        <?php foreach($result as $rs){
+        <?php
+        $totalUnread = 0;
+        foreach($result as $rs){
             $flagRead = 0; 
             if($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
@@ -76,6 +78,9 @@
                 $flagRead = $rs['flag_read_admin'];
             } else {
                 $flagRead = $rs['flag_read_pegawai'];
+            }
+            if($flagRead == 0){
+                $totalUnread++;
             }
         ?>
             <?php if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
@@ -274,6 +279,10 @@
         <?php } ?>
     </div>
     <script>
+        $(function(){
+            
+        })
+
         function onHoverChat(id){
             // $('.div_profil_live_chat').hide()
             // $('.profile_chat_'+id).show()
@@ -288,8 +297,12 @@
             });
         }
     </script>
-<?php } else { ?> 
-    <div class="col-lg-12 text-center">
-        <i><h4>Belum ada Riwayat Konsultasi</h4></i>
+<?php } else { ?>
+    <div class="col-lg-12 text-center p-3">
+        <?php if(isset($flag_search)){ ?>
+            <i><h6>Data Tidak Ditemukan</h6></i>
+        <?php } else { ?>
+            <i><h6>Belum ada Riwayat Konsultasi</h6></i>
+        <?php } ?>
     </div>
 <?php } ?>

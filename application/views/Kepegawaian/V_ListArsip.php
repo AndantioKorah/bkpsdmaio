@@ -19,33 +19,37 @@
           <?php $no = 1; foreach($result as $rs){ ?>
             <tr class="<?php if($rs['status'] == 1) echo 'bg-warning'; else echo '';?>">
               <td class="text-left"><?=$no++;?></td>
-              <td class="text-left"><?php if($rs['name'] == "") echo $rs['nama_sk']; else echo $rs['keterangan'];?></td>
+              <td class="text-left"><?php if($rs['name'] == "") echo $rs['nama_sk']; else echo $rs['keterangan'];?> <?php if($rs['id_dokumen'] == "11") echo "(".$rs['tahun'].")";?></td>
               <td class="text-left">
                 <?php if($rs['gambarsk'] != "") {
                   $flagShowButtonArsip = 1;
                   $messageCpns = null;
-                  $kelengkapan = $this->general_library->getKelengkapanBerkasCpns();
-                  if($rs['id_dokumen'] == 34){
-                    if($kelengkapan['done'] == true){
-                      $flagShowButtonArsip = 1;
-                    } else {
-                      $flagShowButtonArsip = 0;
-                      $messageCpns = $kelengkapan['message'];
-                    }
-                  }
+                  // $kelengkapan = $this->general_library->getKelengkapanBerkasCpns();
+                  // if($rs['id_dokumen'] == 34){
+                  //   if($kelengkapan['done'] == true){
+                  //     $flagShowButtonArsip = 1;
+                  //   } else {
+                  //     $flagShowButtonArsip = 1;
+                  //     // $messageCpns = $kelengkapan['message'];
+                  //     $messageCpns = null;
+
+                  //   }
+                  // }
                   // if($this->general_library->isPPPKbaru() && $rs['id_dokumen'] == 34){ // hilangkan tombol jika CPNS dan belum tanggal 2 Juni 2025 untuk SPMT
                   //   $flagShowButtonArsip = 0;
                   //   $messageCpns = "File SPMT dapat didownload pada tanggal 1 September 2025 jam 10 pagi";
                   // }
                 ?>
-                  <?php if($flagShowButtonArsip == 1){ ?>
+                 <button href="#modal_view_file_arsip" onclick="openFileArsip('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+                    <i class="fa fa-file-pdf"></i></button>
+                  <!-- <?php if($flagShowButtonArsip == 1){ ?>
                     <button href="#modal_view_file_arsip" onclick="openFileArsip('<?=$rs['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
                     <i class="fa fa-file-pdf"></i></button>
                   <?php } ?>
                   <?php if($messageCpns){ ?>
                     <span style="font-size: .75rem; color: red; font-weight: bold;"><i><?=$messageCpns?></i></span>
                   <?php } ?>
-                <?php } ?>
+                <?php } ?> -->
               </td>
               <td>
 
@@ -59,12 +63,15 @@
                 onclick="loadEditArsipLain('<?=$rs['id']?>')" title="Ubah Data" class="open-DetailCuti btn btn-sm btn-info"> <i class="fa fa-edit"></i> </button> 
                 <?php } ?>
                     <?php if($rs['id_dokumen'] != 105) { ?>
+                     <?php if($rs['flag_allow_delete'] == 1) { ?>
                 <button onclick="deleteArsip('<?=$rs['id']?>','<?=$rs['gambarsk']?>',2 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button> 
-                   <?php } ?>
+                    <?php } ?>
+                <?php } ?>
 
               <?php if($kode == 1) { ?>
                 <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip) { ?>
               <?php if($rs['id_dokumen'] != 105) { ?>
+                <?php if($rs['flag_allow_delete'] == 1) { ?>
                 <button 
                 data-toggle="modal" 
                 data-id="<?=$rs['id']?>"
@@ -73,6 +80,7 @@
                 <?php } ?>
                 <?php } ?>
                 <?php } ?>
+                   <?php } ?>
                 <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?>
                 <?php if($kode == 1) { ?>
                 <!-- <button onclick="deleteArsip('<?=$rs['id']?>','<?=$rs['gambarsk']?>',1 )" class="btn btn-sm btn-danger"> <i class="fa fa-trash"></i> </button>  -->

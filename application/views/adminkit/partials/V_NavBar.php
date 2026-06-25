@@ -159,6 +159,17 @@
 		z-index: 1;
 		right: 0;
 	}
+
+	.icon_okta{
+		width: 35px;
+		opacity: .85;
+	}
+
+	.icon_okta:hover{
+		opacity: 1;
+		transition: .2s;
+		cursor: pointer;
+	}
 </style>
 
 <?php
@@ -320,15 +331,32 @@
 			
 
 			<!-- live chat -->
-			<?php if($this->general_library->isProgrammer() || $this->general_library->getId() == 87){ ?>
+			<?php
+				// if($this->general_library->isProgrammer() ||
+				// $this->general_library->getId() == 87 ||
+				// $this->general_library->isPegawaiBkpsdm()){
+			?>
 				<li class="nav-item">
 					<div class="position-relative">
 						<a class="nav-icon" href="#" id="liveChatIcon">
-							<i class="align-middle" data-feather="message-circle"></i>
+							<span class="indicator" id="live_chat_total_unread" style="
+								color: white;
+								font-weight: bold;
+								/* font-size: .5rem;
+								padding: 5px;
+								border-radius: 50%; */
+								background-color: red;
+								z-index: 5;
+								left: 40px;
+								display: none;
+							"
+							></span>
+							<img class="icon_okta" src="<?=base_url('assets/img/okta-icon.png')?>" />
+							<!-- <i class="align-middle" data-feather="message-circle"></i> -->
 						</a>
 					</div>
 				</li>
-			<?php } ?>
+			<?php // } ?>
 
 			<!-- notif  -->
 			<?php // if($this->general_library->isPegawaiBkpsdm()) { ?>
@@ -521,7 +549,6 @@
 <script>
 	let loadLiveChat = 0;
 	$(function(){
-
 	})
 
 	$('#liveChatIcon').on('click', function(e){
@@ -531,20 +558,26 @@
 
 	function toggleLiveChat(flag_wrapper = 0){
 		// if(loadLiveChat == 0){
-			$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
-				loadLiveChat = 1
-			})
 		// }
 		if(flag_wrapper == 1){
 			$('.div_live_chat').removeClass('div_live_chat_slide_in')
 			$('.div_live_chat').addClass('div_live_chat_slide_out')
+			if($('#video_perkenalan_okta').length) {
+					$('#video_perkenalan_okta')[0].pause()
+			}
 		} else {
 			if(!$('.div_live_chat').hasClass('div_live_chat_slide_in')){
 				$('.div_live_chat').removeClass('div_live_chat_slide_out')
 				$('.div_live_chat').addClass('div_live_chat_slide_in')
+				$('.div_live_chat').load('<?=base_url("user/C_User/loadLiveChat")?>', function(){
+					// loadLiveChat = 1
+				})
 			} else {
 				$('.div_live_chat').removeClass('div_live_chat_slide_in')
 				$('.div_live_chat').addClass('div_live_chat_slide_out')
+				if($('#video_perkenalan_okta').length) {
+					$('#video_perkenalan_okta')[0].pause()
+				}
 			}
 		}
 	}

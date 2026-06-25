@@ -3838,9 +3838,7 @@
                                 $result[$p['id_m_user']]['kelas_jabatan'] = 7;
                             }
                         }
-                    }
-                    
-                    if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
+                    } else if(in_array($p['id_unitkerjamaster'], LIST_UNIT_KERJA_MASTER_SEKOLAH)){ //jika guru
                         $result[$p['id_m_user']]['kelas_jabatan'] = $p['kelas_jabatan'];
                         $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
                         $list_selected_jf = ['Pertama', 'Muda', 'Penyelia', 'Terampil', 'Madya', 'Utama', 'Lanjutan', 'Pelaksana', 'Mahir'];
@@ -3850,7 +3848,13 @@
                                 $result[$p['id_m_user']]['kelas_jabatan'] = 7;
                             }
                         }
-                    }
+                    } else if($p['id_unitkerja'] == 3030000){ // jika PTSP, ahli madya kelas jabatan 11
+                        $explode_nama_jabatan = explode(" ", $p['nama_jabatan']);
+                        if($explode_nama_jabatan[count($explode_nama_jabatan)-2] == "Ahli" &&
+                            $explode_nama_jabatan[count($explode_nama_jabatan)-1] == "Madya"){
+                            $result[$p['id_m_user']]['kelas_jabatan'] = 11;
+                        }
+                    } 
 
                     if(isset($p['id_jabatan_tambahan']) && $p['id_jabatan_tambahan']){ // jika ada jabatan tambahan
                         if(stringStartWith("Kepala Puskesmas", $p['nama_jabatan_tambahan'])){ // jika Kepala Puskesmas
@@ -3890,6 +3894,7 @@
                     $result[$p['id_m_user']]['kondisi_kerja'] = $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['kondisi_kerja'];
                 }
 
+                // custom PK, BK, KK
                 if($data['id_unitkerja'] == 4026000){ // jika BKAD
                     if($p['jenis_jabatan'] == 'JFT'){
                         if(isContainSeq($p['nama_jabatan'], "Ahli Pertama") || isContainSeq($p['nama_jabatan'], "Penyelia")){

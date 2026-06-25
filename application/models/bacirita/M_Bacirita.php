@@ -16,6 +16,15 @@ class M_Bacirita extends CI_Model
     }
 
     public function loadListKegiatan($tab){
+        $inputPost = $this->input->post();
+        $limit = 0;
+        $startId = 0;
+        if(isset($inputPost['limit'])){
+            $limit = $inputPost['limit'];
+            if(isset($inputPost['startId'])){
+                $startId = $inputPost['startId'];
+            }
+        }
         $res = null;
         $data = $this->db->select('a.*, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_t_peserta_kegiatan,
                     (
@@ -46,19 +55,23 @@ class M_Bacirita extends CI_Model
                     ->join("db_bacirita.t_peserta_kegiatan d", "a.id = d.id_t_kegiatan AND d.flag_active = 1 AND d.id_m_user = '".$this->general_library->getId()."'", "left")
                     ->where('a.flag_active', 1)
                     ->group_by('a.id')
-                    ->order_by('a.tanggal', 'desc')
-                    ->get()->result_array();
-        if($tab == "all"){
-            $res = $data;
-        } else if($tab == "personal"){
-            foreach($data as $d){
-                if($d['id_t_peserta_kegiatan']){
-                    $res[] = $d;
-                } 
-            }
+                    ->order_by('a.tanggal', 'desc');
+                    // ->get()->result_array();
+        if($tab == "personal"){
+            $this->db->where('d.id IS NOT NULL');
         }
 
-        return $res;
+        if($limit != 0){
+            $this->db->limit($limit+1);
+        }
+
+        if($startId != 0){
+            $this->db->where('a.id <=', $startId);
+        }
+
+        $res = $this->db->get()->result_array();
+
+        return ['res' => $res, 'startId' => $startId, 'limit' => $limit];
     }
 
     public function saveDataKegiatan($data){
@@ -521,7 +534,7 @@ class M_Bacirita extends CI_Model
     public function loadDetailWebinar($id){
         return $this->db->select('a.*, d.flag_absen, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_daftar, d.flag_generate_sertifikat,
                     d.url_sertifikat as url_sertifikat_peserta, d.date_absen, d.date_generate_sertifikat')
-                    ->from('db_bacirita.t_kegiatan a')
+                    ->from('db_bacirita.t_kegiatanx a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
                     ->join('db_bacirita.t_peserta_kegiatan d', '(a.id = d.id_t_kegiatan  and d.id_m_user = "'.$this->general_library->getId().'" and d.flag_active = 1)', 'left')
@@ -554,7 +567,13 @@ class M_Bacirita extends CI_Model
             $res['message'] = 'Mohon maaf, Anda sudah terdaftar untuk kegiatan ini sebelumnya.';
             $res['success'] = false;
         } else {
-            $this->insert('db_bacirita.t_peserta_kegiatan', $data);
+            $check = $this->checkActivity($data['id_t_kegiatan'], $data['id_m_user'], "pendaftaran");
+            if($check['code'] == 0){
+                $this->insert('db_bacirita.t_peserta_kegiatan', $data);
+            } else {
+                $this->db->trans_rollback();
+                return $check;
+            }
         }
 
         if($this->db->trans_status() == FALSE){
@@ -589,15 +608,19 @@ class M_Bacirita extends CI_Model
             $res['message'] = 'Presensi Webinar Belum dibuka';
             $res['success'] = false;
         } else {
+            $check = $this->checkActivity($id_kegiatan, $this->general_library->getId(), "absen");
+            if($check['code'] == 0){
+                $data["flag_absen"] = 1;
+                $data["date_absen"] = date('Y-m-d H:i:s');
+                $data["updated_by"] = $this->general_library->getId();
 
-        $data["flag_absen"] = 1;
-        $data["date_absen"] = date('Y-m-d H:i:s');
-        $data["updated_by"] = $this->general_library->getId();
-
-        $this->db->where('id_t_kegiatan', $id_kegiatan)
-                 ->where('id_m_user', $id_m_user)
-                 ->update('db_bacirita.t_peserta_kegiatan', $data);
-
+                $this->db->where('id_t_kegiatan', $id_kegiatan)
+                        ->where('id_m_user', $id_m_user)
+                        ->update('db_bacirita.t_peserta_kegiatan', $data);
+            } else {
+                $this->db->trans_rollback();
+                return $check;
+            }
         }
      
        
@@ -634,6 +657,11 @@ class M_Bacirita extends CI_Model
                                 ->where('a.flag_active', 1)
                                 ->where('b.flag_active', 1)
                                 ->get()->row_array();
+        if(!$kegiatan){
+            $res['code'] = 1;
+            $res['message'] = 'Data Kegiatan tidak ditemukan';
+            return $res;
+        }
 
         if($activity == "generate_sertifikat"){
             if($kegiatan['flag_download_sertifikat'] == 0){
@@ -653,6 +681,37 @@ class M_Bacirita extends CI_Model
                 $res['message'] = 'Mohon maaf, sertifikat sudah digenerate sebelumnya.';
                 return $res;
             }
+
+            if($peserta['flag_absen'] == 0){
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, Anda belum melakukan absensi, sertifikat tidak dapat digenerate.';
+                return $res;
+            }
+        } else if($activity == "pendaftaran"){
+            $batasDaftar = date($kegiatan['tanggal_batas_pendaftaran']." ".$kegiatan['jam_batas_pendaftaran']);
+            $now = date('Y-m-d H:i:s');
+            if($now > $batasDaftar){
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, pendaftaran telah ditutup karena sudah melebihi batas waktu pendaftaran.';
+                return $res;
+            }
+        } else if($activity == "absen"){
+            if(!$peserta){
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, Anda tidak terdaftar sebagai peserta.';
+                return $res;
+            }
+
+            $batasAwalAbsen = date($kegiatan['tanggal_batas_absensi']." ".$kegiatan['jam_buka_absensi']);
+            $batasAkhirAbsen = date($kegiatan['tanggal_batas_absensi']." ".$kegiatan['jam_batas_absensi']);
+            $now = date('Y-m-d H:i:s');
+            if($now >= $batasAwalAbsen && $now <= $batasAkhirAbsen){
+
+            } else {
+                $res['code'] = 1;
+                $res['message'] = 'Mohon maaf, absen telah ditutup karena sudah melebihi batas waktu absen.';
+                return $res;
+            }            
         }
 
         $res['data']['kegiatan'] = $kegiatan;
@@ -905,17 +964,22 @@ class M_Bacirita extends CI_Model
         return $res;
     }
 
-    public function loadPesertaKegiatan($id){
-        return $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, e.nama_jabatan, d.nm_unitkerja, f.nm_pangkat, c.nipbaru_ws')
+    public function loadPesertaKegiatan($id, $flag_rekap = 0){
+        $this->db->select('a.*, c.gelar1, c.gelar2, c.nama, e.nama_jabatan, d.nm_unitkerja, f.nm_pangkat, c.nipbaru_ws, g.topik')
                     ->from('db_bacirita.t_peserta_kegiatan a')
                     ->join('m_user b', 'a.id_m_user = b.id')
                     ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
                     ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
                     ->join('db_pegawai.jabatan e', 'c.jabatan = e.id_jabatanpeg')
                     ->join('db_pegawai.pangkat f', 'c.pangkat = f.id_pangkat')
+                    ->join('db_bacirita.t_kegiatan g', 'a.id_t_kegiatan = g.id')
                     ->where('a.id_t_kegiatan', $id)
-                    ->where('a.flag_active', 1)
-                    ->order_by('a.created_date', 'desc')
-                    ->get()->result_array();
+                    ->where('a.flag_active', 1);
+        if($flag_rekap == 1){
+            $this->db->order_by('a.created_date', 'asc');
+        } else {
+            $this->db->order_by('a.created_date', 'desc');
+        }
+        return $this->db->get()->result_array();
     }
 }

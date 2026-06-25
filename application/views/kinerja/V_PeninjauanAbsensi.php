@@ -613,6 +613,7 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
           });
             var today = new Date(tanggal);
             var dayIndex = today.getDay(); 
+            
             $.ajax({
               url : "<?php echo base_url();?>kinerja/C_Kinerja/getSkpdWfa",
               method : "POST",
@@ -622,10 +623,13 @@ const compressImage = async (file, { quality = 1, type = file.type }) => {
               success: function(ress){
                 if(tanggal >= '2026-04-10'){
                 if(dayIndex == 5){
-                if(ress == 1){
+                // if(ress == 1){
+                if(ress == 3){
                    $('#btn_upload').hide()
                    $('#ket').show()
-                   $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFH</b>')
+                  //  $('#ket').html('<b>Peninjauan Absensi tidak dibuka untuk pegawai WFH</b>')
+                  $('#btn_upload').show()
+
                 } else {
                 $('#btn_upload').show()
                 $('#ket').hide()

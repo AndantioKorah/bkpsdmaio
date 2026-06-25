@@ -23,6 +23,10 @@ class C_Cron extends CI_Controller
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
         $this->load->helper('url_helper');
         $this->load->helper('form');
+        // if(!$this->general_library->isNotMenu()){
+        //     dd($_SERVER);
+        //     redirect('logout');
+        // };
     }
 
     public function cronRekapAbsen()
@@ -43,11 +47,14 @@ class C_Cron extends CI_Controller
     }
 
     public function cronDsBulkTte(){
-        // $this->cronRiwayatJabatanSiasn();
-
         // $this->general->logCron('cronDsBulkTte');
 		// $this->layanan->cronBulkDs();
 	}
+
+    public function cronCheckLiveChat(){
+        $this->user->cronCheckLiveChat();
+        $this->general->logCron('cronCheckLiveChat');
+    }
 
     public function updateSisaCuti($id, $operand){
 		// $this->kepegawaian->updateSisaCuti($id, $operand);
@@ -99,6 +106,7 @@ class C_Cron extends CI_Controller
     public function cronHashFileBangkom(){
         // $this->user->cronHashFileBangkom();
         $this->general->logCron('cronHashFileBangkom');
+        $this->cronCheckLiveChat();
     }
 
     public function cronSyncBangkomPerDataDownload(){
@@ -137,6 +145,11 @@ class C_Cron extends CI_Controller
         $this->rekap->cronUpdateGajiBkad();
 
         // $this->cronSyncBangkomToSiasn();
+    }
+
+    public function cronAsyncManual(){
+        $this->general->logCron('cronAsync');
+        $this->general->cronAsync();
     }
 
     public function cronAsync(){
@@ -197,6 +210,11 @@ class C_Cron extends CI_Controller
         // return $this->user->cekKenegaraanCustom();
     }
 
+    public function inputSumpahJanji(){
+        return $this->user->inputSumpahJanji();
+        // return $this->user->cekKenegaraanCustom();
+    }
+
     public function cekProgressCuti($nip, $flagFixProgress = 0){
         $insert_id = 0;
         $peg = $this->general->getOne('m_user', 'username', $nip, 1);
@@ -253,6 +271,10 @@ class C_Cron extends CI_Controller
         return $this->user->addFileSkPPPK();
     }
 
+    public function addFileSkPns(){
+        return $this->user->addFileSkPns();
+    }
+
     public function updateJabatanPegBaru(){
         return $this->user->updateJabatanPegBaru();
     }
@@ -305,28 +327,30 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
+        dd('asd');
         // $this->general->editPdf();
-        dd(cekWaktuKerja(0));
+        // dd(cekWaktuKerja(0));
         // $this->user->insertPesertaBkpsdmBacirita();
 
         // dd($this->general_library->getDataKabanBkpsdm());
         // $randomString = generateRandomString(30, 1, 't_file_ds'); 
         // $contentQr = trim(base_url('verifPdf/'.str_replace( array( '\'', '"', ',' , ';', '<', '>' ), ' ', $randomString)));
-        $contentQr = "https://docs.google.com/spreadsheets/d/1ksMYI1i0duXJOQCb46yIB-RmSK-CDNf5oQRvpsOYjDo/edit?gid=0#gid=0";
-        $res['qr'] = generateQr($contentQr);
-        echo "<img style='width: 300px; height: 300px;' src='".$res['qr']."'></img>";
+        // $contentQr = "https://docs.google.com/spreadsheets/d/1ksMYI1i0duXJOQCb46yIB-RmSK-CDNf5oQRvpsOYjDo/edit?gid=0#gid=0";
+        // $res['qr'] = generateQr($contentQr);
+        // echo "<img style='width: 300px; height: 300px;' src='".$res['qr']."'></img>";
         // $this->load->view('adminkit/partials/V_TemplateTte', $res);
 
         // dd(generateRandomString(16));
 
-        // $date = date("Y-m-d H:i:s");
-        // $nip = "199502182020121013";
-        // $publickKey = "AARS_251016378";
-        // $secretKey = "mb8V34s8xtxqEFVP";
-        // $string = $date.";".$secretKey;
+        $date = date("Y-m-d H:i:s");
+        $nip = "199502182020121013";
+        $publickKey = "AARS_251016378";
+        $secretKey = "mb8V34s8xtxqEFVP";
 
-        // $encrypted = AESEncrypt($string, $publickKey, $secretKey);
-        // dd("token: ".$encrypted);
+        $string = $date.";".$secretKey;
+
+        $encrypted = AESEncrypt($string, $publickKey, $secretKey);
+        dd($encrypted);
         // dd(AESDecrypt($encrypted, $secretKey));
     }
 

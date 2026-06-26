@@ -536,11 +536,80 @@
  	</div>
  </div>
 <?php } ?>
+
+
+
+ <?php if(isset($fungsional)) { ?>
+ <div class="row">
+ 	<div class="col-lg-12">
+ 		<div class="card card-default">
+ 			<div class="row p-3">
+ 				<div class="col-md-12 col-sm-12">
+ 					<h3>Jumlah Pegawai Negeri Sipil (ASN) Pemerintah Kota Manado Menurut Golongan dan Kategori Jabatan Fungsional</h3>
+ 					<div class="row">
+ 						<div class="col-lg-12 table-responsive">
+ 						 	<table class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 								<thead>
+ 									<th class="text-left">No</th>
+ 									<th class="text-left">Golongan</th>
+ 									<th class="text-left">Utama</th>
+ 									<th class="text-left">Madya</th>
+ 									<th class="text-left">Muda</th>
+ 									<th class="text-left">Pertama</th>
+ 									<th class="text-left">Total</th>
+ 								</thead>
+ 								<tbody>
+ 									<?php $no = 1;  
+           $jab_total_utama = 0; 
+            $jab_total_madya = 0; 
+            $jab_total_muda = 0; 
+            $jab_total_pertama = 0; 
+
+
+			
+            foreach($fungsional['jabatan'] as $rs){ ?>
+ 									<?php if(isset($rs['nama'])){ ?>
+ 									<tr>
+ 										<td class="text-left"><?=$no++;?></td>
+ 										<td class="text-left"><?=$rs['nama']?></td>
+ 										<td class="text-left"><?=$rs['utama']?></td>
+ 										<td class="text-left"><?=$rs['madya']?></td>
+ 										<td class="text-left"><?=$rs['muda']?></td>
+ 										<td class="text-left"><?=$rs['pertama']?></td>
+
+ 										<td class="text-left"><?=$rs['utama']+$rs['madya']+$rs['muda']+$rs['pertama']?></td>
+ 									</tr>
+ 									<?php 
+         $jab_total_utama += $rs['utama']; 
+         $jab_total_madya += $rs['madya'];
+		 $jab_total_muda += $rs['muda'];
+		  $jab_total_pertama += $rs['pertama'];
+         } } ?>
+		 <tr>
+ 										<td style="color:#fff;">23</td>
+ 										<td>Total</td>
+ 										<td><?=$jab_total_utama;?></td>
+ 										<td><?=$jab_total_madya;?></td>
+										<td><?=$jab_total_muda;?></td>
+ 										<td><?=$jab_total_pertama;?></td>
+ 										<td><?=$jab_total_utama+$jab_total_madya+$jab_total_muda+$jab_total_pertama;?></td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
+
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+ <?php } ?>
  
 <script>
 	    $(document).ready( function() {
 		$('.datatable').dataTable({
-			"pageLength": 25
+			"pageLength": 30
 		}) 
   		$('.select2-navy').select2()
         //   var table = $('.datatable').DataTable({

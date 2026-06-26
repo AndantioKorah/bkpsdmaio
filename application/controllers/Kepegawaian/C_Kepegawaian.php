@@ -4047,6 +4047,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
 		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
+		// $data['fungsional'] = $this->kepegawaian->laporanJumlahPegawaiFungsionalMenurutKategori();
+
 		// dd($data['skpd']);
 
 		} else if($this->input->post('jenis_laporan') == "1") {
@@ -4069,6 +4071,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['jabatan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPns();
 		} else if($this->input->post('jenis_laporan') == "10") {
 		$data['jabatan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPppk();
+		} else if($this->input->post('jenis_laporan') == "11") {
+		$data['fungsional'] = $this->kepegawaian->laporanJumlahPegawaiFungsionalMenurutKategori();
 		}
 		$data['jenis_laporan'] = $this->input->post('jenis_laporan');
 

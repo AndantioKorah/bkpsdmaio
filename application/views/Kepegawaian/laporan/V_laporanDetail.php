@@ -543,7 +543,7 @@
  		<div class="card card-default">
  			<div class="row p-3">
  				<div class="col-md-12 col-sm-12">
- 					<h3>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan</h3>
+ 					<h3>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Kategori Fungsional</h3>
  					<div class="row">
  						<div class="col-lg-12 table-responsive">
  						 	<table class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
@@ -561,10 +561,16 @@
              $jab_belum_terdata_laki =0;
             foreach($fungsional['jabatan'] as $rs){ ?>
  									<?php if(isset($rs['nama'])){ ?>
- 									<tr>
+ 									 <tr onclick="window.open('<?=base_url('kepegawaian/C_Kepegawaian/laporanDetailListPegawai/'.$rs['nama'].'')?>', '_blank');" style="cursor: pointer;">
  										<td class="text-left"><?=$no++;?></td>
  										<td class="text-left"><?=$rs['nama']?></td>
- 										<td class="text-left"><?=$rs['laki']?></td>
+ 										<td class="text-left">
+											<?=$rs['laki']?>
+											   <!-- <?php foreach($rs['list_pegawai'] as $l){ ?>
+                                            <span class="badge badge-dark"><?php echo $l['nipbaru_ws'] ?></span>
+                                            <br>
+                                            <?php } ?> -->
+									    </td>
  										<td class="text-left"><?=$rs['perempuan']?></td>
  										<td class="text-left"><?=$rs['laki']+$rs['perempuan']?></td>
  									</tr>
@@ -590,6 +596,7 @@
  	</div>
  </div>
  <?php } ?>
+
 
 
  <?php if(isset($gol_fungsional)) { ?>

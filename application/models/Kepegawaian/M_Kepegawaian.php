@@ -16352,41 +16352,52 @@ public function checkListIjazahCpns($id, $id_pegawai){
         $result['jabatan'][1]['nama'] = 'Utama';
         $result['jabatan'][1]['laki'] = 0;
         $result['jabatan'][1]['perempuan'] = 0;
+        $result['jabatan'][1]['list_pegawai'] = null;
 
         $result['jabatan'][2]['nama'] = 'Madya';
         $result['jabatan'][2]['laki'] = 0;
         $result['jabatan'][2]['perempuan'] = 0;
+        $result['jabatan'][2]['list_pegawai'] = null;
         
         $result['jabatan'][3]['nama'] = 'Muda';
         $result['jabatan'][3]['laki'] = 0;
         $result['jabatan'][3]['perempuan'] = 0;
+        $result['jabatan'][3]['list_pegawai'] = null;
 
         $result['jabatan'][4]['nama'] = 'Pertama';
         $result['jabatan'][4]['laki'] = 0;
         $result['jabatan'][4]['perempuan'] = 0;
+        $result['jabatan'][4]['list_pegawai'] = null;
 
         $result['jabatan'][5]['nama'] = 'Penyelia';
         $result['jabatan'][5]['laki'] = 0;
         $result['jabatan'][5]['perempuan'] = 0;
+        $result['jabatan'][5]['list_pegawai'] = null;
 
         $result['jabatan'][6]['nama'] = 'Mahir';
         $result['jabatan'][6]['laki'] = 0;
         $result['jabatan'][6]['perempuan'] = 0;
+        $result['jabatan'][6]['list_pegawai'] = null;
 
         $result['jabatan'][7]['nama'] = 'Terampil';
         $result['jabatan'][7]['laki'] = 0;
         $result['jabatan'][7]['perempuan'] = 0;
+        $result['jabatan'][7]['list_pegawai'] = null;
 
         $result['jabatan'][8]['nama'] = 'Pemula';
         $result['jabatan'][8]['laki'] = 0;
         $result['jabatan'][8]['perempuan'] = 0;
+        $result['jabatan'][8]['list_pegawai'] = null;
+
 
         $result['jabatan'][9]['nama'] = 'Lainnya';
         $result['jabatan'][9]['laki'] = 0;
         $result['jabatan'][9]['perempuan'] = 0;
+        $result['jabatan'][9]['list_pegawai'] = null;
 
 
-        $this->db->select('a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan,c.nama_jabatan,a.pangkat')
+
+        $this->db->select('a.nipbaru_ws,a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan,c.nama_jabatan,a.pangkat')
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
                     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
@@ -16398,54 +16409,63 @@ public function checkListIjazahCpns($id, $id_pegawai){
         // dd($pegawai1);
         foreach($pegawai1 as $peg){
         if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][1]['list_pegawai'][] = $peg;
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['jabatan'][1]['laki']++;
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['jabatan'][1]['perempuan']++;
         } 
         } else if(substr($peg['nama_jabatan'], -5) == "Madya"){
+        $result['jabatan'][2]['list_pegawai'][] = $peg;
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['jabatan'][2]['laki']++;
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['jabatan'][2]['perempuan']++;
         } 
         } else if(substr($peg['nama_jabatan'], -4) == "Muda"){
+        $result['jabatan'][3]['list_pegawai'][] = $peg;
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['jabatan'][3]['laki']++;
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['jabatan'][3]['perempuan']++;
         } 
         } else if(substr($peg['nama_jabatan'], -7) == "Pertama"){
+        $result['jabatan'][4]['list_pegawai'][] = $peg;
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['jabatan'][4]['laki']++;
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['jabatan'][4]['perempuan']++;
         } 
         } else if(substr($peg['nama_jabatan'], -8) == "Penyelia"){
+        $result['jabatan'][5]['list_pegawai'][] = $peg;
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['jabatan'][5]['laki']++;
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['jabatan'][5]['perempuan']++;
         } 
         } else if(substr($peg['nama_jabatan'], -5) == "Mahir"){
+        $result['jabatan'][6]['list_pegawai'][] = $peg;
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['jabatan'][6]['laki']++;
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['jabatan'][6]['perempuan']++;
         } 
         } else if(substr($peg['nama_jabatan'], -8) == "Terampil"){
+        $result['jabatan'][7]['list_pegawai'][] = $peg;
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['jabatan'][7]['laki']++;
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['jabatan'][7]['perempuan']++;
         } 
         } else if(substr($peg['nama_jabatan'], -6) == "Pemula"){
+        $result['jabatan'][8]['list_pegawai'][] = $peg;
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['jabatan'][8]['laki']++;
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
         $result['jabatan'][8]['perempuan']++;
         } 
         } else {
+        $result['jabatan'][9]['list_pegawai'][] = $peg;
         if($peg['jk'] == 'Laki-Laki' || $peg['jk'] == 'Laki-laki'){
         $result['jabatan'][9]['laki']++;
         } else if($peg['jk'] == 'Perempuan' || $peg['jk'] == null) {
@@ -16453,7 +16473,6 @@ public function checkListIjazahCpns($id, $id_pegawai){
         } 
         } 
         }   
-        
         return $result;
     }
 
@@ -17889,6 +17908,65 @@ public function checkListIjazahCpns($id, $id_pegawai){
         return $res;
 
        
+    }
+
+    public function laporanDetailListPegawai($param){
+
+        $this->db->select('a.gelar1,a.gelar2,a.nama,a.nipbaru_ws,a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan,
+        c.nama_jabatan,a.pangkat, b.nm_unitkerja')
+            ->from('db_pegawai.pegawai a')
+                    ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                    ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg', 'left')
+                    ->join('db_pegawai.unitkerjamaster d', 'b.id_unitkerjamaster = d.id_unitkerjamaster')
+                    ->where('c.jenis_jabatan', 'JFT')
+                    ->where('a.id_m_status_pegawai', 1)
+                    ->where_not_in('c.id_unitkerja', [5, 9050030]);
+
+        if($param == 'Utama'){
+            $this->db->where('RIGHT(c.nama_jabatan, 5) =', 'Utama');
+        } 
+
+        if($param == 'Madya'){
+            $this->db->where('RIGHT(c.nama_jabatan, 5) =', 'Madya');
+        } 
+
+          if($param == 'Muda'){
+            $this->db->where('RIGHT(c.nama_jabatan, 4) =', 'Muda');
+        } 
+
+          if($param == 'Pertama'){
+            $this->db->where('RIGHT(c.nama_jabatan, 7) =', 'Pertama');
+        } 
+
+          if($param == 'Penyelia'){
+            $this->db->where('RIGHT(c.nama_jabatan, 8) =', 'Penyelia');
+        } 
+
+          if($param == 'Mahir'){
+            $this->db->where('RIGHT(c.nama_jabatan, 5) =', 'Mahir');
+        } 
+
+          if($param == 'Terampil'){
+            $this->db->where('RIGHT(c.nama_jabatan, 8) =', 'Terampil');
+        } 
+
+          if($param == 'Pemula'){
+            $this->db->where('RIGHT(c.nama_jabatan, 6) =', 'Pemula');
+        } 
+         if($param == 'Lainnya'){
+            $this->db->where_not_in('RIGHT(c.nama_jabatan, 5)', ['Utama']);
+            $this->db->where_not_in('RIGHT(c.nama_jabatan, 5)', ['Madya']);
+            $this->db->where_not_in('RIGHT(c.nama_jabatan, 4)', ['Muda']);
+            $this->db->where_not_in('RIGHT(c.nama_jabatan, 7)', ['Pertama']);
+            $this->db->where_not_in('RIGHT(c.nama_jabatan, 8)', ['Penyelia']);
+            $this->db->where_not_in('RIGHT(c.nama_jabatan, 5)', ['Mahir']);
+            $this->db->where_not_in('RIGHT(c.nama_jabatan, 8)', ['Terampil']);
+            $this->db->where_not_in('RIGHT(c.nama_jabatan, 6)', ['Pemula']);
+        } 
+
+        $pegawai1 = $this->db->get()->result_array();
+         
+        return $pegawai1;
     }
 
 

@@ -51,14 +51,14 @@
                 <td style="font-weight: bold; text-align: center; width: 20%;">Tanggal Lahir</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Status Pegawai</td>
                 <!-- <td style="font-weight: bold; text-align: center; width: 20%;">Bidang</td> -->
-                <td style="font-weight: bold; text-align: center; width: 20%;">No HP</td>
-                <td style="font-weight: bold; text-align: center; width: 20%;">Email</td>
+                <!-- <td style="font-weight: bold; text-align: center; width: 20%;">No HP</td> -->
+                <!-- <td style="font-weight: bold; text-align: center; width: 20%;">Email</td> -->
                 <td style="font-weight: bold; text-align: center; width: 20%;">NIK</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">BUP</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Pendidikan Terakhir</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Status Perkawinan</td>
-                <td style="font-weight: bold; text-align: center; width: 20%;">Jumlah Anak</td>
-                <td style="font-weight: bold; text-align: center; width: 20%;">Nama Pasangan</td>
+                <!-- <td style="font-weight: bold; text-align: center; width: 20%;">Jumlah Anak</td> -->
+                <!-- <td style="font-weight: bold; text-align: center; width: 20%;">Nama Pasangan</td> -->
                 <td style="font-weight: bold; text-align: center; width: 20%;">Alamat</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">NPWP</td>
                 <td style="font-weight: bold; text-align: center; width: 20%;">Jenis Kelamin</td>
@@ -104,14 +104,14 @@
                         <td style="padding: 10px; text-align: left;"><?=($rs['tgllahir'])?></td>
                         <td style="padding: 10px; text-align: left;"><?=($rs['nm_statuspeg'])?></td>
                         <!-- <td style="padding: 10px; text-align: left;"><?=($rs['nama_bidang'])?></td> -->
-                        <td style="padding: 10px; text-align: left;"><?='`'.($rs['handphone'])?></td>
-                        <td style="padding: 10px; text-align: left;"><?=($rs['email'])?></td>
+                        <!-- <td style="padding: 10px; text-align: left;"><?='`'.($rs['handphone'])?></td> -->
+                        <!-- <td style="padding: 10px; text-align: left;"><?=($rs['email'])?></td> -->
                         <td style="padding: 10px; text-align: left;"><?='`'.($rs['nik'])?></td>
                         <td style="padding: 10px; text-align: left;"><?=($rs['tmt_pensiun'])?></td>
                         <td style="padding: 10px; text-align: left;"><?=($rs['nm_tktpendidikan'])?></td>
                         <td style="padding: 10px; text-align: left;"><?=($rs['nm_sk'])?></td>
-                        <td style="padding: 10px; text-align: left;"></td>
-                        <td style="padding: 10px; text-align: left;"></td>
+                        <!-- <td style="padding: 10px; text-align: left;"></td> -->
+                        <!-- <td style="padding: 10px; text-align: left;"></td> -->
                         <td style="padding: 10px; text-align: left;">
                          <?php if($rs['nama_kelurahan']) { ?>
                                 Sulawesi Utara, <?=$rs['nama_kabupaten_kota']?>, Kec. <?=$rs['nama_kecamatan']?>, Kel. <?=$rs['nama_kelurahan']?></td>

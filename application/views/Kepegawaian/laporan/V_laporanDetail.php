@@ -56,7 +56,9 @@
          $skpd_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">64</td>
+ 										<td >
+											<span style="opacity: 0;">64</span>
+										</td>
  										<td>Total</td>
  										<td><?=$skpd_total_laki;?></td>
  										<td><?=$skpd_total_perempuan;?></td>
@@ -111,7 +113,9 @@
          $jab_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">23</td>
+ 										<td >
+											<span style="opacity: 0;">23</span>
+										</td>
  										<td>Total</td>
  										<td><?=$jab_total_laki;?></td>
  										<td><?=$jab_total_perempuan;?></td>
@@ -166,7 +170,9 @@
          $jab_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">23</td>
+ 										<td>
+											<span style="opacity: 0;">23</span>
+										</td>
  										<td>Total</td>
  										<td><?=$jab_total_laki;?></td>
  										<td><?=$jab_total_perempuan;?></td>
@@ -220,7 +226,9 @@
          $jab_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">23</td>
+ 										<td >
+											<span style="opacity: 0;">23</span>
+										</td>
  										<td>Total</td>
  										<td><?=$jab_total_laki;?></td>
  										<td><?=$jab_total_perempuan;?></td>
@@ -274,7 +282,9 @@
          $gol_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">25</td>
+ 										<td >
+											<span style="opacity: 0;">25</span>
+										</td>
  										<td>Total</td>
  										<td><?=$gol_total_laki;?></td>
  										<td><?=$gol_total_perempuan;?></td>
@@ -340,7 +350,9 @@
  									</tr>
 				<?php } ?>
  									<tr>
- 										<td style="color:#fff;">12</td>
+ 										<td >
+											<span style="opacity: 0;">12</span>
+										</td>
  										<td>Total</td>
  										<td><?=$total_laki+$belum_terdata_laki;?></td>
  										<td><?=$total_perempuan+$belum_terdata_perempuan;?></td>
@@ -406,7 +418,9 @@
  				</tr>
 		<?php } ?>
  				<tr>
- 					<td style="color:#fff;">12</td>
+ 					<td >
+						<span style="opacity: 0;">12</span>
+					</td>
  					<td>Total</td>
  					<td><?=$total_laki_pns+$belum_terdata_laki_pns;?></td>
  					<td><?=$total_perempuan_pns+$belum_terdata_perempuan_pns;?></td>
@@ -471,7 +485,9 @@
  				</tr>
 				<?php } ?>
  				<tr>
- 					<td style="color:#fff;">12</td>
+ 					<td >
+						<span style="opacity: 0;">12</span>
+					</td>
  					<td>Total</td>
  					<td><?=$total_laki_pppk+$belum_terdata_laki_pppk;?></td>
  					<td><?=$total_perempuan_pppk+$belum_terdata_perempuan_pppk;?></td>
@@ -519,7 +535,9 @@
          $total_laki += $rs['laki']; 
          $total_perempuan += $rs['perempuan']; } ?>
  				<tr>
- 					<td style="color:#fff;">12</td>
+ 					<td >
+						<span style="opacity: 0;">12</span>
+					</td>
  					<td>Total</td>
  					<td><?=$total_laki;?></td>
  					<td><?=$total_perempuan;?></td>
@@ -579,7 +597,9 @@
          $jab_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">23</td>
+ 										<td >
+											<span style="opacity: 0; opacity: 0;">13</span>
+										</td>
  										<td>Total</td>
  										<td><?=$jab_total_laki;?></td>
  										<td><?=$jab_total_perempuan;?></td>
@@ -663,7 +683,9 @@
 			  $jab_total_pemula += $rs['pemula'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">23</td>
+ 										<td >
+											<span style="opacity: 0;">23</span>
+										</td>
  										<td>Total</td>
  										<td><?=$jab_total_utama;?></td>
  										<td><?=$jab_total_madya;?></td>

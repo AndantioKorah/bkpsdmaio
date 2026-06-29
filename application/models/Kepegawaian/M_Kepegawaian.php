@@ -17912,7 +17912,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
     public function laporanDetailListPegawai($param){
 
-        $this->db->select('a.gelar1,a.gelar2,a.nama,a.nipbaru_ws,a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan,
+        $this->db->select('a.statuspeg,a.gelar1,a.gelar2,a.nama,a.nipbaru_ws,a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan,
         c.nama_jabatan,a.pangkat, b.nm_unitkerja')
             ->from('db_pegawai.pegawai a')
                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')

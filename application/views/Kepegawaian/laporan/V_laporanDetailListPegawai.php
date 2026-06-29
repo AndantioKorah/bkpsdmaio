@@ -24,6 +24,7 @@
  				<th class="text-left">No</th>
  				<th class="text-left">Nama</th>
  				<th class="text-left">NIP</th>
+ 				<th class="text-left">Status Kepegawaian</th>
  				<th class="text-left">Unit Kerja</th>
  				<th class="text-left">Jabatan</th>
 
@@ -31,13 +32,31 @@
  			</thead>
  			<tbody>
  				<?php $no = 1; $total_perempuan = 0; $total_laki = 0; foreach($list_pegawai as $rs){ ?>
+                  <?php
+                                        $badge_status = 'badge-cpns';
+                                        if($rs['statuspeg'] == 2){
+                                        $badge_status = 'badge-pns';
+                                        } else if($rs['statuspeg'] == 3){
+                                        $badge_status = 'badge-pppk';
+                                        } else if($rs['statuspeg'] == 6){
+                                        $badge_status = 'badge-pppk-pw';
+                                        }
+                                    ?>
+
  				<tr>
  					<td class="text-left"><?=$no++;?></td>
- 					<td class="text-left"><?= getNamaPegawaiFull($rs)?></td>
+ 					<td class="text-left">
+                         <span class="fw-bold namapegawai">
+                                <a target="_blank" style="font-weight: bold; color: black !important;" href="<?=base_url('kepegawaian/profil-pegawai/'.$rs['nipbaru_ws'])?>"><?=getNamaPegawaiFull($rs)?></a>
+                            </span>
+                            
+                    </td>
  					<td class="text-left"><?= $rs['nipbaru_ws']?></td>
+ 					<td class="text-left">
+                             <span class="badge <?=$badge_status?>"> <?php  if($rs['statuspeg'] == 1) echo "CPNS"; else if($rs['statuspeg'] == 2) echo "PNS"; else if($rs['statuspeg'] == 3) echo "PPPK"; else echo "PPPK Paruh Waktu";?> </span><br>
+                    </td>
  					<td class="text-left"><?= $rs['nm_unitkerja']?></td>
  					<td class="text-left"><?= $rs['nama_jabatan']?></td>
-
  	
  				</tr>
                 <?php } ?>

@@ -4073,6 +4073,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['jabatan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPppk();
 		} else if($this->input->post('jenis_laporan') == "11") {
 		$data['fungsional'] = $this->kepegawaian->laporanJumlahPegawaiFungsionalMenurutKategori();
+		} else if($this->input->post('jenis_laporan') == "12") {
+		$data['gol_fungsional'] = $this->kepegawaian->laporanJumlahPegawaiFungsionalMenurutGolKategori();
 		}
 		$data['jenis_laporan'] = $this->input->post('jenis_laporan');
 

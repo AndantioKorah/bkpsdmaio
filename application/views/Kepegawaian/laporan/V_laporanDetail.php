@@ -537,9 +537,62 @@
  </div>
 <?php } ?>
 
+<?php if(isset($fungsional)) { ?>
+ <div class="row">
+ 	<div class="col-lg-12">
+ 		<div class="card card-default">
+ 			<div class="row p-3">
+ 				<div class="col-md-12 col-sm-12">
+ 					<h3>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan</h3>
+ 					<div class="row">
+ 						<div class="col-lg-12 table-responsive">
+ 						 	<table class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 								<thead>
+ 									<th class="text-left">No</th>
+ 									<th class="text-left">Jenjang</th>
+ 									<th class="text-left">Laki-laki</th>
+ 									<th class="text-left">Perempuan</th>
+ 									<th class="text-left">Total</th>
+ 								</thead>
+ 								<tbody>
+ 									<?php $no = 1;  
+            $jab_total_perempuan = 0; 
+            $jab_total_laki = 0; 
+             $jab_belum_terdata_laki =0;
+            foreach($fungsional['jabatan'] as $rs){ ?>
+ 									<?php if(isset($rs['nama'])){ ?>
+ 									<tr>
+ 										<td class="text-left"><?=$no++;?></td>
+ 										<td class="text-left"><?=$rs['nama']?></td>
+ 										<td class="text-left"><?=$rs['laki']?></td>
+ 										<td class="text-left"><?=$rs['perempuan']?></td>
+ 										<td class="text-left"><?=$rs['laki']+$rs['perempuan']?></td>
+ 									</tr>
+ 									<?php 
+         $jab_total_laki += $rs['laki']; 
+         $jab_total_perempuan += $rs['perempuan'];
+         } } ?>
+		 <tr>
+ 										<td style="color:#fff;">23</td>
+ 										<td>Total</td>
+ 										<td><?=$jab_total_laki;?></td>
+ 										<td><?=$jab_total_perempuan;?></td>
+ 										<td><?=$jab_total_laki+$jab_total_perempuan;?></td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
+
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+ <?php } ?>
 
 
- <?php if(isset($fungsional)) { ?>
+ <?php if(isset($gol_fungsional)) { ?>
  <div class="row">
  	<div class="col-lg-12">
  		<div class="card card-default">
@@ -556,6 +609,13 @@
  									<th class="text-left">Madya</th>
  									<th class="text-left">Muda</th>
  									<th class="text-left">Pertama</th>
+									<th class="text-left">Penyelia</th>
+									<th class="text-left">Mahir</th>
+									<th class="text-left">Terampil</th>
+									<th class="text-left">Pemula</th>
+
+
+
  									<th class="text-left">Total</th>
  								</thead>
  								<tbody>
@@ -563,11 +623,14 @@
            $jab_total_utama = 0; 
             $jab_total_madya = 0; 
             $jab_total_muda = 0; 
-            $jab_total_pertama = 0; 
-
+            $jab_total_pertama = 0;
+			$jab_total_penyelia = 0;
+			$jab_total_mahir = 0;
+			$jab_total_terampil = 0; 
+			$jab_total_pemula = 0;
 
 			
-            foreach($fungsional['jabatan'] as $rs){ ?>
+            foreach($gol_fungsional['jabatan'] as $rs){ ?>
  									<?php if(isset($rs['nama'])){ ?>
  									<tr>
  										<td class="text-left"><?=$no++;?></td>
@@ -576,14 +639,21 @@
  										<td class="text-left"><?=$rs['madya']?></td>
  										<td class="text-left"><?=$rs['muda']?></td>
  										<td class="text-left"><?=$rs['pertama']?></td>
-
- 										<td class="text-left"><?=$rs['utama']+$rs['madya']+$rs['muda']+$rs['pertama']?></td>
+ 										<td class="text-left"><?=$rs['penyelia']?></td>
+ 										<td class="text-left"><?=$rs['mahir']?></td>
+ 										<td class="text-left"><?=$rs['terampil']?></td>
+ 										<td class="text-left"><?=$rs['pemula']?></td>
+ 										<td class="text-left"><?=$rs['utama']+$rs['madya']+$rs['muda']+$rs['pertama']+$rs['penyelia']+$rs['mahir']+$rs['terampil']+$rs['pemula']?></td>
  									</tr>
  									<?php 
          $jab_total_utama += $rs['utama']; 
          $jab_total_madya += $rs['madya'];
 		 $jab_total_muda += $rs['muda'];
 		  $jab_total_pertama += $rs['pertama'];
+		   $jab_total_penyelia += $rs['penyelia'];
+		    $jab_total_mahir += $rs['mahir'];
+			 $jab_total_terampil += $rs['terampil'];
+			  $jab_total_pemula += $rs['pemula'];
          } } ?>
 		 <tr>
  										<td style="color:#fff;">23</td>
@@ -592,7 +662,11 @@
  										<td><?=$jab_total_madya;?></td>
 										<td><?=$jab_total_muda;?></td>
  										<td><?=$jab_total_pertama;?></td>
- 										<td><?=$jab_total_utama+$jab_total_madya+$jab_total_muda+$jab_total_pertama;?></td>
+ 										<td><?=$jab_total_penyelia;?></td>
+ 										<td><?=$jab_total_mahir;?></td>
+ 										<td><?=$jab_total_terampil;?></td>
+ 										<td><?=$jab_total_pemula;?></td>
+ 										<td><?=$jab_total_utama+$jab_total_madya+$jab_total_muda+$jab_total_pertama+$jab_total_penyelia+$jab_total_mahir+$jab_total_terampil+$jab_total_pemula;?></td>
  									</tr>
  								</tbody>
  							</table>

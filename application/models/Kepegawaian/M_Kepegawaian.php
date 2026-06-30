@@ -16532,6 +16532,126 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $result['jabatan'][5]['terampil'] = 0;
             $result['jabatan'][5]['pemula'] = 0;
 
+            $result['jabatan'][6]['nama'] = 'III/d';
+            $result['jabatan'][6]['utama'] = 0;
+            $result['jabatan'][6]['madya'] = 0;
+            $result['jabatan'][6]['muda'] = 0;
+            $result['jabatan'][6]['pertama'] = 0;
+            $result['jabatan'][6]['penyelia'] = 0;
+            $result['jabatan'][6]['mahir'] = 0;
+            $result['jabatan'][6]['terampil'] = 0;
+            $result['jabatan'][6]['pemula'] = 0;
+
+            $result['jabatan'][7]['nama'] = 'III/c';
+            $result['jabatan'][7]['utama'] = 0;
+            $result['jabatan'][7]['madya'] = 0;
+            $result['jabatan'][7]['muda'] = 0;
+            $result['jabatan'][7]['pertama'] = 0;
+            $result['jabatan'][7]['penyelia'] = 0;
+            $result['jabatan'][7]['mahir'] = 0;
+            $result['jabatan'][7]['terampil'] = 0;
+            $result['jabatan'][7]['pemula'] = 0;
+
+            $result['jabatan'][8]['nama'] = 'III/b';
+            $result['jabatan'][8]['utama'] = 0;
+            $result['jabatan'][8]['madya'] = 0;
+            $result['jabatan'][8]['muda'] = 0;
+            $result['jabatan'][8]['pertama'] = 0;
+            $result['jabatan'][8]['penyelia'] = 0;
+            $result['jabatan'][8]['mahir'] = 0;
+            $result['jabatan'][8]['terampil'] = 0;
+            $result['jabatan'][8]['pemula'] = 0;
+
+            $result['jabatan'][9]['nama'] = 'III/a';
+            $result['jabatan'][9]['utama'] = 0;
+            $result['jabatan'][9]['madya'] = 0;
+            $result['jabatan'][9]['muda'] = 0;
+            $result['jabatan'][9]['pertama'] = 0;
+            $result['jabatan'][9]['penyelia'] = 0;
+            $result['jabatan'][9]['mahir'] = 0;
+            $result['jabatan'][9]['terampil'] = 0;
+            $result['jabatan'][9]['pemula'] = 0;
+
+            $result['jabatan'][10]['nama'] = 'II/d';
+            $result['jabatan'][10]['utama'] = 0;
+            $result['jabatan'][10]['madya'] = 0;
+            $result['jabatan'][10]['muda'] = 0;
+            $result['jabatan'][10]['pertama'] = 0;
+            $result['jabatan'][10]['penyelia'] = 0;
+            $result['jabatan'][10]['mahir'] = 0;
+            $result['jabatan'][10]['terampil'] = 0;
+            $result['jabatan'][10]['pemula'] = 0;
+
+            $result['jabatan'][11]['nama'] = 'II/c';
+            $result['jabatan'][11]['utama'] = 0;
+            $result['jabatan'][11]['madya'] = 0;
+            $result['jabatan'][11]['muda'] = 0;
+            $result['jabatan'][11]['pertama'] = 0;
+            $result['jabatan'][11]['penyelia'] = 0;
+            $result['jabatan'][11]['mahir'] = 0;
+            $result['jabatan'][11]['terampil'] = 0;
+            $result['jabatan'][11]['pemula'] = 0;
+
+            $result['jabatan'][12]['nama'] = 'II/b';
+            $result['jabatan'][12]['utama'] = 0;
+            $result['jabatan'][12]['madya'] = 0;
+            $result['jabatan'][12]['muda'] = 0;
+            $result['jabatan'][12]['pertama'] = 0;
+            $result['jabatan'][12]['penyelia'] = 0;
+            $result['jabatan'][12]['mahir'] = 0;
+            $result['jabatan'][12]['terampil'] = 0;
+            $result['jabatan'][12]['pemula'] = 0;
+
+            $result['jabatan'][13]['nama'] = 'II/a';
+            $result['jabatan'][13]['utama'] = 0;
+            $result['jabatan'][13]['madya'] = 0;
+            $result['jabatan'][13]['muda'] = 0;
+            $result['jabatan'][13]['pertama'] = 0;
+            $result['jabatan'][13]['penyelia'] = 0;
+            $result['jabatan'][13]['mahir'] = 0;
+            $result['jabatan'][13]['terampil'] = 0;
+            $result['jabatan'][13]['pemula'] = 0;
+
+            $result['jabatan'][14]['nama'] = 'I/d';
+            $result['jabatan'][14]['utama'] = 0;
+            $result['jabatan'][14]['madya'] = 0;
+            $result['jabatan'][14]['muda'] = 0;
+            $result['jabatan'][14]['pertama'] = 0;
+            $result['jabatan'][14]['penyelia'] = 0;
+            $result['jabatan'][14]['mahir'] = 0;
+            $result['jabatan'][14]['terampil'] = 0;
+            $result['jabatan'][14]['pemula'] = 0;
+
+            $result['jabatan'][15]['nama'] = 'I/c';
+            $result['jabatan'][15]['utama'] = 0;
+            $result['jabatan'][15]['madya'] = 0;
+            $result['jabatan'][15]['muda'] = 0;
+            $result['jabatan'][15]['pertama'] = 0;
+            $result['jabatan'][15]['penyelia'] = 0;
+            $result['jabatan'][15]['mahir'] = 0;
+            $result['jabatan'][15]['terampil'] = 0;
+            $result['jabatan'][15]['pemula'] = 0;
+
+            $result['jabatan'][16]['nama'] = 'I/b';
+            $result['jabatan'][16]['utama'] = 0;
+            $result['jabatan'][16]['madya'] = 0;
+            $result['jabatan'][16]['muda'] = 0;
+            $result['jabatan'][16]['pertama'] = 0;
+            $result['jabatan'][16]['penyelia'] = 0;
+            $result['jabatan'][16]['mahir'] = 0;
+            $result['jabatan'][16]['terampil'] = 0;
+            $result['jabatan'][16]['pemula'] = 0;
+
+            $result['jabatan'][17]['nama'] = 'I/a';
+            $result['jabatan'][17]['utama'] = 0;
+            $result['jabatan'][17]['madya'] = 0;
+            $result['jabatan'][17]['muda'] = 0;
+            $result['jabatan'][17]['pertama'] = 0;
+            $result['jabatan'][17]['penyelia'] = 0;
+            $result['jabatan'][17]['mahir'] = 0;
+            $result['jabatan'][17]['terampil'] = 0;
+            $result['jabatan'][17]['pemula'] = 0;
+
 
 
         $this->db->select('a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan,c.nama_jabatan,a.pangkat')
@@ -16553,7 +16673,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
         $result['jabatan'][1]['muda']++;
         } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
-        $result['jabatan'][1]['muda']++;
+        $result['jabatan'][1]['pertama']++;
         } 
         } else if($peg['pangkat'] == "44" ) {
         if(substr($peg['nama_jabatan'], -5) == "Utama"){
@@ -16563,8 +16683,16 @@ public function checkListIjazahCpns($id, $id_pegawai){
         } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
         $result['jabatan'][2]['muda']++;
         } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
-        $result['jabatan'][2]['muda']++;
-        } 
+        $result['jabatan'][2]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][2]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][2]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][2]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][2]['pemula']++;
+        }
         } else if($peg['pangkat'] == "43" ) {
         if(substr($peg['nama_jabatan'], -5) == "Utama"){
         $result['jabatan'][3]['utama']++;
@@ -16573,8 +16701,16 @@ public function checkListIjazahCpns($id, $id_pegawai){
         } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
         $result['jabatan'][3]['muda']++;
         } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
-        $result['jabatan'][3]['muda']++;
-        } 
+        $result['jabatan'][3]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][3]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][3]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][3]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][3]['pemula']++;
+        }
         } else if($peg['pangkat'] == "42" ) {
         if(substr($peg['nama_jabatan'], -5) == "Utama"){
         $result['jabatan'][4]['utama']++;
@@ -16583,8 +16719,16 @@ public function checkListIjazahCpns($id, $id_pegawai){
         } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
         $result['jabatan'][4]['muda']++;
         } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
-        $result['jabatan'][4]['muda']++;
-        } 
+        $result['jabatan'][4]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][4]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][4]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][4]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][4]['pemula']++;
+        }
         } else if($peg['pangkat'] == "41" ) {
         if(substr($peg['nama_jabatan'], -5) == "Utama"){
         $result['jabatan'][5]['utama']++;
@@ -16593,9 +16737,233 @@ public function checkListIjazahCpns($id, $id_pegawai){
         } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
         $result['jabatan'][5]['muda']++;
         } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
-        $result['jabatan'][5]['muda']++;
+        $result['jabatan'][5]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][5]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][5]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][5]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][5]['pemula']++;
+        }
+        } else if($peg['pangkat'] == "34" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][6]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][6]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][6]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][6]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][6]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][6]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][6]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][6]['pemula']++;
+        }
+        } else if($peg['pangkat'] == "33" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][7]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][7]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][7]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][7]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][7]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][7]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][7]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][7]['pemula']++;
         } 
+        } else if($peg['pangkat'] == "32" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][8]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][8]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][8]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][8]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][8]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][8]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][8]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][8]['pemula']++;
         } 
+        } else if($peg['pangkat'] == "31" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][9]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][9]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][9]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][9]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][9]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][9]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][9]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][9]['pemula']++;
+        } 
+        } else if($peg['pangkat'] == "24" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][10]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][10]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][10]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][10]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][10]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][10]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][10]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][10]['pemula']++;
+        } 
+        } else if($peg['pangkat'] == "23" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][11]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][11]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][11]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][11]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][11]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][11]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][11]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][11]['pemula']++;
+        } 
+        } else if($peg['pangkat'] == "22" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][12]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][12]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][12]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][12]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][12]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][12]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][12]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][12]['pemula']++;
+        } 
+        } else if($peg['pangkat'] == "21" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][13]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][13]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][13]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][13]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][13]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][13]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][13]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][13]['pemula']++;
+        } 
+        } else if($peg['pangkat'] == "14" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][14]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][14]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][14]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][14]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][14]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][14]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][14]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][14]['pemula']++;
+        } 
+        } else if($peg['pangkat'] == "13" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][15]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][15]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][15]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][15]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][15]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][15]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][15]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][15]['pemula']++;
+        } 
+        } else if($peg['pangkat'] == "12" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][16]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][16]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][16]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][16]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][16]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][16]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][16]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][16]['pemula']++;
+        } 
+        } else if($peg['pangkat'] == "11" ) {
+        if(substr($peg['nama_jabatan'], -5) == "Utama"){
+        $result['jabatan'][17]['utama']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Madya") {
+        $result['jabatan'][17]['madya']++;
+        } else if(substr($peg['nama_jabatan'], -4) == "Muda") {
+        $result['jabatan'][17]['muda']++;
+        } else if(substr($peg['nama_jabatan'], -7) == "Pertama") {
+        $result['jabatan'][17]['pertama']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Penyelia") {
+        $result['jabatan'][17]['penyelia']++;
+        } else if(substr($peg['nama_jabatan'], -5) == "Mahir") {
+        $result['jabatan'][17]['mahir']++;
+        } else if(substr($peg['nama_jabatan'], -8) == "Terampil") {
+        $result['jabatan'][17]['terampil']++;
+        } else if(substr($peg['nama_jabatan'], -6) == "Pemula") {
+        $result['jabatan'][17]['pemula']++;
+        } 
+        }
   
         }   
         

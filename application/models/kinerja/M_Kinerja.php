@@ -2825,7 +2825,9 @@
         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
         ->where('a.id',$this->input->post('id_user'))
         ->get()->row_array();
-        
+        if($datapegawai['id_unitkerjamaster'] == "8010000" || $datapegawai['id_unitkerjamaster'] == "8020000" || $datapegawai['id_unitkerjamaster'] == "8000000"){
+        $max = 4; 
+        }
 
         if($datapegawai['id_unitkerjamaster_kecamatan']){ // jika sekolah kecamatan
             $id_unitkerja = 'sekolah_'.$datapegawai['id_unitkerjamaster_kecamatan'];

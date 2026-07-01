@@ -4313,6 +4313,7 @@ class C_Kepegawaian extends CI_Controller
 
     public function openListUploadBangkomSkpdItemExcel(){
         $data['result'] = $this->kepegawaian->getListUploadBangkomSkpd();
+		
         $data['bulan'] = $this->input->post('bulan');
         $data['tahun'] = $this->input->post('tahun');
         $this->load->view('kepegawaian/laporan/V_skpdUploadBangkomItemExcel', $data);

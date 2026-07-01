@@ -686,7 +686,7 @@
 			 $jab_total_terampil += $rs['terampil'];
 			  $jab_total_pemula += $rs['pemula'];
 			  if(isset($rs['total_jft'])){
-              $jab_total_jft += $rs['total_jft'];
+              $jab_total_jft = $rs['total_jft'];
 			  }
 			  
          } } ?>

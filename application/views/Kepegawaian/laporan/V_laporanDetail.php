@@ -655,10 +655,14 @@
 			$jab_total_mahir = 0;
 			$jab_total_terampil = 0; 
 			$jab_total_pemula = 0;
+			$jab_total_jft = 0;
 
 			
             foreach($gol_fungsional['jabatan'] as $rs){ ?>
  									<?php if(isset($rs['nama'])){ ?>
+									<?php  if(isset($rs['total_jft'])){
+                       $jab_total_jft += $rs['total_jft'];
+			               } ?>
  									<tr>
  										<td class="text-left"><?=$no++;?></td>
  										<td class="text-left"><?=$rs['nama']?></td>
@@ -670,7 +674,7 @@
  										<td class="text-left"><?=$rs['mahir']?></td>
  										<td class="text-left"><?=$rs['terampil']?></td>
  										<td class="text-left"><?=$rs['pemula']?></td>
- 										<td class="text-left"><?=$rs['utama']+$rs['madya']+$rs['muda']+$rs['pertama']+$rs['penyelia']+$rs['mahir']+$rs['terampil']+$rs['pemula']?></td>
+ 										<td class="text-left"><?=$rs['utama']+$rs['madya']+$rs['muda']+$rs['pertama']+$rs['penyelia']+$rs['mahir']+$rs['terampil']+$rs['pemula']+$jab_total_jft?></td>
  									</tr>
  									<?php 
          $jab_total_utama += $rs['utama']; 
@@ -681,10 +685,14 @@
 		    $jab_total_mahir += $rs['mahir'];
 			 $jab_total_terampil += $rs['terampil'];
 			  $jab_total_pemula += $rs['pemula'];
+			  if(isset($rs['total_jft'])){
+              $jab_total_jft += $rs['total_jft'];
+			  }
+			  
          } } ?>
 		 <tr>
  										<td >
-											<span style="opacity: 0;">23</span>
+											<span style="opacity: 0;">30</span>
 										</td>
  										<td>Total</td>
  										<td><?=$jab_total_utama;?></td>
@@ -695,7 +703,7 @@
  										<td><?=$jab_total_mahir;?></td>
  										<td><?=$jab_total_terampil;?></td>
  										<td><?=$jab_total_pemula;?></td>
- 										<td><?=$jab_total_utama+$jab_total_madya+$jab_total_muda+$jab_total_pertama+$jab_total_penyelia+$jab_total_mahir+$jab_total_terampil+$jab_total_pemula;?></td>
+ 										<td><?=$jab_total_utama+$jab_total_madya+$jab_total_muda+$jab_total_pertama+$jab_total_penyelia+$jab_total_mahir+$jab_total_terampil+$jab_total_pemula+$jab_total_jft;?></td>
  									</tr>
  								</tbody>
  							</table>

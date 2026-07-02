@@ -141,7 +141,7 @@
                 data-id="<?=$rs['id_t_layanan'];?>"
                 data-file_pengantar="<?=$rs['file_pengantar'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
-                <i class="fa fa-edit"></i> Ubah Surat Pengantar 
+                <i class="fa fa-edit"></i> Ubah Surat Pengantar
                 </button>
                 </div>
                 <div class="btn-group mr-2" role="group" aria-label="Second group">
@@ -177,8 +177,19 @@
                 data-id="<?=$rs['id_t_layanan'];?>"
                 data-file_pengantar="<?=$rs['file_pengantar'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
-                <i class="fa fa-edit"></i> Ubah Surat Pengantar 
+                <i class="fa fa-edit"></i> Ubah Surat Pengantar
                 </button>
+            
+                <?php if($rs['id_m_layanan'] == 34) { ?>
+                <button
+                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
+                data-id="<?=$rs['id_t_layanan'];?>"
+                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahFormcuti">
+                <i class="fa fa-edit"></i> Ubah Form Cuti
+                </button>
+                <?php } ?>
+                
                 </div>
                 <div class="btn-group mr-2" role="group" aria-label="Second group">
                 <button onclick="ajukanKembali('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
@@ -248,6 +259,36 @@
     </div>
   </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalUbahFormcuti" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form method="post" id="form_ubah_form_cuti" enctype="multipart/form-data" >
+        <input type="hidden" name="id_pengajuan" id="id_pengajuan">
+        <input type="hidden" name="file_pengantar" id="file_pengantar">
+        <input type="hidden" name="id_m_layanan" id="ubah_form_id_m_layanan" >
+        <div class="form-group">
+        <label>Form Cuti</label>
+        <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar_ubah" name="file"   />
+        <span style="color:red;">* Maksimal Ukuran File : 1 MB</span><br>
+      </div>
+    
+      <button id="btn_submit_sp" class="btn btn-primary" style="float: right;">Simpan</button>
+    </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 <!-- Modal -->
@@ -512,6 +553,16 @@ function ajukanKembali(id){
                 
             });
 
+             $('#modalUbahFormcuti').on('show.bs.modal', function (event) {
+    
+                var div = $(event.relatedTarget) // Tombol dimana modal di tampilkan
+                var modal = $(this)
+                modal.find('#file_pengantar').attr("value",div.data('file_pengantar'));
+                modal.find('#id_pengajuan').attr("value",div.data('id'));
+                modal.find('#id_m_layanan').attr("value",div.data('id_m_layanan'));
+                
+            });
+
     $('#form_ubah_surat_pengantar').on('submit', function(e){  
      
      e.preventDefault();
@@ -653,6 +704,43 @@ function ajukanKembali(id){
        
      }); 
 
+
+
+     $('#form_ubah_form_cuti').on('submit', function(e){  
+     
+     e.preventDefault();
+     var formvalue = $('#form_ubah_form_cuti');
+     var form_data = new FormData(formvalue[0]);
+     var ins = document.getElementById('pdf_surat_keterangan_ubah').files.length;
+     var id_layanan = "<?=$m_layanan;?>"
+    //  document.getElementById('btn_submit_sp').disabled = true;
+    //  $('#btn_submit_sp').html('Loading.... <i class="fas fa-spinner fa-spin"></i>')
+   
+     $.ajax({  
+     url:"<?=base_url("kepegawaian/C_Kepegawaian/submitEditFormCuti")?>",
+     method:"POST",  
+     data:form_data,  
+     contentType: false,  
+     cache: false,  
+     processData:false,  
+     // dataType: "json",
+     success:function(res){ 
+         console.log(res)
+         var result = JSON.parse(res); 
+         console.log(result)
+         if(result.success == true){
+             successtoast(result.msg)
+                setTimeout(function() {$("#modalUbahFormcuti").trigger( "click" );}, 1000);
+                const myTimeout = setTimeout(loadListRiwayatCutiBesar, 2000);
+           } else {
+             errortoast(result.msg)
+             return false;
+           } 
+         
+     }  
+     });  
+       
+     }); 
 
 </script>
 <?php } else { ?>

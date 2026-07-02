@@ -14961,6 +14961,52 @@ public function getFileForVerifLayanan()
 
        }
 
+       public function submitEditFormCuti(){
+
+        $datapost = $this->input->post();
+        $id_m_layanan = $datapost['id_m_layanan'];
+
+        $target_dir	= './dokumen_layanan/cuti_besar';
+
+        $this->db->trans_begin();
+    
+            $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+            $filename = $random_number."form_cuti.pdf";
+            $config['upload_path']          = $target_dir;
+            $config['allowed_types']        = 'pdf';
+            $config['encrypt_name']			= FALSE;
+            $config['overwrite']			= TRUE;
+            $config['detect_mime']			= TRUE; 
+            $config['file_name']            = "$filename"; 
+
+		$this->load->library('upload', $config);
+		// coba upload file		
+		if (!$this->upload->do_upload('file')) {
+
+			$data['error']    = strip_tags($this->upload->display_errors());            
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' => $data['error']);
+            return $res;
+
+		} else {
+            $id = $datapost['id_pengajuan'];
+            $data["surat_pernyataan_tidak_hd"] = $filename;
+            $this->db->where('id', $id)
+                    ->update('t_layanan', $data);
+            $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+		}
+        
+
+        if($this->db->trans_status() == FALSE){
+            $this->db->trans_rollback();
+            $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+        } else {
+            $this->db->trans_commit();
+        }
+    
+        return $res;
+
+       }
+
        public function submitProsesKenaikanGajiBerkala(){
         $res['code'] = 0;
         $res['message'] = 'ok';

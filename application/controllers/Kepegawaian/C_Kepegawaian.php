@@ -3290,6 +3290,11 @@ class C_Kepegawaian extends CI_Controller
 			echo json_encode($this->kepegawaian->submitEditSuketLayanan());
 		}
 
+			public function submitEditFormCuti()
+		{ 
+			echo json_encode($this->kepegawaian->submitEditFormCuti());
+		}
+
 	public function prosesGajiBerkala($nip,$tahun){
 		
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiForDrafSK($nip);
@@ -4362,7 +4367,6 @@ class C_Kepegawaian extends CI_Controller
 
 	public function searchDetailAbsenPegawai($flag_edit = 0, $id_user = 0){
         $dt = $this->input->post();
-
         $data['flag_edit'] = $flag_edit;
         if($flag_edit == 1){
             $data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id_user, $dt['bulan'], $dt['tahun'], 0);

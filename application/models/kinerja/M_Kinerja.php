@@ -3816,7 +3816,7 @@
                 if(!isset($presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'])){
                     // dd($presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]);
                     // dd($result[$p['id_m_user']]);
-                    dd($p); // di sini dibuka dd nya
+                    // dd($p); // di sini dibuka dd nya
                 }
                 $result[$p['id_m_user']]['prestasi_kerja'] =
                 $presentaseTpp[$result[$p['id_m_user']]['kelas_jabatan']]['prestasi_kerja'];

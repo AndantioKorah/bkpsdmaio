@@ -1,3 +1,4 @@
+
 <?php if(isset($result['code']) && $result['code'] == 1){ ?>
     <div class="col-lg-12 text-center">
         <h4 style="color: red; font-style: italic;">Dokumen belum dapat didownload karena data Bangkom belum lengkap</h4>

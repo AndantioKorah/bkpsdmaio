@@ -2825,7 +2825,9 @@
         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
         ->where('a.id',$this->input->post('id_user'))
         ->get()->row_array();
-        
+        if($datapegawai['id_unitkerjamaster'] == "8010000" || $datapegawai['id_unitkerjamaster'] == "8020000" || $datapegawai['id_unitkerjamaster'] == "8000000"){
+        $max = 4; 
+        }
 
         if($datapegawai['id_unitkerjamaster_kecamatan']){ // jika sekolah kecamatan
             $id_unitkerja = 'sekolah_'.$datapegawai['id_unitkerjamaster_kecamatan'];
@@ -5065,7 +5067,7 @@ function getDataWfa()
     {        
         $wfa = 1; 
         $id_eselon = $this->general_library->getIdEselon();
-        $list_unitkerja_wfo = [4013000,3016000,3027000,3026000,3015000,3030000,4026000,3012000,3010000];
+        $list_unitkerja_wfo = [4013000,3016000,3027000,3026000,3015000,3030000,4026000,3012000,3010000,4027000];
         $list_unitkerjamaster_wfo = [6000000,7005000,8010000,8020000,8030000,5001000,5002000,5003000,5004000,5005000,5006000,5007000,5008000,5009000,5010001,5011001];
 
         if (in_array($this->general_library->getIdUnitKerjaPegawai(), $list_unitkerja_wfo)){

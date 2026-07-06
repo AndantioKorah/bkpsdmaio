@@ -56,7 +56,9 @@
          $skpd_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">64</td>
+ 										<td >
+											<span style="opacity: 0;">64</span>
+										</td>
  										<td>Total</td>
  										<td><?=$skpd_total_laki;?></td>
  										<td><?=$skpd_total_perempuan;?></td>
@@ -111,7 +113,9 @@
          $jab_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">23</td>
+ 										<td >
+											<span style="opacity: 0;">23</span>
+										</td>
  										<td>Total</td>
  										<td><?=$jab_total_laki;?></td>
  										<td><?=$jab_total_perempuan;?></td>
@@ -166,7 +170,9 @@
          $jab_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">23</td>
+ 										<td>
+											<span style="opacity: 0;">23</span>
+										</td>
  										<td>Total</td>
  										<td><?=$jab_total_laki;?></td>
  										<td><?=$jab_total_perempuan;?></td>
@@ -220,7 +226,9 @@
          $jab_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">23</td>
+ 										<td >
+											<span style="opacity: 0;">23</span>
+										</td>
  										<td>Total</td>
  										<td><?=$jab_total_laki;?></td>
  										<td><?=$jab_total_perempuan;?></td>
@@ -274,7 +282,9 @@
          $gol_total_perempuan += $rs['perempuan'];
          } } ?>
 		 <tr>
- 										<td style="color:#fff;">25</td>
+ 										<td >
+											<span style="opacity: 0;">25</span>
+										</td>
  										<td>Total</td>
  										<td><?=$gol_total_laki;?></td>
  										<td><?=$gol_total_perempuan;?></td>
@@ -340,7 +350,9 @@
  									</tr>
 				<?php } ?>
  									<tr>
- 										<td style="color:#fff;">12</td>
+ 										<td >
+											<span style="opacity: 0;">12</span>
+										</td>
  										<td>Total</td>
  										<td><?=$total_laki+$belum_terdata_laki;?></td>
  										<td><?=$total_perempuan+$belum_terdata_perempuan;?></td>
@@ -406,7 +418,9 @@
  				</tr>
 		<?php } ?>
  				<tr>
- 					<td style="color:#fff;">12</td>
+ 					<td >
+						<span style="opacity: 0;">12</span>
+					</td>
  					<td>Total</td>
  					<td><?=$total_laki_pns+$belum_terdata_laki_pns;?></td>
  					<td><?=$total_perempuan_pns+$belum_terdata_perempuan_pns;?></td>
@@ -471,7 +485,9 @@
  				</tr>
 				<?php } ?>
  				<tr>
- 					<td style="color:#fff;">12</td>
+ 					<td >
+						<span style="opacity: 0;">12</span>
+					</td>
  					<td>Total</td>
  					<td><?=$total_laki_pppk+$belum_terdata_laki_pppk;?></td>
  					<td><?=$total_perempuan_pppk+$belum_terdata_perempuan_pppk;?></td>
@@ -519,7 +535,9 @@
          $total_laki += $rs['laki']; 
          $total_perempuan += $rs['perempuan']; } ?>
  				<tr>
- 					<td style="color:#fff;">12</td>
+ 					<td >
+						<span style="opacity: 0;">12</span>
+					</td>
  					<td>Total</td>
  					<td><?=$total_laki;?></td>
  					<td><?=$total_perempuan;?></td>
@@ -536,11 +554,173 @@
  	</div>
  </div>
 <?php } ?>
+
+<?php if(isset($fungsional)) { ?>
+ <div class="row">
+ 	<div class="col-lg-12">
+ 		<div class="card card-default">
+ 			<div class="row p-3">
+ 				<div class="col-md-12 col-sm-12">
+ 					<h3>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Kategori Fungsional</h3>
+ 					<div class="row">
+ 						<div class="col-lg-12 table-responsive">
+ 						 	<table class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 								<thead>
+ 									<th class="text-left">No</th>
+ 									<th class="text-left">Jenjang</th>
+ 									<th class="text-left">Laki-laki</th>
+ 									<th class="text-left">Perempuan</th>
+ 									<th class="text-left">Total</th>
+ 								</thead>
+ 								<tbody>
+ 									<?php $no = 1;  
+            $jab_total_perempuan = 0; 
+            $jab_total_laki = 0; 
+             $jab_belum_terdata_laki =0;
+            foreach($fungsional['jabatan'] as $rs){ ?>
+ 									<?php if(isset($rs['nama'])){ ?>
+ 									 <tr onclick="window.open('<?=base_url('kepegawaian/C_Kepegawaian/laporanDetailListPegawai/'.$rs['nama'].'')?>', '_blank');" style="cursor: pointer;">
+ 										<td class="text-left"><?=$no++;?></td>
+ 										<td class="text-left"><?=$rs['nama']?></td>
+ 										<td class="text-left">
+											<?=$rs['laki']?>
+											   <!-- <?php foreach($rs['list_pegawai'] as $l){ ?>
+                                            <span class="badge badge-dark"><?php echo $l['nipbaru_ws'] ?></span>
+                                            <br>
+                                            <?php } ?> -->
+									    </td>
+ 										<td class="text-left"><?=$rs['perempuan']?></td>
+ 										<td class="text-left"><?=$rs['laki']+$rs['perempuan']?></td>
+ 									</tr>
+ 									<?php 
+         $jab_total_laki += $rs['laki']; 
+         $jab_total_perempuan += $rs['perempuan'];
+         } } ?>
+		 <tr>
+ 										<td >
+											<span style="opacity: 0; opacity: 0;">13</span>
+										</td>
+ 										<td>Total</td>
+ 										<td><?=$jab_total_laki;?></td>
+ 										<td><?=$jab_total_perempuan;?></td>
+ 										<td><?=$jab_total_laki+$jab_total_perempuan;?></td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
+
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+ <?php } ?>
+
+
+
+ <?php if(isset($gol_fungsional)) { ?>
+ <div class="row">
+ 	<div class="col-lg-12">
+ 		<div class="card card-default">
+ 			<div class="row p-3">
+ 				<div class="col-md-12 col-sm-12">
+ 					<h3>Jumlah Pegawai Negeri Sipil (ASN) Pemerintah Kota Manado Menurut Golongan dan Kategori Jabatan Fungsional</h3>
+ 					<div class="row">
+ 						<div class="col-lg-12 table-responsive">
+ 						 	<table class="table table-hover table-striped thead-dark datatable" id="pendidikanall" style="width:100%;">
+ 								<thead>
+ 									<th class="text-left">No</th>
+ 									<th class="text-left">Golongan</th>
+ 									<th class="text-left">Utama</th>
+ 									<th class="text-left">Madya</th>
+ 									<th class="text-left">Muda</th>
+ 									<th class="text-left">Pertama</th>
+									<th class="text-left">Penyelia</th>
+									<th class="text-left">Mahir</th>
+									<th class="text-left">Terampil</th>
+									<th class="text-left">Pemula</th>
+
+
+
+ 									<th class="text-left">Total</th>
+ 								</thead>
+ 								<tbody>
+ 									<?php $no = 1;  
+           $jab_total_utama = 0; 
+            $jab_total_madya = 0; 
+            $jab_total_muda = 0; 
+            $jab_total_pertama = 0;
+			$jab_total_penyelia = 0;
+			$jab_total_mahir = 0;
+			$jab_total_terampil = 0; 
+			$jab_total_pemula = 0;
+			$jab_total_jft = 0;
+
+			
+            foreach($gol_fungsional['jabatan'] as $rs){ ?>
+ 									<?php if(isset($rs['nama'])){ ?>
+									<?php  if(isset($rs['total_jft'])){
+                       $jab_total_jft += $rs['total_jft'];
+			               } ?>
+ 									<tr>
+ 										<td class="text-left"><?=$no++;?></td>
+ 										<td class="text-left"><?=$rs['nama']?></td>
+ 										<td class="text-left"><?=$rs['utama']?></td>
+ 										<td class="text-left"><?=$rs['madya']?></td>
+ 										<td class="text-left"><?=$rs['muda']?></td>
+ 										<td class="text-left"><?=$rs['pertama']?></td>
+ 										<td class="text-left"><?=$rs['penyelia']?></td>
+ 										<td class="text-left"><?=$rs['mahir']?></td>
+ 										<td class="text-left"><?=$rs['terampil']?></td>
+ 										<td class="text-left"><?=$rs['pemula']?></td>
+ 										<td class="text-left"><?=$rs['utama']+$rs['madya']+$rs['muda']+$rs['pertama']+$rs['penyelia']+$rs['mahir']+$rs['terampil']+$rs['pemula']+$jab_total_jft?></td>
+ 									</tr>
+ 									<?php 
+         $jab_total_utama += $rs['utama']; 
+         $jab_total_madya += $rs['madya'];
+		 $jab_total_muda += $rs['muda'];
+		  $jab_total_pertama += $rs['pertama'];
+		   $jab_total_penyelia += $rs['penyelia'];
+		    $jab_total_mahir += $rs['mahir'];
+			 $jab_total_terampil += $rs['terampil'];
+			  $jab_total_pemula += $rs['pemula'];
+			  if(isset($rs['total_jft'])){
+              $jab_total_jft = $rs['total_jft'];
+			  }
+			  
+         } } ?>
+		 <tr>
+ 										<td >
+											<span style="opacity: 0;">30</span>
+										</td>
+ 										<td>Total</td>
+ 										<td><?=$jab_total_utama;?></td>
+ 										<td><?=$jab_total_madya;?></td>
+										<td><?=$jab_total_muda;?></td>
+ 										<td><?=$jab_total_pertama;?></td>
+ 										<td><?=$jab_total_penyelia;?></td>
+ 										<td><?=$jab_total_mahir;?></td>
+ 										<td><?=$jab_total_terampil;?></td>
+ 										<td><?=$jab_total_pemula;?></td>
+ 										<td><?=$jab_total_utama+$jab_total_madya+$jab_total_muda+$jab_total_pertama+$jab_total_penyelia+$jab_total_mahir+$jab_total_terampil+$jab_total_pemula+$jab_total_jft;?></td>
+ 									</tr>
+ 								</tbody>
+ 							</table>
+ 						</div>
+ 					</div>
+
+ 				</div>
+ 			</div>
+ 		</div>
+ 	</div>
+ </div>
+ <?php } ?>
  
 <script>
 	    $(document).ready( function() {
 		$('.datatable').dataTable({
-			"pageLength": 25
+			"pageLength": 30
 		}) 
   		$('.select2-navy').select2()
         //   var table = $('.datatable').DataTable({

@@ -3290,6 +3290,11 @@ class C_Kepegawaian extends CI_Controller
 			echo json_encode($this->kepegawaian->submitEditSuketLayanan());
 		}
 
+			public function submitEditFormCuti()
+		{ 
+			echo json_encode($this->kepegawaian->submitEditFormCuti());
+		}
+
 	public function prosesGajiBerkala($nip,$tahun){
 		
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawaiForDrafSK($nip);
@@ -4047,6 +4052,8 @@ class C_Kepegawaian extends CI_Controller
 		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
 		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
+		// $data['fungsional'] = $this->kepegawaian->laporanJumlahPegawaiFungsionalMenurutKategori();
+
 		// dd($data['skpd']);
 
 		} else if($this->input->post('jenis_laporan') == "1") {
@@ -4069,6 +4076,12 @@ class C_Kepegawaian extends CI_Controller
 		$data['jabatan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPns();
 		} else if($this->input->post('jenis_laporan') == "10") {
 		$data['jabatan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPppk();
+		} else if($this->input->post('jenis_laporan') == "11") {
+		$data['fungsional'] = $this->kepegawaian->laporanJumlahPegawaiFungsionalMenurutKategori();
+		
+		} else if($this->input->post('jenis_laporan') == "12") {
+		$data['gol_fungsional'] = $this->kepegawaian->laporanJumlahPegawaiFungsionalMenurutGolKategori();
+		// dd($data);
 		}
 		$data['jenis_laporan'] = $this->input->post('jenis_laporan');
 
@@ -4090,27 +4103,41 @@ class C_Kepegawaian extends CI_Controller
 		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
 		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
-
+		$data['nama_file'] = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado";
 		} else if($this->input->post('jenis_laporan') == "1") {
+		$data['nama_file'] = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Pangkat/Golongan";
 		$data['pangkat'] = $this->kepegawaian->laporanJumlahPegawaiMenurutGolongan();
 		} else if($this->input->post('jenis_laporan') == "2") {
+		$data['nama_file'] = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Tingkat Pendidikan";
 		$data['pendidikan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikan();
 		} else if($this->input->post('jenis_laporan') == "3") {
+		$data['nama_file'] = "Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Tingkat Pendidikan";
 		$data['pendidikan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPns();
 		} else if($this->input->post('jenis_laporan') == "4") {
+		$data['nama_file'] = "Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Tingkat Pendidikan";
 		$data['pendidikan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutPendidikanPppk();
 		} else if($this->input->post('jenis_laporan') == "5") {
+		$data['nama_file'] = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado per Kecamatan";
 		$data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();
 		} else if($this->input->post('jenis_laporan') == "6") {
+		$data['nama_file'] = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Jabatan";
 		$data['jabatan'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatan();
 		} else if($this->input->post('jenis_laporan') == "7") {
+		$data['nama_file'] = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Unit Kerja";
 		$data['skpd'] = $this->kepegawaian->laporanJumlahPegawaiMenurutSkpd();
 		} else if($this->input->post('jenis_laporan') == "8") {
+		$data['nama_file'] = "Jumlah ASN Kota Manado Menurut Jenis Jabatan Per Unit Kerja";
 		$data['result'] = $this->kepegawaian->rincianAsn($this->general_library->getUnitKerjaPegawai());
 		} else if($this->input->post('jenis_laporan') == "9") {
+		$data['nama_file'] = "Jumlah Pegawai Negeri Sipil (PNS) Pemerintah Kota Manado Menurut Unit Kerja";
 		$data['jabatan_pns'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPns();
 		} else if($this->input->post('jenis_laporan') == "10") {
+		$data['nama_file'] = "Jumlah Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) Pemerintah Kota Manado Menurut Unit Kerja";
 		$data['jabatan_pppk'] = $this->kepegawaian->laporanJumlahPegawaiMenurutJabatanPppk();
+		} else if($this->input->post('jenis_laporan') == "11") {
+		$data['nama_file'] = "Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Kategori Fungsional";
+
+		$data['fungsional'] = $this->kepegawaian->laporanJumlahPegawaiFungsionalMenurutKategori();
 		}
 
 		if($this->input->post('jenis_laporan') == "8") {
@@ -4291,6 +4318,7 @@ class C_Kepegawaian extends CI_Controller
 
     public function openListUploadBangkomSkpdItemExcel(){
         $data['result'] = $this->kepegawaian->getListUploadBangkomSkpd();
+		
         $data['bulan'] = $this->input->post('bulan');
         $data['tahun'] = $this->input->post('tahun');
         $this->load->view('kepegawaian/laporan/V_skpdUploadBangkomItemExcel', $data);
@@ -4339,7 +4367,6 @@ class C_Kepegawaian extends CI_Controller
 
 	public function searchDetailAbsenPegawai($flag_edit = 0, $id_user = 0){
         $dt = $this->input->post();
-
         $data['flag_edit'] = $flag_edit;
         if($flag_edit == 1){
             $data['result'] = $this->general_library->getPaguTppPegawaiByIdPegawai($id_user, $dt['bulan'], $dt['tahun'], 0);
@@ -4443,6 +4470,13 @@ class C_Kepegawaian extends CI_Controller
 		public function insertUsulLayananSatyalancana($id_m_layanan)
 	{ 
 		echo json_encode( $this->kepegawaian->insertUsulLayananSatyalancana($id_m_layanan));
+	}
+
+
+	public function laporanDetailListPegawai($param){
+		$data['list_pegawai'] = $this->kepegawaian->laporanDetailListPegawai($param);
+		$data['nama_laporan'] = "List Pegawai Fungsional Kategori $param";
+		render('kepegawaian/laporan/V_laporanDetailListPegawai',null,null, $data);
 	}
 
 

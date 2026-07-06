@@ -1939,9 +1939,9 @@
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
         $tempListPegawai = $list_pegawai;
-        // if($this->general_library->isProgrammer()){
-        //     dd($flag_rekap_tpp);
-        // }
+        if($this->general_library->isProgrammer()){
+            // $flag_rekap_tpp = 0;
+        }
         if($flag_rekap_tpp == 1){
             $exceptBangkom = $this->db->select('*')
                                 ->from('t_except_bangkom')

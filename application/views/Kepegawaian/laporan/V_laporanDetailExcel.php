@@ -1,6 +1,6 @@
 <?php
 
-    $filename = 'DATA Jumlah ASN Kota Manado '.formatDateNamaBulan(date('Y-m-d')).'.xls';
+    $filename = $nama_file.' '.formatDateNamaBulan(date('Y-m-d')).'.xls';
     header("Content-type: application/vnd-ms-excel");
     header("Content-Disposition: attachment; filename=$filename");
 ?>
@@ -677,6 +677,75 @@
              $total_perempuan = 0; 
 			$total_laki = 0; 
          foreach($kecamatan['unitkerjamaster'] as $rs){ ?>
+        <tr>
+             <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$no++;?></span></p>
+            </td>
+            <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;text-align:center;'><span style='font-family:"Arial",sans-serif;'><?=$rs['nama']?></span></p>
+            </td>
+            <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$rs['laki']?></span></p>
+            </td>
+            <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$rs['perempuan']?></span></p>
+            </td>
+            <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$rs['laki']+$rs['perempuan']?></span></p>
+            </td>
+        </tr>
+    <?php 
+        $total_laki += $rs['laki']; 
+         $total_perempuan += $rs['perempuan'];
+         }  ?>
+     <tr>
+             <td style="color:#fff;width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'>100</span></p>
+            </td>
+            <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;text-align:center;'><span style='font-family:"Arial",sans-serif;'>Total</span></p>
+            </td>
+            <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$total_laki;?></span></p>
+            </td>
+            <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$total_perempuan;?></span></p>
+            </td>
+            <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$total_laki+$total_perempuan;?></span></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<?php } ?>
+
+
+<?php if(isset($fungsional)) { ?>
+<br>
+<span style='font-family:"Arial",sans-serif;'><b>Jumlah Aparatur Sipil Negara (ASN) Pemerintah Kota Manado Menurut Kategori Fungsional Per Tanggal <?=formatDateNamaBulan(date('Y-m-d'));?></b></span>
+<table style="border-collapse: collapse; border: none; width: 100%;border: 1pt solid black;" class="fr-table-selection-hover">
+    <tbody>
+        <tr style="">
+            <td style="width: 5%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'>No</span></p>
+            </td>
+            <td style="width: 57.5%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;text-align:center;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'>Jenjang</span></p>
+            </td>
+            <td style="width: 12.5%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'>Laki-laki</span></p>
+            </td>
+            <td style="width: 12.5%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'>Perempuan</span></p>
+            </td>
+            <td style="width: 12.5%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'>Total</span></p>
+            </td>
+        </tr>
+         <?php $no = 1;  
+             $total_perempuan = 0; 
+			$total_laki = 0; 
+         foreach($fungsional['jabatan'] as $rs){ ?>
         <tr>
              <td style="width: 7.0073%; border-top: none; border-left: none; border-bottom: 1pt solid black; border-right: 1pt solid black; padding: 0cm 5.4pt;">
                 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;'><span style='font-family:"Arial",sans-serif;'><?=$no++;?></span></p>

@@ -20,6 +20,56 @@
         margin-bottom: 10px;
     }
 
+    .sp_chat_id_chatkonsul{
+        font-size: .9rem;
+        color: #f9fbf9;
+        font-weight: bold;
+    }
+
+    .sp_chat_pesan_chatkonsul{
+        font-size: .9rem;
+        color: #272727;
+        font-weight: 900;
+        float: left;
+        text-align: left;
+    }
+
+    .sp_jam_pesan_chatkonsul{
+        font-size: .75rem;
+        color: #767676;
+        font-weight: 500;
+        padding: 0;
+        /* float: right; */
+    }
+
+    .sp_jam_pesan_chatkonsul_left{
+        float: right;
+    }
+
+    .sp_jam_pesan_chatkonsul_right{
+        float: right;
+    }
+
+    .div_chat{
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 240px;
+        -webkit-box-shadow: 3px 3px 6px 1px rgba(82,82,82,0.46); 
+        box-shadow: 3px 3px 6px 1px rgba(82,82,82,0.46);
+        /* position: absolute;
+        bottom: 10px; */
+    }
+
+    .div_chat_left{
+        background-color: #99efe8;
+        float: left;
+    }
+
+    .div_chat_right{
+        background-color: #e6e6e6;
+        float: right;
+    }
+
 </style>
 <script>
     
@@ -88,8 +138,7 @@
                         $spJam = "sp_jam_pesan_chatkonsul_right"; 
                     }
                     
-                    if(($this->general_library->isHakAkses('admin_live_chat_konsultasi')
-                        || $this->general_library->isHakAkses('monitoring_okta') 
+                    if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                         || $this->general_library->isProgrammer()
                         || $this->general_library->getId() == $result['chat']['id_m_user_assigned'])){
                         if($rd['is_sender_admin'] == 1){ 
@@ -106,8 +155,7 @@
                 ?>
                 <?php
                     if(($result['chat']['id_m_user_assigned'] != null &&
-                    ($this->general_library->isHakAkses('admin_live_chat_konsultasi')
-                    || $this->general_library->isHakAkses('monitoring_okta') 
+                    ($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
                     || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $flagSenderChanged == 1)
                     && $rd['is_sender_admin'] == 1){

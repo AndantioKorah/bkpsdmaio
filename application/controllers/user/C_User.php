@@ -783,4 +783,28 @@ class C_User extends CI_Controller
         // dd($data);
     }
 
+    public function monitoringOkta(){
+        $data['skpd'] = $this->general->getAll('db_pegawai.unitkerja', 0);
+        $data['jenis_layanan'] = $this->user->loadLayananKonsultasi();
+        render('user/V_MonitoringOkta', '', '', $data);
+    }
+
+    public function loadRiwayatKonsultasiMonitoringOkta($id_konsul_aktif = 0){
+        $data['result'] = $this->user->searchRiwayatKonsul();
+        $data['id_konsul_aktif'] = $id_konsul_aktif;
+        $this->load->view('user/V_MonitoringOktaRiwayatKonsultasi', $data);
+    }
+
+    public function searchRiwayatKonsulMonitoring(){
+        $data['result'] = $this->user->searchRiwayatKonsul();
+        $data['flag_search'] = 1;
+        $this->load->view('user/V_MonitoringOktaRiwayatKonsultasi', $data);
+        // dd($data);
+    }
+
+    public function openDetailKonsultasiMonitoring($id){
+        $data['result'] = $this->user->reloadChatContainer($id);
+        $this->load->view('user/V_MonitoringOktaLiveChat', $data);
+    }
+
 }

@@ -874,6 +874,8 @@
                     $data_rekap['rekap'] = $rekap;
                     $data_rekap['hukdis'] = $hukdis;
                     $data_rekap['kepalabkpsdm'] = $pegawai['kepalaskpd'];
+                    $data_rekap['rekap']['jhk'] = $rs['rekap']['jhk'];
+
                     if($pegawai['flag_puskesmas'] == 1){
                         $data_rekap['kepalabkpsdm'] = $pegawai['kapus'];
                     } else if($pegawai['flag_rs'] == 1){

@@ -49,9 +49,10 @@
     <div class="card-body p-0" style="
         -webkit-box-shadow: 0px 0px 7px 2px rgba(0,0,0,0.41); 
         box-shadow: 0px 0px 7px 2px rgba(0,0,0,0.41);
+        border-radius: 10px;
     ">
         <div class="row">
-            <div class="col-lg-3" id="list_riwayat_konsul_monitoring"
+            <div class="col-lg-3 col-md-3 col-sm-3" id="list_riwayat_konsul_monitoring"
                 style="
                     height: 75vh;
                     overflow-y: auto;
@@ -59,11 +60,12 @@
                 "
             >
             </div>
-            <div class="col-lg-9 pl-0">
+            <div class="col-lg-9 col-md-9 col-sm-9 pl-0">
                 <div class="w-100" style="
                     background-image: url('<?=base_url('assets/img/bg-live-chat.png')?>');
                     background-size: 10vw;
                     width: 100%;
+                    border-radius: 10px;
                 ">
                     <div class="w-100"
                         style="
@@ -76,7 +78,6 @@
                         "
                     >
                         <div class="row div_monitoring_konsultasi_detail">
-
                         </div>
                     </div>
                 </div>

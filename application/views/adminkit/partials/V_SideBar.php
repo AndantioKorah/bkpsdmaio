@@ -346,6 +346,7 @@
 	<?php } ?>
 	<?php if($this->general_library->isProgrammer() ||
 	$this->general_library->isHakAkses('admin_siladen') ||
+	$this->general_library->isHakAkses('monitoring_okta') ||
 	$this->general_library->getBidangUser() == ID_BIDANG_PEKIN
 	){ ?>
 		<a title="Admin SILADEN" data-bs-target="#adminsiladen" data-bs-toggle="collapse" class="sidebar-link">
@@ -386,6 +387,13 @@
 					</a>
 				</li>
 			<?php } ?>
+			<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('monitoring_okta')){ ?>
+				<li class="sidebar-item">
+					<a class="sidebar-link sidebar-link-child" href="<?=base_url('admin/monitoring/okta');?>">
+						<i class="align-middle me-2 far fa-circle"></i>Monitoring OKTA
+					</a>
+				</li>
+			<?php }?>
 		</ul>
 	<?php } ?>
 

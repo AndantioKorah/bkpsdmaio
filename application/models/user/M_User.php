@@ -4371,7 +4371,9 @@
                         ->order_by('b.created_date', 'desc')
                         ->group_by('a.id');
                         
-            if(!$this->general_library->isHakAkses('admin_live_chat_konsultasi')){
+            if(!$this->general_library->isHakAkses('admin_live_chat_konsultasi') &&
+            !$this->general_library->isHakAkses('monitoring_okta') &&
+            !$this->general_library->isProgrammer()){
                 $this->db->where("(a.id_m_user = ".$this->general_library->getId()." OR id_m_user_assigned = ".$this->general_library->getId().")");
             } else {
                 $this->db->order_by('a.flag_read_admin', 'asc');
@@ -4424,50 +4426,50 @@
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
 
-            if($chat){
-                // disini
-                if((!$this->general_library->isHakAkses('admin_live_chat_konsultasi') 
-                && !$this->general_library->isProgrammer()
-                && $this->general_library->getId() != $chat['id_m_user_assigned']
-                ) && $chat['flag_read_pegawai'] == 0){
-                    // jika pegawai yang buka chat, ubah flag_read_pegawai jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
-                    $this->db->where('id', $chat['id'])
-                        ->update('t_live_chat', [
-                            'flag_read_pegawai' => 1,
-                        ]);
-
-                    $this->db->where('id_t_live_chat', $chat['id'])
-                            ->where('read_date', null)
-                            ->where('id_m_user_sender !=', $this->general_library->getId())
-                            ->update('t_live_chat_detail',[
-                                'read_date' => date('Y-m-d H:i:s'),
-                                'updated_by' => $this->general_library->getId()
+            if(!$this->general_library->isHakAkses('monitoring_okta')){
+                if($chat){
+                    // disini
+                    if((!$this->general_library->isHakAkses('admin_live_chat_konsultasi') 
+                        && !$this->general_library->isProgrammer()
+                        && $this->general_library->getId() != $chat['id_m_user_assigned']
+                    ) && $chat['flag_read_pegawai'] == 0){
+                        // jika pegawai yang buka chat, ubah flag_read_pegawai jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
+                        $this->db->where('id', $chat['id'])
+                            ->update('t_live_chat', [
+                                'flag_read_pegawai' => 1,
                             ]);
 
-                } else if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
-                || $this->general_library->isProgrammer()
-                || $this->general_library->getId() == $chat['id_m_user_assigned']
-                )
-                && $chat['flag_read_admin'] == 0){
-                    // jika admin yang buka chat, ubah flag_read_admin jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
-                    $update['flag_read_admin'] = 1;
-                    if($this->general_library->getId() == $chat['id_m_user_assigned']){
-                        $update['flag_read_admin_only'] = 1;
+                        $this->db->where('id_t_live_chat', $chat['id'])
+                                ->where('read_date', null)
+                                ->where('id_m_user_sender !=', $this->general_library->getId())
+                                ->update('t_live_chat_detail',[
+                                    'read_date' => date('Y-m-d H:i:s'),
+                                    'updated_by' => $this->general_library->getId()
+                                ]);
+
+                    } else if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
+                        || $this->general_library->isProgrammer()
+                        || $this->general_library->getId() == $chat['id_m_user_assigned']
+                        ) && $chat['flag_read_admin'] == 0){
+                        // jika admin yang buka chat, ubah flag_read_admin jadi 1, dan input read_date di detail untuk menandakan chat sudah dibaca 
+                        $update['flag_read_admin'] = 1;
+                        if($this->general_library->getId() == $chat['id_m_user_assigned']){
+                            $update['flag_read_admin_only'] = 1;
+                        }
+                        $this->db->where('id', $chat['id'])
+                            ->update('t_live_chat', $update);
+
+                        $this->db->where('id_t_live_chat', $chat['id'])
+                                ->where('read_date', null)
+                                ->where('id_m_user_sender', $chat['id_m_user'])
+                                ->update('t_live_chat_detail',[
+                                    'read_date' => date('Y-m-d H:i:s'),
+                                    'updated_by' => $this->general_library->getId(),
+                                    'admin_read_by' => $this->general_library->getId()
+                                ]);
                     }
-                    $this->db->where('id', $chat['id'])
-                        ->update('t_live_chat', $update);
-
-                    $this->db->where('id_t_live_chat', $chat['id'])
-                            ->where('read_date', null)
-                            ->where('id_m_user_sender', $chat['id_m_user'])
-                            ->update('t_live_chat_detail',[
-                                'read_date' => date('Y-m-d H:i:s'),
-                                'updated_by' => $this->general_library->getId(),
-                                'admin_read_by' => $this->general_library->getId()
-                            ]);
                 }
             }
-
             return [
                 'chat' => $chat,
             ];
@@ -4565,6 +4567,7 @@
                 }
             }
 
+            $data['id_m_user_sender'] = $this->general_library->getId();
             $data['pesan'] = trim($data['pesan']);
             $this->db->insert('t_live_chat_detail', $data);
             $last_id = $this->db->insert_id();
@@ -4761,6 +4764,8 @@
                     'id_t_live_chat' => $id_t_live_chat,
                     'pesan' => 'Admin telah mengganti Jenis Layanan Konsul menjadi '.$mKonsul['nama_layanan'],
                     'is_sistem' => 1,
+                    'created_by' => $this->general_library->getId(),
+                    'id_m_user_sender' => $this->general_library->getId()
                 ]);
             }
 
@@ -4996,7 +5001,9 @@
             $this->db->insert('t_live_chat_detail', [
                 'id_t_live_chat' => $dataInput['id_t_live_chat'],
                 'pesan' => 'Admin telah memilih Operator Teknis Layanan untuk membantu kebutuhan Anda',
-                'is_sistem' => 1
+                'is_sistem' => 1,
+                'created_by' => $this->general_library->getId(),
+                'id_m_user_sender' => $this->general_library->getId()
             ]);
 
             $assignedOperator = $this->db->select('b.gelar1, b.gelar2, b.nama')
@@ -5010,7 +5017,9 @@
                 'id_t_live_chat' => $dataInput['id_t_live_chat'],
                 'pesan' => getNamaPegawaiFull($assignedOperator).' telah dipilih Admin sebagai Operator Layanan Teknis',
                 'is_sistem' => 1,
-                'flag_only_admin' => 1
+                'flag_only_admin' => 1,
+                'created_by' => $this->general_library->getId(),
+                'id_m_user_sender' => $this->general_library->getId()
             ]);
 
             $lastId = $this->db->insert_id();
@@ -5126,6 +5135,9 @@
 
         public function searchRiwayatKonsul(){
             $param = $this->input->post();
+            // if($param){
+            //     dd($param);
+            // }
             $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
                         d.nipbaru_ws, h.gelar1 as gelar1_assign, h.gelar2 as gelar2_assign, h.nama as nama_assign, h.nipbaru_ws as nip_assign, i.nama_layanan,
                         b.is_image, b.is_file')
@@ -5146,19 +5158,19 @@
                         ->order_by('b.created_date', 'desc')
                         ->group_by('a.id');
 
-            if($param['status'] != "semua"){
+            if(isset($param['status']) && $param['status'] != "semua"){
                 $this->db->where('a.flag_done', $param['status']);
             }
 
-            if($param['skpd'] != "0"){
+            if(isset($param['skpd']) && $param['skpd'] != "0"){
                 $this->db->where('e.id_unitkerja', $param['skpd']);
             }
 
-            if($param['jenis_layanan'] != "0"){
+            if(isset($param['jenis_layanan']) && $param['jenis_layanan'] != "0"){
                 $this->db->where('a.id_m_layanan_konsul', $param['jenis_layanan']);
             }
 
-            if($param['search'] != ""){
+            if(isset($param['search']) && $param['search'] != ""){
                 $this->db->where("(
                     (d.nama LIKE '%".$param['search']."%') OR
                     (h.nama LIKE '%".$param['search']."%') OR

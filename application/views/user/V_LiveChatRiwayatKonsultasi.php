@@ -289,12 +289,12 @@
             // $('.profile_chat_'+id).on('mouseleave', function(){
             //     $('.profile_chat_'+id).hide()
             // })
-            $('#div_chat_'+id).on('mouseover', function() {
-                $('.div_profil_live_chat').hide()
-                $('.profile_chat_'+id).fadeIn(20)
-            }).on('mouseleave', function() {
-                $('.profile_chat_'+id).fadeOut(20)
-            });
+            // $('#div_chat_'+id).on('mouseover', function() {
+            //     $('.div_profil_live_chat').hide()
+            //     $('.profile_chat_'+id).fadeIn(20)
+            // }).on('mouseleave', function() {
+            //     $('.profile_chat_'+id).fadeOut(20)
+            // });
         }
     </script>
 <?php } else { ?>

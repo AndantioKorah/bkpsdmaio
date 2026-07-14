@@ -212,6 +212,7 @@ input:checked + .slider .off
                   <option value="3" >Usul BKAD</option>
                   <option value="4" >Diterima BKAD</option>
                   <option value="5" >Ditolak BKAD</option>
+                  <option value="10" >Verifikasi Operator Simgaji Perangkat Daerah</option>
             <?php } else if($id_m_layanan == 21) { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>

@@ -165,10 +165,10 @@ class M_Kepegawaian extends CI_Model
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'penghargaan'){
-                return $this->db->select('a.*,b.*, c.nm_pemberipenghargaan, a.id as id_dokumen, a.status as status_dokumen')
+                return $this->db->select('a.*,b.* , a.id as id_dokumen, a.status as status_dokumen')
                                 ->from('db_pegawai.pegpenghargaan a')
                                 ->join('db_pegawai.pegawai b', 'a.id_pegawai = b.id_peg')
-                                ->join('db_pegawai.pemberipenghargaan c', 'a.pemberi = c.id')
+                                // ->join('db_pegawai.pemberipenghargaan c', 'a.pemberi = c.id')
                                 ->where('a.id', $id)
                                 ->get()->row_array();
             } else if($jd == 'sumpahjanji'){
@@ -1865,6 +1865,7 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['gambarsk']         = $filename;
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['updated_by']      = $this->general_library->getId();
+            $dataInsert['flag_lingkup_baru']      = 1;
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
                 $dataInsert['status']      = 2;
                 $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
@@ -3373,6 +3374,10 @@ public function submitVerifikasiDokumen(){
     }
     if(trim($datapost["jenis_dokumen"]) == "skp"){
         $data["predikat"] = $datapost["edit_predikat"];
+    }
+
+    if(trim($datapost["jenis_dokumen"]) == "penghargaan"){
+        $data["lingkup_penghargaan"] = $datapost["edit_penghargaan_lingkup_verif"];
     }
 
     $this->db->where('id', $id)

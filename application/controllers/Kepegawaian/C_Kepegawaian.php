@@ -451,7 +451,7 @@ class C_Kepegawaian extends CI_Controller
 	public function openDetailDokumen($id, $jd){
 		$data['result'] = $this->kepegawaian->openDetailDokumen($id, $jd);
 		$data['param']['jenisdokumen'] = $this->session->userdata('list_dokumen_selected');
-		// dd($jd);
+		// dd($data['result']);
 		    if($jd == "jabatan"){
 			$data['path'] = 'arsipjabatan/'.$data['result']['gambarsk'];
             } else if($jd == "pangkat"){

@@ -22,6 +22,28 @@
 
     </div>
 </div> -->
+<style>
+    .sec_lbl_profile_top_monitoring_okta{
+        font-weight: bold;
+        color: grey;
+        font-size: .6rem;
+        font-style: italic;
+    }
+
+    .height-full{
+        height: 75vh;
+    }
+
+    .height-not-full{
+        height: 62vh;
+    }
+
+    #nama_profile_top_monitoring_okta:hover{
+        cursor: pointer;
+        color: green !important;
+        text-decoration: underline !important;
+    }
+</style>
 
 <div class="card card-default"
     style="border: 1px solid #efefef;
@@ -60,16 +82,71 @@
                 "
             >
             </div>
-            <div class="col-lg-9 col-md-9 col-sm-9 pl-0">
+            <div class="col-lg-9 col-md-9 col-sm-9 pl-0" style="height: 75vh;">
                 <div class="w-100" style="
                     background-image: url('<?=base_url('assets/img/bg-live-chat.png')?>');
                     background-size: 10vw;
                     width: 100%;
                     border-radius: 10px;
+                    position: relative;
                 ">
-                    <div class="w-100"
+                    <div class="w-100 align-items-center div_profile_live_chat_monitoring" style="
+                        background-color: #f1f3f1;
+                        border-top-right-radius: 10px;
+                        height: 13vh;
+                        padding: 10px;
+                        line-height: 10px;
+                        -webkit-box-shadow: 0px 5px 14px 0px rgba(0,0,0,0.87); 
+                        box-shadow: 0px 5px 14px 0px rgba(0,0,0,0.87);
+                        display: none;
+                    ">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td class="text-center" rowspan=5 style="width: 10%;">
+                                    <img style="
+                                        width: 70%;
+                                        border-radius: 50%;
+                                        aspect-ratio: 1;
+                                        object-fit: cover;
+                                    "
+                                        src="" id="foto_profile_top_monitoring_okta" />
+                                </td>
+                                <td rowspan=1 style="width: 90%;">
+                                    <span style="
+                                        font-size: .7rem;
+                                        font-weight: bold;
+                                        color: black;
+                                    " id="nama_profile_top_monitoring_okta"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan=1>
+                                    <span class="sec_lbl_profile_top_monitoring_okta" id="nip_profile_top_monitoring_okta"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan=1>
+                                    <span class="sec_lbl_profile_top_monitoring_okta" id="jabatan_profile_top_monitoring_okta"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan=1>
+                                    <span class="sec_lbl_profile_top_monitoring_okta" id="skpd_profile_top_monitoring_okta"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan=1>
+                                    <span class="sec_lbl_profile_top_monitoring_okta" style="
+                                        font-style: normal !important;
+                                        font-size: .6rem;
+                                    "
+                                        id="jenis_layanan_profile_top_monitoring_okta"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="w-100 wrapper_div_monitoring_konsultasi_detail height-full" 
                         style="
-                            height: 75vh;;
                             overflow-y: auto;
                             display: flex;
                             overflow-x: hidden;
@@ -112,6 +189,7 @@
 
     $(function(){
         loadRiwayatChatMonitoringOkta()
+        $('.wrapper_div_monitoring_konsultasi_detail').addClass('height-full')
     })
 
     function filterRiwayatKonsul(){

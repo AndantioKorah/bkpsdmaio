@@ -17,7 +17,7 @@
     }
 
     .margin-admin-bottom{
-        margin-bottom: 10px;
+        margin-bottom: 30px !important;
     }
 
 </style>
@@ -77,7 +77,11 @@
                 style="
                     <?=($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
-                    || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==1 ? "margin-top: 80px;" : ""?>
+                    || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==1 ? "" : ""
+                    ?>
+                    <?=
+                        $i == 1 ? "margin-top: 80px; margin-bottom: 10px;" : "";
+                    ?>
                 "
                 >
                 <?php
@@ -105,8 +109,7 @@
                     }
                 ?>
                 <?php
-                    if(($result['chat']['id_m_user_assigned'] != null &&
-                    ($this->general_library->isHakAkses('admin_live_chat_konsultasi')
+                    if((($this->general_library->isHakAkses('admin_live_chat_konsultasi')
                     || $this->general_library->isHakAkses('monitoring_okta') 
                     || $this->general_library->isProgrammer()
                     || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $flagSenderChanged == 1)

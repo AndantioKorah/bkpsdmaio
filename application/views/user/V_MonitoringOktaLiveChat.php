@@ -1,4 +1,3 @@
-<?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){ ?>
 <style>
     .ellipsis_this{
         display: -webkit-box; /* Required for older browser compatibility */
@@ -74,7 +73,6 @@
 <script>
     
 </script>
-<?php } ?>
 <?php if($result['detail']){ $i = 1; ?>
     <?php $flagSenderChanged = 0; $userSender = 0; 
         foreach($result['detail'] as $rd){
@@ -154,8 +152,7 @@
                     }
                 ?>
                 <?php
-                    if(($result['chat']['id_m_user_assigned'] != null &&
-                    ($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
+                    if((($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
                     || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $flagSenderChanged == 1)
                     && $rd['is_sender_admin'] == 1){
@@ -205,8 +202,42 @@
         <?php } ?>
     <?php $i++; } ?>
     <script>
+        $(function(){
+            $('.div_profile_live_chat_monitoring').hide()
+            $('.div_profile_live_chat_monitoring').removeClass('d-flex')
+            $('.wrapper_div_monitoring_konsultasi_detail').addClass('height-full')
+            $('.wrapper_div_monitoring_konsultasi_detail').removeClass('height-not-full')
+            <?php if($result['chat']){
+                $nama_pegawai = getNamaPegawaiFull($result['chat']);    
+            ?>
+                $('.div_profile_live_chat_monitoring').show()
+                $('.div_profile_live_chat_monitoring').addClass('d-flex')
+                $('.wrapper_div_monitoring_konsultasi_detail').removeClass('height-full')
+                $('.wrapper_div_monitoring_konsultasi_detail').addClass('height-not-full')
+                $('#id_chat_profile_top_monitoring_okta').text('<?=$result['chat']["chat_id"]?>')
+                $('#nama_profile_top_monitoring_okta').text('<?=$nama_pegawai?>')
+                $('#nama_profile_top_monitoring_okta').on('click', function(){
+                    window.open('<?=base_url('kepegawaian/profil-pegawai/'.$result['chat']['nipbaru_ws'])?>', "_blank")
+                })
+                $('#nip_profile_top_monitoring_okta').text('NIP. '+'<?=$result['chat']["nipbaru_ws"]?>')
+                $('#jabatan_profile_top_monitoring_okta').text('<?=$result['chat']["nama_jabatan"]?>')
+                $('#skpd_profile_top_monitoring_okta').text('<?=$result['chat']["nm_unitkerja"]?>')
+                $('#jenis_layanan_profile_top_monitoring_okta').text('<?=$result['chat']["nama_layanan"]?>')
+                $('#foto_profile_top_monitoring_okta').attr('src', '<?= base_url().'./assets/fotopeg/'.$result['chat']['fotopeg']?>')
+            <?php } ?>
+        })
+
         function openAttachment(url){
             window.open('<?=base_url()?>'+url, "_blank")
         } 
+    </script>
+<?php } else { ?>
+    <script>
+        $(function(){
+            $('.div_profile_live_chat_monitoring').hide()
+            $('.div_profile_live_chat_monitoring').removeClass('d-flex')
+            $('.wrapper_div_monitoring_konsultasi_detail').addClass('height-full')
+            $('.wrapper_div_monitoring_konsultasi_detail').removeClass('height-not-full')
+        })
     </script>
 <?php } ?>

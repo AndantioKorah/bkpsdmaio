@@ -4345,6 +4345,26 @@
             ]);
             $rs['id'] = $this->db->insert_id();
 
+            if($rs['code'] == 0){
+                $greet = "Selamat ".strtolower(greeting());
+                $jk = $this->general_library->getUserLoggedIn()['jk'] == "Laki-laki" ? "bapak" : "ibu";
+                $this->db->insert('t_live_chat_detail', [
+                    'id_t_live_chat' => $rs['id'],
+                    'is_sender_admin' => 1, 
+                    'pesan' => $greet." ".$jk." ".getNamaPegawaiFull($this->general_library->getUserLoggedIn()).", ada yang bisa kami bantu?",
+                    'id_m_user_sender' => 1,
+                    'created_by' => 1,
+                ]);
+
+                $last_detail_id = $this->db->insert_id();
+
+                $this->db->where('id', $rs['id'])
+                        ->update('t_live_chat', [
+                            'last_id_t_live_chat_detail' => $last_detail_id,
+                            'flag_read_pegawai' => 1
+                        ]);
+            }
+
             return $rs;
         }
 

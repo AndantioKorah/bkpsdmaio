@@ -1816,6 +1816,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
     function getDiklatPengawai($id,$jenis_pengisian,$eselonpegawai,$jabatanpegawai){
             
         $id_diklat = null;
+        
         if($jenis_pengisian == 3){
             if($eselonpegawai == "III B" || $eselonpegawai == "III A"){
                 $this->db->select('a.id')
@@ -1850,7 +1851,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                         }  
                     }
                 }
-            } else if($eselonpegawai == "II B"){
+            } else if($eselonpegawai == "II B" || $eselonpegawai == "II A"){
                 $this->db->select('a.id')
                 ->from('db_pegawai.pegdiklat a')
                 ->where('a.id_pegawai', $id)

@@ -5504,7 +5504,7 @@ public function submitEditJabatan(){
             $data["nosk"] = $datapost["edit_nosk"];
             $data["tglsk"] = $datapost["edit_tglsk"];
             $data["tahun_penghargaan"] = $datapost["edit_tahun_penghargaan"];
-            $data["pemberi"] = $datapost["edit_pemberi"];
+            $data["lingkup_penghargaan"] = $datapost["edit_lingkup_penghargaan"];
             $data["gambarsk"] = $filename;
             $this->db->where('id', $id)
                     ->update('db_pegawai.pegpenghargaan', $data);
@@ -5516,7 +5516,7 @@ public function submitEditJabatan(){
             $data["nosk"] = $datapost["edit_nosk"];
             $data["tglsk"] = $datapost["edit_tglsk"];
             $data["tahun_penghargaan"] = $datapost["edit_tahun_penghargaan"];
-            $data["pemberi"] = $datapost["edit_pemberi"];
+             $data["lingkup_penghargaan"] = $datapost["edit_lingkup_penghargaan"];
             $this->db->where('id', $id)
                     ->update('db_pegawai.pegpenghargaan', $data);
             $res = array('msg' => 'Data berhasil disimpan', 'success' => true);

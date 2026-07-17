@@ -4347,7 +4347,7 @@
 
             if($rs['code'] == 0){
                 $greet = "Selamat ".strtolower(greeting());
-                $jk = $this->general_library->getUserLoggedIn()['jk'] == "Laki-laki" ? "bapak" : "ibu";
+                $jk = $this->general_library->getUserLoggedIn()['jk'] == "Laki-Laki" ? "bapak" : "ibu";
                 $this->db->insert('t_live_chat_detail', [
                     'id_t_live_chat' => $rs['id'],
                     'is_sender_admin' => 1, 

@@ -4783,6 +4783,11 @@
     }
 
     public function rekapKehadiranPeriodik($tahun = 2025){
+        $date = date('H:i:s');
+        $explode = explode(";", $date);
+        if($explode[0] < 19){ // dibawah jam 7 malam, jangan jalankan rekap
+            return;
+        }
         // $listJenisDisiplin = null;
         // $jenisDisiplin = $this->db->select('*')
         //                         ->from('m_jenis_disiplin_kerja')
@@ -4807,7 +4812,7 @@
                                 ->where_not_in('a.id_unitkerja', [9000001]) // exclude tubel
                                 ->where_not_in('a.id_unitkerja', [7005010, 7005020]) // exclude tubel
                                 ->group_by('a.id_unitkerja')
-                                ->limit(3)
+                                ->limit(1)
                                 ->get()->result_array();
             if($unitkerja){
                 $this->general->logCron('cronRekapKehadiran');

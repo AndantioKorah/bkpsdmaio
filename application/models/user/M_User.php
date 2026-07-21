@@ -2582,7 +2582,7 @@
                     ->where('i.flag_active', 1)
                     ->where_not_in('c.id_unitkerja', [5, 9050030])
                     ->group_by('a.nipbaru_ws')
-                    ->order_by('c.eselon, a.namax');
+                    ->order_by('c.eselon, a.nama');
                     // ->order_by('c.eselon, a.nama')
                     // ->order_by('b.nm_unitkerja');
 
@@ -4347,7 +4347,7 @@
 
             if($rs['code'] == 0){
                 $greet = "Selamat ".strtolower(greeting());
-                $jk = $this->general_library->getUserLoggedIn()['jk'] == "Laki-laki" ? "bapak" : "ibu";
+                $jk = $this->general_library->getUserLoggedIn()['jk'] == "Laki-Laki" ? "bapak" : "ibu";
                 $this->db->insert('t_live_chat_detail', [
                     'id_t_live_chat' => $rs['id'],
                     'is_sender_admin' => 1, 

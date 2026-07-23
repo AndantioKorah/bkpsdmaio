@@ -1785,6 +1785,11 @@
             return $res;
         }
 
+        if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
+            $this->general_library->isProgrammer()){
+                return $res;
+        }
+
         // buka comment ini agar diknas tidak dihitung dengan guru2
         // if(in_array($param['id_unitkerja'], [3010000])){
         //     $this->db->select('a.gelar1, a.gelar2, a.nama, a.flag_bangkom_terpenuhi, b.nm_unitkerja, b.id_unitkerja, a.nipbaru_ws as nip')
@@ -4782,7 +4787,7 @@
         return $rs;
     }
 
-    public function rekapKehadiranPeriodik($tahun = 2025){
+    public function rekapKehadiranPeriodik($tahun = 2026){
         $date = date('H:i:s');
         $explode = explode(";", $date);
         if($explode[0] < 19){ // dibawah jam 7 malam, jangan jalankan rekap

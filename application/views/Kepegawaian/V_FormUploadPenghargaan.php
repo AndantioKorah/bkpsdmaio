@@ -116,7 +116,9 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     <option value="1">Penghargaan di lingkup Internasional</option>
     <option value="2">Penghargaan di lingkup Nasional</option>           
     <option value="3">Penghargaan di lingkup lintas Instansi </option>           
-    <option value="4">Penghargaan di lingkup Instansi</option>         
+    <option value="4">Penghargaan di lingkup Instansi</option> 
+    <option value="5">Satyalancana Karya Satya</option>         
+
     </select>
   </div>
 

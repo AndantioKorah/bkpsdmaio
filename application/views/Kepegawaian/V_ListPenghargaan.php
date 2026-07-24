@@ -33,6 +33,7 @@
                 else if($rs['lingkup_penghargaan'] == 2) echo "Penghargaan di lingkup Nasional";
                 else if($rs['lingkup_penghargaan'] == 3) echo "Penghargaan di lingkup lintas Instansi";
                 else if($rs['lingkup_penghargaan'] == 4) echo "Penghargaan di lingkup Instansi";
+                 else if($rs['lingkup_penghargaan'] == 5) echo "Satyalancana Karya Satya";
                 else echo "-";
                 ?>
               

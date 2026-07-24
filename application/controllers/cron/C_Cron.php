@@ -156,7 +156,7 @@ class C_Cron extends CI_Controller
         // $this->general->logCron('cronAsync');
         // $this->general->cronAsync();
 
-        // $this->rekap->rekapKehadiranPeriodik();
+        $this->rekap->rekapKehadiranPeriodik();
     }
 
     public function getOauthToken(){
@@ -323,7 +323,11 @@ class C_Cron extends CI_Controller
     }
 
     public function rekapKehadiranPeriodik($bulan = 0, $tahun = 0){
-        $this->rekap->rekapKehadiranPeriodik();
+        if($tahun == 0){
+            $tahun = date('Y');
+            $tahun = '2026';
+        }
+        $this->rekap->rekapKehadiranPeriodik($tahun);
     }
 
     public function funcTest($str = ""){

@@ -1288,7 +1288,7 @@
         }
         
         //coding ini untuk mengubah penandatangan menjadi hardcode
-        if($id_unitkerja == 3015000 || // capil, kasub sudah pensiun 
+        if( 
         $id_unitkerja == 3018000 || // pu, kasubag sudah pindah
         $id_unitkerja == 3020000 || //diskop, kasub sudah pensiun
         $id_unitkerja == 4012000 || //baperida, kasub masih kosong
@@ -1347,19 +1347,6 @@
                                     ->get()->row_array();
 
             // $result['kepalaskpd']['nama_jabatan'] = "Kepala Bagian Kerja Sama"; 
-        } else if($id_unitkerja == 1010200){ // kesra
-            $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
-                                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
-                                    ->from('db_pegawai.pegawai a')
-                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
-                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
-                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
-                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
-                                    ->where('a.nipbaru_ws', '197101032009021001')
-                                    ->where('id_m_status_pegawai', 1)
-                                    ->get()->row_array();
-
-            $result['kepalaskpd']['nama_jabatan'] = "Kepala Bagian Kerja Sama"; 
         } else if($result['flag_sekolah'] == 1){ // sekolah
             $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                             e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -1796,6 +1783,11 @@
         
         if(intval($param['bulan']) == 2 && $param['tahun'] == 2026){
             return $res;
+        }
+
+        if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
+            $this->general_library->isProgrammer()){
+                return $res;
         }
 
         // buka comment ini agar diknas tidak dihitung dengan guru2
@@ -4795,7 +4787,12 @@
         return $rs;
     }
 
-    public function rekapKehadiranPeriodik($tahun = 2025){
+    public function rekapKehadiranPeriodik($tahun = 2026){
+        $date = date('H:i:s');
+        $explode = explode(";", $date);
+        if($explode[0] < 19){ // dibawah jam 7 malam, jangan jalankan rekap
+            return;
+        }
         // $listJenisDisiplin = null;
         // $jenisDisiplin = $this->db->select('*')
         //                         ->from('m_jenis_disiplin_kerja')
@@ -4820,7 +4817,7 @@
                                 ->where_not_in('a.id_unitkerja', [9000001]) // exclude tubel
                                 ->where_not_in('a.id_unitkerja', [7005010, 7005020]) // exclude tubel
                                 ->group_by('a.id_unitkerja')
-                                ->limit(3)
+                                ->limit(1)
                                 ->get()->result_array();
             if($unitkerja){
                 $this->general->logCron('cronRekapKehadiran');

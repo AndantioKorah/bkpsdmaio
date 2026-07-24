@@ -220,6 +220,7 @@
               $("#edit_nama_jabatan_verif").val(this.value);
           });
 
+          
           </script>
           <tr>
             <td class="td-lab-dd">Eselon</td>
@@ -396,9 +397,26 @@
             <td class="td-val-dd"><?=$result['tahun_penghargaan']?></td>
           </tr>
           <tr>
-            <td class="td-lab-dd">Asal Perolehan</td>
+            <td class="td-lab-dd">Lingkup Penghargaan</td>
             <td class="td-smc-dd">:</td>
-            <td class="td-val-dd"><?=$result['nm_pemberipenghargaan']?></td>
+            <td class="td-val-dd">
+
+              <select class="form-control select22"  data-dropdown-css-class="select2-navy" name="penghargaan_lingkup_verif" id="penghargaan_lingkup_verif" <?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) echo "Required"; else echo ""; ?>>
+                   <option selected disabled value="">Pilih Item</option>
+                  <option <?php if($result['lingkup_penghargaan'] == 1) echo "selected"; else echo "";?> value="1">Penghargaan di lingkup Internasional</option>
+                  <option <?php if($result['lingkup_penghargaan'] == 2) echo "selected"; else echo "";?> value="2">Penghargaan di lingkup Nasional</option>           
+                  <option <?php if($result['lingkup_penghargaan'] == 3) echo "selected"; else echo "";?> value="3">Penghargaan di lingkup lintas Instansi </option>           
+                  <option <?php if($result['lingkup_penghargaan'] == 4) echo "selected"; else echo "";?> value="4">Penghargaan di lingkup Instansi</option> 
+                  <option <?php if($result['lingkup_penghargaan'] == 5) echo "selected"; else echo "";?> value="5">Satyalancana Karya Satya</option> 
+                  </select>
+
+              <!-- <?php 
+              if($result['lingkup_penghargaan'] == 1) echo "Penghargaan di lingkup Internasional"; 
+              else if($result['lingkup_penghargaan'] == 2) echo "Penghargaan di lingkup Nasional";
+              else if($result['lingkup_penghargaan'] == 3) echo "Penghargaan di lingkup lintas Instansi";
+              else if($result['lingkup_penghargaan'] == 4) echo "Penghargaan di lingkup Instansi";
+              else if($result['lingkup_penghargaan'] == 5) echo "Satyalancana Karya Satya";
+              ?></td> -->
           </tr>
       
         </table>
@@ -882,6 +900,7 @@
   <input type="hidden" name="edit_tmt_jabatan_verif" id="edit_tmt_jabatan_verif" value="<?php if(isset($result['tmt_jabatan'])) echo $result['tmt_jabatan']; else echo "";?>">
   <input type="hidden" name="edit_predikat" id="edit_predikat" value="<?php if(isset($result['predikat'])) echo $result['predikat']; else echo "";?>">
   <input type="hidden" name="edit_nama_jabatan_verif" id="edit_nama_jabatan_verif" value="<?php if(isset($result['id_jabatanpeg'])) echo ''.$result['id_jabatanpeg'].','.$result['nama_jabatan'].''; else echo "";?>">
+  <input type="hidden" name="edit_penghargaan_lingkup_verif" id="edit_penghargaan_lingkup_verif" value="<?php if(isset($result['lingkup_penghargaan'])) echo ''.$result['lingkup_penghargaan'].''; else echo "";?>">
   
   <div class="form-group" style="display:none" id="field_ket">
     <label for="exampleFormControlTextarea1">Keterangan</label>
@@ -942,7 +961,12 @@
      allowClear: true,
  });
 
+   
     })
+
+    $('#penghargaan_lingkup_verif').on('change', function() {
+       $("#edit_penghargaan_lingkup_verif").val(this.value);
+          });
 
      function getDokumenWs(){
     $('.view_file_ws').hide()
@@ -1015,6 +1039,9 @@
 
       var jabatan = $("#jabatan_nama_verif").val()
       $("#edit_nama_jabatan_verif").val(jabatan);
+
+      var lp = $("#penghargaan_lingkup_verif").val()
+      $("#edit_penghargaan_lingkup_verif").val(lp);
 
       
     

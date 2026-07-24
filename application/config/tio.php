@@ -136,6 +136,7 @@ $route['admin/monitoring/cron-wa'] = 'admin/C_Admin/monitoringCronWa';
 $route['admin/monitoring/inbox-whatsapp'] = 'admin/C_Admin/monitoringInboxWa';
 $route['admin/monitoring/cron-ds'] = 'admin/C_Admin/monitoringDs';
 $route['admin/monitoring/event/absen'] = 'dashboard/C_Dashboard/dashboardWalikota';
+$route['admin/monitoring/okta'] = 'user/C_User/monitoringOkta';
 
 //internal API
 $route['api/tpp/get'] = 'api/C_ApiLayanan/getDataTpp';

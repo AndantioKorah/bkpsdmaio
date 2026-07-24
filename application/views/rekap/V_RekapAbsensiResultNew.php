@@ -283,8 +283,8 @@
                                 <th style="text-align: center; "><?=$ldk?></th>
                             <?php } } } ?>
             </tr> 
-                </thead>
-                <tbody>
+        </thead>
+            <tbody>
                 <?php
                     $data_foreach = $result;
                     if(isset($flag_rekap_aars)){
@@ -391,7 +391,6 @@
                                     <?php } } ?>
                                 </tr>
                             <?php } } ?>
-                
                 </tbody>
             </table>
         </div>
@@ -401,7 +400,7 @@
                     
                     <br>
                     <center>
-                    <!-- <span style="font-size: 12px;">printed by: </span><span style="font-size: 12px; font-weight: bold;"><?=$this->general_library->getNamaUser()?></span> -->
+                    <span style="font-size: 12px;">printed by: </span><span style="font-size: 12px; font-weight: bold;"><?=$this->general_library->getNamaUser()?></span>
                     <br>
                     <span style="font-size: 12px;">date: </span><span style="font-size: 12px; font-weight: bold;"><?=date('d/m/Y H:i:s')?></span>
                                     </center>

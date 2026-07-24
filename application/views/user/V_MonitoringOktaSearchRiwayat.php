@@ -8,7 +8,7 @@
     }
 </style>
 <div class="row" style="overflow-y: auto;">
-    <form id="form_search_live_chat_riwayat">
+    <form id="form_search_live_chat_riwayat_monitoring">
         <div class="col-lg-12">
             <span class="label_search_riwayat_live_chat">Status</span>
             <select class="form-control select2-navy" style="width: 100%"
@@ -47,7 +47,7 @@
             <hr>
             <div class="row">
                 <div class="col-lg-6 text-left">
-                    <button id="btn_reset_filter_riwayat_konsul" type="button" class="btn btn-sm btn-light"><i class="fa fa-reset"></i> Reset</button>
+                    <button id="btn_reset_filter_riwayat_konsul_monitoring" type="button" class="btn btn-sm btn-light"><i class="fa fa-reset"></i> Reset</button>
                 </div>
                 <div class="col-lg-6 text-right">
                     <button id="btn_submit_search_riwayat_live_chat" type="submit" class="btn btn-sm btn-navy"><i class="fa fa-search"></i> Search</button>
@@ -61,28 +61,30 @@
         $('.select2-navy').select2()
     })
 
-    $('#form_search_live_chat_riwayat').on('submit', function(e){
+    $('#form_search_live_chat_riwayat_monitoring').on('submit', function(e){
         e.preventDefault()
         $.ajax({
-            url: '<?=base_url("user/C_User/searchRiwayatKonsul")?>',
+            url: '<?=base_url("user/C_User/searchRiwayatKonsulMonitoring")?>',
             method: 'post',
             data: $(this).serialize(),
             success: function(data){
-                $('.icon_search_riwayat_konsul').addClass('icon_search_riwayat_konsul_actived')
-                hidePopupLiveChat()
-                $('.div_riwayat_chat').html('')
-                $('.div_riwayat_chat').append(divLoaderNavy)
+                $('#list_riwayat_konsul_monitoring').html('')
+                $('#list_riwayat_konsul_monitoring').append(divLoaderNavy)
                 $('#loader').hide()
-                $('.div_riwayat_chat').html(data)
+                $('#list_riwayat_konsul_monitoring').html(data)
+                $('#btn_filter_monitoring_okta').removeClass('btn-light')
+                $('#btn_filter_monitoring_okta').addClass('btn-warning')
+                $('#modal_filter').modal('hide')
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')
             }
         })
     })
 
-    $('#btn_reset_filter_riwayat_konsul').on('click', function(){
-        $('.icon_search_riwayat_konsul').removeClass('icon_search_riwayat_konsul_actived')
-        hidePopupLiveChat()
-        loadRiwayatChat()
+    $('#btn_reset_filter_riwayat_konsul_monitoring').on('click', function(){
+        loadRiwayatChatMonitoringOkta()
+        $('#btn_filter_monitoring_okta').addClass('btn-light')
+        $('#btn_filter_monitoring_okta').removeClass('btn-warning')
+        $('#modal_filter').modal('hide')
     })
 </script>

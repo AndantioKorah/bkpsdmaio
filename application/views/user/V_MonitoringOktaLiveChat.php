@@ -1,4 +1,3 @@
-<?php if($this->general_library->isHakAkses('admin_live_chat_konsultasi')){ ?>
 <style>
     .ellipsis_this{
         display: -webkit-box; /* Required for older browser compatibility */
@@ -17,14 +16,63 @@
     }
 
     .margin-admin-bottom{
-        margin-bottom: 30px !important;
+        margin-bottom: 10px;
+    }
+
+    .sp_chat_id_chatkonsul{
+        font-size: .9rem;
+        color: #f9fbf9;
+        font-weight: bold;
+    }
+
+    .sp_chat_pesan_chatkonsul{
+        font-size: .9rem;
+        color: #272727;
+        font-weight: 900;
+        float: left;
+        text-align: left;
+    }
+
+    .sp_jam_pesan_chatkonsul{
+        font-size: .75rem;
+        color: #767676;
+        font-weight: 500;
+        padding: 0;
+        /* float: right; */
+    }
+
+    .sp_jam_pesan_chatkonsul_left{
+        float: right;
+    }
+
+    .sp_jam_pesan_chatkonsul_right{
+        float: right;
+    }
+
+    .div_chat{
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 240px;
+        -webkit-box-shadow: 3px 3px 6px 1px rgba(82,82,82,0.46); 
+        box-shadow: 3px 3px 6px 1px rgba(82,82,82,0.46);
+        /* position: absolute;
+        bottom: 10px; */
+    }
+
+    .div_chat_left{
+        background-color: #99efe8;
+        float: left;
+    }
+
+    .div_chat_right{
+        background-color: #e6e6e6;
+        float: right;
     }
 
 </style>
 <script>
     
 </script>
-<?php } ?>
 <?php if($result['detail']){ $i = 1; ?>
     <?php $flagSenderChanged = 0; $userSender = 0; 
         foreach($result['detail'] as $rd){
@@ -77,11 +125,7 @@
                 style="
                     <?=($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
-                    || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==1 ? "" : ""
-                    ?>
-                    <?=
-                        $i == 1 ? "margin-top: 80px; margin-bottom: 10px;" : "";
-                    ?>
+                    || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==1 ? "margin-top: 80px;" : ""?>
                 "
                 >
                 <?php
@@ -92,8 +136,7 @@
                         $spJam = "sp_jam_pesan_chatkonsul_right"; 
                     }
                     
-                    if(($this->general_library->isHakAkses('admin_live_chat_konsultasi')
-                        || $this->general_library->isHakAkses('monitoring_okta') 
+                    if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                         || $this->general_library->isProgrammer()
                         || $this->general_library->getId() == $result['chat']['id_m_user_assigned'])){
                         if($rd['is_sender_admin'] == 1){ 
@@ -109,8 +152,7 @@
                     }
                 ?>
                 <?php
-                    if((($this->general_library->isHakAkses('admin_live_chat_konsultasi')
-                    || $this->general_library->isHakAkses('monitoring_okta') 
+                    if((($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
                     || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $flagSenderChanged == 1)
                     && $rd['is_sender_admin'] == 1){
@@ -160,8 +202,42 @@
         <?php } ?>
     <?php $i++; } ?>
     <script>
+        $(function(){
+            $('.div_profile_live_chat_monitoring').hide()
+            $('.div_profile_live_chat_monitoring').removeClass('d-flex')
+            $('.wrapper_div_monitoring_konsultasi_detail').addClass('height-full')
+            $('.wrapper_div_monitoring_konsultasi_detail').removeClass('height-not-full')
+            <?php if($result['chat']){
+                $nama_pegawai = getNamaPegawaiFull($result['chat']);    
+            ?>
+                $('.div_profile_live_chat_monitoring').show()
+                $('.div_profile_live_chat_monitoring').addClass('d-flex')
+                $('.wrapper_div_monitoring_konsultasi_detail').removeClass('height-full')
+                $('.wrapper_div_monitoring_konsultasi_detail').addClass('height-not-full')
+                $('#id_chat_profile_top_monitoring_okta').text('<?=$result['chat']["chat_id"]?>')
+                $('#nama_profile_top_monitoring_okta').text('<?=$nama_pegawai?>')
+                $('#nama_profile_top_monitoring_okta').on('click', function(){
+                    window.open('<?=base_url('kepegawaian/profil-pegawai/'.$result['chat']['nipbaru_ws'])?>', "_blank")
+                })
+                $('#nip_profile_top_monitoring_okta').text('NIP. '+'<?=$result['chat']["nipbaru_ws"]?>')
+                $('#jabatan_profile_top_monitoring_okta').text('<?=$result['chat']["nama_jabatan"]?>')
+                $('#skpd_profile_top_monitoring_okta').text('<?=$result['chat']["nm_unitkerja"]?>')
+                $('#jenis_layanan_profile_top_monitoring_okta').text('<?=$result['chat']["nama_layanan"]?>')
+                $('#foto_profile_top_monitoring_okta').attr('src', '<?= base_url().'./assets/fotopeg/'.$result['chat']['fotopeg']?>')
+            <?php } ?>
+        })
+
         function openAttachment(url){
             window.open('<?=base_url()?>'+url, "_blank")
         } 
+    </script>
+<?php } else { ?>
+    <script>
+        $(function(){
+            $('.div_profile_live_chat_monitoring').hide()
+            $('.div_profile_live_chat_monitoring').removeClass('d-flex')
+            $('.wrapper_div_monitoring_konsultasi_detail').addClass('height-full')
+            $('.wrapper_div_monitoring_konsultasi_detail').removeClass('height-not-full')
+        })
     </script>
 <?php } ?>

@@ -34,13 +34,16 @@
   </div>
 
   <div class="form-group">
-    <label>Asal Perolehan</label>
-    <select class="form-control select2" data-dropdown-parent="#modal_edit_penghargaan" data-dropdown-css-class="select2-navy" name="edit_pemberi" id="edit_pemberi" required>
+    <label>Lingkup Penghargaan</label>
+    <select class="form-control select2" data-dropdown-parent="#modal_edit_penghargaan" data-dropdown-css-class="select2-navy" name="edit_lingkup_penghargaan" id="edit_lingkup_penghargaan" required>
                     <option value="" disabled selected>Pilih Item</option>
-                    <?php if($pemberi){ foreach($pemberi as $r){ ?>
-                        <option  <?php if($penghargaan[0]['pemberi'] == $r['id']) echo "selected"; else echo ""; ?> value="<?=$r['id']?>"><?=$r['nm_pemberipenghargaan']?></option>
-                    <?php } } ?>
-    </select>
+                      <option <?php if($penghargaan[0]['lingkup_penghargaan']  == 1) echo "selected"; else echo "";?> value="1">Penghargaan di lingkup Internasional</option>
+                  <option <?php if($penghargaan[0]['lingkup_penghargaan']  == 2) echo "selected"; else echo "";?> value="2">Penghargaan di lingkup Nasional</option>           
+                  <option <?php if($penghargaan[0]['lingkup_penghargaan']  == 3) echo "selected"; else echo "";?> value="3">Penghargaan di lingkup lintas Instansi </option>           
+                  <option <?php if($penghargaan[0]['lingkup_penghargaan']  == 4) echo "selected"; else echo "";?> value="4">Penghargaan di lingkup Instansi</option> 
+                  <option <?php if($penghargaan[0]['lingkup_penghargaan']  == 5) echo "selected"; else echo "";?> value="5">Satyalancana Karya Satya</option> 
+                  
+                   
   </div>
 
   <?php if(!$this->general_library->isProgrammer() AND !$this->general_library->isAdminAplikasi()){ ?>       

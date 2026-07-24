@@ -105,6 +105,19 @@ class General_library
     }
 
     public function isHakAkses($meta_name){
+        if($meta_name == "monitoring_okta"){
+            $listJabatanMonitoringOkta = [
+                '4018000JS01',
+                '4018000JS02',
+                '4018000JS06',
+                '4018000JS10',
+                '4018000JS14',
+                '4018000JS18'
+            ];
+            if(in_array($this->getIdJabatan(), $listJabatanMonitoringOkta)){
+                return true;
+            }
+        }
         if(count($this->hakAkses) > 0){
             foreach($this->hakAkses as $hk){
                 if($hk['meta_name'] == $meta_name){

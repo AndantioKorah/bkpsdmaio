@@ -1316,7 +1316,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             return $id_pendidikan;
         }
 
-        function getPenghargaan($id){
+        function getPenghargaanBU($id){
             $this->db->select('*')
                 ->from('db_pegawai.pegpenghargaan a')
                 ->where('a.id_pegawai', $id)
@@ -1358,11 +1358,12 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             return $id_penghargaan;
         }
 
-        function getPenghargaan2($id){
+        function getPenghargaan($id){
             $this->db->select('a.lingkup_penghargaan')
                 ->from('db_pegawai.pegpenghargaan a')
                 ->where('a.id_pegawai', $id)
                 ->where('a.status', 2)
+                ->where_not_in('a.id_m_satyalencana', [1,2,3])
                 ->where('a.flag_active', 1);
             $penghargaan =  $this->db->get()->result_array();
 
@@ -1815,6 +1816,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
     function getDiklatPengawai($id,$jenis_pengisian,$eselonpegawai,$jabatanpegawai){
             
         $id_diklat = null;
+        
         if($jenis_pengisian == 3){
             if($eselonpegawai == "III B" || $eselonpegawai == "III A"){
                 $this->db->select('a.id')
@@ -1849,7 +1851,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                         }  
                     }
                 }
-            } else if($eselonpegawai == "II B"){
+            } else if($eselonpegawai == "II B" || $eselonpegawai == "II A"){
                 $this->db->select('a.id')
                 ->from('db_pegawai.pegdiklat a')
                 ->where('a.id_pegawai', $id)
@@ -2442,6 +2444,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             
         }
 
+
         function getPengalamanTimPegawai($id){
             $this->db->select('*')
                 ->from('db_pegawai.pegtimkerja a')
@@ -2451,7 +2454,39 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
                 // ->where('a.lingkup_timkerja', 1)
                 // ->where('a.jabatan', 1);
             $timkerja = $this->db->get()->result_array();
+         
 
+            $id_tim_kerja = 83;
+            $qty1 = 0; // Jumlah tim kerja lingkup perangkat daerah
+            $qty2 = 0; // Jumlah tim kerja lingkup unit kerja
+            $ketuaTimUnitKerja = 0;
+            // Lingkup Pemerintah Daerah 
+            foreach ($timkerja as $tim) {
+               if($tim['lingkup_timkerja'] == 1 && $tim['jabatan'] == 1){ 
+                $id_tim_kerja = 79;
+               } else if($tim['lingkup_timkerja'] == 1 && $tim['jabatan'] == 2){      
+                $id_tim_kerja = 81;
+               } else if($tim['lingkup_timkerja'] == 2 && $tim['jabatan'] == 1){      
+                $id_tim_kerja = 80;
+               } else if($tim['lingkup_timkerja'] == 2 && $tim['jabatan'] == 2){      
+                $id_tim_kerja = 82;
+               }   
+            }
+           
+           
+
+            return $id_tim_kerja;
+        }
+
+        function getPengalamanTimPegawaiBU($id){
+            $this->db->select('*')
+                ->from('db_pegawai.pegtimkerja a')
+                ->where('a.id_pegawai', $id)
+                ->where('a.flag_active', 1)
+                ->where('a.status', 2);
+                // ->where('a.lingkup_timkerja', 1)
+                // ->where('a.jabatan', 1);
+            $timkerja = $this->db->get()->result_array();
          
 
             $id_tim_kerja = null;

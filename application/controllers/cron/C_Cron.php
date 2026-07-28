@@ -39,7 +39,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSendWa(){
-        $this->cronSyncBangkomPerData();
+        // $this->cronSyncBangkomPerData();
         // $this->general->logCron('cronSendWa');
         // $this->general->cronSendWa();
         // dd('asdd');
@@ -331,6 +331,7 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
+        $this->user->inputHardcodeNominatifCpns();
         dd('asd');
         // $this->general->editPdf();
         // dd(cekWaktuKerja(0));

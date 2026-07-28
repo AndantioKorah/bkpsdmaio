@@ -2742,7 +2742,8 @@
         }
 
         public function cronCheckBangkom($bulan = 0, $tahun = 0, $nip = "", $id_unitkerja = 0){
-            if($nip == ""){
+            // dd($id_unitkerja);
+            if($nip == "" && $id_unitkerja == 0){
                 $exists = $this->db->select('*')
                                 ->from('t_cek_bangkom')
                                 ->where('flag_active', 1)

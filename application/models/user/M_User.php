@@ -5201,5 +5201,41 @@
 
             return $this->db->get()->result_array();
         }
+
+        public function inputHardcodeNominatifCpns(){
+            $data = $this->db->select('a.skpd, c.id_jabatanpeg, a.nipbaru_ws')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                            ->join('db_pegawai.jabatan c', 'a.skpd = c.id_unitkerja')
+                            ->where("a.nipbaru_ws LIKE '%202505%'")
+                            ->where('c.nama_jabatan', 'Pelaksana')
+                            ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $exists = $this->db->select('*')
+                                    ->from('t_hardcode_nominatif')
+                                    ->where('nip', $d['nipbaru_ws'])
+                                    ->where('bulan', '7')
+                                    ->where('tahun', '2026')
+                                    ->where('flag_add', 1)
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+                    if($exists){
+                        echo "skip cause exists ".$d['nipbaru_ws']."\n<br>";
+                    } else {
+                        $this->db->insert('t_hardcode_nominatif', [
+                            'id_unitkerja' => $d['skpd'],
+                            'id_jabatan' => $d['id_jabatanpeg'],
+                            'bulan' => 7,
+                            'tahun' => 2026,
+                            'nip' => $d['nipbaru_ws'],
+                            'nama_jabatan' => "Pelaksana",
+                            'flag_add' => 1
+                        ]);
+                        echo "inserting ".$d['nipbaru_ws']."\n<br>";
+                    }
+                }
+            }
+        }
 	}
 ?>

@@ -1781,14 +1781,11 @@
             'id_unitkerja' => $param['id_unitkerja']
         ];
         
-        if(intval($param['bulan']) == 2 && $param['tahun'] == 2026){
-            return $res;
-        }
-
-        if($this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
-            $this->general_library->isProgrammer()){
-                return $res;
-        }
+        // if((intval($param['bulan']) == 2 && $param['tahun'] == 2026) ||
+        //     ($this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
+        //         $this->general_library->isProgrammer())){
+        //     return $res;
+        // }
 
         // buka comment ini agar diknas tidak dihitung dengan guru2
         // if(in_array($param['id_unitkerja'], [3010000])){
@@ -1812,6 +1809,8 @@
             foreach($list_pegawai as $lp){
                 $pegawai[$lp['nip']] = $lp['nip'];
             }
+
+            $this->m_general->cronCheckBangkom($param['bulan'], $param['tahun'], "", $param['id_unitkerja']);
             // if($this->general_library->isProgrammer()){
             //     dd($param);
             // }
@@ -1853,6 +1852,16 @@
                     //jika masih ada data di $pegawai, maka itu adalah sisa yang belum ada di t_cek_bangkom dan belum upload sama sekali
                     // unset($pegawai[$cb['nip']]);
                 // }
+            } else {
+                if($bulan == '1' && $tahun == '2026'){
+                    return $res;
+                } else if($tahun < 2026){
+                    return $res;
+                } else {
+                    $res['code'] = 1;
+                    $res['message'] = "belum lengkap bangkom";
+                    $res['list_pegawai'] = $pegawai;
+                }
             }
             // foreach($list_pegawai as $lp){
             //     if($lp['flag_bangkom_terpenuhi'] == 0){

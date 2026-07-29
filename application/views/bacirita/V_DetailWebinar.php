@@ -407,8 +407,8 @@
     }
     
     $('#btn_generate_sertifikat').on('click', function(){
-        // $('#btn_generate_sertifikat').html('<i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...')
-        // $('#btn_generate_sertifikat').prop('disabled', true)
+        $('#btn_generate_sertifikat').html('<i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...')
+        $('#btn_generate_sertifikat').prop('disabled', true)
         $.ajax({
             url: '<?=base_url("bacirita/C_Bacirita/generateSertifikat/".$webinar['id_kegiatan'])?>',
             method: 'post',

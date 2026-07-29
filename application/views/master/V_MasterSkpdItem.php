@@ -1,3 +1,11 @@
+
+
+<?php
+    $nama_file = "Data Sekolah";
+    $filename = $nama_file.' '.formatDateNamaBulan(date('Y-m-d')).'.xls';
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=$filename");
+?>
 <style>
     .table_result, .table_result tr, .table_result td{
         border: 1px solid;
@@ -7,6 +15,7 @@
         cursor: pointer;
     }
 </style>
+
 
 <?php if($result){ ?>
     <?php if($ukmaster == '2000000'){ ?>

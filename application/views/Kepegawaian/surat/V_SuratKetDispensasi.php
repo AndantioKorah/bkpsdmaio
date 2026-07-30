@@ -96,51 +96,65 @@
 				$ns = $nomor_surat;
 			}
 		?>
-		<p class="judul" style="margin-top:5px;text-align: center;"><u>SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS</u><br></p>
-		<p style="margin-left:195px;">Nomor :  <?= $ns;?> </p>
+
+        <table style="width:100%;" border="0">
+            <tr>
+                <td></td>
+                <td></td>
+                <td style="text-align: right;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?></td>
+            </tr>
+            <tr>
+                <td>Nomor</td>
+                <td>:</td>
+                <td><?= $ns;?></td>
+            </tr>
+            <tr>
+                <td>Sifat</td>
+                <td>:</td>
+                <td>Biasa</td>
+            </tr>
+            <tr>
+                <td>Lampiran</td>
+                <td>:</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>Hal</td>
+                <td>:</td>
+                <td>Dispensasi</td>
+            </tr>
+           </table>
+           <table>
+            <tr>
+                <td>Yth.</td>
+                <td></td>
+                <td>
+                <?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
+				Kepala Dinas Pendidikan dan Kebudayaan<br>
+			<?php } else { ?>
+				Kepala <?= $profil_pegawai['nm_unitkerja'];?><br>
+			<?php } ?>
+                </td>
+            </tr>
+        </table>
 	
+        
 
-	<p>&nbsp;Yang bertanda-tangan dibawah ini :</p>
-	<table style="width:100%;" border="0">
-		<tr>
-			<td style="width:25%;">Nama</td>
-			<td style="width:5%;text-align: center;">:</td>
-			<td style="width:70%;"><?= $kaban['gelar1'];?><?= getNamaPegawaiFull($kaban);?></td>
-		</tr>
-		<tr>
-			<td>NIP</td>
-			<td style="text-align: center;">:</td>
-			<td><?= $kaban['nipbaru'];?></td>
-		</tr>
-		<!-- <tr>
-			<td>Pangkat, Gol/Ruang</td>
-			<td style="text-align: center;">:</td>
-			<td><?= $kaban['nm_pangkat'];?></td>
-		</tr> -->
-		<tr>
-			<td valign="top">Jabatan</td>
-			<td valign="top" style="text-align: center;">:</td>
-			<td><?= $kaban['nama_jabatan'];?></td>
-		</tr>
-        <!-- <tr>
-			<td valign="top">Unit Kerja</td>
-			<td valign="top" style="text-align: center;">:</td>
-			<td><?= $kaban['nm_unitkerja'];?></td>
-		</tr> -->
+	<p class="justify" >
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Menindaklanjuti Surat <?= $detail_kegiatan['nama_organisasi']; ?> 
+        Nomor: <?= $detail_kegiatan['nomor_surat_permohonan']; ?> tanggal <?= formatDateNamaBulan($detail_kegiatan['tanggal_surat_permohonan']); ?> 
+        hal Permohonan Izin/Dispensasi, maka berdasarkan Pasal 29 ayat (5) Peraturan Wali Kota Manado Nomor 30 Tahun 2023 
+        tentang Perubahan Atas Peraturan Wali Kota  Manado Nomor 1 Tahun 2022 tentang Tambahan Penghasilan Bagi Aparatur Sipil Negara, 
+        dengan ini memberikan dispensasi untuk tidak masuk kerja/melaksanakan tugas kedinasan kepada ASN tersebut dibawah ini:.
+    </p>
 
-	</table>
-	<br>
-
-	<span>
-		&nbsp;Dengan ini menerangkan bahwa :
-	</span>
 
 	<table style="width:100%;" border="0">
 		<tr>
 			<td style="width:25%;">Nama</td>
 			<td style="width:5%;text-align: center;">:</td>
-			<td style="width:70%;">
-			<?= getNamaPegawaiFull($profil_pegawai);?>
+			<td style="width:70%;text-transform: capitalize;">
+			   <?= getNamaPegawaiFull($profil_pegawai);?>
 			</td>
 		</tr>
 		<tr>
@@ -163,23 +177,21 @@
 
 	</table>
 
+    <p class="justify" style="text-indent: 5px;">
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dalam rangka mengikuti kegiatan <?= $detail_kegiatan['nama_kegiatan']; ?> yang dilaksanakan
+         pada tanggal <?= formatDateNamaBulan($detail_kegiatan['tanggal_mulai_kegiatan']);?> s.d <?= formatDateNamaBulan($detail_kegiatan['tanggal_selesai_kegiatan']);?> 
+         di <?= $detail_kegiatan['tempat_kegiatan']; ?>, Kecamatan <?= $detail_kegiatan['nama_kecamatan']; ?>, <span style="text-transform: capitalize;"><?= strtolower($detail_kegiatan['nama_kabupaten_kota']); ?></span> , <?= $detail_kegiatan['nama_provinsi']; ?>. 
+        </p>
+        <p class="justify" style="text-indent: 4px;">
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian disampaikan atasnya diucapkan terima kasih.
+        </p>
 
-	<p class="justify" >
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Adalah Benar Pegawai Negeri Sipil Kota Manado dan saat ini tidak sedang menjalani 
-        Tugas &nbsp;Belajar/Ikatan Dinas di Pemerintah Kota Manado.</p>
+      
 
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demikian surat keterangan dibuat untuk kelengkapan administrasi 
-		pindah tugas dari Pemerintah &nbsp;Kota Manado ke <?=$tanggal_dispensasi;?>.
-        penyesuaian/inpassing.
-
-	
-
-     </p>
-
-	<table border="0" style="width:100%;margin-top:100px;">
+	<table border="0" style="width:100%;margin-top:20px;">
 		<tr>
 			<td style="width:62%;"></td>
-			<td class="center"  style="width:38%;text-align: left;">Manado, <?= formatDateNamaBulan(date('Y-m-d'));?><br><br></td>
+			<td class="center"  style="width:38%;text-align: left;">a.n. WALI KOTA MANADO,<br><br></td>
 		</tr>
 		<tr>
 			<td style="width:62%;"></td>
@@ -192,23 +204,18 @@
 	</table>
 
 	<div class="footer-sk-2">
-	<!-- <table border="0" style="width:100%;">
+	<table border="0" style="width:100%;">
 		<tr>
 			<td style="width:100%;">
 			Tembusan Yth. :<br>
 			1. Wali Kota Manado (sebagai laporan);<br>
 			2. Wakil Wali Kota Manado;<br>
-			3. Pj. Sekretaris Daerah Kota Manado;<br>
-			<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
-				4. Kepala Dinas Pendidikan dan Kebudayaan<br>
-			<?php } else { ?>
-				4. Kepala <?= $profil_pegawai['nm_unitkerja'];?><br>
-			<?php } ?>
-			5. Arsip.
+			3. Sekretaris Daerah Kota Manado.<br>
+			
 			</td>
 			
 		</tr>
-	</table> -->
+	</table>
 	</div>
 	<div class="footer-sk">
 	<!-- <img src="<?=base_url();?>assets/images/footer.png" alt=""> -->

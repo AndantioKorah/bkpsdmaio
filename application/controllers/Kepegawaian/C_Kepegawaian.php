@@ -2885,6 +2885,7 @@ class C_Kepegawaian extends CI_Controller
 		} else if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		} else if($id_m_layanan == 39){
+			
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		}
 	}
@@ -3118,6 +3119,7 @@ class C_Kepegawaian extends CI_Controller
 
 			render('kepegawaian/layanan/V_VerifikasiLayananSatyalancanaDetail.php', '', '', $data);
 		}  else if($layanan == 39){
+			$data['kegiatan'] = $this->kepegawaian->getKegiatanDispensasi();
 			render('kepegawaian/layanan/V_VerifikasiLayananDispensasiDetail.php', '', '', $data);
 		}     
 		
@@ -4280,9 +4282,16 @@ class C_Kepegawaian extends CI_Controller
 
 	 public function kebutuhanJf(){
        	// $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
-		  $data['unit_kerja'] = $this->master->getAllSkpd();
+		$data['unit_kerja'] = $this->master->getAllSkpd();
 		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanFungsional();
         render('kepegawaian/V_KebutuhanJf', '', '', $data);
+    }
+
+	public function kegiatanDispensasi(){
+       	// $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
+		$data['unit_kerja'] = $this->master->getAllSkpd();
+		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanFungsional();
+        render('kepegawaian/V_KegiatanDispensasi', '', '', $data);
     }
 
 	   public function submitTambahkebutuhanJf()
@@ -4500,16 +4509,18 @@ class C_Kepegawaian extends CI_Controller
 
 		$nip = $this->input->post('nip');
 		$id_usul = $this->input->post('id_usul');
-		$jenis = $this->input->post('jenis');
+		$id_kegiatan = $this->input->post('kegiatan');
 		$data['nomor_pertek'] = $this->input->post('nomor_pertek');
 		$data['profil_pegawai'] = $this->kepegawaian->getProfilPegawai($nip);
 		$data['kaban'] = $this->kepegawaian->getDataKabanBkd();
+		$data['detail_kegiatan'] = $this->kepegawaian->getDetailKegiatanDispensasi($id_kegiatan);
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
 		$data['nomor_surat'] = $this->input->post('nomor_surat');
 		$data['tanggal_dispensasi'] = $this->input->post('tanggal_dispensasi');
 		$data['kegiatan'] = $this->input->post('kegiatan');
 
-		// $this->load->view('kepegawaian/surat/V_SuratKetTidakTubel',$data);
+		// dd($data['detail_kegiatan']);
+
 		$id_m_layanan = 24;
 		$data['data_layanan'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
 		$statusDS = 0;
@@ -4528,56 +4539,57 @@ class C_Kepegawaian extends CI_Controller
 
 	
 
+		$this->load->view('kepegawaian/surat/V_SuratKetDispensasi',$data);
 
-		$mpdf = new \Mpdf\Mpdf([
-			'format' => 'A4',
-			'debug' => true
-		]);
-		$mpdf->AddPage(
-            'P', // L - landscape, P - portrait
-            '',
-            '',
-            '',
-            '',
-            10, // margin_left
-            10, // margin right
-            5, // margin top
-            10, // margin bottom
-            18, // margin header
-            12
-        );
+		// $mpdf = new \Mpdf\Mpdf([
+		// 	'format' => 'A4',
+		// 	'debug' => true
+		// ]);
+		// $mpdf->AddPage(
+        //     'P', // L - landscape, P - portrait
+        //     '',
+        //     '',
+        //     '',
+        //     '',
+        //     10, // margin_left
+        //     10, // margin right
+        //     5, // margin top
+        //     10, // margin bottom
+        //     18, // margin header
+        //     12
+        // );
 
-		$bulan = getNamaBulan(date('m'));
-		$tahun = date('Y');
+		// $bulan = getNamaBulan(date('m'));
+		// $tahun = date('Y');
 		
-		if(!file_exists('arsipusulds/'.$tahun)){
-                mkdir('arsipusulds/'.$tahun, 0777);
-            }
+		// if(!file_exists('arsipusulds/'.$tahun)){
+        //         mkdir('arsipusulds/'.$tahun, 0777);
+        //     }
 
-        if(!file_exists('arsipusulds/'.$tahun.'/'.$bulan)){
-                mkdir('arsipusulds/'.$tahun.'/'.$bulan, 0777);
-            }
+        // if(!file_exists('arsipusulds/'.$tahun.'/'.$bulan)){
+        //         mkdir('arsipusulds/'.$tahun.'/'.$bulan, 0777);
+        //     }
 
 
 
-		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-		$html = $this->load->view('kepegawaian/surat/V_SuratKetDispensasi', $data, true); 
-		$file_pdf = $random_number."surat_ket_dispensasi_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	
-	    $url1 = 'arsipusulds/'.$tahun.'/'.$bulan.'/'.$file_pdf;
-	    $url2 = 'dokumen_layanan/suratkettidaktubel/arsipsuket/'.$file_pdf;
-		$mpdf->WriteHTML($html);
-		$mpdf->showImageErrors = true;
-		$mpdf->Output($url1, 'F');
-		$mpdf->Output($url2, 'F');
-		// $mpdf->Output($file_pdf, 'D');
-		$this->load->helper(array('url','download'));
+		// $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+		// $html = $this->load->view('kepegawaian/surat/V_SuratKetDispensasi', $data, true); 
+		// $file_pdf = $random_number."surat_ket_dispensasi_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	
+	    // $url1 = 'arsipusulds/'.$tahun.'/'.$bulan.'/'.$file_pdf;
+	    // $url2 = 'dokumen_layanan/suratkettidaktubel/arsipsuket/'.$file_pdf;
+		// $mpdf->WriteHTML($html);
+		// $mpdf->showImageErrors = true;
+		// $mpdf->Output($url1, 'F');
+		// $mpdf->Output($url2, 'F');
+		// // $mpdf->Output($file_pdf, 'D');
+		// $this->load->helper(array('url','download'));
 
-		$dataPost = $this->input->post();
-		$dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
-		if($statusDS == 0){
-		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
-		}
-		force_download($url1,NULL);
+		// $dataPost = $this->input->post();
+		// $dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
+		// if($statusDS == 0){
+		// $this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
+		// }
+		// force_download($url1,NULL);
 
     }
 

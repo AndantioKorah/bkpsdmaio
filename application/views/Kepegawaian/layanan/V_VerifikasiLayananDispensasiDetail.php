@@ -472,7 +472,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Draf Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Draf Surat Keterangan Dispensasi</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -481,26 +481,26 @@
       <form method="post"  enctype="multipart/form-data" action="<?=base_url('kepegawaian/C_Kepegawaian/usulDSSuketDispensasi')?>" target="_blank">
       <!-- downloadDraftSuketTidakTubel -->
       <div class="form-group">
-          <input type="text" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
-          <input type="text" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="text" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
-          <input type="text" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
-          <input type="text" class="form-control" id="nomor_surat" name="nomor_surat" value="<?=$result[0]['nomor_surat1']?>" readonly>
+          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
+          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          <input type="hidden" class="form-control" id="nomor_surat" name="nomor_surat" value="<?=$result[0]['nomor_surat1']?>" readonly>
 
            <label>Kegiatan Dispensasi</label>
-          <select onchange="myFunction()" class="form-control select2"  type="text" id="kegiatan" name="kegiatan" autocomplete="off"  required>
+          <select  class="form-control select2"  type="text" id="kegiatan" name="kegiatan" autocomplete="off"  required>
           <option selected disabled value="">Pilih Item</option>
-          <option value="1">Kegiatan 1</option>
-          <option value="2">Kegiatan 2</option>           
+            <?php if($kegiatan){ foreach($kegiatan as $r){ ?>
+                                                <option value="<?=$r['id']?>"><?=$r['nama_kegiatan']?></option>
+            <?php } } ?>
           </select>
 
           
 
-          <div>
+          <!-- <div>
           <label for="exampleInputEmail1">Tanggal Dispensasi</label>
              <input autocomplete="off"  class="form-control datepickerr"   id="tanggal_dispensasi" name="tanggal_dispensasi" required/>
-
-          </div>
+          </div> -->
           </div> 
           <button id="" type="submit" class="btn btn-sm btn-info float-right mt-2 "><i class="fa fa-file-pdf"></i> Download</button>
 
@@ -527,6 +527,13 @@ var nip = "<?= $result[0]['nipbaru_ws'];?>";
 var status = "<?= $result[0]['status_layanan'];?>";
 var dok = "<?= $result[0]['dokumen_layanan'];?>";
 $(function(){
+
+  $(".select2").select2({   
+		width: '100%',
+		// dropdownAutoWidth: true,
+		allowClear: true
+	});
+
   // $( "#sidebar_toggle" ).trigger( "click" );
   
   $('.datepickerr').datepicker({

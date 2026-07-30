@@ -3829,6 +3829,19 @@ public function getDataKabanBkd()
     return $this->db->get()->row_array(); 
 }
 
+public function getDetailKegiatanDispensasi($id_kegiatan)
+{
+    $this->db->select('*')
+    ->from('t_kegiatan_dispensasi a')
+    ->join('m_kecamatan b', 'a.kecamatan_kegiatan = b.id')
+    ->join('m_kabupaten_kota c', 'a.kota_kab_kegiatan = c.id')
+    ->join('m_provinsi d', 'a.provinsi_kegiatan = d.id')
+
+    ->where('a.flag_active', 1)
+    ->where('a.id', $id_kegiatan);
+    return $this->db->get()->row_array(); 
+}
+
 public function getDataCutiPegawai($id)
 {
     $this->db->select('*,a.alamat as alamat_cuti, a.created_date as tanggal_surat')
@@ -18833,6 +18846,13 @@ public function checkListIjazahCpns($id, $id_pegawai){
          
         return $pegawai1;
     }
+
+       public function getKegiatanDispensasi(){
+                return $this->db->select('a.*')
+                                ->from('t_kegiatan_dispensasi a')  
+                                ->where('a.flag_active', 1)
+                                ->get()->result_array();
+            }
 
 
 

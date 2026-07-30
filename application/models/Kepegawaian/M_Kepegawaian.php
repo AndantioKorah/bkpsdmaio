@@ -12057,7 +12057,9 @@ public function searchPengajuanLayanan($id_m_layanan){
             } else if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){ 
                $this->db->where_in('a.id_m_layanan', [36,37,38]);
             }      else {
-                $this->db->where('a.id_m_layanan', 99);
+                // $this->db->where('a.id_m_layanan', 99);
+                $this->db->where('a.id_m_layanan', $id_m_layanan);
+
             } 
 
     if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
@@ -13014,7 +13016,15 @@ public function getFileForVerifLayanan()
                 ->where('a.status !=', 3)
                 ->limit(1);
                 return $this->db->get()->result_array();
-        }     else {
+        } else if($this->input->post('file') == "surat_kegiatan"){
+            $this->db->select('a.surat_pernyataan_tidak_hd')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }    else {
          return [''];
         }
 
@@ -14582,6 +14592,9 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/sayatalancana';
+            } else if($id_m_layanan == 39){
+                $nama_file = "pengantar_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/dispensasi';
             }    else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
@@ -14601,6 +14614,8 @@ public function getFileForVerifLayanan()
                 $filehd =  "surat_pernyataan_bersedia_tidak_diangkat_jf_lagi_$nip"."_$random_number".".pdf";
                 } else if($id_m_layanan == 34){
                 $filehd =  "formulir_cuti_besar_$nip"."_$random_number".".pdf";
+                } else if($id_m_layanan == 39){
+                $filehd =  "surat_kegiatan_dispensasi_$nip"."_$random_number".".pdf";
                 } else {
                 $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
                 }
@@ -14612,6 +14627,8 @@ public function getFileForVerifLayanan()
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional';
                 } else if($id_m_layanan == 34){
                 $target_dir_hd	= './dokumen_layanan/cuti_besar';
+                } else if($id_m_layanan == 39){
+                $target_dir_hd	= './dokumen_layanan/dispensasi';
                 } else {
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
                 } 
@@ -15722,6 +15739,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
                 } else {
                 $data['keterangan'] = "Surat Pernyataan Tidak Sedang Menjalani Proses Pidana Atau Pernah dipidana a.n. ".$dataLayanan['nama'] ;
                 }
+            } else if($dataPost['id_m_layanan'] == 39){
+            $id_m_jenis_layanan = 39;
+            $data['keterangan'] = "Surat Keterangan Dispensasi a.n. ".$dataLayanan['nama'] ;    
             } else {
             $id_m_jenis_layanan = 30;
             $data['keterangan'] = "Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas a.n. ".$dataLayanan['nama'] ;
@@ -15738,6 +15758,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
                 $data['meta_view'] = "kepegawaian/surat/V_SuratPidana";
                 $perihal = "SURAT PERNYATAAN TIDAK SEDANG MENJALANI PROSES PIDANA ATAU PERNAH DIPIDANA a.n.".getNamaPegawaiFull($dataLayanan);
             }
+            } else if($dataPost['id_m_layanan'] == 39){
+            $data['meta_view'] = "kepegawaian/surat/V_SuratKetDispensasi";
+            $perihal = "SURAT KETERANGAN DISPENSASI a.n.".getNamaPegawaiFull($dataLayanan);
             } else {
             $data['meta_view'] = "kepegawaian/surat/V_SuratKetTidakTubel";
             $perihal = "SURAT KETERANGAN TIDAK SEDANG TUGAS BELAJAR/IKATAN DINAS a.n.".getNamaPegawaiFull($dataLayanan);
@@ -15775,13 +15798,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $progress2['flag_ds_now'] = 0;
             $this->db->insert('t_usul_ds_detail_progress', $progress2);
 
-           
             $dataUpdate['id_t_usul_ds'] = $id_t_usul_ds;
              if($dataPost['id_m_layanan'] == 23){
             $dataUpdate['nomor_surat'.$dataPost['jenis']] = $dataPost['nomor_surat_siladen'];
              } else {
             $dataUpdate['nomor_surat1'] = $dataPost['nomor_surat_siladen'];
              }
+
+
             // $dataUpdate['status'] = 3;
             $this->db->where('id', $id_usul)
                 ->update('t_layanan', $dataUpdate);

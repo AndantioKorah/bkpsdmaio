@@ -289,7 +289,11 @@
       $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/satyalancana/")?>'+val, function(){
       $('#loader').hide()
     })
-    }else {
+    } else if(val == 39) {
+      $('#form_layanan').load('<?=base_url("kepegawaian/C_Kepegawaian/layananDispensasi/")?>'+val, function(){
+      $('#loader').hide()
+    })
+    } else {
       $('#form_layanan').html('')
     }
 

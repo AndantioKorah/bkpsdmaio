@@ -1853,14 +1853,16 @@
                     // unset($pegawai[$cb['nip']]);
                 // }
             } else {
-                if($bulan == '1' && $tahun == '2026'){
+                if($param['bulan'] == '1' && $param['tahun'] == '2026'){
                     return $res;
-                } else if($tahun < 2026){
+                } else if($param['tahun'] < 2026){
                     return $res;
                 } else {
-                    $res['code'] = 1;
-                    $res['message'] = "belum lengkap bangkom";
-                    $res['list_pegawai'] = $pegawai;
+                    return $res;
+                    // $res['code'] = 1;
+                    // $res['message'] = "belum lengkap bangkom";
+                    // // dd($pegawai);
+                    // $res['list_pegawai'] = $pegawai;
                 }
             }
             // foreach($list_pegawai as $lp){

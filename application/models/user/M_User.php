@@ -3222,10 +3222,10 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 1;
-            $bulan = 4;
+            $tanggal = 6;
+            $bulan = 7;
             $tahun = 2026;
-            $namaKegiatan = "Apel Perdana Bulan April Tahun 2026"; 
+            $namaKegiatan = "Apel Perdana Bulan Juli Tahun 2026"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -3338,7 +3338,7 @@
             }
 
             $EXCLUDE_NIP_FBKM_ADVENT = [
-                0
+                '199502182020121013'
             ];
 
             $excludeNipPegawai = null;
@@ -3380,7 +3380,7 @@
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
-                    // $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
 
                     $notif['id_m_user'] = $k['user_id'];
                     $notif['pesan'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($k).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran KENEGARAAN dengan keterangan: ".$k['keterangan_sistem']."";
@@ -3388,7 +3388,7 @@
                     $notif['jenis_notifikasi'] = "pelanggaran_kenegaraan";
                     $notif['icon_color'] = "red";
                     $notif['fa_icon'] = "fa fa-times";
-                    // $this->db->insert('t_notifikasi', $notif);
+                    $this->db->insert('t_notifikasi', $notif);
 
                     // echo "input ".$k['user_id']."\n <br>";
                 } else {

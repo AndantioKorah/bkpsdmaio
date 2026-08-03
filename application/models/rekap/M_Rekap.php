@@ -1858,9 +1858,11 @@
                 } else if($param['tahun'] < 2026){
                     return $res;
                 } else {
-                    $res['code'] = 1;
-                    $res['message'] = "belum lengkap bangkom";
-                    $res['list_pegawai'] = $pegawai;
+                    return $res;
+                    // $res['code'] = 1;
+                    // $res['message'] = "belum lengkap bangkom";
+                    // // dd($pegawai);
+                    // $res['list_pegawai'] = $pegawai;
                 }
             }
             // foreach($list_pegawai as $lp){

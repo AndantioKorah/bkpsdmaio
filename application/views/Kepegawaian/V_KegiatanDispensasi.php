@@ -116,7 +116,7 @@ $(".select2").select2({
      allowClear: true,
  });
 
- loadListkebutuhanJf()
+ loadListKegiatanDispensasi()
  
  })
 
@@ -145,7 +145,7 @@ $(".select2").select2({
             if(result.success == true){
                 successtoast(result.msg)
                 // document.getElementById("form_tambah_kebutuhan").reset();
-                loadListkebutuhanJf()
+                loadListKegiatanDispensasi()
                 // location.reload()
               } else {
                 errortoast(result.msg)
@@ -158,11 +158,11 @@ $(".select2").select2({
         });
 
      
- function loadListkebutuhanJf(){
+ function loadListKegiatanDispensasi(){
    
     $('#list_indikator').html('')
     $('#list_indikator').append(divLoaderNavy)
-    $('#list_indikator').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListkebutuhanJf/")?>', function(){
+    $('#list_indikator').load('<?=base_url("kepegawaian/C_Kepegawaian/loadListKegiatanDispensasi/")?>', function(){
       $('#loader').hide()
     })
   }

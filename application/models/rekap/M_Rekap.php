@@ -1853,9 +1853,9 @@
                     // unset($pegawai[$cb['nip']]);
                 // }
             } else {
-                if($bulan == '1' && $tahun == '2026'){
+                if($param['bulan'] == '1' && $param['tahun'] == '2026'){
                     return $res;
-                } else if($tahun < 2026){
+                } else if($param['tahun'] < 2026){
                     return $res;
                 } else {
                     $res['code'] = 1;

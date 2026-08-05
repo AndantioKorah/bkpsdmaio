@@ -413,16 +413,18 @@
       <div class="modal-body">
          <form id="upload_dok_form" method="post" enctype="multipart/form-data">
           <div class="form-group">
-          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
-          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
-          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
-          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
-          
-          <label for="exampleInputEmail1">Surat Keterangan Tidak Sedang Tugas Belajar/Ikatan Dinas</label>
-          <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file" required>
+          <input type="text" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="text" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="text" class="form-control" id="jenis" name="jenis" value="2" readonly>
+          <input type="text" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          <input type="text" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
 
+          <input type="text" class="form-control" id="id_kegiatan_dispensasi" name="id_kegiatan_dispensasi" value="<?=$id_usul;?>" readonly>
+
+          <label for="exampleInputEmail1">Surat Dispensasi</label>
+          <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file" required>
           </div> 
+
           <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
         </form>
       </div>

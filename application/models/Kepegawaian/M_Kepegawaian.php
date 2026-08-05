@@ -15727,6 +15727,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
     function uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf){
         $this->db->trans_begin();
+        
         $result['done'] = true;
         $result['message'] = "";
         $bulan = getNamaBulan(date('m'));
@@ -15814,9 +15815,13 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $dataUpdate['id_t_usul_ds'] = $id_t_usul_ds;
              if($dataPost['id_m_layanan'] == 23){
             $dataUpdate['nomor_surat'.$dataPost['jenis']] = $dataPost['nomor_surat_siladen'];
-             } else {
+             } else  {
             $dataUpdate['nomor_surat1'] = $dataPost['nomor_surat_siladen'];
              }
+
+            if($dataPost['id_m_layanan'] == 39){
+            $dataUpdate['id_t_kegiatan_dispensasi'] = $dataPost['kegiatan'];
+            }
 
 
             // $dataUpdate['status'] = 3;
@@ -18706,6 +18711,30 @@ public function checkListIjazahCpns($id, $id_pegawai){
     public function getBangkomPegawai($nip,$tahun,$bulan)
     {
        $formattedMonth = str_pad($bulan, 2, "0", STR_PAD_LEFT);
+
+       
+       $this->db->select('a.bulan,a.jumlah_jp,b.nipbaru_ws')
+         ->from('t_cek_bangkom a')
+         ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
+         ->where('a.flag_active', 1)
+         ->where('tahun', $tahun)
+         ->where('bulan', $bulan)
+         ->where('a.nip', $nip)
+         ->where('b.id_m_status_pegawai', 1)
+         ->where('a.flag_active', 1)
+         ->where('b.id_m_status_pegawai', 1);
+         $cekBulanPilih = $this->db->get()->result_array();
+
+       if(!$cekBulanPilih){
+           $this->db->insert('t_cek_bangkom', [
+                        'bulan' => $bulan,
+                        'tahun' => $tahun,
+                        'nip' => $nip,
+                        'bulan_tahun' => $tahun."-".$formattedMonth."-01"
+                    ]);
+       }
+
+
        $this->db->select('a.bulan,a.jumlah_jp')
          ->from('t_cek_bangkom a')
          ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
@@ -18720,6 +18749,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
          ->where('a.flag_active', 1)
          ->where('b.id_m_status_pegawai', 1);
          $dataBangkom = $this->db->get()->result_array();
+
+       
+
         return $dataBangkom;  
     }
 
@@ -18847,7 +18879,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
         return $pegawai1;
     }
 
-       public function getKegiatanDispensasi(){
+    public function getKegiatanDispensasi(){
                 return $this->db->select('a.*')
                                 ->from('t_kegiatan_dispensasi a')  
                                 ->where('a.flag_active', 1)
@@ -18855,6 +18887,12 @@ public function checkListIjazahCpns($id, $id_pegawai){
             }
 
 
+    public function loadListKegiatanDispensasi(){
+                return $this->db->select('*')
+                                ->from('t_kegiatan_dispensasi a')  
+                                ->where('a.flag_active', 1)
+                                ->get()->result_array();
+        }
 
 
     

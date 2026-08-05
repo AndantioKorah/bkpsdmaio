@@ -5337,6 +5337,94 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             $role = $this->general_library->getRole();
             $eselon = $this->general_library->getIdEselon();
             // dd($eselon);
+
+
+            $list_pegawai = null;
+            $list_user_tambahan = null;
+            $list_bidang_tambahan = null;
+            $list_pegawai_tambahan = null;
+            
+            $this_user = $this->db->select('a.id_m_bidang,d.kelas_jabatan,d.jenis_jabatan,a.*, b.*, c.nm_unitkerja, c.id_unitkerjamaster, d.nama_jabatan, e.nama_jabatan as nama_jabatan_tambahan')
+                                ->from('m_user a')
+                                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                                ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
+                                ->join('db_pegawai.jabatan e', 'b.id_jabatan_tambahan = e.id_jabatanpeg', 'left')
+                                ->where('a.id', $this->general_library->getId())
+                                ->where('a.flag_active', 1)
+                                ->where('id_m_status_pegawai', 1)
+                                ->get()->row_array();
+
+
+             
+            $this->db->select('*, id as id_m_user')
+                ->from('m_user a')
+                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
+                ->join('db_pegawai.unitkerja d', 'b.skpd = d.id_unitkerja')
+                ->where('a.id !=', $this->general_library->getId())
+                ->where('b.skpd ', $this_user['skpd'])
+                // ->where('a.id_m_bidang ', $this_user['id_m_bidang'])
+                ->where('a.flag_active', 1)
+                ->where_in('b.statuspeg', [1,2]);
+               
+                if($this_user['id_unitkerjamaster'] != '8010000' AND $this_user['id_unitkerjamaster'] != '8020000'){
+                if($this_user['kelas_jabatan'] == 7){
+                    if($this_user['skpd'] == '4011000'){
+                    $this->db->where_in('c.kelas_jabatan', [6,7,8,9]);
+                    $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    } else {
+                    $this->db->where_in('c.kelas_jabatan', [6,7,8]);
+                    $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    }
+                } else if($this_user['kelas_jabatan'] == 8){
+                    if($this_user['skpd'] == '4011000'){
+                    $this->db->where_in('c.kelas_jabatan', [6,7,8,10]);
+                    $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    } else {
+                    $this->db->where_in('c.kelas_jabatan', [6,7,8,9]);
+                    $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    }
+                } else if($this_user['kelas_jabatan'] == 9){
+                    $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    $this->db->where_in('c.kelas_jabatan', [6,7,8,9,11,12]);
+                    $this->db->order_by('c.kelas_jabatan', 'DESC');
+                } else if($this_user['kelas_jabatan'] == 10){
+                    $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    $this->db->where_in('c.kelas_jabatan', [6,7,8,9,11]);
+                    $this->db->order_by('c.kelas_jabatan', 'DESC');
+                }  else if($this_user['kelas_jabatan'] == 11){
+                    $this->db->group_start(); 
+                    $this->db->where('c.kelas_jabatan', 14);
+                    $this->db->or_where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    $this->db->group_end();
+                
+                }
+                }
+
+                 
+             
+                $list_pegawai = $this->db->get()->result_array();
+            
+            $list_id_pegawai = array();
+            $list_data_pegawai = array();
+            
+            if($list_pegawai){
+                foreach($list_pegawai as $lp){
+                    $list_id_pegawai[] = $lp['id_m_user'];
+                    $list_data_pegawai[] = $lp;
+                }
+            }
+
+        
+            // dd($list_id_pegawai);
+            return $list_id_pegawai;
+        }
+
+        public function getListIdPegawaiForPenilaianSejawatBU($data = null, $return_data_pegawai = false){
+            $role = $this->general_library->getRole();
+            $eselon = $this->general_library->getIdEselon();
+            // dd($eselon);
                                    
             $list_user_tambahan = null;
             $list_bidang_tambahan = null;
@@ -5361,6 +5449,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
                 ->join('db_pegawai.unitkerja d', 'b.skpd = d.id_unitkerja')
                 ->where('a.id !=', $this->general_library->getId())
+                ->where_in('b.statuspeg', [1,2])
                 ->where('a.flag_active', 1);
 
                 if(!stringStartWith('Kelurahan', $this_user['nm_unitkerja'])){ //jika lurah
@@ -5378,15 +5467,19 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
                             ->join('db_pegawai.unitkerja d', 'b.skpd = d.id_unitkerja')
                             ->where('a.id !=', $this->general_library->getId())
+                            ->where('b.skpd', $this_user['skpd'])
+                            ->where_in('c.eselon', ['III A','IV A','Non Eselon'])
+                            ->where('a.id_m_bidang ', $this_user['id_m_bidang'])
+                            ->where_in('b.statuspeg', [1,2])
                             ->where('a.flag_active', 1);
 
-                        $this->db->where('d.id_unitkerjamaster',$this_user['id_unitkerjamaster']);
-                        $this->db->group_start(); 
-                        $this->db->where_in('c.eselon', ['III A','IV A']);
-                        // $this->db->or_where('c.nama_jabatan like', '%Lurah%');
-                        $this->db->where('c.nama_jabatan not like', '%Kepala Seksi%');
-                        $this->db->or_where('b.skpd', $this_user['skpd']);
-                        $this->db->group_end();
+                        // $this->db->where('d.id_unitkerjamaster',$this_user['id_unitkerjamaster']);
+                        // $this->db->group_start(); 
+                        // $this->db->where_in('c.eselon', ['III A','IV A']);
+                        // // $this->db->or_where('c.nama_jabatan like', '%Lurah%');
+                        // $this->db->where('c.nama_jabatan not like', '%Kepala Seksi%');
+                        // $this->db->or_where('b.skpd', $this_user['skpd']);
+                        // $this->db->group_end();
                 
                        $list_pegawai = $this->db->get()->result_array();
             } else if($eselon == 6 || $eselon == 7){
@@ -5399,6 +5492,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     ->join('db_pegawai.unitkerja g', 'e.skpd = g.id_unitkerja')
                     ->where('a.id !=', $this->general_library->getId())
                     ->where('a.flag_active', 1)
+                    ->where_in('e.statuspeg', [1,2])
                     ->where('c.flag_active', 1);
 
                     if(stringStartWith("Bagian", $this_user['nm_unitkerja'])){
@@ -5447,6 +5541,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                                         ->where('a.flag_active', 1)
                                                         ->where('c.flag_active', 1)
                                                         ->where('id_m_status_pegawai', 1)
+                                                         ->where_in('e.statuspeg', [1,2])
                                                         ->get()->result_array();
                 }
                 
@@ -5461,6 +5556,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                             ->where('a.flag_active', 1)
                                             ->where_in('f.id_eselon', [5])
                                             ->where('id_m_status_pegawai', 1)
+                                             ->where_in('d.statuspeg', [1,2])
                                             ->group_by('a.id')
                                             ->get()->result_array();
               
@@ -5483,6 +5579,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                             ->where('a.flag_active', 1)
                                             ->where('id_m_status_pegawai', 1)
                                             ->group_by('a.id')
+                                             ->where_in('d.statuspeg', [1,2])
                                             ->get()->result_array();
             }  else if($eselon == 1){
                 $this->db->select('*, id as id_m_user')
@@ -5494,7 +5591,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 ->where('b.skpd ', $this_user['skpd'])
                 // ->where('a.id_m_bidang ', $this_user['id_m_bidang'])
                 ->where('a.flag_active', 1)
-                ->where('b.statuspeg', 2);
+                ->where_in('b.statuspeg', [1,2]);
                
                
                 if($this_user['jenis_jabatan'] == 'JFT'){

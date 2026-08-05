@@ -4304,8 +4304,18 @@ class C_Kepegawaian extends CI_Controller
         $this->load->view('kepegawaian/V_KebutuhanJfItem', $data);
     }
 
+	
+	 public function loadListKegiatanDispensasi(){
+        $data['result'] = $this->kepegawaian->loadListKegiatanDispensasi();
+        $this->load->view('kepegawaian/V_KegiatanDisptensasiItem', $data);
+    }
+
 	 public function deleteKebutuhanJf($id){
         $this->general->delete('id', $id, 't_kebutuhan_fungsional');
+    }
+
+	 public function deleteKegiatanDispensasi($id){
+        $this->general->delete('id', $id, 't_kegiatan_dispensasi');
     }
 
 	public function editKebutuhanJf($id)
@@ -4539,57 +4549,57 @@ class C_Kepegawaian extends CI_Controller
 
 	
 
-		$this->load->view('kepegawaian/surat/V_SuratKetDispensasi',$data);
+		// $this->load->view('kepegawaian/surat/V_SuratKetDispensasi',$data);
 
-		// $mpdf = new \Mpdf\Mpdf([
-		// 	'format' => 'A4',
-		// 	'debug' => true
-		// ]);
-		// $mpdf->AddPage(
-        //     'P', // L - landscape, P - portrait
-        //     '',
-        //     '',
-        //     '',
-        //     '',
-        //     10, // margin_left
-        //     10, // margin right
-        //     5, // margin top
-        //     10, // margin bottom
-        //     18, // margin header
-        //     12
-        // );
+		$mpdf = new \Mpdf\Mpdf([
+			'format' => 'A4',
+			'debug' => true
+		]);
+		$mpdf->AddPage(
+            'P', // L - landscape, P - portrait
+            '',
+            '',
+            '',
+            '',
+            10, // margin_left
+            10, // margin right
+            5, // margin top
+            10, // margin bottom
+            18, // margin header
+            12
+        );
 
-		// $bulan = getNamaBulan(date('m'));
-		// $tahun = date('Y');
+		$bulan = getNamaBulan(date('m'));
+		$tahun = date('Y');
 		
-		// if(!file_exists('arsipusulds/'.$tahun)){
-        //         mkdir('arsipusulds/'.$tahun, 0777);
-        //     }
+		if(!file_exists('arsipusulds/'.$tahun)){
+                mkdir('arsipusulds/'.$tahun, 0777);
+            }
 
-        // if(!file_exists('arsipusulds/'.$tahun.'/'.$bulan)){
-        //         mkdir('arsipusulds/'.$tahun.'/'.$bulan, 0777);
-        //     }
+        if(!file_exists('arsipusulds/'.$tahun.'/'.$bulan)){
+                mkdir('arsipusulds/'.$tahun.'/'.$bulan, 0777);
+            }
 
 
 
-		// $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
-		// $html = $this->load->view('kepegawaian/surat/V_SuratKetDispensasi', $data, true); 
-		// $file_pdf = $random_number."surat_ket_dispensasi_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	
-	    // $url1 = 'arsipusulds/'.$tahun.'/'.$bulan.'/'.$file_pdf;
-	    // $url2 = 'dokumen_layanan/suratkettidaktubel/arsipsuket/'.$file_pdf;
-		// $mpdf->WriteHTML($html);
-		// $mpdf->showImageErrors = true;
-		// $mpdf->Output($url1, 'F');
-		// $mpdf->Output($url2, 'F');
-		// // $mpdf->Output($file_pdf, 'D');
-		// $this->load->helper(array('url','download'));
+		$random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
+		$html = $this->load->view('kepegawaian/surat/V_SuratKetDispensasi', $data, true); 
+		$file_pdf = $random_number."surat_ket_dispensasi_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	
+	    $url1 = 'arsipusulds/'.$tahun.'/'.$bulan.'/'.$file_pdf;
+	    $url2 = 'dokumen_layanan/suratkettidaktubel/arsipsuket/'.$file_pdf;
+		$mpdf->WriteHTML($html);
+		$mpdf->showImageErrors = true;
+		$mpdf->Output($url1, 'F');
+		$mpdf->Output($url2, 'F');
+		// $mpdf->Output($file_pdf, 'D');
+		$this->load->helper(array('url','download'));
 
-		// $dataPost = $this->input->post();
-		// $dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
-		// if($statusDS == 0){
-		// $this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
-		// }
-		// force_download($url1,NULL);
+		$dataPost = $this->input->post();
+		$dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
+		if($statusDS == 0){
+		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
+		}
+		force_download($url1,NULL);
 
     }
 

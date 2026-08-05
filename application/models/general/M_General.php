@@ -2752,8 +2752,8 @@
                                 ->limit(1)
                                 ->get()->row_array();
                 if($exists){
-                    dd('exists');
-                    return;
+                    // dd('exists');
+                    // return;
                 }
             }
 
@@ -2816,7 +2816,17 @@
                                 ->update('t_cek_bangkom', $updateData);
                     } else {
                         $updateData['created_by'] = $this->general_library->getId();
-                        $this->db->insert('t_cek_bangkom', $updateData);
+                        $exists = $this->db->select('*')
+                                    ->from('t_cek_bangkom')
+                                    ->where('flag_active', 1)
+                                    ->where('bulan', $updateData['bulan'])
+                                    ->where('tahun', $updateData['tahun'])
+                                    ->get()->row_array();
+                        if($exists){
+
+                        } else {
+                            $this->db->insert('t_cek_bangkom', $updateData);
+                        }
                     }
                 }
             }

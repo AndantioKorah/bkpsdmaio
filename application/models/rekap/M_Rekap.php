@@ -1174,7 +1174,7 @@
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
 
-            if($unitkerja['id_unitkerja'] == 1000001  //jika staf ahli / setda / prtokol, bendaharanya Marie Marce Kolopita 
+            if($unitkerja['id_unitkerja'] == 1000001  //jika staf ahli / setda / prtokol, bendaharanya Christabella 
             || $unitkerja['id_unitkerja'] == 2000100
             || $unitkerja['id_unitkerja'] == 1010500){
                 $result['bendahara'] = $result['bendahara_setda'];
@@ -1686,6 +1686,18 @@
     }
 
     public function getPltPlhTambahan($id_unitkerja, $bulan, $tahun, $list_pegawai){
+        $tempList = null;
+        // if($this->general_library->isProgrammer()){
+        //     dd($list_pegawai);
+        // }
+        foreach($list_pegawai as $lp){
+            if(!isset($lp['nip'])){
+                $tempList[$lp['nipbaru_ws']] = $lp;
+            } else {
+                $tempList[$lp['nip']] = $lp;
+            }
+        }
+
         if($bulan == null){
             $bulan = date('m');
         }
@@ -1738,15 +1750,10 @@
                 $list_hari_kerja[$hk] = $hk;
             }
         }
-        // cari tanggal kerja dari tanggal awal s/d tanggal akhir PLT dan cocokkan dengan hari kerja di bulan yang dicari.
-        // jika presentasi >= 50%, maka masuk dalam pegawai tambahan tersebut
         if($pegawai){
             foreach($pegawai as $p){
-                // $bulan = $bulan;
-                // if($bulan < 10){
-                //     $bulan = "0".intval($bulan);
-                // }
-                // if()
+                // cari tanggal kerja dari tanggal awal s/d tanggal akhir PLT dan cocokkan dengan hari kerja di bulan yang dicari.
+                // jika presentasi >= 50%, maka masuk dalam pegawai tambahan tersebut
                 $hari_kerja_tmt = countHariKerjaDateToDate($p['tanggal_mulai'], $p['tanggal_akhir']);   
                 $jumlah_hari_kerja_tmt = 0;
                 foreach($hari_kerja_tmt[3] as $hkt){
@@ -1754,13 +1761,17 @@
                         $jumlah_hari_kerja_tmt++;
                     }
                 }
-                $presentase = ($jumlah_hari_kerja_tmt / $hari_kerja[0]) * 100;
-                if($presentase >= 50){
-                    $list_pegawai[] = $p;
+                // $presentase = ($jumlah_hari_kerja_tmt / $hari_kerja[0]) * 100;
+                // cari jika sudah 12 hari kerja di tempat yang baru
+                if($jumlah_hari_kerja_tmt >= 12){
+                    if(isset($tempList[$p['nipbaru_ws']])){
+                        unset($tempList[$p['nipbaru_ws']]);
+                        $tempList[$p['nipbaru_ws']] = $p;
+                    }
                 }
             }
         }
-
+        $list_pegawai = $tempList;
         return $list_pegawai;
     }
 
@@ -1949,7 +1960,7 @@
                         ->where('d.id', $data['id_m_user']);
             }
             $list_pegawai = $this->db->get()->result_array();
-            
+
             $list_pegawai = $this->getPltPlhTambahan($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
 
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);

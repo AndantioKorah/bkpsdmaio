@@ -1397,6 +1397,7 @@ public function getPegawaiPenilaianKinerjaJpt($id,$penilaian,$jenis_pengisian){
             } else if($qty4 != 0) {
                 $id_penghargaan = 114;
             }
+
             return $id_penghargaan;
         }
 

@@ -3119,6 +3119,8 @@ class C_Kepegawaian extends CI_Controller
 
 			render('kepegawaian/layanan/V_VerifikasiLayananSatyalancanaDetail.php', '', '', $data);
 		}  else if($layanan == 39){
+		    $data['dok_pendukung'] = $this->kepegawaian->getDataDokPendukung($data['result'][0]['id_m_user'],$data['result'][0]['tanggal_dispen_mulai']);
+			// dd($data['dok_pendukung']);
 			$data['kegiatan'] = $this->kepegawaian->getKegiatanDispensasi();
 			render('kepegawaian/layanan/V_VerifikasiLayananDispensasiDetail.php', '', '', $data);
 		}     
@@ -3212,6 +3214,11 @@ class C_Kepegawaian extends CI_Controller
 	public function uploadSuratLayananSuketTidakTubel()
 	{ 
 		echo json_encode( $this->kepegawaian->uploadSuratLayananSuketTidakTubel());
+	}
+
+	public function uploadSuratLayananSuketDispensasi()
+	{ 
+		echo json_encode( $this->kepegawaian->uploadSuratLayananSuketDispensasi());
 	}
 
 	public function uploadSuratLayananRekomSeleksiPT()
@@ -3741,6 +3748,8 @@ class C_Kepegawaian extends CI_Controller
 		$dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
 		if($statusDS == 0){
 		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
+		} else {
+		$this->kepegawaian->updateFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
 		}
 		force_download($url1,NULL);
 
@@ -4034,6 +4043,8 @@ class C_Kepegawaian extends CI_Controller
 		$dataPost['jenis'] = $jenis;
 		if($statusDS == 0){
 		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
+		} else {
+		$this->kepegawaian->updateFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
 		}
 		force_download($url1,NULL);
 
@@ -4526,12 +4537,16 @@ class C_Kepegawaian extends CI_Controller
 		$data['detail_kegiatan'] = $this->kepegawaian->getDetailKegiatanDispensasi($id_kegiatan);
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
 		$data['nomor_surat'] = $this->input->post('nomor_surat');
-		$data['tanggal_dispensasi'] = $this->input->post('tanggal_dispensasi');
+
+		 $tanggal = explodeRangeDateNew($this->input->post('range_periode'));
+
+		$data['tanggal_mulai_kegiatan'] =  $tanggal[0];
+		$data['tanggal_selesai_kegiatan'] =  $tanggal[1];
+
 		$data['kegiatan'] = $this->input->post('kegiatan');
 
-		// dd($data['detail_kegiatan']);
 
-		$id_m_layanan = 24;
+		$id_m_layanan = 39;
 		$data['data_layanan'] = $this->kepegawaian->getPengajuanLayanan($id_usul,$id_m_layanan);
 		$statusDS = 0;
 
@@ -4586,7 +4601,7 @@ class C_Kepegawaian extends CI_Controller
 		$html = $this->load->view('kepegawaian/surat/V_SuratKetDispensasi', $data, true); 
 		$file_pdf = $random_number."surat_ket_dispensasi_".$data['profil_pegawai']['nipbaru_ws'].'.pdf';  	
 	    $url1 = 'arsipusulds/'.$tahun.'/'.$bulan.'/'.$file_pdf;
-	    $url2 = 'dokumen_layanan/suratkettidaktubel/arsipsuket/'.$file_pdf;
+	    $url2 = 'dokumen_layanan/dispensasi/arsipsuratdispensasi/'.$file_pdf;
 		$mpdf->WriteHTML($html);
 		$mpdf->showImageErrors = true;
 		$mpdf->Output($url1, 'F');
@@ -4598,9 +4613,15 @@ class C_Kepegawaian extends CI_Controller
 		$dataPost['nomor_surat_siladen'] = $data['nomor_surat'];
 		if($statusDS == 0){
 		$this->kepegawaian->uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
+		} else {
+		$this->kepegawaian->updateFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf);
 		}
 		force_download($url1,NULL);
 
+    }
+
+	public function checkDetailKegiatanDispensasi(){
+        echo json_encode($this->kepegawaian->checkDetailKegiatanDispensasi());
     }
 
 	

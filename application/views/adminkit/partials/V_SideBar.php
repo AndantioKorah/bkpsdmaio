@@ -1545,7 +1545,7 @@
 				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 					<span class="align-middle">
-					Penilaian Sejawat
+					Penilaian 360
 					</span>
 				</a>	
 			</li>

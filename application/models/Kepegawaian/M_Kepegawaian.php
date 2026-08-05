@@ -18972,7 +18972,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
          ->where('a.flag_terpenuhi', 0)
          ->where('a.flag_exception', 0)
          ->where('a.flag_active', 1)
-          ->where('a.bulan >', '1')
+         ->where('a.bulan >', '1')
          ->where('b.id_m_status_pegawai', 1);
          $dataBangkom = $this->db->get()->result_array();
 

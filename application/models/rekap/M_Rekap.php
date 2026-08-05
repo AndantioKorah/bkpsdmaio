@@ -2079,8 +2079,9 @@
                 // dd($list_pegawai);
             }
             $list_pegawai = $this->getKelasJabatanPegawai($list_pegawai);
+
             foreach($list_pegawai as $lpw){
-                $temp_list_nip[] = $lpw['nip'];
+                $temp_list_nip[$lpw['nip']] = $lpw['nip'];
                 $tlp[$lpw['nip']]['nama_pegawai'] = getNamaPegawaiFull($lpw);
                 $tlp[$lpw['nip']]['nip'] = ($lpw['nip']);
                 $tlp[$lpw['nip']]['nama_jabatan'] = ($lpw['nama_jabatan']);
@@ -3303,6 +3304,21 @@
 
             $hukdis = isset($data_rekap['hukdis']) ? $data_rekap['hukdis'] : null;
 
+            // get list yang tppnya dipending
+            $dataPending = $this->db->select('a.*')
+                                ->from('t_pending_tpp a')
+                                ->where('bulan', floatval($param['bulan']))
+                                ->where('tahun', floatval($param['tahun']))
+                                ->where_in('nip', $list_nip)
+                                ->where('flag_active', 1)
+                                ->get()->result_array();
+            $listPending = null;
+            if($dataPending){
+                foreach($dataPending as $dPending){
+                    $listPending[$dPending['nip']] = $dPending;
+                }
+            }
+
             foreach($data_rekap['result'] as $dr){
                 $list_pegawai['result'][$dr['nip']]['rekap_kehadiran'] = $dr;
             }
@@ -3397,6 +3413,10 @@
                     $result[$l['nipbaru_ws']]['presentase_tpp'] = formatTwoMaxDecimal(
                         floatval($result[$l['nipbaru_ws']]['bobot_produktivitas_kerja']) + 
                         floatval($result[$l['nipbaru_ws']]['bobot_disiplin_kerja']));
+
+                    if(isset($listPending[$l['nipbaru_ws']])){ // jika masuk di pending tpp, presentase tpp 0
+                        $result[$l['nipbaru_ws']]['presentase_tpp'] = 0;
+                    }
                     
 
                     // untuk desember tahun 2025, cek yang cuti tahunan dan menyebabkan kehadiran < 50%, agar dibuatkan kehadirannya menjadi 100%

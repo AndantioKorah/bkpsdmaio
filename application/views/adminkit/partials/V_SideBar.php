@@ -1541,6 +1541,7 @@
 			// { 
 			?>
 			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()) { ?>
+			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
 			<li class="sidebar-item ">
 				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
@@ -1553,7 +1554,7 @@
 		    // }
 		    ?>
 			<?php } ?>	
-			
+			<?php } ?>	
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))
 			{ 
 			?>	

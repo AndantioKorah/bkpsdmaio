@@ -826,6 +826,13 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/39')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Dispensasi
+					</a>
+				</li>
+				<?php } ?>
 				<?php if($this->general_library->isHakAkses('verifikasi_permohonan_salinan_sk')){ ?>
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/11')?>">
@@ -1541,7 +1548,6 @@
 			// { 
 			?>
 			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()) { ?>
-			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()) { ?>
 			<li class="sidebar-item ">
 				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
@@ -1553,7 +1559,6 @@
 			<?php 
 		    // }
 		    ?>
-			<?php } ?>	
 			<?php } ?>	
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))
 			{ 

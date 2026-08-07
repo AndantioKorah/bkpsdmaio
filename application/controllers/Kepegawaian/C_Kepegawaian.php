@@ -1369,6 +1369,13 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($response);
     }
 
+	public function getdatakotakab()
+    {
+        $id_kab = $this->input->post('id');
+        $response   = $this->kepegawaian->getdatakotakab($id_kab);
+        echo json_encode($response);
+    }
+
 
 	public function getdatakec()
     {
@@ -4302,12 +4309,19 @@ class C_Kepegawaian extends CI_Controller
        	// $data['unit_kerja'] = $this->kepegawaian->getAllWithOrder('db_pegawai.unitkerja', 'id_unitkerja', 'asc');
 		$data['unit_kerja'] = $this->master->getAllSkpd();
 		$data['nama_jabatan'] = $this->kepegawaian->getNamaJabatanFungsional();
+		$data['provinsi'] = $this->kepegawaian->getProvinsi('db_efort.m_provinsi', 'id', 'asc');
+		$data['kabkota'] = $this->kepegawaian->getKabKota('db_efort.m_kabupaten_kota', 'id', 'asc');
         render('kepegawaian/V_KegiatanDispensasi', '', '', $data);
     }
 
 	   public function submitTambahkebutuhanJf()
 	{ 
 		echo json_encode( $this->kepegawaian->submitTambahkebutuhanJf());
+	}
+
+		   public function submitTambahKegiatanDispensasi()
+	{ 
+		echo json_encode( $this->kepegawaian->submitTambahKegiatanDispensasi());
 	}
 
 	 public function loadListkebutuhanJf(){

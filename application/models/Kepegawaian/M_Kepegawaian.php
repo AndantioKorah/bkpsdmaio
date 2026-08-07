@@ -4058,6 +4058,16 @@ function getJenisHd($id)
     return $data;
 }
 
+public function getProvinsi($tableName, $orderBy = 'created_date', $whatType = 'desc')
+{
+    $this->db->select('*')
+    // ->where('id !=', 0)
+    // ->where('id_m_provinsi', 71)
+    ->order_by($orderBy, $whatType)
+    ->from($tableName);
+    return $this->db->get()->result_array(); 
+}
+
 
 public function getKabKota($tableName, $orderBy = 'created_date', $whatType = 'desc')
 {
@@ -4067,6 +4077,21 @@ public function getKabKota($tableName, $orderBy = 'created_date', $whatType = 'd
     ->order_by($orderBy, $whatType)
     ->from($tableName);
     return $this->db->get()->result_array(); 
+}
+
+function getdatakotakab($id_provinsi)
+{        
+    $this->db->select('id, nama_kabupaten_kota');
+    $this->db->where('id_m_provinsi', $id_provinsi);
+    $this->db->order_by('id', 'asc');
+    $fetched_records = $this->db->get('m_kabupaten_kota');
+    $datakec = $fetched_records->result_array();
+
+    $data = array();
+    foreach ($datakec as $kec) {
+        $data[] = array("id" => $kec['id'], "nama_kabupaten_kota" => $kec['nama_kabupaten_kota']);
+    }
+    return $data;
 }
 
 
@@ -6163,6 +6188,10 @@ public function submitEditJabatan(){
 
         if($this->general_library->isHakAkses('admin_pengajuan_cuti')){
             $id_layanan[] = 34;
+        }
+
+         if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')){
+            $id_layanan[] = 39;
         }
 
 
@@ -13719,10 +13748,10 @@ public function getFileForVerifLayanan()
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
             } else if($dataKgb[0]['statuspeg'] == "3") {
             if($dataKgb[0]['pangkat'] == "55"){
-                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+1 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
             }
             if($dataKgb[0]['pangkat'] == "57"){
-                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+3 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
+                $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
             }
             if($dataKgb[0]['pangkat'] == "59" || $dataKgb[0]['pangkat'] == "60"){
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
@@ -18240,6 +18269,29 @@ public function checkListIjazahCpns($id, $id_pegawai){
             
                 return $res;
             }
+
+    public function submitTambahKegiatanDispensasi(){
+    
+                $datapost = $this->input->post();
+                
+                $this->db->trans_begin();
+           
+                $this->db->insert('t_kegiatan_dispensasi', $datapost);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            
+                if($this->db->trans_status() == FALSE){
+                    $this->db->trans_rollback();
+                    // $res['code'] = 1;
+                    // $res['message'] = 'Terjadi Kesalahan';
+                    // $res['data'] = null;
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false);
+                } else {
+                    $this->db->trans_commit();
+                }
+            
+                return $res;
+            }
+            
 
     public function loadListkebutuhanJf(){
                 return $this->db->select('*')

@@ -104,7 +104,7 @@
     <div class="card card-default">
         <div class="card-header">
                 <div class="col-6">
-                    <h3 class="card-title">DAFTAR KEBUTUHAN JABATAN FUNGSIONAL</h3>
+                    <h3 class="card-title">DAFTAR KEGIATAN DISPENSASI</h3>
                 </div>
         </div>
         <div class="card-body" style="margin-top:-20px;">

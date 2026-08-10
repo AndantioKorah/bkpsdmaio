@@ -5386,9 +5386,13 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     $this->db->where('a.id_m_sub_bidang ', $this_user['id_m_sub_bidang']);
                     $this->db->order_by('c.kelas_jabatan', 'DESC');
                     $this->db->group_end();
+                    } else if($this_user['id_m_sub_bidang'] == 0) {
+                    $this->db->where_in('c.kelas_jabatan', [8,9,11,12]);
+                    $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    $this->db->where('a.id_m_sub_bidang ', 0);
                     } else {
                     $this->db->where_in('c.kelas_jabatan', [6,7,8,9,11]);
-                    $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+                    $this->db->where('a.id_m_sub_bidang ', $this_user['id_m_sub_bidang']);
                     }
 
                 } else if($this_user['kelas_jabatan'] == 8){

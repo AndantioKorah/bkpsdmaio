@@ -435,6 +435,14 @@
 			</a>
 		</li>
 
+		<?php if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')) { ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>kepegawaian/C_Kepegawaian/kegiatanDispensasi">
+				<i class="fa fa-database"></i> <span class="align-middle">Kegiatan Dispensasi</span>
+			</a>
+		</li>
+		<?php } ?>
+
 		<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || 
 	             $this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')){ ?>
 		<li class="sidebar-item">
@@ -808,6 +816,13 @@
 					</a>
 				</li>
 				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/35')?>">
+						<i class="align-middle me-2 far fa-circle"></i>CPNS Menjadi PNS
+					</a>
+				</li>
+				<?php } ?>
 
 
 				<?php if($this->general_library->isHakAkses('verifikasi_cpns_pns')){ ?>
@@ -829,6 +844,13 @@
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/18')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Ujian Dinas
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/39')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Dispensasi
 					</a>
 				</li>
 				<?php } ?>
@@ -1551,7 +1573,7 @@
 				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 					<span class="align-middle">
-					Penilaian Sejawat
+					Penilaian 360
 					</span>
 				</a>	
 			</li>
@@ -1559,7 +1581,6 @@
 		    // }
 		    ?>
 			<?php } ?>	
-			
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))
 			{ 
 			?>	

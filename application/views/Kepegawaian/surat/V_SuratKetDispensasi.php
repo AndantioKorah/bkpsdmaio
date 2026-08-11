@@ -129,8 +129,20 @@
                 <td>Yth.</td>
                 <td></td>
                 <td>
-                <?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
+            <?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>
 				Kepala Dinas Pendidikan dan Kebudayaan<br>
+			<?php }  else if(substr($profil_pegawai['nm_unitkerja'], 0, 9) == "Kelurahan")  { ?>
+				<?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") { ?>
+				Camat <?= substr($profil_pegawai['nm_unitkerjamaster'], 9) ;?> <br>
+				<?php } else { ?>
+				Lurah <?= substr($profil_pegawai['nm_unitkerja'], 9) ;?><br>
+				<?php } ?>
+			<?php } if(substr($profil_pegawai['nm_unitkerja'], 0, 9) == "Kecamatan") { ?>
+			    <?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") { ?>
+				Sekrataris Daerah Kota Manado <br>
+				<?php } else { ?>
+				Camat <?= substr($profil_pegawai['nm_unitkerja'], 9) ;?><br>
+				<?php } ?>
 			<?php } else { ?>
 				Kepala <?= $profil_pegawai['nm_unitkerja'];?><br>
 			<?php } ?>
@@ -179,7 +191,12 @@
 
     <p class="justify" style="text-indent: 5px;">
 		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dalam rangka mengikuti kegiatan <?= $detail_kegiatan['nama_kegiatan']; ?> yang dilaksanakan
-         pada tanggal <?= formatDateNamaBulan($detail_kegiatan['tanggal_mulai_kegiatan']);?> s.d <?= formatDateNamaBulan($detail_kegiatan['tanggal_selesai_kegiatan']);?> 
+         <?php if($tanggal_mulai_kegiatan == $tanggal_selesai_kegiatan) { ?>
+         pada tanggal <?= formatDateNamaBulan($tanggal_mulai_kegiatan);?> 
+		 <?php } else { ?>
+         pada tanggal <?= formatDateNamaBulan($tanggal_mulai_kegiatan);?> s.d <?= formatDateNamaBulan($tanggal_selesai_kegiatan);?> 
+		 <?php }  ?>
+
          di <?= $detail_kegiatan['tempat_kegiatan']; ?>, Kecamatan <?= $detail_kegiatan['nama_kecamatan']; ?>, <span style="text-transform: capitalize;"><?= strtolower($detail_kegiatan['nama_kabupaten_kota']); ?></span> , <?= $detail_kegiatan['nama_provinsi']; ?>. 
         </p>
         <p class="justify" style="text-indent: 4px;">

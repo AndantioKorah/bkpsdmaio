@@ -95,7 +95,7 @@
         Batal Verif
         </button>
          <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDownloadDraftHukdis">
-        Draf Surat Keterangan Dispensasi
+        Draf Surat  Dispensasi
         </button>
        
        <?php 
@@ -107,9 +107,9 @@
         </button>
         <?php } ?>
         <?php if($result[0]['status_layanan'] == 3) { ?>
-          <button onclick="deleteFile('<?=$id_usul;?>','<?=$result[0]['reference_id_dok'];?>',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
+          <button onclick="deleteFile('<?=$id_usul;?>','0',<?=$id_m_layanan;?>)"  id="btn_hapus_file"  class="btn btn-sm btn-danger ml-1 ">
         <i class="fa fa-file-trash"></i> Hapus Dokumen</button>
-        <button id="btn_lihat_dok" href="#modal_view_file" onclick="openDokumen('<?=$result[0]['gambarsk']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+        <button id="btn_lihat_dok" href="#modal_view_file" onclick="openDokumen('<?=$dok_pendukung[0]['url_outside']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
         <i class="fa fa-file-pdf"></i> Lihat Dokumen</button>
         <?php } ?>
 
@@ -413,17 +413,18 @@
       <div class="modal-body">
          <form id="upload_dok_form" method="post" enctype="multipart/form-data">
           <div class="form-group">
-          <input type="text" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
-          <input type="text" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
-          <input type="text" class="form-control" id="jenis" name="jenis" value="2" readonly>
-          <input type="text" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
-          <input type="text" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
+          <input type="hidden" class="form-control" id="id_pegawai" name="id_pegawai" value="<?=$result[0]['id_peg']?>" readonly>
+          <input type="hidden" class="form-control" id="nip" name="nip" value="<?=$result[0]['nipbaru_ws']?>" readonly>
+          <input type="hidden" class="form-control" id="jenis" name="jenis" value="2" readonly>
+          <input type="hidden" class="form-control" id="id_m_layanan" name="id_m_layanan" value="<?=$id_m_layanan;?>" readonly>
+          <input type="hidden" class="form-control" id="id_usul" name="id_usul" value="<?=$id_usul;?>" readonly>
 
-          <input type="text" class="form-control" id="id_kegiatan_dispensasi" name="id_kegiatan_dispensasi" value="<?=$id_usul;?>" readonly>
+          <input type="hidden" class="form-control" id="id_kegiatan_dispensasi" name="id_kegiatan_dispensasi" value="<?=$result[0]['id_t_kegiatan_dispensasi']?>" readonly>
 
           <label for="exampleInputEmail1">Surat Dispensasi</label>
           <input type="file" class="form-control mb-2"  id="pdf_surat_hd" name="file" required>
           </div> 
+         
 
           <button id="btn_uploadkgb" class="btn btn-primary float-right mt-2"  id=""><i class="fa fa-save"></i> Upload</button>
         </form>
@@ -445,8 +446,6 @@
       <div class="modal-body">
         <form method="post" id="form_verifikasi_layanan" enctype="multipart/form-data" >
         <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="<?= $result[0]['id_pengajuan'];?>">
-        <input type="hidden" id="sk_pns" name="sk_pns"  value="<?php if($sk_pns) echo $sk_pns['id']; else echo "";?>">
-        <input type="hidden" id="skp1" name="skp1"  value="<?php if($skp1) echo $skp1['id']; else echo "";?>">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Status</label>
         <select class="form-select" aria-label="Default select example" name="status" id="status">
@@ -490,12 +489,53 @@
           <input type="hidden" class="form-control" id="nomor_surat" name="nomor_surat" value="<?=$result[0]['nomor_surat1']?>" readonly>
 
            <label>Kegiatan Dispensasi</label>
-          <select  class="form-control select2"  type="text" id="kegiatan" name="kegiatan" autocomplete="off"  required>
+          <select onchange="myFunction()"  class="form-control select2"  type="text" id="kegiatan" name="kegiatan" autocomplete="off"  required>
           <option selected disabled value="">Pilih Item</option>
             <?php if($kegiatan){ foreach($kegiatan as $r){ ?>
                                                 <option value="<?=$r['id']?>"><?=$r['nama_kegiatan']?></option>
             <?php } } ?>
           </select>
+
+            <script>
+            function myFunction(val) {
+
+            $.ajax({
+            url: '<?=base_url("kepegawaian/C_Kepegawaian/checkDetailKegiatanDispensasi")?>',
+            method: 'post',
+            data: {
+                id_kegiatan: $("#kegiatan").val()
+            },
+            success: function(data){
+            let rs = JSON.parse(data)
+
+            const tglawal = new Date(rs.tanggal_mulai_kegiatan);
+            const tglakhir = new Date(rs.tanggal_selesai_kegiatan);
+
+             
+            $("#range_periode").daterangepicker({
+            format: 'DD/MM/YYYY',
+            showDropdowns: true,
+            startDate : tglawal.toLocaleDateString('en-US'),
+            endDate: tglakhir.toLocaleDateString('en-US'),
+            // minDate: firstDay
+          });
+
+            }, error: function(e){
+                $('.class_form').show()
+                errortoast('Terjadi Kesalahan')
+            }
+         })
+
+
+
+        
+              }
+            </script>
+
+            <div class="col-lg-12 col-md-12 mt-3">
+                <label>Pilih Periode</label>  
+                <input class="form-control form-control-sm" id="range_periode" readonly name="range_periode"/>
+            </div>
 
           
 
@@ -545,6 +585,14 @@ $(function(){
     // orientation: 'bottom',
     autoclose: true
     });
+
+   $("#range_periode").daterangepicker({
+            format: 'DD/MM/YYYY',
+            showDropdowns: true,
+            // startDate : "08/03/2026",
+//     endDate: '-0d',
+            // minDate: firstDay
+        });
 
 
    if(status == 0){
@@ -770,9 +818,9 @@ $('#iframe_view_file').hide()
 $('.iframe_loader').show()  
 
 var number = Math.floor(Math.random() * 1000);
-$link = "<?=base_url();?>arsiplain/"+filename+"?v="+number;
+var link = "<?=base_url();?>"+filename+"?v="+number;
 
-$('#iframe_view_file').attr('src', $link)
+$('#iframe_view_file').attr('src', link)
 $('#iframe_view_file').on('load', function(){
   $('.iframe_loader').hide()
   $(this).show()
@@ -827,8 +875,8 @@ function kirimBkad(id,status){
                }
 
         $('#upload_dok_form').on('submit', function(e){  
-        document.getElementById('btn_uploadkgb').disabled = true;
-        $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
+        // document.getElementById('btn_uploadkgb').disabled = true;
+        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
         var formvalue = $('#upload_dok_form');
         var form_data = new FormData(formvalue[0]);
@@ -840,7 +888,7 @@ function kirimBkad(id,status){
         // }
       
         $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSuratLayananSuketTidakTubel")?>",
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/uploadSuratLayananSuketDispensasi")?>",
         method:"POST",  
         data:form_data,  
         contentType: false,  

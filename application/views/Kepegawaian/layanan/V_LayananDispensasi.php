@@ -302,6 +302,10 @@ ol {
 			
     
           <span><b>Berkas Persyaratan :</b></span>
+             <div class="form-group mt-2">
+           <label>Pilih Tanggal Dispensasi</label>  
+                <input class="form-control form-control-sm" id="range_periode" readonly name="range_periode"/>
+          </div>
 					<div class="list-type1x mt-2">
           <div class="form-group">
             <label>Surat Pengantar dari Kepala Perangkat Daerah / Kepala Sekolah / Kepala Puskesmas / Direktur Rumah Sakit</label>
@@ -311,6 +315,8 @@ ol {
             <label>Surat Kegiatan</label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_kegiatan" name="file2" required />
           </div>
+         
+
    
 			
 			</div>
@@ -363,6 +369,25 @@ $(function(){
 		dropdownAutoWidth: true,
 		allowClear: true,
 	});
+
+//   $('#range_periode').click(function(){
+//     var popup =$(this).offset();
+//     var popupTop = popup.top - 40;
+//     $('.ui-datepicker').css({
+//       'top' : popupTop
+//      });
+// });
+
+  $("#range_periode").daterangepicker({
+            format: 'DD/MM/YYYY',
+            showDropdowns: true,
+             orientation: "top auto"
+            // startDate : "08/03/2026",
+//     endDate: '-0d',
+            // minDate: firstDay
+        });
+
+        
   loadListRiwayatCutiBesar()
     })
     $('#form_dispensasi').on('submit', function(e){  

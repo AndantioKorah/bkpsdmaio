@@ -4552,10 +4552,10 @@ class C_Kepegawaian extends CI_Controller
 		$data['pimpinan_opd'] = $this->kepegawaian->getDataKepalaOpd($data['profil_pegawai']['nm_unitkerja']);
 		$data['nomor_surat'] = $this->input->post('nomor_surat');
 
-		 $tanggal = explodeRangeDateNew($this->input->post('range_periode'));
+		//  $tanggal = explodeRangeDateNew($this->input->post('range_periode'));
 
-		$data['tanggal_mulai_kegiatan'] =  $tanggal[0];
-		$data['tanggal_selesai_kegiatan'] =  $tanggal[1];
+		// $data['tanggal_mulai_kegiatan'] =  $tanggal[0];
+		// $data['tanggal_selesai_kegiatan'] =  $tanggal[1];
 
 		$data['kegiatan'] = $this->input->post('kegiatan');
 

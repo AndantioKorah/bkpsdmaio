@@ -33,6 +33,7 @@
           <?php } ?>
            <?php if($m_layanan == 39) { ?>
           <th class="text-left">Surat Kegiatan</th>
+          <th class="text-left">Surat Dispensasi</th>
           <?php } ?>
           <th style="width:40%;"></th>
         </thead>
@@ -48,7 +49,7 @@
              <span class="badge badge-<?php if($rs['status'] == '0' || $rs['status'] == '1' || $rs['status'] == '3' || $rs['status'] == '4' || $rs['status'] == '7' || $rs['status'] == '8' || $rs['status'] == '10') echo "success"; else  echo "danger"; ?>"><?=$rs['status_verif'];?>
             <?php } else if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 14 || $m_layanan == 15 ||  $m_layanan == 16 ||  $m_layanan == 30) { ?>
              <span class="badge badge-<?php if($rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else  echo "success"; ?>"><?=$rs['status_verif'];?>
-            <?php } else if($m_layanan == 21) { ?>
+            <?php } else if($m_layanan == 21 || $m_layanan == 39) { ?>
             <span class="badge badge-<?php if($rs['status'] == '0' || $rs['status'] == '1' || $rs['status'] == '3' || $rs['status'] == '4' || $rs['status'] == '7' || $rs['status'] == '8') echo "success"; else  echo "danger"; ?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Tolak Siladen";  else if($rs['status'] == '6')  echo "Tolak BKN"; else if($rs['status'] == '7') echo "ACC BKN"; else if($rs['status'] == '3') echo "Selesai";  else echo "Menunggu Verifikasi BKPSDM" ?>
             <?php } else { ?>
             <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Usul BKAD"; else if($rs['status'] == '4')  echo "Diterima BKAD"; else if($rs['status'] == '5') echo "BTL / Berkas Tidak Lengkap"; else if($rs['status'] == '7') echo "TMS / Tidak Memenuhi Syarat"; else echo "Menunggu Verifikasi BKPSDM" ?>
@@ -80,6 +81,14 @@
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_pidana']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
           </td>
+          <?php } ?>
+            <?php if($m_layanan == 39) { ?>
+             <?php if($rs['status'] == 3) { ?>
+          <td class="text-left">
+          <button href="#modal_view_file" onclick="openSuratDispensasi('<?=$rs['surat_pernyataan_tidak_pidana']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          </td>
+            <?php } ?>
           <?php } ?>
             <?php if($m_layanan == 10 || $m_layanan == 21) { ?>
           <td class="text-left">

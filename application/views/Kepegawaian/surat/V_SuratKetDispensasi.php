@@ -188,13 +188,12 @@
 		
 
 	</table>
-
     <p class="justify" style="text-indent: 5px;">
 		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dalam rangka mengikuti kegiatan <?= $detail_kegiatan['nama_kegiatan']; ?> yang dilaksanakan
-         <?php if($tanggal_mulai_kegiatan == $tanggal_selesai_kegiatan) { ?>
-         pada tanggal <?= formatDateNamaBulan($tanggal_mulai_kegiatan);?> 
+         <?php if($data_layanan[0]['tanggal_dispen_mulai'] == $data_layanan[0]['tanggal_dispen_selesai']) { ?>
+         pada tanggal <?= formatDateNamaBulan($data_layanan[0]['tanggal_dispen_mulai']);?> 
 		 <?php } else { ?>
-         pada tanggal <?= formatDateNamaBulan($tanggal_mulai_kegiatan);?> s.d <?= formatDateNamaBulan($tanggal_selesai_kegiatan);?> 
+         pada tanggal <?= formatDateNamaBulan($data_layanan[0]['tanggal_dispen_mulai']);?> s.d <?= formatDateNamaBulan($data_layanan[0]['tanggal_dispen_selesai']);?> 
 		 <?php }  ?>
 
          di <?= $detail_kegiatan['tempat_kegiatan']; ?>, Kecamatan <?= $detail_kegiatan['nama_kecamatan']; ?>, <span style="text-transform: capitalize;"><?= strtolower($detail_kegiatan['nama_kabupaten_kota']); ?></span> , <?= $detail_kegiatan['nama_provinsi']; ?>. 

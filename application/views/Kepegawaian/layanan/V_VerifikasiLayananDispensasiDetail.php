@@ -532,10 +532,10 @@
               }
             </script>
 
-            <div class="col-lg-12 col-md-12 mt-3">
+            <!-- <div class="col-lg-12 col-md-12 mt-3">
                 <label>Pilih Periode</label>  
                 <input class="form-control form-control-sm" id="range_periode" readonly name="range_periode"/>
-            </div>
+            </div> -->
 
           
 

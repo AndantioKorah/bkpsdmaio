@@ -14599,7 +14599,9 @@ public function getFileForVerifLayanan()
 	{
        
         $this->db->trans_begin();
-    
+    $datapost = $this->input->post();
+   
+
         if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
         $cek =  $this->db->select('*')
         ->from('t_layanan a')
@@ -14693,6 +14695,7 @@ public function getFileForVerifLayanan()
             } else if($id_m_layanan == 39){
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/dispensasi';
+                $tanggal = explodeRangeDateNew($datapost['range_periode']);
             }    else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
@@ -14762,7 +14765,10 @@ public function getFileForVerifLayanan()
                     $dataUsul['file_pengantar']      = "$nama_file.pdf";
                     $dataUsul['surat_pernyataan_tidak_hd']      = $filehd;
                     $dataUsul['surat_pernyataan_tidak_pidana']      = $filepidana;
-                    
+                    if($id_m_layanan == 39){
+                    $dataUsul['tanggal_dispen_mulai']      = $tanggal[0];
+                    $dataUsul['tanggal_dispen_selesai']      = $tanggal[1];
+                    }
                     $this->db->insert('db_efort.t_layanan', $dataUsul);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             }
@@ -15941,7 +15947,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
     function uploadFileUsulDs($id_usul,$dataPost,$url1,$url2,$file_pdf){
         $this->db->trans_begin();
-        $tanggal = explodeRangeDateNew($dataPost['range_periode']);
+        // $tanggal = explodeRangeDateNew($dataPost['range_periode']);
         $result['done'] = true;
         $result['message'] = "";
         $bulan = getNamaBulan(date('m'));
@@ -16035,8 +16041,8 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
             if($dataPost['id_m_layanan'] == 39){
             $dataUpdate['id_t_kegiatan_dispensasi'] = $dataPost['kegiatan'];
-            $dataUpdate['tanggal_dispen_mulai'] = $tanggal[0];
-            $dataUpdate['tanggal_dispen_selesai'] = $tanggal[1];
+            // $dataUpdate['tanggal_dispen_mulai'] = $tanggal[0];
+            // $dataUpdate['tanggal_dispen_selesai'] = $tanggal[1];
             }
 
 
@@ -16094,14 +16100,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
                 ->update('t_usul_ds_detail', $dataUpdate2);
 
 
-        $tanggal = explodeRangeDateNew($dataPost['range_periode']);
+        // $tanggal = explodeRangeDateNew($dataPost['range_periode']);
 
-        if($dataUsulDS['id_m_layanan'] == 39){
-        $dataUpdate3['tanggal_dispen_mulai'] = $tanggal[0];
-        $dataUpdate3['tanggal_dispen_selesai'] = $tanggal[1];
-        $this->db->where('id', $dataUsulDS['id_layanan'])
-                ->update('t_layanan', $dataUpdate3);
-        }
+        // if($dataUsulDS['id_m_layanan'] == 39){
+        // $dataUpdate3['tanggal_dispen_mulai'] = $tanggal[0];
+        // $dataUpdate3['tanggal_dispen_selesai'] = $tanggal[1];
+        // $this->db->where('id', $dataUsulDS['id_layanan'])
+        //         ->update('t_layanan', $dataUpdate3);
+        // }
         
 
         if($this->db->trans_status() == FALSE && $result['code'] != 0){

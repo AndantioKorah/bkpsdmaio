@@ -22,6 +22,7 @@ $route['master/pelanggaran'] = 'master/C_Master/masterPelanggaran';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
 $route['master/event'] = 'master/C_Master/masterEvent';
 $route['master/hardcode-nominatif'] = 'master/C_Master/hardCodeNominatif';
+$route['master/pending-tpp'] = 'master/C_Master/pendingTpp';
 $route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
 $route['master/perangkat-daerah/jft'] = 'master/C_Master/openListPegawaiDetailSkpdMenu';
 $route['notifikasi-pegawai'] = 'user/C_User/notifikasiPegawai';

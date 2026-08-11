@@ -260,6 +260,12 @@
 							<i class="align-middle me-2 far fa-circle"></i>Lock TPP
 						</a>
 					</li>
+
+					<li class="sidebar-item ">
+						<a title="Pending TPP" class="sidebar-link sidebar-link-child" href="<?=base_url('master/pending-tpp')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Pending TPP
+						</a>
+					</li>
 				<?php } ?>
 
 				<li class="sidebar-item ">

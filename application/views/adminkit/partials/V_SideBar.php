@@ -1066,11 +1066,18 @@
 			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 			|| $this->general_library->isHakAkses('menu_bidang_pekin') 
 			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
-			<li class="sidebar-item ">
-				<a title="Rekapitulasi Hukuman Disipllin" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/hukdis')?>">
-					<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
-				</a>
-			</li>
+				<li class="sidebar-item ">
+					<a title="Rekapitulasi Hukuman Disipllin" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/hukdis')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
+					</a>
+				</li>
+			<?php } ?>
+			<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('monitoring_okta')){ ?>
+				<li class="sidebar-item ">
+					<a title="Rekapitulasi OKTA" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/okta')?>">
+						<i class="align-middle me-2 far fa-circle"></i>OKTA
+					</a>
+				</li>
 			<?php } ?>
 		</ul>
 	</li>

@@ -429,7 +429,7 @@
 			</a>
 		</li>
 
-		<?php if($this->general_library->isHakAkses('laporan_jumlah_asn')) { ?>
+		<?php if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')) { ?>
 		<li class="sidebar-item">
 			<a class="sidebar-link" href="<?=base_url();?>kepegawaian/C_Kepegawaian/kegiatanDispensasi">
 				<i class="fa fa-database"></i> <span class="align-middle">Kegiatan Dispensasi</span>
@@ -807,6 +807,13 @@
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/36')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Satyalancana 
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/35')?>">
+						<i class="align-middle me-2 far fa-circle"></i>CPNS Menjadi PNS
 					</a>
 				</li>
 				<?php } ?>

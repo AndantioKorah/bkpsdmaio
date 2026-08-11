@@ -3436,6 +3436,8 @@ public function submitVerifikasiDokumen(){
           if($datapost['jenis_dokumen'] == "diklat") {
             if($tahun >= '2026'){
             $this->general->cronCheckBangkom($bulansertifikat,$tahun, $peg['nipbaru_ws']);
+            // $this->general->cronCheckDataBangkom($peg['nipbaru_ws']);
+            // $this->general->logCron('cronCheckDataBangkom');
             }
             }
 
@@ -11697,7 +11699,9 @@ public function getFileForKarisKarsu()
             $tahun = date("Y", $timestamp);
             $bulan = date("m", $timestamp);
                     if($tahun >= '2026'){
-                    $this->general->cronCheckBangkom($bulan,$tahun, $bangkom['nipbaru_ws']);
+                    // $this->general->cronCheckBangkom($bulan,$tahun, $bangkom['nipbaru_ws']);
+                    $this->general->cronCheckDataBangkom($bangkom['nipbaru_ws']);
+                    $this->general->logCron('cronCheckDataBangkom');
                     }
          }
 
@@ -18755,7 +18759,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             }
 
             $this->db->select('a.*, b.gelar1, b.nama, b.gelar2, b.statuspeg,c.nm_unitkerja, a.jumlah_jp as total_jp')
-                                ->from('t_cek_bangkomx a')
+                                ->from('t_cek_bangkom a')
                                 ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->where('a.flag_ditebus', 0)

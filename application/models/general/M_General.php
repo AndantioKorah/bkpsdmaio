@@ -2815,6 +2815,7 @@
                         $this->db->where('id', $p['id_t_cek_bangkom'])
                                 ->update('t_cek_bangkom', $updateData);
                     } else {
+                        
                         $updateData['created_by'] = $this->general_library->getId();
                         $exists = $this->db->select('*')
                                     ->from('t_cek_bangkom')
@@ -2823,7 +2824,7 @@
                                     ->where('tahun', $updateData['tahun'])
                                     ->get()->row_array();
                         if($exists){
-
+                            $this->db->insert('t_cek_bangkom', $updateData);
                         } else {
                             $this->db->insert('t_cek_bangkom', $updateData);
                         }

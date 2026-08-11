@@ -87,14 +87,17 @@
             <div class="col-lg-12 text-center mb-2
                 <?=($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                 || $this->general_library->isProgrammer()
+                || $this->general_library->isHakAkses('monitoring_okta')
                 || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==1 ? "margin-admin" : ""?>
                 <?=($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                 || $this->general_library->isProgrammer()
+                || $this->general_library->isHakAkses('monitoring_okta')
                 || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==count($result['detail']) ? "margin-admin-bottom div_chat_last_item" : ""?>
                 "style="line-height: 15px;">
                 <?php if($rd['flag_only_admin'] == 1 && (
                     $this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                 || $this->general_library->isProgrammer()
+                || $this->general_library->isHakAkses('monitoring_okta')
                 || $this->general_library->getId() == $result['chat']['id_m_user_assigned']
                 )){ ?>
                     <span style="
@@ -120,11 +123,13 @@
             <div class="col-lg-12 mb-2
                     <?=($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
+                    || $this->general_library->isHakAkses('monitoring_okta')
                     || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==count($result['detail']) ? "margin-admin-bottom div_chat_last_item" : ""?>
                     "
                 style="
                     <?=($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
+                    || $this->general_library->isHakAkses('monitoring_okta')
                     || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $i==1 ? "margin-top: 80px;" : ""?>
                 "
                 >
@@ -138,6 +143,7 @@
                     
                     if(($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                         || $this->general_library->isProgrammer()
+                    || $this->general_library->isHakAkses('monitoring_okta')
                         || $this->general_library->getId() == $result['chat']['id_m_user_assigned'])){
                         if($rd['is_sender_admin'] == 1){ 
                             $divChat = "div_chat_right"; 
@@ -154,6 +160,7 @@
                 <?php
                     if((($this->general_library->isHakAkses('admin_live_chat_konsultasi') 
                     || $this->general_library->isProgrammer()
+                    || $this->general_library->isHakAkses('monitoring_okta')
                     || $this->general_library->getId() == $result['chat']['id_m_user_assigned']) && $flagSenderChanged == 1)
                     && $rd['is_sender_admin'] == 1){
                 ?>

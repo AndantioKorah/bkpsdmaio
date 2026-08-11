@@ -717,5 +717,22 @@ class C_Master extends CI_Controller
         echo json_encode($this->master->changeFlagTerimaSemua($id, $state));
     }
 
+    public function pendingTpp(){
+        $data['list_pegawai'] = $this->master->getAllPegawai();
+        render('master/V_MasterPendingTpp', '', '', $data);
+    }
+
+    public function savePendingTpp(){
+        echo json_encode($this->master->savePendingTpp($this->input->post()));
+    }
+
+    public function getListPendingTpp(){
+        $data['result'] = $this->master->getListPendingTpp();
+        $this->load->view('master/V_MasterPendingTppList', $data);
+    }
+
+    public function deleteDataPendingTpp($id){
+        echo json_encode($this->master->deleteDataPendingTpp($id));
+    }
 
 }

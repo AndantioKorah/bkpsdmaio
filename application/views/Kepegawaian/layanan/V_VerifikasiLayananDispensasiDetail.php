@@ -130,6 +130,10 @@
  <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='surat_kegiatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Kegiatan</button>
   </li>
+
+  <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="openProfileTab()" class="nav-link nav-link-layanan" id="pills-tanggal-tab" data-bs-toggle="pill" data-bs-target="#pills-tanggal" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Usulan Tanggal Dispensasi</button>
+  </li>
   
  
 
@@ -140,6 +144,14 @@
   <div class="tab-pane fade show " id="pills-pangkat" role="tabpanel" aria-labelledby="pills-pangkat-tab">
   <!-- <div style="margin-left:10px;" class="col-lg-12">
   </div> -->
+  </div>
+
+   <div class="tab-pane fade show " id="pills-tanggal" role="tabpanel" aria-labelledby="pills-tanggal-tab">
+  <!-- <div style="margin-left:10px;" class="col-lg-12">
+  </div> -->
+  
+  <h4> <?php echo formatDateNamaBulan($result[0]['tanggal_dispen_mulai']);?> - <?php echo formatDateNamaBulan($result[0]['tanggal_dispen_selesai']);?></h4>
+  <br><p></p>
   </div>
 
 
@@ -685,6 +697,16 @@ function openPresensiTab(){
         }
         }
         });
+ }
+
+  function clear(){
+    $('#riwayat_disiplin').html('')
+    $('#view_file_verif').hide()
+    $('.iframe_loader').show()  
+    $('.iframe_loader').html('LOADING.. <i class="fas fa-spinner fa-spin"></i>')
+    $('#ket').html('');
+    alert()
+   
  }
 
 

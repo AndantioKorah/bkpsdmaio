@@ -2630,7 +2630,9 @@ class C_Kepegawaian extends CI_Controller
 				$data['diklat'] = $this->kepegawaian->getDokumenDiklatForVerifLayanan();	
 				$data['pangkalandata'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','12','0');	
 				$data['ibel'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','13','0');	
-				$data['skjabterusmenerus'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','67','0');	
+				$data['skjabterusmenerus'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','67','0');
+				$data['skberhentijafung'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','73','0');	
+
 			}
 			if($id_layanan == 9){
 				$data['ijazah'] = $this->kepegawaian->getIjazahTerakhir(); 

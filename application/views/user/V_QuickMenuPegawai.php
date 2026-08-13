@@ -83,8 +83,14 @@
             </div>
         </div>
     </div>
-    <?php } ?>
+    <?php } ?>    
 </div>
+
+<div  class="row" style="background-color: white; padding: 10px;">
+    
+<iframe src="https://surveidigital.spbe.go.id/embed/survey/eyJzdXJ2ZXlfaWQiOjIsInNlcnZpY2VfaWQiOjEwMDQsImhvc3QiOiJodHRwczovL3NpbGFkZW4ubWFuYWRva290YS5nby5pZC8saHR0cDovLzIwMy4xNzUuMTAuOTAvIiwia2V5IjoiR21xRm1qcEQifQ==/embed/view/?jenis_layanan=Siladen" width="100%" height="700px"></iframe>
+</div>
+
 
 <script>
     function href(url){

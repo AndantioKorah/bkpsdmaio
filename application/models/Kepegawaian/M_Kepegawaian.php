@@ -2169,7 +2169,7 @@ class M_Kepegawaian extends CI_Model
         $this->db->trans_begin();
         $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
         $nama_dok =  str_replace(' ', '', $_FILES['file']['name']);
-        $filename = $this->general_library->getId().$random_number."ArsipLain.pdf";
+        $filename = date('Y')."_".$this->general_library->getId().$random_number."ArsipLain.pdf";
         $target_dir						= './arsiplain/';
         		
 		$config['upload_path']          = $target_dir;
@@ -12504,7 +12504,17 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "peta" || $this->input->post('file') == "peta_jabatan"){
+        }  else if($this->input->post('file') == "skberhentijafung"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 73)
+                ->where('a.status !=', 3)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }  else if($this->input->post('file') == "peta" || $this->input->post('file') == "peta_jabatan"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')
                 ->where('a.id_pegawai', $id_peg)

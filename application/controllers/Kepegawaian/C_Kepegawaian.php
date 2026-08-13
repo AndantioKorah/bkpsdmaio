@@ -3460,6 +3460,12 @@ class C_Kepegawaian extends CI_Controller
             // echo json_encode($response);
 		}
 
+		public function updateFlagExceptionBangkom(){
+			$this->kepegawaian->updateFlagExceptionBangkom();
+			// $response   = $this->kinerja->getDataPengajuanAbsensiPegawai();
+            // echo json_encode($response);
+		}
+
 		public function hitungMasaKerja(){
 			echo countDiffDateLengkap($this->input->post('tmtberkala'), $this->input->post('tmtcpns'), ['tahun', 'bulan']);
 		}

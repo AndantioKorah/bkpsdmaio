@@ -15905,8 +15905,13 @@ public function checkListIjazahCpns($id, $id_pegawai){
         $this->db->where_in('id', [18,19,20])
         ->update('m_layanan', $data);
         }
-        
-       
+    }
+
+      public function updateFlagExceptionBangkom()
+    {
+        $data['flag_exception'] = $this->input->post('flag_exception');
+        $this->db->where('id', $this->input->post('id_t_check_bangkom'))
+        ->update('t_cek_bangkom', $data);
     }
 
     public function catatanGajiBerkala()
@@ -18922,9 +18927,10 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->where('a.flag_ditebus', 0)
                                 ->where('a.flag_terpenuhi', 0)
-                                ->where('a.flag_exception', 0)
+                                // ->where('a.flag_exception', 0)
                                 ->where('a.flag_active', 1)
                                 ->where('b.id_m_status_pegawai', 1)
+                                ->order_by('a.bulan', 'desc')
                                 ->group_by('b.nipbaru_ws');
                                 
                                 if($this->input->post('unitkerja') == 0){
@@ -18973,13 +18979,13 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                 $this->db->where('b.skpd', $this->input->post('unitkerja'));
                                 }
                                 }
-
                               
-
                                  $result = $this->db->get()->result_array();
+
+                                 
                                  if($result) {
                                     foreach($result as $res){
-                                    $this->db->select('a.bulan,a.jumlah_jp')
+                                    $this->db->select('a.id,a.bulan,a.jumlah_jp,a.flag_exception')
                                                     ->from('t_cek_bangkom a')
                                                     ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                                                     ->where('a.flag_active', 1)

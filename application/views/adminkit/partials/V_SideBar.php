@@ -991,7 +991,7 @@
 			<?php if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isHakAkses('rekap_bangkom')
-				||  $this->general_library->isPegawaiBkpsdm()
+				// ||  $this->general_library->isPegawaiBkpsdm()
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
 				){ ?>

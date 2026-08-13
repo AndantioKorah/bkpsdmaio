@@ -15910,6 +15910,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
       public function updateFlagExceptionBangkom()
     {
         $data['flag_exception'] = $this->input->post('flag_exception');
+        $data['updated_by'] = $this->general_library->getId();
         $this->db->where('id', $this->input->post('id_t_check_bangkom'))
         ->update('t_cek_bangkom', $data);
     }

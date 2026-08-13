@@ -99,18 +99,24 @@
 
           <?php if($m_layanan == 28) { ?>
           <td class="text-left">
+          <?php if($rs['surat_rekom_asal'] != null) { ?>
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_rekom_asal']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
           </td>
 
           <td class="text-left">
+            <?php if($rs['surat_rekom_tujuan'] != null) { ?>
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_rekom_tujuan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
           </td>
 
           <td class="text-left">
+            <?php if($rs['rekomendasi'] != null) { ?>
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['rekomendasi']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
           </td>
 
         
@@ -401,6 +407,11 @@
                                if(id_layanan == 35){
                                 loadListRiwayatCpnsPns()
                                }
+                               if(id_layanan == 28){
+                                loadListRiwayatMutasiPidahMasuk()
+                               }
+
+                               
                                
                                
                            }, error: function(e){

@@ -317,26 +317,26 @@ ol {
           </div>
 
            <div class="form-group mb-2">
-            <label>Surat Keterangan Tidak Pernah/Sedang Dijatuhi Hukuman Disiplin dan Tidak Sedang Memangku Jabatan sebagai Bendahara dan Pengurus Barang tanda tangan Kepala Perangkat Daerah Asal</label>
+            <label>Surat Keterangan Tidak Pernah/Sedang Dijatuhi Hukuman Disiplin dan Tidak Sedang Memangku Jabatan sebagai Bendahara dan Pengurus Barang tanda tangan Kepala Perangkat Daerah Asal </label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
         </div>
 
           <div class="form-group mb-2">
-            <label>Surat Rekomendasi dari Perangkat Daerah Asal dengan menyebutkan nama jabatan saat ini, ditanda tangani oleh Kepala Perangkat Daerah/Unit Kerja Asal </label>
-            <input  class="form-control my-image-field" type="file" id="surat_rekom_asal" name="file3" required />
+            <label>Surat Rekomendasi dari Perangkat Daerah Asal dengan menyebutkan nama jabatan saat ini, ditanda tangani oleh Kepala Perangkat Daerah/Unit Kerja Asal <span style="color:red"><b>(Khusus ASN Diluar Guru dan Tenaga Kesehatan)</b></span>  </label>
+            <input  class="form-control my-image-field" type="file" id="surat_rekom_asal" name="file3"  />
             <!-- <input 
              class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
 
           <div class="form-group mb-2">
-            <label>Surat Rekomendasi dari Perangkat Daerah Tujuan dengan menyebutkan nama jabatan yang akan diduduki di Perangkat Daerah Tujuan (nama jabatan wajib sesuai dengan yang ada di peta jabatan)</label>
-            <input  class="form-control my-image-field" type="file" id="surat_rekom_tujuan" name="file4" required />
+            <label>Surat Rekomendasi dari Perangkat Daerah Tujuan dengan menyebutkan nama jabatan yang akan diduduki di Perangkat Daerah Tujuan (nama jabatan wajib sesuai dengan yang ada di peta jabatan) <span style="color:red"><b>(Khusus ASN Diluar Guru dan Tenaga Kesehatan)</b></span></label>
+            <input  class="form-control my-image-field" type="file" id="surat_rekom_tujuan" name="file4"  />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
 
          <div class="form-group">
-            <label>Rekomendasi Dari Dinas Kesehatan/Dinas Pendidikan dan Kebudayaan (Khusus Untuk Guru/Tenaga Kesehatan)</label>
-            <input  class="form-control my-image-field" type="file" id="rekomendasi" name="file5" required />
+            <label>Rekomendasi Dari Dinas Kesehatan/Dinas Pendidikan dan Kebudayaan <span style="color:red"><b>(Khusus Untuk ASN Guru/Tenaga Kesehatan)</b></span> </label>
+            <input  class="form-control my-image-field" type="file" id="rekomendasi" name="file5"  />
         </div>
 
         
@@ -420,7 +420,7 @@ $(function(){
   loadListRiwayatMutasiPidahMasuk()
     })
     $('#form_mutasi_pindah_masuk').on('submit', function(e){  
-        //     document.getElementById('btn_upload').disabled = true;
+        // document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
         var formvalue = $('#form_mutasi_pindah_masuk');

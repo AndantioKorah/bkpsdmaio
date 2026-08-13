@@ -12423,6 +12423,30 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "rekomendasi"){
+            $this->db->select('a.rekomendasi')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rekom_asal"){
+            $this->db->select('a.surat_rekom_asal')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rekom_tujuan"){
+            $this->db->select('a.surat_rekom_tujuan')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         } else if($this->input->post('file') == "peta_jabatan_mutasi_asn"){
             $this->db->select('a.peta_jabatan')
                 ->from('t_layanan as a')
@@ -14716,6 +14740,9 @@ public function getFileForVerifLayanan()
             // $file2 = null;
             $filehd = null;
             $filepidana = null;
+            $file3 = null;
+            $file4 = null;
+            $file5 = null;
 
             $this->load->library('upload');
             if(isset($_FILES['file2']['name'])){
@@ -14746,7 +14773,7 @@ public function getFileForVerifLayanan()
                 } 
             }
 
-            if(isset($_FILES['file3']['name'])){
+            if(isset($_FILES['file3']['name']) AND $_FILES['file3']['name'] != NULL){
                 if($id_m_layanan == 28){
                 $file3 =  "surat_rekom_asal_$nip"."_$random_number".".pdf";
                 $target_dir3	= './dokumen_layanan/mutasi_pindah_masuk';
@@ -14756,12 +14783,12 @@ public function getFileForVerifLayanan()
                 }
             } 
 
-            if(isset($_FILES['file4']['name'])){
+            if(isset($_FILES['file4']['name']) AND $_FILES['file4']['name'] != NULL){
                 $file4 =  "surat_rekom_tujuan_$nip"."_$random_number".".pdf";
                 $target_dir4	= './dokumen_layanan/mutasi_pindah_masuk';
             } 
 
-            if(isset($_FILES['file5']['name'])){
+            if(isset($_FILES['file5']['name']) AND $_FILES['file5']['name'] != NULL){
                 $file5 =  "rekomendasi_$nip"."_$random_number".".pdf";
                 $target_dir5	= './dokumen_layanan/mutasi_pindah_masuk';
             } 
@@ -14822,7 +14849,7 @@ public function getFileForVerifLayanan()
                 }
             }
 
-            if(isset($_FILES['file3']['name'])){
+            if(isset($_FILES['file3']['name']) AND $_FILES['file3']['name'] != NULL ){
                 $config_pidana['upload_path']       = $target_dir3;
                 $config_pidana['allowed_types']     = 'pdf';
                 $config_pidana['encrypt_name']		= FALSE;
@@ -14840,7 +14867,7 @@ public function getFileForVerifLayanan()
                 }
             }
 
-            if(isset($_FILES['file4']['name'])){
+            if(isset($_FILES['file4']['name']) AND $_FILES['file4']['name'] != NULL ){
                 $config_pidana['upload_path']       = $target_dir4;
                 $config_pidana['allowed_types']     = 'pdf';
                 $config_pidana['encrypt_name']		= FALSE;
@@ -14858,7 +14885,7 @@ public function getFileForVerifLayanan()
                 }
             }
 
-            if(isset($_FILES['file5']['name'])){
+            if(isset($_FILES['file5']['name']) AND $_FILES['file5']['name'] != NULL ){
                 $config_pidana['upload_path']       = $target_dir5;
                 $config_pidana['allowed_types']     = 'pdf';
                 $config_pidana['encrypt_name']		= FALSE;

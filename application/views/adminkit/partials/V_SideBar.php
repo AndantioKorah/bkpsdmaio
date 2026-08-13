@@ -991,7 +991,7 @@
 			<?php if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isHakAkses('rekap_bangkom')
-				||  $this->general_library->isPegawaiBkpsdm()
+				// ||  $this->general_library->isPegawaiBkpsdm()
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
 				){ ?>
@@ -1570,14 +1570,14 @@
 			// { 
 			?>
 			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()) { ?>
-			<li class="sidebar-item ">
+			<!-- <li class="sidebar-item ">
 				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 					<span class="align-middle">
 					Penilaian 360
 					</span>
 				</a>	
-			</li>
+			</li> -->
 			<?php 
 		    // }
 		    ?>

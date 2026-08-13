@@ -1,3 +1,113 @@
+<style>
+  .lbl_status_pengajuan_1, .lbl_status_pengajuan_2{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: yellow;
+    font-weight: bold;
+    font-size: .7rem;
+  }
+
+  .lbl_status_pengajuan_3, .lbl_status_pengajuan_5{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: red;
+    font-weight: bold;
+    font-size: .7rem;
+    color: white;
+  }
+
+  .lbl_status_pengajuan_4{
+    padding: 5px;
+    border-radius: 5px;
+    background-color: green;
+    font-weight: bold;
+    font-size: .7rem;
+    color: white;
+  }
+</style>
+
+<style>
+  .switch {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  height: 24px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ca2222;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2ab934;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(55px);
+  -ms-transform: translateX(55px);
+  transform: translateX(115px);
+}
+
+/*------ ADDED CSS ---------*/
+.on
+{
+  display: none;
+}
+
+.on, .off
+{
+  color: white;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  top: 50%;
+  left: 50%;
+  font-size: 10px;
+  font-family: Verdana, sans-serif;
+}
+
+input:checked+ .slider .on
+{display: block;}
+
+input:checked + .slider .off
+{display: none;}
+
+/*--------- END --------*/
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;}
+</style>
+
 <div class="card card-default">
     
  <div class="row">
@@ -31,6 +141,9 @@
                                     <th class="text-center">Tahun</th>
                                     <?php if(isset($result[0]['riwayat'])) { ?>
                                     <th class="text-center">Semua Data</th>
+                                     <?php if($this->general_library->isProgrammer()) { ?>
+                                    <th>Keculiakan Dari Perhitungan</th>
+                                     <?php }  ?>
                                      <?php } else { ?>
                                     <th class="text-center">Bulan</th>
                                     <th class="text-center">Data Bangkom</th>
@@ -40,6 +153,8 @@
                                 <tbody>
                                     <?php $no=1; foreach($result as $lj){ ?>
                                     <?php
+                                    $fe = 0;
+                                     $id = 0;
                                         $badge_status = 'badge-cpns';
                                         if($lj['statuspeg'] == 2){
                                         $badge_status = 'badge-pns';
@@ -59,17 +174,22 @@
                                             <td class="text-center"><?=$tahun?></td>
                                             <?php if(isset($lj['riwayat'])) { ?>
                                             <td class="text-center">
-                                            <?php foreach($lj['riwayat'] as $l){ ?>
+                                            <?php $i = 0; foreach($lj['riwayat'] as $l){ ?>
                                             <span class="badge badge-dark"><?php echo  getNamaBulan($l['bulan'])." : ".$l['jumlah_jp']." JP";?></span>
                                             <br>
+                                            <?php  if($bulan == $l['bulan']){ $fe = $l['flag_exception']; $id = $l['id'];  } $i++; } ?>
+                                           <?php if($this->general_library->isProgrammer()) { ?>
+                                            <td>  
+                                             <label class="switch ml-2"><input id="t_cek_bangkom_<?=$l['id']?>" type="checkbox" id="togBtn" onchange="myToggleFunction(this,'<?=$id?>')" <?php if($fe == 1) echo "checked"; else echo "";?>><div class="slider round">
+                                            <span class="on" style="font-size:11px;">Ya </span>
+                                            <span class="off" style="font-size:11px;"> Tidak </span></div></label> 
+                                            </td>
                                             <?php } ?>
                                             <?php } else { ?>
                                             <td class="text-center"><?= getNamaBulan($bulan)?></td>
                                             <td class="text-center"><?php if($lj['id'] == null) echo "-"; else echo "Ada";?></td>
                                             <td class="text-center"><?=$lj['total_jp']?></td>
                                             <?php } ?>
-
-                                            
                                         </td>
 
                                             <!-- <td class="text-center">
@@ -98,4 +218,26 @@
 			"pageLength": 50
 		}) 
   })
+
+function myToggleFunction(id,id_t_check_bangkom){
+
+    if(id.checked) {
+    var flag_exception = 1
+    } else {
+    var flag_exception = 0
+    }
+
+    $.ajax({
+      url: '<?=base_url("kepegawaian/C_Kepegawaian/updateFlagExceptionBangkom/")?>',
+      method: 'post',
+      data : {id_t_check_bangkom: id_t_check_bangkom, flag_exception : flag_exception},
+      success: function(){
+      successtoast("Berhasil ubah data");
+      }, error: function(e){
+      errortoast('Terjadi Kesalahan')
+      }
+    })
+            
+        }
+
 </script>

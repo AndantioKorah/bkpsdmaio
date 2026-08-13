@@ -2169,7 +2169,7 @@ class M_Kepegawaian extends CI_Model
         $this->db->trans_begin();
         $random_number = intval( "0" . rand(1,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) . rand(0,9) );
         $nama_dok =  str_replace(' ', '', $_FILES['file']['name']);
-        $filename = $this->general_library->getId().$random_number."ArsipLain.pdf";
+        $filename = date('Y')."_".$this->general_library->getId().$random_number."ArsipLain.pdf";
         $target_dir						= './arsiplain/';
         		
 		$config['upload_path']          = $target_dir;
@@ -2212,13 +2212,7 @@ class M_Kepegawaian extends CI_Model
                                         ->get()->result_array();
 
             if($cekArsip) {
-            if($this->input->post('jenis_arsip') != 11){
-            $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
-            $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
-            $dataInsert['gambarsk']         = $filename;
-            $this->db->where('id', $cekArsip[0]['id'])
-                ->update('db_pegawai.pegarsip', $dataInsert);
-            } else {
+            if($this->input->post('jenis_arsip') == 11 || $this->input->post('jenis_arsip') == 73){
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
             $dataInsert['gambarsk']         = $filename;
@@ -2231,6 +2225,13 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
             $result = $this->db->insert('db_pegawai.pegarsip', $dataInsert);
+            } else {
+            $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
+            $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
+            $dataInsert['gambarsk']         = $filename;
+            $this->db->where('id', $cekArsip[0]['id'])
+                ->update('db_pegawai.pegarsip', $dataInsert);
+
             }
             } else {
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
@@ -12422,6 +12423,30 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "rekomendasi"){
+            $this->db->select('a.rekomendasi')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rekom_asal"){
+            $this->db->select('a.surat_rekom_asal')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "surat_rekom_tujuan"){
+            $this->db->select('a.surat_rekom_tujuan')
+                ->from('t_layanan as a')
+                ->where('a.id', $id_usul)
+                ->where('a.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
         } else if($this->input->post('file') == "peta_jabatan_mutasi_asn"){
             $this->db->select('a.peta_jabatan')
                 ->from('t_layanan as a')
@@ -12504,7 +12529,17 @@ public function getFileForVerifLayanan()
                 ->order_by('a.created_date', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
-        } else if($this->input->post('file') == "peta" || $this->input->post('file') == "peta_jabatan"){
+        }  else if($this->input->post('file') == "skberhentijafung"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 73)
+                ->where('a.status !=', 3)
+                ->order_by('a.tahun', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        }  else if($this->input->post('file') == "peta" || $this->input->post('file') == "peta_jabatan"){
             $this->db->select('a.gambarsk')
                 ->from('db_pegawai.pegarsip as a')
                 ->where('a.id_pegawai', $id_peg)
@@ -14599,7 +14634,7 @@ public function getFileForVerifLayanan()
 	{
        
         $this->db->trans_begin();
-    $datapost = $this->input->post();
+        $datapost = $this->input->post();
    
 
         if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
@@ -14705,6 +14740,9 @@ public function getFileForVerifLayanan()
             // $file2 = null;
             $filehd = null;
             $filepidana = null;
+            $file3 = null;
+            $file4 = null;
+            $file5 = null;
 
             $this->load->library('upload');
             if(isset($_FILES['file2']['name'])){
@@ -14735,9 +14773,24 @@ public function getFileForVerifLayanan()
                 } 
             }
 
-             if(isset($_FILES['file3']['name'])){
-                $filepidana =  "surat_pernyataan_tidak_pidana_$nip"."_$random_number".".pdf";
-                $target_dir_pidana	= './dokumen_layanan/suratpidanahukdis';
+            if(isset($_FILES['file3']['name']) AND $_FILES['file3']['name'] != NULL){
+                if($id_m_layanan == 28){
+                $file3 =  "surat_rekom_asal_$nip"."_$random_number".".pdf";
+                $target_dir3	= './dokumen_layanan/mutasi_pindah_masuk';
+                } else {
+                $file3 =  "surat_pernyataan_tidak_pidana_$nip"."_$random_number".".pdf";
+                $target_dir3	= './dokumen_layanan/suratpidanahukdis';
+                }
+            } 
+
+            if(isset($_FILES['file4']['name']) AND $_FILES['file4']['name'] != NULL){
+                $file4 =  "surat_rekom_tujuan_$nip"."_$random_number".".pdf";
+                $target_dir4	= './dokumen_layanan/mutasi_pindah_masuk';
+            } 
+
+            if(isset($_FILES['file5']['name']) AND $_FILES['file5']['name'] != NULL){
+                $file5 =  "rekomendasi_$nip"."_$random_number".".pdf";
+                $target_dir5	= './dokumen_layanan/mutasi_pindah_masuk';
             } 
             
           
@@ -14769,6 +14822,11 @@ public function getFileForVerifLayanan()
                     $dataUsul['tanggal_dispen_mulai']      = $tanggal[0];
                     $dataUsul['tanggal_dispen_selesai']      = $tanggal[1];
                     }
+                    if($id_m_layanan == 28){
+                    $dataUsul['surat_rekom_asal']      = $file3;
+                    $dataUsul['surat_rekom_tujuan']      = $file4;
+                    $dataUsul['rekomendasi']      = $file5;
+                    }
                     $this->db->insert('db_efort.t_layanan', $dataUsul);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             }
@@ -14791,13 +14849,13 @@ public function getFileForVerifLayanan()
                 }
             }
 
-            if(isset($_FILES['file3']['name'])){
-                $config_pidana['upload_path']       = $target_dir_hd;
+            if(isset($_FILES['file3']['name']) AND $_FILES['file3']['name'] != NULL ){
+                $config_pidana['upload_path']       = $target_dir3;
                 $config_pidana['allowed_types']     = 'pdf';
                 $config_pidana['encrypt_name']		= FALSE;
                 $config_pidana['overwrite']			= TRUE;
                 $config_pidana['detect_mime']		= TRUE;
-                $config_pidana['file_name']         = $filepidana;
+                $config_pidana['file_name']         = $file3;
                 $this->upload->initialize($config_pidana);
                 if (!$this->upload->do_upload('file3')) {
                     $data['error']    = strip_tags($this->upload->display_errors());
@@ -14808,6 +14866,43 @@ public function getFileForVerifLayanan()
                     $dataFile 			= $this->upload->data();
                 }
             }
+
+            if(isset($_FILES['file4']['name']) AND $_FILES['file4']['name'] != NULL ){
+                $config_pidana['upload_path']       = $target_dir4;
+                $config_pidana['allowed_types']     = 'pdf';
+                $config_pidana['encrypt_name']		= FALSE;
+                $config_pidana['overwrite']			= TRUE;
+                $config_pidana['detect_mime']		= TRUE;
+                $config_pidana['file_name']         = $file4;
+                $this->upload->initialize($config_pidana);
+                if (!$this->upload->do_upload('file4')) {
+                    $data['error']    = strip_tags($this->upload->display_errors());
+                    $data['token']    = $this->security->get_csrf_hash();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                    return $res;
+                } else {
+                    $dataFile 			= $this->upload->data();
+                }
+            }
+
+            if(isset($_FILES['file5']['name']) AND $_FILES['file5']['name'] != NULL ){
+                $config_pidana['upload_path']       = $target_dir5;
+                $config_pidana['allowed_types']     = 'pdf';
+                $config_pidana['encrypt_name']		= FALSE;
+                $config_pidana['overwrite']			= TRUE;
+                $config_pidana['detect_mime']		= TRUE;
+                $config_pidana['file_name']         = $file5;
+                $this->upload->initialize($config_pidana);
+                if (!$this->upload->do_upload('file5')) {
+                    $data['error']    = strip_tags($this->upload->display_errors());
+                    $data['token']    = $this->security->get_csrf_hash();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                    return $res;
+                } else {
+                    $dataFile 			= $this->upload->data();
+                }
+            }
+
         }
 
 
@@ -15810,8 +15905,14 @@ public function checkListIjazahCpns($id, $id_pegawai){
         $this->db->where_in('id', [18,19,20])
         ->update('m_layanan', $data);
         }
-        
-       
+    }
+
+      public function updateFlagExceptionBangkom()
+    {
+        $data['flag_exception'] = $this->input->post('flag_exception');
+        $data['updated_by'] = $this->general_library->getId();
+        $this->db->where('id', $this->input->post('id_t_check_bangkom'))
+        ->update('t_cek_bangkom', $data);
     }
 
     public function catatanGajiBerkala()
@@ -18827,9 +18928,10 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                 ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                                 ->where('a.flag_ditebus', 0)
                                 ->where('a.flag_terpenuhi', 0)
-                                ->where('a.flag_exception', 0)
+                                // ->where('a.flag_exception', 0)
                                 ->where('a.flag_active', 1)
                                 ->where('b.id_m_status_pegawai', 1)
+                                ->order_by('a.bulan', 'desc')
                                 ->group_by('b.nipbaru_ws');
                                 
                                 if($this->input->post('unitkerja') == 0){
@@ -18878,13 +18980,13 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                 $this->db->where('b.skpd', $this->input->post('unitkerja'));
                                 }
                                 }
-
                               
-
                                  $result = $this->db->get()->result_array();
+
+                                 
                                  if($result) {
                                     foreach($result as $res){
-                                    $this->db->select('a.bulan,a.jumlah_jp')
+                                    $this->db->select('a.id,a.bulan,a.jumlah_jp,a.flag_exception')
                                                     ->from('t_cek_bangkom a')
                                                     ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                                                     ->where('a.flag_active', 1)

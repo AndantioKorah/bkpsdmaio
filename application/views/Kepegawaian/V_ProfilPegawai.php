@@ -1206,13 +1206,15 @@
 
 <!-- Modal -->
 <div class="modal fade" id="modalSurvei" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content ">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <iframe src="https://surveidigital.spbe.go.id/embed/survey/eyJzdXJ2ZXlfaWQiOjIsInNlcnZpY2VfaWQiOjEwMDQsImhvc3QiOiJodHRwczovL3NpbGFkZW4ubWFuYWRva290YS5nby5pZC8saHR0cDovLzIwMy4xNzUuMTAuOTAvIiwia2V5IjoiR21xRm1qcEQifQ==/embed/view/?jenis_layanan=Siladen" width="100%" height="700px"></iframe>
+<!--           
          <div id="modal-survei">
          Yth. Bapak/Ibu/Saudara/i, Dokumen Layanan <?=$layananSelesai['layanan'];?> anda telah kami upload di Aplikasi Siladen dan dapat Anda lihat pada tab Pangkat.
           <br><br>
@@ -1234,7 +1236,7 @@
        <center>
           <img  style="width: 240px; height: 240px" src="<?=base_url('assets/images/asn.png')?>" /> 
        </center>
-        </div>
+        </div> -->
       </div>
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
@@ -1452,9 +1454,15 @@
   // if(bidang == ""){
   // $('#btnstatic').click()  
   // }
+  <?php if($this->general_library->isProgrammer()){ ?>
+        //  $('#btnmodalsurvei').click()
+    <?php } ?>
+
       <?php if(isset($layananSelesai['code']) AND ($layananSelesai['code'] == 1)){ ?>
-      // $('#btnmodalsurvei').click()
-      // $('#modal-survei').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
+				<?php if($this->general_library->isProgrammer()){ ?>
+         $('#btnmodalsurvei').click()
+        //  $('#modal-survei').load('<?=base_url('login/C_Login/loadAnnouncement')?>')
+    <?php } ?>
     <?php } ?>
 
   

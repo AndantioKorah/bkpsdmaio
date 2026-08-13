@@ -8,7 +8,7 @@
           <th class="text-left">Tanggal Pengajuan</th>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
-          <?php if($m_layanan == 25 || $m_layanan == 26) { ?>
+          <?php if($m_layanan == 25 || $m_layanan == 26 || $m_layanan == 28) { ?>
           <th class="text-left">Surat Permohonan</th>
           <?php } else { ?>
           <th class="text-left">Surat Pengantar</th>
@@ -34,6 +34,12 @@
            <?php if($m_layanan == 39) { ?>
           <th class="text-left">Surat Kegiatan</th>
           <th class="text-left">Surat Dispensasi</th>
+          <?php } ?>
+           <?php if($m_layanan == 28) { ?>
+          <th class="text-left">Surat Rekomendasi dari Perangkat Daerah Asal</th>
+          <th class="text-left">Surat Rekomendasi dari Perangkat Daerah Tujuan</th>
+          <th class="text-left">Rekomendasi Dari Dinas Kesehatan/Dinas Pendidikan dan Kebudayaan</th>
+
           <?php } ?>
           <th style="width:40%;"></th>
         </thead>
@@ -90,6 +96,32 @@
           </td>
             <?php } ?>
           <?php } ?>
+
+          <?php if($m_layanan == 28) { ?>
+          <td class="text-left">
+          <?php if($rs['surat_rekom_asal'] != null) { ?>
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_rekom_asal']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
+          </td>
+
+          <td class="text-left">
+            <?php if($rs['surat_rekom_tujuan'] != null) { ?>
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_rekom_tujuan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
+          </td>
+
+          <td class="text-left">
+            <?php if($rs['rekomendasi'] != null) { ?>
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['rekomendasi']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
+          </td>
+
+        
+          <?php } ?>
+
             <?php if($m_layanan == 10 || $m_layanan == 21) { ?>
           <td class="text-left">
           <?php if($rs['dokumen_layanan'] != null) { ?>
@@ -375,6 +407,11 @@
                                if(id_layanan == 35){
                                 loadListRiwayatCpnsPns()
                                }
+                               if(id_layanan == 28){
+                                loadListRiwayatMutasiPidahMasuk()
+                               }
+
+                               
                                
                                
                            }, error: function(e){

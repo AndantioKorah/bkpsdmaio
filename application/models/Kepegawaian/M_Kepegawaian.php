@@ -14610,7 +14610,7 @@ public function getFileForVerifLayanan()
 	{
        
         $this->db->trans_begin();
-    $datapost = $this->input->post();
+        $datapost = $this->input->post();
    
 
         if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
@@ -14746,9 +14746,24 @@ public function getFileForVerifLayanan()
                 } 
             }
 
-             if(isset($_FILES['file3']['name'])){
-                $filepidana =  "surat_pernyataan_tidak_pidana_$nip"."_$random_number".".pdf";
-                $target_dir_pidana	= './dokumen_layanan/suratpidanahukdis';
+            if(isset($_FILES['file3']['name'])){
+                if($id_m_layanan == 28){
+                $file3 =  "surat_rekom_asal_$nip"."_$random_number".".pdf";
+                $target_dir3	= './dokumen_layanan/mutasi_pindah_masuk';
+                } else {
+                $file3 =  "surat_pernyataan_tidak_pidana_$nip"."_$random_number".".pdf";
+                $target_dir3	= './dokumen_layanan/suratpidanahukdis';
+                }
+            } 
+
+            if(isset($_FILES['file4']['name'])){
+                $file4 =  "surat_rekom_tujuan_$nip"."_$random_number".".pdf";
+                $target_dir4	= './dokumen_layanan/mutasi_pindah_masuk';
+            } 
+
+            if(isset($_FILES['file5']['name'])){
+                $file5 =  "rekomendasi_$nip"."_$random_number".".pdf";
+                $target_dir5	= './dokumen_layanan/mutasi_pindah_masuk';
             } 
             
           
@@ -14780,6 +14795,11 @@ public function getFileForVerifLayanan()
                     $dataUsul['tanggal_dispen_mulai']      = $tanggal[0];
                     $dataUsul['tanggal_dispen_selesai']      = $tanggal[1];
                     }
+                    if($id_m_layanan == 28){
+                    $dataUsul['surat_rekom_asal']      = $file3;
+                    $dataUsul['surat_rekom_tujuan']      = $file4;
+                    $dataUsul['rekomendasi']      = $file5;
+                    }
                     $this->db->insert('db_efort.t_layanan', $dataUsul);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
             }
@@ -14803,12 +14823,12 @@ public function getFileForVerifLayanan()
             }
 
             if(isset($_FILES['file3']['name'])){
-                $config_pidana['upload_path']       = $target_dir_hd;
+                $config_pidana['upload_path']       = $target_dir3;
                 $config_pidana['allowed_types']     = 'pdf';
                 $config_pidana['encrypt_name']		= FALSE;
                 $config_pidana['overwrite']			= TRUE;
                 $config_pidana['detect_mime']		= TRUE;
-                $config_pidana['file_name']         = $filepidana;
+                $config_pidana['file_name']         = $file3;
                 $this->upload->initialize($config_pidana);
                 if (!$this->upload->do_upload('file3')) {
                     $data['error']    = strip_tags($this->upload->display_errors());
@@ -14819,6 +14839,43 @@ public function getFileForVerifLayanan()
                     $dataFile 			= $this->upload->data();
                 }
             }
+
+            if(isset($_FILES['file4']['name'])){
+                $config_pidana['upload_path']       = $target_dir4;
+                $config_pidana['allowed_types']     = 'pdf';
+                $config_pidana['encrypt_name']		= FALSE;
+                $config_pidana['overwrite']			= TRUE;
+                $config_pidana['detect_mime']		= TRUE;
+                $config_pidana['file_name']         = $file4;
+                $this->upload->initialize($config_pidana);
+                if (!$this->upload->do_upload('file4')) {
+                    $data['error']    = strip_tags($this->upload->display_errors());
+                    $data['token']    = $this->security->get_csrf_hash();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                    return $res;
+                } else {
+                    $dataFile 			= $this->upload->data();
+                }
+            }
+
+            if(isset($_FILES['file5']['name'])){
+                $config_pidana['upload_path']       = $target_dir5;
+                $config_pidana['allowed_types']     = 'pdf';
+                $config_pidana['encrypt_name']		= FALSE;
+                $config_pidana['overwrite']			= TRUE;
+                $config_pidana['detect_mime']		= TRUE;
+                $config_pidana['file_name']         = $file5;
+                $this->upload->initialize($config_pidana);
+                if (!$this->upload->do_upload('file5')) {
+                    $data['error']    = strip_tags($this->upload->display_errors());
+                    $data['token']    = $this->security->get_csrf_hash();
+                    $res = array('msg' => 'Data gagal disimpan', 'success' => false, 'error' =>$data['error']);
+                    return $res;
+                } else {
+                    $dataFile 			= $this->upload->data();
+                }
+            }
+
         }
 
 

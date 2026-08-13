@@ -309,16 +309,39 @@ ol {
     
           <span><b>Berkas Persyaratan :</b></span>
 					<div class="list-type1x mt-2">
+
           <div class="form-group mb-2">
-            <label>Surat Pengantar dari Perangkat Daerah Asal, dengan menyebutkan nama jabatan saat ini dan yang akan diduduki di Perangkat Daerah Tujuan (nama jabatan wajib sesuai dengan yang ada di peta jabatan) </label>
+            <label>Surat Permohonan </label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar" name="file" required />
             <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
           </div>
-        <div class="form-group">
+
+           <div class="form-group mb-2">
             <label>Surat Keterangan Tidak Pernah/Sedang Dijatuhi Hukuman Disiplin dan Tidak Sedang Memangku Jabatan sebagai Bendahara dan Pengurus Barang tanda tangan Kepala Perangkat Daerah Asal</label>
             <input  class="form-control my-image-field" type="file" id="pdf_surat_hd" name="file2" required />
         </div>
-			<ol class="rectangle-list">
+
+          <div class="form-group mb-2">
+            <label>Surat Rekomendasi dari Perangkat Daerah Asal dengan menyebutkan nama jabatan saat ini, ditanda tangani oleh Kepala Perangkat Daerah/Unit Kerja Asal </label>
+            <input  class="form-control my-image-field" type="file" id="surat_rekom_asal" name="file3" required />
+            <!-- <input 
+             class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
+          </div>
+
+          <div class="form-group mb-2">
+            <label>Surat Rekomendasi dari Perangkat Daerah Tujuan dengan menyebutkan nama jabatan yang akan diduduki di Perangkat Daerah Tujuan (nama jabatan wajib sesuai dengan yang ada di peta jabatan)</label>
+            <input  class="form-control my-image-field" type="file" id="surat_rekom_tujuan" name="file4" required />
+            <!-- <input class="form-control" type="file" id="surat_pengantar" name="surat_pengantar" autocomplete="off"  /> -->
+          </div>
+
+         <div class="form-group">
+            <label>Rekomendasi Dari Dinas Kesehatan/Dinas Pendidikan dan Kebudayaan (Khusus Untuk Guru/Tenaga Kesehatan)</label>
+            <input  class="form-control my-image-field" type="file" id="rekomendasi" name="file5" required />
+        </div>
+
+        
+
+			  <ol class="rectangle-list">
             <li>
             	<a class="<?php if($sk_pangkat){ if($sk_pangkat['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>"
             		<?php if($sk_pangkat) { ?> onclick="viewBerkasPangkat('<?=$sk_pangkat['gambarsk'];?>',2)"

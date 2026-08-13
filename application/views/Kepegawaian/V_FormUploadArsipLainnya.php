@@ -238,7 +238,7 @@ $(function(){
  $('#jenis_arsip').change(function() {
         // Code to run when the value changes
         var selectedValue = $(this).val(); // Get the new value
-        if(selectedValue == '11'){
+        if(selectedValue == '11' || selectedValue == '73'){
           $('.div_tahun').show()
         } else {
           $('.div_tahun').hide()
@@ -257,7 +257,7 @@ $(function(){
         var jenis_arsip = $('#jenis_arsip').val()
        
 
-        if(jenis_arsip == 11){
+        if(jenis_arsip == 11 || jenis_arsip == 73){
            var tahun = $('#arsip_tahun').val()
            if(tahun == null || tahun == ""){
             errortoast('Tahun Masih Kosong')

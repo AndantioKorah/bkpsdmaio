@@ -2212,13 +2212,7 @@ class M_Kepegawaian extends CI_Model
                                         ->get()->result_array();
 
             if($cekArsip) {
-            if($this->input->post('jenis_arsip') != 11){
-            $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
-            $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
-            $dataInsert['gambarsk']         = $filename;
-            $this->db->where('id', $cekArsip[0]['id'])
-                ->update('db_pegawai.pegarsip', $dataInsert);
-            } else {
+            if($this->input->post('jenis_arsip') == 11 || $this->input->post('jenis_arsip') == 73){
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
             $dataInsert['gambarsk']         = $filename;
@@ -2231,6 +2225,13 @@ class M_Kepegawaian extends CI_Model
                 $dataInsert['id_m_user_verif']      = $this->general_library->getId();
                 }
             $result = $this->db->insert('db_pegawai.pegarsip', $dataInsert);
+            } else {
+            $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
+            $dataInsert['id_dokumen']      = $this->input->post('jenis_arsip');
+            $dataInsert['gambarsk']         = $filename;
+            $this->db->where('id', $cekArsip[0]['id'])
+                ->update('db_pegawai.pegarsip', $dataInsert);
+
             }
             } else {
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
@@ -12511,7 +12512,7 @@ public function getFileForVerifLayanan()
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 73)
                 ->where('a.status !=', 3)
-                ->order_by('a.created_date', 'desc')
+                ->order_by('a.tahun', 'desc')
                 ->limit(1);
                 return $this->db->get()->result_array();
         }  else if($this->input->post('file') == "peta" || $this->input->post('file') == "peta_jabatan"){

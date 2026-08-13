@@ -1607,7 +1607,14 @@
         $temp_list_pegawai = null;
         foreach($list_pegawai as $lp){
             $nip = isset($lp['nipbaru_ws']) ? $lp['nipbaru_ws'] : $lp['nip'];
-            $temp_list_pegawai[$nip] = $lp;
+            if(isset($temp_list_pegawai[$nip])){
+                // dd($nip."   ".$lp['kelas_jabatan']."  ".$temp_list_pegawai[$nip]['kelas_jabatan']);
+                if($lp['kelas_jabatan'] > $temp_list_pegawai[$nip]['kelas_jabatan']){
+                    $temp_list_pegawai[$nip] = $lp;
+                }
+            } else {
+                $temp_list_pegawai[$nip] = $lp;
+            }
         }
 
         $uk = $this->db->select('*')
@@ -1712,7 +1719,7 @@
                                     ->get()->row_array();
         
         $result = null;
-        $pegawai = $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp, d.kelas_jabatan_hardcode, h.nm_statuspeg,
+        $pegawai = $this->db->select('a.id as id_t_plt_plh, d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, a.flag_timpa_tpp, d.kelas_jabatan_hardcode, h.nm_statuspeg,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja, c.id as id_m_user, d.id_jabatan_tambahan,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, a.presentasi_tpp, d.nipbaru_ws as nip, a.flag_use_bpjs, f.nm_unitkerja, d.tmt_hitung_absen,
             concat(a.jenis, ". ", b.nama_jabatan) as nama_jabatan, a.tanggal_mulai, a.tanggal_akhir, b.eselon, e.id_pangkat as pangkat, b.flag_override_tpp, a.flag_use_presentase_tpp_plt')
@@ -1763,15 +1770,19 @@
                 }
                 // $presentase = ($jumlah_hari_kerja_tmt / $hari_kerja[0]) * 100;
                 // cari jika sudah 12 hari kerja di tempat yang baru
+                
                 if($jumlah_hari_kerja_tmt >= 12){
-                    if(isset($tempList[$p['nipbaru_ws']])){
+                    if(isset($tempList[$p['nipbaru_ws']]) && $p['flag_timpa_tpp'] == 1){
                         unset($tempList[$p['nipbaru_ws']]);
-                        $tempList[$p['nipbaru_ws']] = $p;
                     }
+                    $tempList[] = $p;
                 }
             }
         }
         $list_pegawai = $tempList;
+        // if($this->general_library->isProgrammer()){
+        //     dd($list_pegawai);
+        // }
         return $list_pegawai;
     }
 
@@ -1966,9 +1977,9 @@
             $list_pegawai = $this->getNominatifPegawaiHardCode($data['id_unitkerja'], $data['bulan'], $data['tahun'], $list_pegawai);
         }
         $tempListPegawai = $list_pegawai;
-        if($this->general_library->isProgrammer()){
-            // $flag_rekap_tpp = 0;
-        }
+        // if($this->general_library->isProgrammer()){
+        //     dd($list_pegawai);
+        // }
         if($flag_rekap_tpp == 1){
             $exceptBangkom = $this->db->select('*')
                                 ->from('t_except_bangkom')
@@ -2050,7 +2061,7 @@
                 }
             }
         }
-        
+
         $list_tanggal_exclude = null;
         $temp_list_nip = null;
         if($flag_absen_aars == 1){
@@ -2075,18 +2086,25 @@
 
             $tlp = null;
             //ambil kelas jabatan tiap pegawai
-            if($this->general_library->isProgrammer()){
-                // dd($list_pegawai);
-            }
+            
             $list_pegawai = $this->getKelasJabatanPegawai($list_pegawai);
 
+            // if($this->general_library->isProgrammer()){
+            //     dd($list_pegawai);
+            // }
+
             foreach($list_pegawai as $lpw){
+                $tempData = null;
+                if(isset($tlp[$lpw['nip']])){
+                    $tempData = $tlp[$lpw['nip']];
+                }
+
                 $temp_list_nip[$lpw['nip']] = $lpw['nip'];
                 $tlp[$lpw['nip']]['nama_pegawai'] = getNamaPegawaiFull($lpw);
                 $tlp[$lpw['nip']]['nip'] = ($lpw['nip']);
-                $tlp[$lpw['nip']]['nama_jabatan'] = ($lpw['nama_jabatan']);
-                $tlp[$lpw['nip']]['eselon'] = ($lpw['eselon']);
-                $tlp[$lpw['nip']]['kelas_jabatan'] = ($lpw['kelas_jabatan']);
+                $tlp[$lpw['nip']]['nama_jabatan'] = $tempData ? $tempData['nama_jabatan'] : ($lpw['nama_jabatan']);
+                $tlp[$lpw['nip']]['eselon'] = $tempData ? $tempData['eselon'] : ($lpw['eselon']);
+                $tlp[$lpw['nip']]['kelas_jabatan'] = $tempData ? $tempData['kelas_jabatan'] : ($lpw['kelas_jabatan']);
                 $tlp[$lpw['nip']]['statuspeg'] = ($lpw['statuspeg']);
                 $tlp[$lpw['nip']]['nm_statuspeg'] = ($lpw['nm_statuspeg']);
                 // $tlp[$lpw['nip']]['golongan'] = $lpw['statuspeg'] == 1 || $lpw['statuspeg'] == 2 ? numberToRoman(substr($lpw['pangkat'], 0, 1)) : '';
@@ -2094,6 +2112,11 @@
                 $tlp[$lpw['nip']]['tmt_hitung_absen'] = $lpw['tmt_hitung_absen'];
                 $tlp[$lpw['nip']]['absen'] = null;
                 $tlp[$lpw['nip']]['jumlah_anulir'] = null;
+
+                if($tempData){
+
+                }
+
                 foreach($list_hari as $lh){
                     $tlp[$lpw['nip']]['absen'][$lh]['tanggal'] = $lh;
                     $tlp[$lpw['nip']]['absen'][$lh]['jam_masuk'] = "";
@@ -3361,6 +3384,17 @@
             $result['hukdis'] = isset($data_rekap['hukdis']) ? $data_rekap['hukdis'] : [];
 
             foreach($list_pegawai['result'] as $l){
+                // // if($this->general_library->isProgrammer()){
+                // //     dd(json_encode($list_pegawai['result']));       
+                // // }
+                // if(isset($result[$l['nipbaru_ws']])){ // cek jika sudah ada sebelumnya, maka data yang kedua adalah plt/plh
+                //     // pagu tpp sebelumnya tambah dengan pagu tpp yang baru
+                //     $l['pagu_tpp'] += $result[$l['nipbaru_ws']]['pagu_tpp'];
+
+                //     $l['nama_jabatan'] = $result[$l['nipbaru_ws']]['nama_jabatan'];
+                //     $l['kelas_jabatan'] = $result[$l['nipbaru_ws']]['kelas_jabatan'];
+                // }
+
                 if(isset($l['nipbaru_ws'])){
                     $result[$l['nipbaru_ws']]['nama_pegawai'] = getNamaPegawaiFull($l);
                     $result[$l['nipbaru_ws']]['nip'] = $l['nipbaru_ws'];
@@ -3674,6 +3708,8 @@
                             $rekap['tpp_final'] += $result[$l['nipbaru_ws']]['tpp_final'];
                         }
                     }
+
+
                 }
             }
 
@@ -5194,5 +5230,216 @@
         $this->db->insert('t_log_download_absen', $insert_data);
     }
 
+    public function searchRekapOkta(){
+        $rs = null;
+        $rs['param'] = $this->input->post();
+        
+        $rs['unitkerja'] = null;
+        if($rs['param']['id_unitkerja'] != 0){
+            $rs['unitkerja'] = $this->db->select('*')
+                                    ->from('db_pegawai.unitkeraj')
+                                    ->where('id_unitkerja', $rs['param']['id_unitkerja'])
+                                    ->get()->row_array();
+        }
+        
+        $rs['data']['rekap']['jenis_konsul'] = null;
+        $jenisKonsul = $this->db->select('*')
+                                ->from('m_layanan_konsul')
+                                ->order_by('nama_layanan')
+                                ->get()->result_array();
+        foreach($jenisKonsul as $jKon){
+            $rs['data']['rekap']['jenis_konsul'][$jKon['id']] = $jKon;
+            $rs['data']['rekap']['jenis_konsul'][$jKon['id']]['total'] = 0;
+            // $rs['data']['rekap']['jenis_konsul'][$jKon['id']]['list'] = null;
+        }
+
+        $rs['data']['rekap']['list_bidang'] = null;
+        $mBidang = $this->db->select('*')
+                            ->from('m_bidang')
+                            ->where('id_unitkerja', 4018000)
+                            ->get()->result_array();
+        foreach($mBidang as $mb){
+            $rs['data']['rekap']['list_bidang'][$mb['id']] = $mb;
+            $rs['data']['rekap']['list_bidang'][$mb['id']]['total'] = 0;
+            $rs['data']['rekap']['list_bidang'][$mb['id']]['list'] = null;
+        }
+        
+        $this->db->select('a.*, g.id_m_bidang')
+                ->from('t_live_chat a')
+                ->join('m_user b', 'a.id_m_user = b.id')
+                ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                ->join('db_pegawai.unitkerja d', 'c.skpd = d.id_unitkerja')
+                ->join('m_user e', 'a.id_m_user_assigned = e.id', 'left')
+                ->join('db_pegawai.pegawai f', 'e.username = f.nipbaru_ws', 'left')
+                ->join('m_layanan_konsul g', 'a.id_m_layanan_konsul = g.id')
+                ->where('a.flag_active', 1)
+                ->where('b.flag_active', 1)
+                ->order_by('a.created_date', 'desc')
+                ->group_by('a.id');
+
+        if($rs['param']['periode'] != "0"){
+            $explPeriode = explode("-", $rs['param']['periode']);
+            $this->db->where('MONTH(a.created_date)', $explPeriode[0])
+                    ->where('YEAR(a.created_date)', $explPeriode[1]);
+        }
+
+        if($rs['param']['id_m_layanan_konsul'] != "0"){
+            $this->db->where('a.id_m_layanan_konsul', $rs['param']['id_m_layanan_konsul']);
+        }
+
+        if($rs['param']['id_unitkerja'] != "0"){
+            $this->db->where('c.id_unitkerja', $rs['param']['id_unitkerja']);
+        }
+
+        if($rs['param']['status'] != "0"){
+            if($rs['param']['status'] == 1){ // cari yang aktif
+                $this->db->where('a.flag_done', 0);
+            } else if($rs['param']['status'] == 2){ // cari yang selesai tapi belum rating
+                $this->db->where('a.flag_done', 1)
+                        ->where('a.flag_rating', 0);
+            } else if($rs['param']['status'] == 3){ // cari yang selesai dan sudah rating
+                $this->db->where('a.flag_done', 1)
+                        ->where('a.flag_rating', 1);
+            }
+        }
+        $list = $this->db->get()->result_array();
+        $rs['data']['list'] = null;
+        $rs['data']['rekap']['total'] = 0;
+        $rs['data']['rekap']['aktif']['total'] = 0;
+        $rs['data']['rekap']['aktif']['list'] = null;
+        $rs['data']['rekap']['selesai']['total'] = 0;
+        $rs['data']['rekap']['selesai']['list'] = null;
+        $rs['data']['rekap']['belum_rating']['total'] = 0;
+        $rs['data']['rekap']['belum_rating']['list'] = null;
+        $rs['data']['rekap']['sudah_rating']['total'] = 0;
+        $rs['data']['rekap']['sudah_rating']['list'] = null;
+        $rs['data']['rating']['total'] = 0;
+        $rs['data']['rating'][5]['total'] = 0;
+        $rs['data']['rating'][5]['list'] = null;
+        $rs['data']['rating'][4]['total'] = 0;
+        $rs['data']['rating'][4]['list'] = null;
+        $rs['data']['rating'][3]['total'] = 0;
+        $rs['data']['rating'][3]['list'] = null;
+        $rs['data']['rating'][2]['total'] = 0;
+        $rs['data']['rating'][2]['list'] = null;
+        $rs['data']['rating'][1]['total'] = 0;
+        $rs['data']['rating'][1]['list'] = null;
+        $rs['data']['rating'][0]['total'] = 0;
+        $rs['data']['rating'][0]['list'] = null;
+
+        $rs['data']['rating']['kecepatan']['total'] = 0;
+        $rs['data']['rating']['kecepatan'][5] = 0;
+        $rs['data']['rating']['kecepatan'][4] = 0;
+        $rs['data']['rating']['kecepatan'][3] = 0;
+        $rs['data']['rating']['kecepatan'][2] = 0;
+        $rs['data']['rating']['kecepatan'][1] = 0;
+        $rs['data']['rating']['kecepatan'][0] = 0;
+        $rs['data']['rating']['kecepatan']['rerata'] = 0;
+        $rs['data']['rating']['kecepatan']['total_rating'] = 0;
+
+        $rs['data']['rating']['ketepatan']['total'] = 0;
+        $rs['data']['rating']['ketepatan'][5] = 0;
+        $rs['data']['rating']['ketepatan'][4] = 0;
+        $rs['data']['rating']['ketepatan'][3] = 0;
+        $rs['data']['rating']['ketepatan'][2] = 0;
+        $rs['data']['rating']['ketepatan'][1] = 0;
+        $rs['data']['rating']['ketepatan'][0] = 0;
+        $rs['data']['rating']['ketepatan']['rerata'] = 0;
+        $rs['data']['rating']['ketepatan']['total_rating'] = 0;
+
+        if($list){
+            foreach($list as $l){
+                $rs['data']['list'][$l['id']] = $l;
+                $rs['data']['rekap']['total']++;
+                
+                $rs['data']['rekap']['jenis_konsul'][$l['id_m_layanan_konsul']]['total']++;
+                // $rs['data']['rekap']['jenis_konsul'][$l['id_m_layanan_konsul']]['list'][] = $l;
+
+                $rs['data']['rekap']['list_bidang'][$l['id_m_bidang']]['total']++;
+                $rs['data']['rekap']['list_bidang'][$l['id_m_bidang']]['list'][] = $l;
+
+                if($l['flag_done'] == 1){
+                    $rs['data']['rekap']['selesai']['total']++;
+                    $rs['data']['rekap']['selesai']['list'][] = $l;
+                    if($l['flag_rating'] == 0){
+                        $rs['data']['rekap']['belum_rating']['total']++;
+                        $rs['data']['rekap']['belum_rating']['list'][] = $l; 
+                    }
+                } else {
+                    $rs['data']['rekap']['aktif']['total']++;
+                    $rs['data']['rekap']['aktif']['list'][] = $l;
+                }
+
+                if($l['flag_rating'] == 1){
+                    $rs['data']['rekap']['sudah_rating']['total']++;
+                    $rs['data']['rekap']['sudah_rating']['list'][] = $l;
+    
+                    $rs['data']['rating']['ketepatan']['total']++;
+                    $rs['data']['rating']['ketepatan']['total_rating'] += $l['rating_ketepatan'];
+                    if($l['rating_ketepatan'] == 5){
+                        $rs['data']['rating']['ketepatan'][5]++;
+                    } else if($l['rating_ketepatan'] == 4){
+                        $rs['data']['rating']['ketepatan'][4]++;
+                    } else if($l['rating_ketepatan'] == 3){
+                        $rs['data']['rating']['ketepatan'][3]++;
+                    } else if($l['rating_ketepatan'] == 2){
+                        $rs['data']['rating']['ketepatan'][2]++;
+                    } else if($l['rating_ketepatan'] == 1){
+                        $rs['data']['rating']['ketepatan'][1]++;
+                    } else if($l['rating_ketepatan'] == 0){
+                        $rs['data']['rating']['ketepatan'][0]++;
+                    }
+
+                    $rs['data']['rating']['kecepatan']['total']++;
+                    $rs['data']['rating']['kecepatan']['total_rating'] += $l['rating_kecepatan'];
+                    if($l['rating_kecepatan'] == 5){
+                        $rs['data']['rating']['kecepatan'][5]++;
+                    } else if($l['rating_kecepatan'] == 4){
+                        $rs['data']['rating']['kecepatan'][4]++;
+                    } else if($l['rating_kecepatan'] == 3){
+                        $rs['data']['rating']['kecepatan'][3]++;
+                    } else if($l['rating_kecepatan'] == 2){
+                        $rs['data']['rating']['kecepatan'][2]++;
+                    } else if($l['rating_kecepatan'] == 1){
+                        $rs['data']['rating']['kecepatan'][1]++;
+                    } else if($l['rating_kecepatan'] == 0){
+                        $rs['data']['rating']['kecepatan'][0]++;
+                    }
+
+                    $rerata = floatval(($l['rating_kecepatan'] + $l['rating_ketepatan']) / 2);
+                    if($rerata == 5){
+                        $rs['data']['rating'][5]['total']++;
+                        $rs['data']['rating'][5]['list'][] = $l;
+                    } else if($rerata >= 4 && $rerata < 5){
+                        $rs['data']['rating'][4]['total']++;
+                        $rs['data']['rating'][4]['list'][] = $l;
+                    } else if($rerata >= 3 && $rerata < 4){
+                        $rs['data']['rating'][3]['total']++;
+                        $rs['data']['rating'][3]['list'][] = $l;
+                    } else if($rerata >= 2 && $rerata < 3){
+                        $rs['data']['rating'][2]['total']++;
+                        $rs['data']['rating'][2]['list'][] = $l;
+                    } else if($rerata >= 1 && $rerata < 2){
+                        $rs['data']['rating'][1]['total']++;
+                        $rs['data']['rating'][1]['list'][] = $l;
+                    } else if($rerata >= 0 && $rerata < 1){
+                        $rs['data']['rating'][0]['total']++;
+                        $rs['data']['rating'][0]['list'][] = $l;
+                    }
+                }
+            }
+
+            $rs['data']['rating']['kecepatan']['rerata'] = 
+                (floatval($rs['data']['rating']['kecepatan']['total_rating']) / floatval($rs['data']['rekap']['sudah_rating']['total']));
+
+            $rs['data']['rating']['ketepatan']['rerata'] = 
+                (floatval($rs['data']['rating']['ketepatan']['total_rating']) / floatval($rs['data']['rekap']['sudah_rating']['total']));
+            
+            $rs['data']['rating']['total'] = 
+                floatval($rs['data']['rating']['kecepatan']['rerata'] + $rs['data']['rating']['ketepatan']['rerata']) / 2;
+        }
+
+        return $rs;
+    }
 }
 ?>

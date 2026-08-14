@@ -4024,8 +4024,8 @@
                             // tambahkan dengan tpp plt
                                 $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];
                                 $tambahanPagu = ($p['presentasi_tpp'] / 100) * $result[$p['id_m_user']]['pagu_tpp'];
-                                $result[$p['id_m_user']]['pagu_tpp'] += $tambahanPagu;
-                                // dd($tempData);
+                                $result[$p['id_m_user']]['pagu_tpp'] = $tambahanPagu + $tempData['pagu_tpp'];
+
                                 // jika jabatan sebelumnya lebih tinggi dari jabatan sekarang, ambil data jabatan sebelumnya
                                 if($tempData['kelas_jabatan'] > $result[$p['id_m_user']]['kelas_jabatan']){
                                     $result[$p['id_m_user']]['kelas_jabatan'] = $tempData['kelas_jabatan'];

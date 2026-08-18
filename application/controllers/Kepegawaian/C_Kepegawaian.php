@@ -3461,7 +3461,7 @@ class C_Kepegawaian extends CI_Controller
 		}
 
 		public function updateFlagExceptionBangkom(){
-			$this->kepegawaian->updateFlagExceptionBangkom();
+			echo json_encode($this->kepegawaian->updateFlagExceptionBangkom());
 			// $response   = $this->kinerja->getDataPengajuanAbsensiPegawai();
             // echo json_encode($response);
 		}

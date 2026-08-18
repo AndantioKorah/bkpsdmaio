@@ -12115,6 +12115,7 @@ public function searchPengajuanLayanan($id_m_layanan){
 
     if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
         $this->db->where('a.status', $data['status_pengajuan']);
+        
     }
 
     return $this->db->get()->result_array();
@@ -12143,6 +12144,9 @@ public function searchPengajuanLayananFungsional($id_m_layanan){
                     $this->db->join('db_pegawai.pegjabatan h', 'a.reference_id_dok = h.id','left');
                     $this->db->where('month(h.tglsk)', $data['bulan']);
                     $this->db->where('year(h.tglsk)', $data['tahun']);
+                }
+                  if($data['jenis_layanan'] != 0){
+                    $this->db->where('a.id_m_layanan', $data['jenis_layanan']);
                 }
                 
 
@@ -15911,8 +15915,25 @@ public function checkListIjazahCpns($id, $id_pegawai){
     {
         $data['flag_exception'] = $this->input->post('flag_exception');
         $data['updated_by'] = $this->general_library->getId();
-        $this->db->where('id', $this->input->post('id_t_check_bangkom'))
+        $id = $this->input->post('id_t_check_bangkom');
+        
+        $this->db->trans_begin();
+         $this->db->where('id', $id)
         ->update('t_cek_bangkom', $data);
+        $res['code'] = 0;
+        $res['message'] = 'Berhasil Ubah Data';
+        $res['data'] = null;
+        
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            $res['code'] = 1;
+            $res['message'] = 'Terjadi Kesalahan';
+            $res['data'] = null;
+        }else{
+            $this->db->trans_commit();
+        }
+        // dd($res);
+        return $res;
     }
 
     public function catatanGajiBerkala()

@@ -141,9 +141,7 @@ input:checked + .slider .off
                                     <th class="text-center">Tahun</th>
                                     <?php if(isset($result[0]['riwayat'])) { ?>
                                     <th class="text-center">Semua Data</th>
-                                     <?php if($this->general_library->isProgrammer()) { ?>
-                                    <th>Keculiakan Dari Perhitungan</th>
-                                     <?php }  ?>
+                                    <th>Kecualikan dari perhitungan bulan <?=getNamaBulan($bulan);?></th>
                                      <?php } else { ?>
                                     <th class="text-center">Bulan</th>
                                     <th class="text-center">Data Bangkom</th>
@@ -177,10 +175,20 @@ input:checked + .slider .off
                                             <?php $i = 0; foreach($lj['riwayat'] as $l){ ?>
                                             <span class="badge badge-dark"><?php echo  getNamaBulan($l['bulan'])." : ".$l['jumlah_jp']." JP";?></span>
                                             <br>
-                                            <?php  if($bulan == $l['bulan']){ $fe = $l['flag_exception']; $id = $l['id'];  } $i++; } ?>
-                                           <?php if($this->general_library->isProgrammer()) { ?>
+                                            <?php  if($bulan == $l['bulan']){ $fe = $l['flag_exception']; $id = $l['id']; $nip = $l['nip'];  } $i++; }
+                                           
+                                            ?>
+                                           <?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('akses_pengecualian_bangkom')) { ?>
                                             <td>  
-                                             <label class="switch ml-2"><input id="t_cek_bangkom_<?=$l['id']?>" type="checkbox" id="togBtn" onchange="myToggleFunction(this,'<?=$id?>')" <?php if($fe == 1) echo "checked"; else echo "";?>><div class="slider round">
+                                            <?php if($id != 0) {?>
+                                             <label class="switch ml-2"><input  id="t_cek_bangkom_<?=$l['id']?>" type="checkbox" id="togBtn" onchange="myToggleFunction(this,'<?=$nip?>','<?=$bulan?>')" <?php if($fe == 1) echo "checked"; else echo "";?>><div class="slider round">
+                                            <span class="on" style="font-size:11px;">Ya </span>
+                                            <span class="off" style="font-size:11px;"> Tidak </span></div></label> 
+                                            </td>
+                                             <?php } ?>
+                                            <?php } else {  ?>
+                                            <td>  
+                                             <label class="switch ml-2"><input disabled type="checkbox"  <?php if($fe == 1) echo "checked"; else echo "";?>><div class="slider round">
                                             <span class="on" style="font-size:11px;">Ya </span>
                                             <span class="off" style="font-size:11px;"> Tidak </span></div></label> 
                                             </td>
@@ -219,7 +227,7 @@ input:checked + .slider .off
 		}) 
   })
 
-function myToggleFunction(id,id_t_check_bangkom){
+function myToggleFunction(id,nip,bulan){
 
     if(id.checked) {
     var flag_exception = 1
@@ -230,9 +238,16 @@ function myToggleFunction(id,id_t_check_bangkom){
     $.ajax({
       url: '<?=base_url("kepegawaian/C_Kepegawaian/updateFlagExceptionBangkom/")?>',
       method: 'post',
-      data : {id_t_check_bangkom: id_t_check_bangkom, flag_exception : flag_exception},
-      success: function(){
-      successtoast("Berhasil ubah data");
+      data : {nip: nip, flag_exception : flag_exception, bulan : bulan},
+      success: function(res){
+         var result = JSON.parse(res); 
+        if(result.code == 0){
+        successtoast(result.message);
+        } else {
+        errortoast(result.message);
+        }
+
+
       }, error: function(e){
       errortoast('Terjadi Kesalahan')
       }

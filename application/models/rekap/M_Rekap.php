@@ -2932,6 +2932,7 @@
                     ->where('a.tmt !=', null)
                     ->where('a.tmt !=', '0000-00-00')
                     ->where_in('b.nipbaru_ws', $temp['temp_list_nip'])
+                    ->order_by('c.idk', 'desc')
                     ->where('a.flag_active', 1);
 
             // if($flag_rekap_tpp == 1 && in_array($skpd[0], LIST_UNIT_KERJA_KECAMATAN_NEW)){
@@ -5250,6 +5251,9 @@
         foreach($jenisKonsul as $jKon){
             $rs['data']['rekap']['jenis_konsul'][$jKon['id']] = $jKon;
             $rs['data']['rekap']['jenis_konsul'][$jKon['id']]['total'] = 0;
+
+            $rs['data']['rekap']['konsul'][$jKon['id']] = $jKon;
+            $rs['data']['rekap']['konsul'][$jKon['id']]['list'] = null;
             // $rs['data']['rekap']['jenis_konsul'][$jKon['id']]['list'] = null;
         }
 
@@ -5261,7 +5265,9 @@
         foreach($mBidang as $mb){
             $rs['data']['rekap']['list_bidang'][$mb['id']] = $mb;
             $rs['data']['rekap']['list_bidang'][$mb['id']]['total'] = 0;
-            $rs['data']['rekap']['list_bidang'][$mb['id']]['list'] = null;
+
+            $rs['data']['rekap']['bidang'][$mb['id']] = $mb;
+            $rs['data']['rekap']['bidang'][$mb['id']]['list'] = null;
         }
         
         $this->db->select('a.*, g.id_m_bidang')
@@ -5353,10 +5359,10 @@
                 $rs['data']['rekap']['total']++;
                 
                 $rs['data']['rekap']['jenis_konsul'][$l['id_m_layanan_konsul']]['total']++;
-                // $rs['data']['rekap']['jenis_konsul'][$l['id_m_layanan_konsul']]['list'][] = $l;
+                $rs['data']['rekap']['konsul'][$l['id_m_layanan_konsul']]['list'][] = $l;
 
                 $rs['data']['rekap']['list_bidang'][$l['id_m_bidang']]['total']++;
-                $rs['data']['rekap']['list_bidang'][$l['id_m_bidang']]['list'][] = $l;
+                $rs['data']['rekap']['bidang'][$l['id_m_bidang']]['list'][] = $l;
 
                 if($l['flag_done'] == 1){
                     $rs['data']['rekap']['selesai']['total']++;
@@ -5440,6 +5446,44 @@
         }
 
         return $rs;
+    }
+
+    public function rekapEkinCustom(){
+        // $dataEkinDinkes = $this->db->select('nip')
+        //                         ->from('t_temp_ekin_dinkes')
+        //                         ->get()->result_array();
+        // $listNipEkinDinkes = null;
+        // foreach($dataEkinDinkes as $dEKes){
+        //     $listNipEkinDinkes[] = $dEKes['nip'];
+        // }
+
+        // $listDinkes = null;
+        // $dataDinkes = $this->db->select('a.nipbaru_ws, a.gelar1, a.nama, a.gelar2, b.nm_unitkerja')
+        //                     ->from('db_pegawai.pegawai a')
+        //                     ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+        //                     ->where("(b.id_unitkerja = '3012000' OR b.id_unitkerjamaster = '6000000')")
+        //                     ->where_not_in('a.nipbaru_ws', ($listNipEkinDinkes))
+        //                     ->where('a.id_m_status_pegawai', 1)
+        //                     ->get()->result_array();
+        // dd(json_encode($dataDinkes));
+
+        $dataEkinDiknas = $this->db->select('nip')
+            ->from('t_temp_ekin_diknas')
+            ->get()->result_array();
+        $listNipEkinDiknas = null;
+        foreach($dataEkinDiknas as $dEDik){
+            $listNipEkinDiknas[] = $dEDik['nip'];
+        }
+
+        $listDiknas = null;
+        $dataDiknas = $this->db->select('a.nipbaru_ws, a.gelar1, a.nama, a.gelar2, b.nm_unitkerja')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                            ->where("(b.id_unitkerja = '3010000' OR b.id_unitkerjamaster = '8000000' OR b.id_unitkerjamaster = '8010000' OR b.id_unitkerjamaster = '8020000')")
+                            ->where_not_in('a.nipbaru_ws', ($listNipEkinDiknas))
+                            ->where('a.id_m_status_pegawai', 1)
+                            ->get()->result_array();
+        dd(json_encode($dataDiknas));
     }
 }
 ?>

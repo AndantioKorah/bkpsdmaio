@@ -331,8 +331,7 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
-        $this->user->inputHardcodeNominatifCpns();
-        dd('asd');
+        $this->rekap->rekapEkinCustom();
         // $this->general->editPdf();
         // dd(cekWaktuKerja(0));
         // $this->user->insertPesertaBkpsdmBacirita();

@@ -168,16 +168,148 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <?php
-                            $jenis_konsul['result'] = $result['data']['rekap']['jenis_konsul'];
-                            $jenis_konsul['id_chart'] = 'jenis_layanan_konsul';
-                            $jenis_konsul['nama_label'] = 'nama_layanan';
-                            $jenis_konsul['total_seluruh_pegawai'] = $result['data']['rekap']['total'];
-                            $this->load->view('login/V_ChartPieDashboardRekapOkta', $jenis_konsul);
-                        ?>
+                        <div class="col-lg-7">
+                            <div class="chart chart-sm" style="width: 100%;">
+                                <canvas id="chart_jenis_konsul"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <table>
+                                <?php 
+                                
+                                $i = 0;
+                                $colors = CHART_COLORS;
+                                // $total_seluruh_pegawai = $this->session->userdata('total_seluruh_pegawai');
+                                foreach($result['data']['rekap']['jenis_konsul'] as $rs){
+                                $jumlah = isset($rs['jumlah']) ? $rs['jumlah'] : $rs['total'];
+                                if($jumlah > 0){
+                                    $presentase = formatCurrencyWithoutRpWithDecimal((($jumlah / $result['data']['rekap']['total']) * 100), 2);
+                                ?>
+                                <tr>
+                                    <td colspan="2"><span style="background-color: <?=$colors[$i]?>">&nbsp;&nbsp;</span></td>
+                                    <td colspan="2"><span style="font-size: .7rem;"><?=$rs['nama_layanan']?></span></td>
+                                    <td colspan="2"><span style="font-size: .7rem;">:&nbsp;&nbsp;</span></td>
+                                    <td colspan="1" class="text-right"><span style="font-size: .7rem; font-weight: bold;"><?=($presentase)."%"?></span></td>
+                                    <td colspan="1" class="text-right"><span style="font-size: .7rem; font-weight: bold;"><?=" (".formatCurrencyWithoutRp($jumlah,0).")"?></span></td>
+                                </tr>
+                                <?php $i++; } } ?>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header card-header-rekap-okta">
+                <div class="card-title text-left">
+                    Bidang
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div class="chart chart-sm" style="width: 100%;">
+                                <canvas id="chart_bidang"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <table>
+                                <?php 
+                                
+                                $i = 0;
+                                $colors = CHART_COLORS;
+                                // $total_seluruh_pegawai = $this->session->userdata('total_seluruh_pegawai');
+                                foreach($result['data']['rekap']['list_bidang'] as $rs){
+                                $jumlah = isset($rs['jumlah']) ? $rs['jumlah'] : $rs['total'];
+                                if($jumlah > 0){
+                                    $presentase = formatCurrencyWithoutRpWithDecimal((($jumlah / $result['data']['rekap']['total']) * 100), 2);
+                                ?>
+                                <tr>
+                                    <td colspan="2"><span style="background-color: <?=$colors[$i]?>">&nbsp;&nbsp;</span></td>
+                                    <td colspan="2"><span style="font-size: .7rem;"><?=$rs['nama_bidang']?></span></td>
+                                    <td colspan="2"><span style="font-size: .7rem;">:&nbsp;&nbsp;</span></td>
+                                    <td colspan="1" class="text-right"><span style="font-size: .7rem; font-weight: bold;"><?=($presentase)."%"?></span></td>
+                                    <td colspan="1" class="text-right"><span style="font-size: .7rem; font-weight: bold;"><?=" (".formatCurrencyWithoutRp($jumlah,0).")"?></span></td>
+                                </tr>
+                                <?php $i++; } } ?>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        renderChartJenisLayananKonsul('<?=json_encode($result['data']['rekap']['jenis_konsul'])?>')
+        renderChartBidang('<?=json_encode($result['data']['rekap']['list_bidang'])?>')
+    })
+
+    function renderChartBidang(rs){
+        let dt = JSON.parse(rs)
+        let labels = [];
+        let values = [];
+        let temp = Object.keys(dt)
+        temp.forEach(function(i) {
+            if(dt[i].total > 0){
+                labels.push(dt[i].nama_bidang)
+                values.push(dt[i].total)
+            }
+        })
+
+        let colors = JSON.parse('<?=json_encode(CHART_COLORS)?>')                
+        new Chart(document.getElementById('chart_bidang'), {
+            type: "pie",
+            data: {
+                labels: labels,
+                datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: "transparent"
+                    }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                        display: false
+                    }
+            }
+        });
+    }
+
+    function renderChartJenisLayananKonsul(rs){
+        let dt = JSON.parse(rs)
+        let labels = [];
+        let values = [];
+        let temp = Object.keys(dt)
+        temp.forEach(function(i) {
+            if(dt[i].total > 0){
+                labels.push(dt[i].nama_layanan)
+                values.push(dt[i].total)
+            }
+        })
+
+        let colors = JSON.parse('<?=json_encode(CHART_COLORS)?>')                
+        new Chart(document.getElementById('chart_jenis_konsul'), {
+            type: "pie",
+            data: {
+                labels: labels,
+                datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: "transparent"
+                    }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                        display: false
+                    }
+            }
+        });
+    }
+</script>

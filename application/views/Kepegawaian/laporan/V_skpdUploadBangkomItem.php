@@ -175,13 +175,13 @@ input:checked + .slider .off
                                             <?php $i = 0; foreach($lj['riwayat'] as $l){ ?>
                                             <span class="badge badge-dark"><?php echo  getNamaBulan($l['bulan'])." : ".$l['jumlah_jp']." JP";?></span>
                                             <br>
-                                            <?php  if($bulan == $l['bulan']){ $fe = $l['flag_exception']; $id = $l['id'];  } $i++; }
+                                            <?php  if($bulan == $l['bulan']){ $fe = $l['flag_exception']; $id = $l['id']; $nip = $l['nip'];  } $i++; }
                                            
                                             ?>
                                            <?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('akses_pengecualian_bangkom')) { ?>
                                             <td>  
                                             <?php if($id != 0) {?>
-                                             <label class="switch ml-2"><input  id="t_cek_bangkom_<?=$l['id']?>" type="checkbox" id="togBtn" onchange="myToggleFunction(this,'<?=$id?>')" <?php if($fe == 1) echo "checked"; else echo "";?>><div class="slider round">
+                                             <label class="switch ml-2"><input  id="t_cek_bangkom_<?=$l['id']?>" type="checkbox" id="togBtn" onchange="myToggleFunction(this,'<?=$nip?>','<?=$bulan?>')" <?php if($fe == 1) echo "checked"; else echo "";?>><div class="slider round">
                                             <span class="on" style="font-size:11px;">Ya </span>
                                             <span class="off" style="font-size:11px;"> Tidak </span></div></label> 
                                             </td>
@@ -227,7 +227,7 @@ input:checked + .slider .off
 		}) 
   })
 
-function myToggleFunction(id,id_t_check_bangkom){
+function myToggleFunction(id,nip,bulan){
 
     if(id.checked) {
     var flag_exception = 1
@@ -238,7 +238,7 @@ function myToggleFunction(id,id_t_check_bangkom){
     $.ajax({
       url: '<?=base_url("kepegawaian/C_Kepegawaian/updateFlagExceptionBangkom/")?>',
       method: 'post',
-      data : {id_t_check_bangkom: id_t_check_bangkom, flag_exception : flag_exception},
+      data : {nip: nip, flag_exception : flag_exception, bulan : bulan},
       success: function(res){
          var result = JSON.parse(res); 
         if(result.code == 0){

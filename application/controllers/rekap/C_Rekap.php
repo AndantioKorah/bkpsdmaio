@@ -939,4 +939,15 @@ class C_Rekap extends CI_Controller
         $data['jenisdisiplin'] = $this->general->getAll('m_jenis_disiplin_kerja', 1);
         $this->load->view('rekap/V_RekapKehadiranPeriodikDetail', $data);
     }
+
+    public function rekapOkta(){
+        $data['jenis_layanan'] = $this->general->getAllWithOrder('m_layanan_konsul', 'nama_layanan', 'asc');
+        $data['unitkerja'] = $this->general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        render('rekap/V_RekapOkta', '', '', $data);
+    }
+
+    public function searchRekapOkta(){
+        $data['result'] = $this->rekap->searchRekapOkta();
+        $this->load->view('rekap/V_RekapOktaData', $data);
+    }
 }

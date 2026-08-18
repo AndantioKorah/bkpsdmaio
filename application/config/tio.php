@@ -24,6 +24,7 @@ $route['master/event'] = 'master/C_Master/masterEvent';
 $route['master/hardcode-nominatif'] = 'master/C_Master/hardCodeNominatif';
 $route['master/pending-tpp'] = 'master/C_Master/pendingTpp';
 $route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
+$route['rekap/okta'] = 'rekap/C_Rekap/rekapOkta';
 $route['master/perangkat-daerah/jft'] = 'master/C_Master/openListPegawaiDetailSkpdMenu';
 $route['notifikasi-pegawai'] = 'user/C_User/notifikasiPegawai';
 $route['master/perangkat-daerah/bangkom'] = 'kepegawaian/C_Kepegawaian/openListUploadBangkomSkpd';

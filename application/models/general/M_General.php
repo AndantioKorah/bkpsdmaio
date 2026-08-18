@@ -2798,7 +2798,9 @@
             }
 
             $pegawai = $this->db->get()->result_array();
-            // dd($pegawai);
+            // if($this->general_library->isProgrammer()){
+            //     dd($pegawai);
+            // }
             if($pegawai){
                 foreach($pegawai as $p){
                     $updateData['jumlah_jp'] = $p['total_jp'] ? $p['total_jp'] : 0;
@@ -2815,11 +2817,11 @@
                         $this->db->where('id', $p['id_t_cek_bangkom'])
                                 ->update('t_cek_bangkom', $updateData);
                     } else {
-                        
                         $updateData['created_by'] = $this->general_library->getId();
                         $exists = $this->db->select('*')
                                     ->from('t_cek_bangkom')
                                     ->where('flag_active', 1)
+                                    ->where('nip', $p['nipbaru_ws'])
                                     ->where('bulan', $updateData['bulan'])
                                     ->where('tahun', $updateData['tahun'])
                                     ->get()->row_array();

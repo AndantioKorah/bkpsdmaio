@@ -12123,7 +12123,69 @@ public function searchPengajuanLayanan($id_m_layanan){
 
 public function searchPengajuanLayananFungsional($id_m_layanan){
     $data = $this->input->post();
-    $this->db->select('*, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
+//     if($data['status_pengajuan'] == 6){
+//    $this->db->select('*, e.tmtjabatan as tmt_jabatan, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
+//      (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
+//             ->from('t_layanan a')
+//             ->join('m_user d', 'a.id_m_user = d.id')
+//             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
+//             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+//              ->join('m_status_layanan_fungsional g', 'a.status = g.id')
+//             ->where_in('a.id_m_layanan', [12,13,14,15,16,30,31])
+//             ->where('a.flag_active', 1)
+//             ->order_by('a.created_date', 'desc');
+//                 if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
+//                     $this->db->where('e.skpd', $data['id_unitkerja']);
+//                 }
+
+//                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
+//                     $this->db->where('g.id', $data['status_pengajuan']);
+//                 }
+
+//                 if($data['tahun'] != 0){
+//                     $this->db->join('db_pegawai.pegjabatan h', 'a.reference_id_dok = h.id','left');
+//                     $this->db->where('year(h.tglsk)', $data['tahun']);
+//                     if($data['bulan'] != 0){
+//                     $this->db->where('month(h.tglsk)', $data['bulan']);
+//                 }
+//                 }
+               
+//                 if($data['jenis_layanan'] != 0){
+//                     $this->db->where('a.id_m_layanan', $data['jenis_layanan']);
+//                 }
+
+//     } else {
+// $this->db->select('*, e.tmtjabatan as tmt_jabatan, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
+//      (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
+//             ->from('t_layanan a')
+//             ->join('m_user d', 'a.id_m_user = d.id')
+//             ->join('db_pegawai.pegawai e', 'd.username = e.nipbaru_ws')
+//             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
+//              ->join('m_status_layanan_fungsional g', 'a.status = g.id')
+//             ->where_in('a.id_m_layanan', [12,13,14,15,16,30,31])
+//             ->where('a.flag_active', 1)
+//             ->order_by('a.created_date', 'desc');
+//                 if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
+//                     $this->db->where('e.skpd', $data['id_unitkerja']);
+//                 }
+
+//                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
+//                     $this->db->where('g.id', $data['status_pengajuan']);
+//                 }
+
+//                 if($data['tahun'] != 0){
+//                     $this->db->join('db_pegawai.pegjabatan h', 'a.reference_id_dok = h.id','left');
+//                     $this->db->where('year(h.tglsk)', $data['tahun']);
+//                     if($data['bulan'] != 0){
+//                     $this->db->where('month(h.tglsk)', $data['bulan']);
+//                 }
+//                 }
+               
+//                 if($data['jenis_layanan'] != 0){
+//                     $this->db->where('a.id_m_layanan', $data['jenis_layanan']);
+//                 }
+//     }
+    $this->db->select('*, e.tmtjabatan as tmt_jabatan, a.keterangan as ket_layanan, e.nama as verifikator, a.status as status_layanan, a.created_date as tanggal_pengajuan, a.id as id_pengajuan, a.status as status_pengajuan, a.created_date as tanggal_pengajuan,
      (select aa.nama from m_user as aa where a.id_m_user_verif = aa.id limit 1) as verifikator')
             ->from('t_layanan a')
             ->join('m_user d', 'a.id_m_user = d.id')
@@ -12140,12 +12202,16 @@ public function searchPengajuanLayananFungsional($id_m_layanan){
                 if(isset($data['status_pengajuan']) && $data['status_pengajuan'] != ""){
                     $this->db->where('g.id', $data['status_pengajuan']);
                 }
-                 if($data['bulan'] != 0){
+
+                if($data['tahun'] != 0){
                     $this->db->join('db_pegawai.pegjabatan h', 'a.reference_id_dok = h.id','left');
-                    $this->db->where('month(h.tglsk)', $data['bulan']);
                     $this->db->where('year(h.tglsk)', $data['tahun']);
+                    if($data['bulan'] != 0){
+                    $this->db->where('month(h.tglsk)', $data['bulan']);
                 }
-                  if($data['jenis_layanan'] != 0){
+                }
+               
+                if($data['jenis_layanan'] != 0){
                     $this->db->where('a.id_m_layanan', $data['jenis_layanan']);
                 }
                 
@@ -14735,6 +14801,9 @@ public function getFileForVerifLayanan()
                 $nama_file = "pengantar_$nip"."_$random_number";
                 $target_dir	= './dokumen_layanan/dispensasi';
                 $tanggal = explodeRangeDateNew($datapost['range_periode']);
+            } else if($id_m_layanan == 40){
+                $nama_file = "rekomendasi_$nip"."_$random_number";
+                $target_dir	= './dokumen_layanan/kontrak_pppk_pw';
             }    else {
                 $nama_file = "pengantar_$nip"."_$random_number";
             }
@@ -14759,6 +14828,8 @@ public function getFileForVerifLayanan()
                 $filehd =  "formulir_cuti_besar_$nip"."_$random_number".".pdf";
                 } else if($id_m_layanan == 39){
                 $filehd =  "surat_kegiatan_dispensasi_$nip"."_$random_number".".pdf";
+                } else if($id_m_layanan == 40){
+                $filehd =  "skp_$nip"."_$random_number".".pdf";
                 } else {
                 $filehd =  "surat_pernyataan_tidak_hd_$nip"."_$random_number".".pdf";
                 }
@@ -14772,6 +14843,8 @@ public function getFileForVerifLayanan()
                 $target_dir_hd	= './dokumen_layanan/cuti_besar';
                 } else if($id_m_layanan == 39){
                 $target_dir_hd	= './dokumen_layanan/dispensasi';
+                } else if($id_m_layanan == 40){
+                $target_dir_hd	= './dokumen_layanan/kontrak_pppk_pw';
                 } else {
                 $target_dir_hd	= './dokumen_layanan/jabatan_fungsional/surat_ket_hd';
                 } 

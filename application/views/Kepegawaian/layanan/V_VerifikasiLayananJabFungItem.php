@@ -9,6 +9,10 @@
           <th class="text-left">Keterangan</th>
           <?php if($this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')) { ?>
             <th class="text-center">Jenis Layanan</th>
+            <?php if($param['status_pengajuan'] == 6) { ?>
+            <th>Tanggal SK</th>
+             <?php } ?>
+
             <th class="text-center"></th>
           <?php } ?>
           <th></th>
@@ -33,6 +37,9 @@
             <td class="text-left">
             <?php if($rs['id_m_layanan'] == '12') echo "Kenaikan Jabatan Fungsional"; else if($rs['id_m_layanan'] == '13') echo "Perpindahan Dari Jabatan Lain"; else if($rs['id_m_layanan'] == '14') echo "Penyesuaian/Inpassing"; else if($rs['id_m_layanan'] == '15') echo "Pemberhentian dari Jabatan Fungsional Atas Permintaan Sendiri"; else if($rs['id_m_layanan'] == '16')  echo "Pengangkatan Kembali"; else if($rs['id_m_layanan'] == '30') echo "Pemberhentian dari Jabatan Fungsional Karena Tugas Belajar"; else echo "Pengangkatan Pertama Dalam Jabatan Fungsional Guru"?>  
             </td>
+            <?php if($rs['status_layanan'] == 6 ) { ?>
+            <td><?= formatDateNamaBulan($rs['tmt_jabatan']);?></td>
+            <?php } ?>
             <td class="text-center">
             <?php if($rs['status_layanan'] == 1 || $rs['status_layanan'] == 3 || $rs['status_layanan'] == 4 || $rs['status_layanan'] == 5) { ?>
               <?php if($rs['reference_id_dok'] != null) { ?>
@@ -47,7 +54,7 @@
                 <i class="fa fa-upload" aria-hidden="true"></i></button> -->
                 <?php } ?>
             <?php } ?>
-              </td>
+              </td> 
              <td>
 
              <!-- <a id="btn_tolak_verifikasi" onclick="kerjakanBerkas('<?=$rs['id_pengajuan']?>','<?=$rs['id_m_layanan']?>')" type="button" class="btn btn-sm btn-primary ml-2">

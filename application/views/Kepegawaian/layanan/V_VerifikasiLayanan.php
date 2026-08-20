@@ -235,7 +235,7 @@ input:checked + .slider .off
 <?php if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16) { ?>
         <div class="col" id="pilih_tahun" style="display:none;">
                 <label for="exampleFormControlInput1">Tahun SK</label>
-                <input  class="form-control yearpicker customInput" id="tahun" name="tahun" value="<?= date('Y');?>">
+                <input  class="form-control yearpicker customInput" id="tahun" name="tahun" autocomplete=off>
               </div>
 
 

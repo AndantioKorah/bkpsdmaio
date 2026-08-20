@@ -296,14 +296,14 @@ ol {
 
 			<div class="card-body">
 
-				<form id="form_peninjauan_masa_kerja" method="post" enctype="multipart/form-data" id="form_cuti"
+				<form id="form_kontrak_pppk_pw" method="post" enctype="multipart/form-data" id="form_cuti"
 					style="margin-top: -45px;">
             <input type="hidden" id="nip" name="nip" value="<?= $this->general_library->getUserName();?>">
 		
           <span><b>Berkas Persyaratan :</b></span>
 					<div class="list-type1x mt-2">
           <div class="form-group">
-            <label>Rekomendasi Kepala Perangkat Kepala Daerah</label>
+            <label>Rekomendasi Kepala Perangkat Daerah</label>
             <input  class="form-control my-image-field" type="file" id="rekomendasi_pd" name="file" required />
           </div>
            <div class="form-group mt-2">
@@ -364,11 +364,11 @@ $(function(){
 	});
   loadListRiwayatCutiBesar()
     })
-    $('#form_peninjauan_masa_kerja').on('submit', function(e){  
+    $('#form_kontrak_pppk_pw').on('submit', function(e){  
         //     document.getElementById('btn_upload').disabled = true;
         // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
-        var formvalue = $('#form_peninjauan_masa_kerja');
+        var formvalue = $('#form_kontrak_pppk_pw');
         var form_data = new FormData(formvalue[0]);
       
         var id_m_layanan = "<?=$id_m_layanan;?>"

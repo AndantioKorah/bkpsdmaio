@@ -247,12 +247,15 @@ class M_Bacirita extends CI_Model
         $explode = explode(".", $data['template_sertifikat']);
         $inputFile = $data['template_sertifikat'];
         $previewFile = $explode[0]."_preview.pdf";
+
         if(isset($data['previewFile'])){
             $previewFile = $data['previewFile'];
         }
         if(file_exists(base_url($previewFile))){
             unlink(base_url($previewFile));
         }
+
+
         $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
         $this->mpdf->AddPage(
@@ -724,7 +727,7 @@ class M_Bacirita extends CI_Model
         $res['message'] = 'ok';
 
         $this->db->trans_begin();
-     
+       
         $data = $this->input->post();
         $check = $this->checkActivity($data['id_t_kegiatan'], $data['id_m_user'], "generate_sertifikat");
         if($check['code'] == 0){

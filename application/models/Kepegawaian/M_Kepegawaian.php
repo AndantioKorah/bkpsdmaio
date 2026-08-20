@@ -16515,6 +16515,28 @@ public function checkListIjazahCpns($id, $id_pegawai){
         return $result;
     }
 
+     public function updateJabatanGuruPppk()
+    {
+        $this->db->select('a.id_peg, a.nama, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan, c.id_jabatanpeg')
+            ->from('db_pegawai.pegawaix a')
+             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+            ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+            ->where('c.id_jabatanpeg != ', '6000000J072')
+            ->where('a.id_m_status_pegawai', 1)
+            ->where_in('b.id_unitkerjamaster', ['8010000','8020000','8000000'])
+            ->where('a.statuspeg', 3);
+            
+        $pegawai = $this->db->get()->result_array();
+        dd($pegawai);
+       
+        foreach ($pegawai as $peg) {  
+         $this->db->where('id_peg', $peg['id_peg'])
+         ->update('db_pegawai.pegawai', 
+         ['jabatan' => '6000000J072']);
+         }
+    }
+
+
        public function updateGajiBerkalaBerikut()
     {
         $this->db->select('a.id_peg,a.statuspeg,a.tmtgjberkala,a.pangkat,a.tmtcpns')

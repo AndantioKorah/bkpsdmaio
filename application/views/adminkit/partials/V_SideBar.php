@@ -972,6 +972,7 @@
 				|| $this->general_library->isHakAksesRekapAbsen()
 				){
 			?>
+			
 			<li class="sidebar-item ">
 				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Absensi

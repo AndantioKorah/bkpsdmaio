@@ -4090,6 +4090,10 @@ class C_Kepegawaian extends CI_Controller
 			$this->kepegawaian->updateGajiBerkalaBerikut();
 	}
 
+	public function updateJabatanGuruPppk(){
+			$this->kepegawaian->updateJabatanGuruPppk();
+	}
+
 
 	public function laporan(){
 		// $data['kecamatan'] = $this->kepegawaian->laporanJumlahPegawaiPerKecamatan();

@@ -4159,8 +4159,20 @@ function getdatajab()
             $this->db->where('jenis_jabatan', "JFU");
             $this->db->where('id_unitkerja', $id_skpd);
             $this->db->where('flag_active', 1);
-            $fetched_records = $this->db->get('db_pegawai.jabatan');
-            $datajab = $fetched_records->result_array();
+            $fetched_records1 = $this->db->get('db_pegawai.jabatan');
+            $datajab1 = $fetched_records1->result_array();
+
+            $this->db->select('id_jabatanpeg, nama_jabatan');
+            $this->db->where('jenis_jabatan', "JFU");
+            $this->db->where('id_unitkerja !=', $id_skpd);
+            $this->db->where('nama_jabatan !=', "Pelaksana");
+            $this->db->where('flag_active', 1);
+            $fetched_records2 = $this->db->get('db_pegawai.jabatan');
+            $datajab2 = $fetched_records2->result_array();
+
+             $datajab = array_merge($datajab1,$datajab2);
+
+
             } else {
             $this->db->select('id_jabatanpeg, nama_jabatan');
             $this->db->where('jenis_jabatan', "JFU");
@@ -16518,7 +16530,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
      public function updateJabatanGuruPppk()
     {
         $this->db->select('a.id_peg, a.nama, a.nipbaru_ws, b.nm_unitkerja, c.nama_jabatan, c.id_jabatanpeg')
-            ->from('db_pegawai.pegawaix a')
+            ->from('db_pegawai.pegawai a')
              ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
             ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
             ->where('c.id_jabatanpeg != ', '6000000J072')
@@ -16527,7 +16539,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             ->where('a.statuspeg', 3);
             
         $pegawai = $this->db->get()->result_array();
-        dd($pegawai);
+        // dd($pegawai);
        
         foreach ($pegawai as $peg) {  
          $this->db->where('id_peg', $peg['id_peg'])

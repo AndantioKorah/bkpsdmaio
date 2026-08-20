@@ -19383,6 +19383,31 @@ public function checkListIjazahCpns($id, $id_pegawai){
 
     }
 
+    public function syncDataUtamaSiasn($nip){
+        $result['code'] = 0;
+        $result['message'] = '';
+        $result['data'] = '';
+
+        $res = $this->siasnlib->getDataUtamaPnsByNip($nip);
+        if($res['code'] == 0){
+            $data = json_decode($res['data'], true);
+            if($data['code'] == 1){
+                $this->db->where('nipbaru_ws', $nip)
+                        ->update('db_pegawai.pegawai', [
+                            'id_pns_siasn' => $data['data']['id']
+                        ]);
+            } else {
+                $result['code'] = 1;
+                $result['message'] = json_encode($data);
+            }
+        } else {
+            $result['code'] = 1;
+            $result['message'] = "Terjadi Kesalahan";
+        }
+
+        return $result;
+    }
+
 //     public function getDetailKegiatanDispensasi($id_kegiatan)
 // {
 //     $this->db->select('*')

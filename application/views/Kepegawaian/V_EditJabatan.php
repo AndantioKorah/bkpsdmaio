@@ -13,12 +13,18 @@
     }
 </style>
 
-<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){ ?> 
-  
-<div class="col-lg-12 text-right">
-  <button id="btn_sync" class="btn btn-success" onclick="syncSiasn()" type="button"><i class="fa fa-sync"></i> Sinkron dengan SIASN</button>
-  <button id="btn_sync_loading" disabled class="btn btn-success" type="button" style="display: none;"><i class="fa fa-spin fa-sync"></i> Mohon Menunggu</button>
-</div>
+<?php if($this->general_library->isProgrammer()
+    || $this->general_library->isAdminAplikasi()
+    || $this->general_library->isHakAkses('sync_siasn')){ ?> 
+  <div class="col-lg-12 text-right">
+    <?php if($jabatan[0]['id_pns_siasn']){ ?>
+      <button id="btn_sync" class="btn btn-success" onclick="syncSiasn()" type="button"><i class="fa fa-sync"></i> Sinkron dengan SIASN</button>
+      <button id="btn_sync_loading" disabled class="btn btn-success" type="button" style="display: none;"><i class="fa fa-spin fa-sync"></i> Mohon Menunggu</button>
+    <?php } else { ?>
+      <button id="btn_sync_data_utama" class="btn btn-success" onclick="syncDataUtamaSiasn()" type="button"><i class="fa fa-sync"></i> Sinkron Data PNS</button>
+      <button id="btn_sync_data_utama_loading" disabled class="btn btn-success" type="button" style="display: none;"><i class="fa fa-spin fa-sync"></i> Mohon Menunggu</button>
+    <?php } ?>
+  </div>
 <?php }?>
 <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
     <li class="nav-item nav-item-profile" role="presentation">
@@ -342,7 +348,31 @@ function syncSiasn(){
     }
   })
 }
-    
+
+function syncDataUtamaSiasn(){
+  $('#btn_sync_data_utama').hide()
+  $('#btn_sync_data_utama_loading').show()
+  $.ajax({
+    url: '<?=base_url("kepegawaian/C_Kepegawaian/syncDataUtamaSiasn/".$jabatan[0]['nipbaru_ws'])?>',
+    method: 'post',
+    data: null,
+    success: function(data){
+      let rs = JSON.parse(data)
+      if(rs.code == 0){
+        successtoast('Sinkronisasi data utama dengan SIASN berhasil')
+      } else {
+        errortoast('Terjadi Kesalahan. '+rs.data)
+      }
+      $('#btn_sync_data_utama').show()
+      $('#btn_sync_data_utama_loading').hide()
+    }, error: function(e){
+      errortoast('Terjadi Kesalahan')
+      $('#btn_sync_data_utama').show()
+      $('#btn_sync_data_utama_loading').hide()
+    }
+  })
+}
+
 $('#form_edit_jabatann').on('submit', function(e){  
      
      e.preventDefault();

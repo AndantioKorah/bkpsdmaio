@@ -4671,7 +4671,9 @@ class C_Kepegawaian extends CI_Controller
         echo json_encode($this->kepegawaian->checkDetailKegiatanDispensasi());
     }
 
-	
+	public function syncDataUtamaSiasn($nip){
+		echo json_encode($this->kepegawaian->syncDataUtamaSiasn($nip));
+	}
 
 
 }

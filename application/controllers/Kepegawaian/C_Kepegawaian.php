@@ -2893,8 +2893,9 @@ class C_Kepegawaian extends CI_Controller
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		} else if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
-		} else if($id_m_layanan == 39){
-			
+		} else if($id_m_layanan == 39){	
+			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
+		} else if($id_m_layanan == 40){
 			$this->load->view('kepegawaian/layanan/V_VerifikasiLayananTugasBelajarItem', $data);
 		}
 	}

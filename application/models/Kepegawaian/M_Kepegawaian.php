@@ -4154,7 +4154,7 @@ function getdatajab()
             $fetched_records = $this->db->get('db_pegawai.jabatan');
             $datajab = $fetched_records->result_array();
         } else {
-            if($uk_master['id_unitkerjaMaster'] != '8020000') {
+            // if($uk_master['id_unitkerjaMaster'] != '8020000') {
             $this->db->select('id_jabatanpeg, nama_jabatan');
             $this->db->where('jenis_jabatan', "JFU");
             $this->db->where('id_unitkerja', $id_skpd);
@@ -4173,14 +4173,14 @@ function getdatajab()
              $datajab = array_merge($datajab1,$datajab2);
 
 
-            } else {
-            $this->db->select('id_jabatanpeg, nama_jabatan');
-            $this->db->where('jenis_jabatan', "JFU");
-            $this->db->where('id_unitkerja', '9999001');
-            $this->db->where('flag_active', 1);
-            $fetched_records = $this->db->get('db_pegawai.jabatan');
-            $datajab = $fetched_records->result_array();
-            }
+            // } else {
+            // $this->db->select('id_jabatanpeg, nama_jabatan');
+            // $this->db->where('jenis_jabatan', "JFU");
+            // $this->db->where('id_unitkerja', '9999001');
+            // $this->db->where('flag_active', 1);
+            // $fetched_records = $this->db->get('db_pegawai.jabatan');
+            // $datajab = $fetched_records->result_array();
+            // }
            
         }
        
@@ -12111,6 +12111,8 @@ public function searchPengajuanLayanan($id_m_layanan){
                 $this->db->where('a.id_m_layanan', 33);
             } else if($id_m_layanan == 34){ 
                 $this->db->where('a.id_m_layanan', 34);
+            } else if($id_m_layanan == 40){ 
+                $this->db->where('a.id_m_layanan', 40);
             }  else if($id_m_layanan == 35){ 
                 $this->db->where('a.id_m_layanan', 35);
             } else if($id_m_layanan == 36 || $id_m_layanan == 37 || $id_m_layanan == 38){ 

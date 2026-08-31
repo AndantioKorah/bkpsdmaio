@@ -176,6 +176,7 @@
                 </div>
                 
               </div>
+              
                  <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23) { ?>
                 <button
                     data-id_m_layanan = <?=$rs['id_m_layanan'];?>
@@ -224,7 +225,20 @@
                 <?php } ?>
          
                 <?php } else { ?>
+              
                 <?php if($rs['status'] == 2 || $rs['status'] == 6) { ?>
+
+                <?php if($m_layanan == 40) { ?>
+                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
+                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
+                data-id="<?=$rs['id_t_layanan'];?>"
+                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
+                <i class="fa fa-edit"></i> Ubah Surat Rekomendasi
+                </button>
+                <?php } else { ?>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
                 <button
@@ -232,8 +246,13 @@
                 data-id="<?=$rs['id_t_layanan'];?>"
                 data-file_pengantar="<?=$rs['file_pengantar'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
-                <i class="fa fa-edit"></i> Ubah Surat Pengantar
+                <i class="fa fa-edit"></i> Ubah Surat Pengantar 
                 </button>
+                <?php } ?>
+
+
+                
+                
             
                 <?php if($rs['id_m_layanan'] == 34) { ?>
                 <button
@@ -244,16 +263,22 @@
                 <i class="fa fa-edit"></i> Ubah Form Cuti
                 </button>
                 <?php } ?>
+
+                <?php if($rs['id_m_layanan'] == 40) { ?>
+                <button
+                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
+                data-id="<?=$rs['id_t_layanan'];?>"
+                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahFormcuti">
+                <i class="fa fa-edit"></i> Ubah SKP
+                </button>
+                <?php } ?>
                 
                 </div>
                 <div class="btn-group mr-2" role="group" aria-label="Second group">
                 <button onclick="ajukanKembali('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
-
                 </div>
-                
               </div>
-              
-               
               <?php } ?>
                              
               <?php } ?>
@@ -303,7 +328,7 @@
         <input type="hidden" name="file_pengantar" id="file_pengantar">
         <input type="hidden" name="id_m_layanan" id="id_m_layanan" >
         <div class="form-group">
-        <label>Surat Pengantar</label>
+        <label>Surat </label>
         <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar_ubah" name="file"   />
         <span style="color:red;">* Maksimal Ukuran File : 1 MB</span><br>
       </div>
@@ -314,6 +339,7 @@
     </div>
   </div>
 </div>
+
 
 
 <!-- Modal -->
@@ -332,7 +358,7 @@
         <input type="hidden" name="file_pengantar" id="file_pengantar">
         <input type="hidden" name="id_m_layanan" id="ubah_form_id_m_layanan" >
         <div class="form-group">
-        <label>Form Cuti</label>
+        <label>File</label>
         <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar_ubah" name="file"   />
         <span style="color:red;">* Maksimal Ukuran File : 1 MB</span><br>
       </div>
@@ -343,6 +369,8 @@
     </div>
   </div>
 </div>
+
+
 
 
 
@@ -570,6 +598,9 @@ function ajukanKembali(id){
                                }
                                if(id_layanan == 35){
                                 loadListRiwayatCpnsPns()
+                               }
+                               if(id_layanan == 40){
+                                loadListRiwayatCutiBesar()
                                }
 
                                

@@ -539,7 +539,7 @@
               </div>
               <div class="col-lg-12 text-left" >
                 <span class="sp_profil_sm">
-                  <?=($profil_pegawai['nm_jenisjab'])?>
+                  <?php if($profil_pegawai['jenis_jabatan'] == "JFT") echo "Jabatan Fungsional Tertentu"; else if($profil_pegawai['jenis_jabatan'] == "JFU") echo "Jabatan Fungsional Umum"; else echo $profil_pegawai['jenis_jabatan'];?>
                 </span>
               </div>
               <div class="col-lg-12 div_label text-left">

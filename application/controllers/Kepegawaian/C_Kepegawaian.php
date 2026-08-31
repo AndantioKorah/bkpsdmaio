@@ -2108,7 +2108,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function lakukan_download(){                                                          
 		$this->load->helper(array('url','download'));
-		force_download('./dokumen_layanan/FORMAT RENCANA TAHUNAN KEBUTUHAN PENGEMBANGAN DIRI.pdf',NULL);
+		force_download('./dokumen_layanan/FORMULIR CUTI.pdf',NULL);
 	}  
 	
 	public function insertUsulLayananKarisKarsu($id_m_layanan)
@@ -3133,6 +3133,8 @@ class C_Kepegawaian extends CI_Controller
 			// dd($data['dok_pendukung']);
 			$data['kegiatan'] = $this->kepegawaian->getKegiatanDispensasi();
 			render('kepegawaian/layanan/V_VerifikasiLayananDispensasiDetail.php', '', '', $data);
+		} else if($layanan == 40){
+			render('kepegawaian/layanan/V_VerifikasiLayananKontrakPpppkPwDetail.php', '', '', $data);
 		}     
 		
 
@@ -3316,6 +3318,11 @@ class C_Kepegawaian extends CI_Controller
 			public function submitEditFormCuti()
 		{ 
 			echo json_encode($this->kepegawaian->submitEditFormCuti());
+		}
+
+			public function submitEditFormSkp()
+		{ 
+			echo json_encode($this->kepegawaian->submitEditFormSkp());
 		}
 
 	public function prosesGajiBerkala($nip,$tahun){

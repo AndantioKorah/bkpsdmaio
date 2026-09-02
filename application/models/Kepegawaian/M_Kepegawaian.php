@@ -14913,7 +14913,7 @@ public function getFileForVerifLayanan()
                     $dataUsul['id_m_layanan']      = $id_m_layanan;
                     $dataUsul['file_pengantar']      = "$nama_file.pdf";
                     $dataUsul['surat_pernyataan_tidak_hd']      = $filehd;
-                    $dataUsul['surat_pernyataan_tidak_pidana']      = $filepidana;
+                    $dataUsul['surat_pernyataan_tidak_pidana']      = $file3;
                     if($id_m_layanan == 39){
                     $dataUsul['tanggal_dispen_mulai']      = $tanggal[0];
                     $dataUsul['tanggal_dispen_selesai']      = $tanggal[1];
@@ -14944,8 +14944,8 @@ public function getFileForVerifLayanan()
                     $dataFile 			= $this->upload->data();
                 }
             }
-
             if(isset($_FILES['file3']['name']) AND $_FILES['file3']['name'] != NULL ){
+               
                 $config_pidana['upload_path']       = $target_dir3;
                 $config_pidana['allowed_types']     = 'pdf';
                 $config_pidana['encrypt_name']		= FALSE;

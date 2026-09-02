@@ -101,6 +101,7 @@
             $image = $nama_file;
             $dataPost = $this->input->post();
             $this->createLaporanKegiatan($dataPost,$image);
+            // $this->updateTotalRealisasiByInsert($dataPost);
         } else {
 
         for($i=0;$i<$countfiles;$i++){
@@ -157,6 +158,7 @@
             $image = json_encode($nama_file); 
             $dataPost = $this->input->post();
             $this->createLaporanKegiatan($dataPost,$image);
+            // $this->updateTotalRealisasiByInsert($dataPost);
            }   
         }
 
@@ -356,21 +358,26 @@
         // $tahun = date('Y');
         // dd($year);
 
-        $cek = $this->db->select('a.id,
-        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
-        ')
-                        ->from('t_rencana_kinerja a')
-                        ->where('a.id_m_user', $id)
-                        ->where('a.tahun', $tahun)
-                        ->where('a.bulan', $bulan)
-                        ->where('a.id', $dataPost['tugas_jabatan'])
+        // $cek = $this->db->select('a.id,
+        // (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
+        // ')
+        //                 ->from('t_rencana_kinerja a')
+        //                 ->where('a.id_m_user', $id)
+        //                 ->where('a.tahun', $tahun)
+        //                 ->where('a.bulan', $bulan)
+        //                 ->where('a.id', $dataPost['tugas_jabatan'])
+        //                 ->where('a.flag_active', 1)
+        //                 ->get()->result_array();
+        
+        $cek = $this->db->select('sum(a.realisasi_target_kuantitas) as realisasi_target_kuantitas')
+                        ->from('t_kegiatan a')
+                        // ->where('a.id_m_user', $id)
+                        ->where('a.id_t_rencana_kinerja', $dataPost['tugas_jabatan'])
                         ->where('a.flag_active', 1)
                         ->get()->result_array();
-        
-       
-       
+    //    dd($cek);
         if($cek){
-           $this->db->where('id',  $cek[0]['id'])
+           $this->db->where('id',  $dataPost['tugas_jabatan'])
                      ->update('t_rencana_kinerja', [
                     //  'updated_by' => $this->general_library->getId(),
                      'total_realisasi' => $cek[0]['realisasi_target_kuantitas']
@@ -388,6 +395,54 @@
         //     ]);
         //  }
         // }
+         if ($this->db->trans_status() === FALSE)
+            {
+                    $this->db->trans_rollback();
+            }
+            else
+            {
+                    $this->db->trans_commit();
+            }
+      
+
+        }
+
+        public function updateTotalRealisasiByInsert($dataPost){
+        $this->db->trans_begin();
+       
+        $id =  $this->general_library->getId();
+        $bulan = date("n",strtotime($dataPost['tanggal_kegiatan']));
+        $tahun = date("Y",strtotime($dataPost['tanggal_kegiatan']));
+
+        // $cek = $this->db->select('a.id,
+        // (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
+        // ')
+        //                 ->from('t_rencana_kinerja a')
+        //                 ->where('a.id_m_user', $id)
+        //                 ->where('a.tahun', $tahun)
+        //                 ->where('a.bulan', $bulan)
+        //                 ->where('a.id', $dataPost['tugas_jabatan'])
+        //                 ->where('a.flag_active', 1)
+        //                 ->get()->result_array();
+       
+         $cek = $this->db->select('sum(a.realisasi_target_kuantitas) as realisasi_target_kuantitas')
+                        ->from('t_kegiatan a')
+                        ->where('a.id_m_user', $id)
+                        ->where('a.id_t_rencana_kinerja', $dataPost['tugas_jabatan'])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+
+        dd($cek);
+        if($cek){
+           $this->db->where('id',  $cek[0]['id'])
+                     ->update('t_rencana_kinerja', [
+                     'total_realisasi' => $cek[0]['realisasi_target_kuantitas']
+            ]);
+        }
+
+        
+
+
          if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();

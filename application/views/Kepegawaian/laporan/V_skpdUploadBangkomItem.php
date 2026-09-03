@@ -172,8 +172,17 @@ input:checked + .slider .off
                                             <td class="text-center"><?=$tahun?></td>
                                             <?php if(isset($lj['riwayat'])) { ?>
                                             <td class="text-center">
-                                            <?php $i = 0; foreach($lj['riwayat'] as $l){ ?>
-                                            <span class="badge badge-dark"><?php echo  getNamaBulan($l['bulan'])." : ".$l['jumlah_jp']." JP";?></span>
+                                            <?php $i = 0; foreach($lj['riwayat'] as $l){ 
+                                              
+                                              if($l['flag_ditebus'] == 1){
+                                              $badge = 'badge-pns';
+                                              } else if($l['flag_terpenuhi'] == 1){
+                                              $badge = 'badge-success';
+                                              } else {
+                                              $badge = 'badge-danger';
+                                              }
+                                              ?>
+                                            <span class="badge <?=$badge;?>"><?php echo  getNamaBulan($l['bulan'])." : ".$l['jumlah_jp']." JP";?></span>
                                             <br>
                                             <?php  if($bulan == $l['bulan']){ $fe = $l['flag_exception']; $id = $l['id']; $nip = $l['nip'];  } $i++; }
                                            

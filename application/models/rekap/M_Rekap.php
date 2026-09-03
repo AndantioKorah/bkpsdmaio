@@ -1980,7 +1980,7 @@
         // if($this->general_library->isProgrammer()){
         //     dd($list_pegawai);
         // }
-        $flag_rekap_tpp = 0;
+        // $flag_rekap_tpp = 0;
         if($flag_rekap_tpp == 1){
             $exceptBangkom = $this->db->select('*')
                                 ->from('t_except_bangkom')

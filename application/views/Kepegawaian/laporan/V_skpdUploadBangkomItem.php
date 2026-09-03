@@ -175,7 +175,7 @@ input:checked + .slider .off
                                             <?php $i = 0; foreach($lj['riwayat'] as $l){ 
                                               
                                               if($l['flag_ditebus'] == 1){
-                                              $badge = 'badge-pns';
+                                              $badge = 'badge-info';
                                               } else if($l['flag_terpenuhi'] == 1){
                                               $badge = 'badge-success';
                                               } else {

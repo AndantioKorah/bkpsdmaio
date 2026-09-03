@@ -13359,6 +13359,9 @@ public function getFileForVerifLayanan()
         }  else if($dataPengajuan[0]['id_m_layanan'] == 39){
             $message = "*[ADMINISTRASI KEPEGAWAIAN - DISPENSASI]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Dispensasi anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
             $jenislayanan = "Dispensasi";
+        } else if($dataPengajuan[0]['id_m_layanan'] == 40){
+            $message = "*[ADMINISTRASI KEPEGAWAIAN - PERPANJANGAN KONTRAK PPPK PARUH WAKTU]*\n\nSelamat ".greeting()." ".getNamaPegawaiFull($dataPengajuan[0]).".\nPengajuan Layanan Perpanjangan Kontrak anda tanggal ".formatDateNamaBulan($dataPengajuan[0]['tanggal_usul'])." telah ".$statusForMessage.".\n\nStatus: ".$status."\nCatatan Verifikator : ".$dataPengajuan[0]['keterangan']."\n\nTerima Kasih\n*BKPSDM Kota Manado*";
+            $jenislayanan = "Dispensasi";
         }
        
         $cronWaNextVerifikator = [

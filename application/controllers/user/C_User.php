@@ -682,8 +682,13 @@ class C_User extends CI_Controller
     }
 
     public function loadRiwayatKonsultasi(){
-        $data['result'] = $this->user->loadRiwayatKonsultasi();
-        $this->load->view('user/V_LiveChatRiwayatKonsultasi', $data);
+        $this->load->view('user/V_LiveChatRiwayatKonsultasi', null);
+    }
+
+    public function loadRiwayatKonsultasiItem($flag_only_active = 1){
+        $data['result'] = $this->user->loadRiwayatKonsultasi($flag_only_active);
+        $data['flag_only_active'] = $flag_only_active;
+        $this->load->view('user/V_LiveChatRiwayatKonsultasiItem', $data);
     }
 
     public function startKonsultasi(){

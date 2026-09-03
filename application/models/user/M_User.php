@@ -4461,7 +4461,7 @@
             return $rs;
         }
 
-        public function loadRiwayatKonsultasi(){
+        public function loadRiwayatKonsultasi($flag_only_active = 1){
             $listChat = null;
             
             $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
@@ -4490,6 +4490,10 @@
                 $this->db->where("(a.id_m_user = ".$this->general_library->getId()." OR id_m_user_assigned = ".$this->general_library->getId().")");
             } else {
                 $this->db->order_by('a.flag_read_admin', 'asc');
+            }
+
+            if($flag_only_active == 1){
+                $this->db->where('flag_done', 1);
             }
 
             $listChat = $this->db->get()->result_array();

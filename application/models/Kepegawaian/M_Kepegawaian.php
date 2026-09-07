@@ -19183,7 +19183,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
                                  
                                  if($result) {
                                     foreach($result as $res){
-                                    $this->db->select('a.nip,a.id,a.bulan,a.jumlah_jp,a.flag_exception')
+                                    $this->db->select('a.nip,a.id,a.bulan,a.jumlah_jp,a.flag_exception,a.flag_terpenuhi,a.flag_ditebus')
                                                     ->from('t_cek_bangkom a')
                                                     ->join('db_pegawai.pegawai b', 'a.nip = b.nipbaru_ws')
                                                     ->where('a.flag_active', 1)

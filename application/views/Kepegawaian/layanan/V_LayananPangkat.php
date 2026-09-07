@@ -323,6 +323,8 @@ ol {
 					<input type="hidden" id="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
 					<input type="hidden" id="diklat" value="<?php if($diklat) echo $diklat['id']; else echo "";?>">
 					<input type="hidden" id="skjabterusmenerus" value="<?php if($skjabterusmenerus) echo $skjabterusmenerus['id']; else echo "";?>">
+					<input type="hidden" id="skberhentijafung" value="<?php if($skberhentijafung) echo $skberhentijafung['id']; else echo "";?>">
+
           <?php } else if($id_m_layanan == 9) { ?>
           <input type="hidden" id="stlud" value="<?php if($stlud) echo $stlud['id']; else echo "";?>">
 					<input type="hidden" id="ibel" value="<?php if($ibel) echo $ibel['id']; else echo "";?>">
@@ -465,6 +467,13 @@ ol {
 									<?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah terakhir/transkrip nilai dan tampilan layar Pangkalan Data/Forlap Dikti (bagi PNS yang memiliki Ijazah/gelar pendidikan baru atau apabila terjadi peningkatan pendidikan)<i
 											class="fas fa-<?php if($pangkalandata) echo ''; else echo '';?>"></i></a>
 							</li> -->
+              <li>
+								<a class="<?php if($skberhentijafung) echo 'select'; else echo 'unselect';?>" <?php if($skberhentijafung) { ?>
+									onclick="viewBerkasPangkat('<?=$skberhentijafung['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
+									<?php } ?>> <i class="fa fa-file-pdf"></i> SK Pemberhentian Dari Jabatan Fungsional (bagi pejabat fungsional yang diangkat dan dilantik dalam jabatan struktural, diupload pada pilihan Arsip Lainnya)<i
+											class="fas fa-<?php if($skberhentijafung) echo ''; else echo '';?>"></i></a>
+							</li>
+              
              
               <?php } ?>
               <?php if($id_m_layanan == 9) { ?>

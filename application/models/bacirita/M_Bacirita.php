@@ -247,12 +247,15 @@ class M_Bacirita extends CI_Model
         $explode = explode(".", $data['template_sertifikat']);
         $inputFile = $data['template_sertifikat'];
         $previewFile = $explode[0]."_preview.pdf";
+
         if(isset($data['previewFile'])){
             $previewFile = $data['previewFile'];
         }
         if(file_exists(base_url($previewFile))){
             unlink(base_url($previewFile));
         }
+
+
         $html = $this->load->view('bacirita/V_TemplateSertifikatBkpsdmBacirita', $data, true);
         $this->mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => [215, 330]]);
         $this->mpdf->AddPage(
@@ -534,7 +537,7 @@ class M_Bacirita extends CI_Model
     public function loadDetailWebinar($id){
         return $this->db->select('a.*, d.flag_absen, c.nama_tipe_kegiatan, a.id as id_kegiatan, d.id as id_daftar, d.flag_generate_sertifikat,
                     d.url_sertifikat as url_sertifikat_peserta, d.date_absen, d.date_generate_sertifikat')
-                    ->from('db_bacirita.t_kegiatanx a')
+                    ->from('db_bacirita.t_kegiatan a')
                     ->join('m_user b', 'a.created_by = b.id')
                     ->join('db_bacirita.m_tipe_kegiatan c', 'a.id_m_tipe_kegiatan = c.id')
                     ->join('db_bacirita.t_peserta_kegiatan d', '(a.id = d.id_t_kegiatan  and d.id_m_user = "'.$this->general_library->getId().'" and d.flag_active = 1)', 'left')
@@ -724,7 +727,7 @@ class M_Bacirita extends CI_Model
         $res['message'] = 'ok';
 
         $this->db->trans_begin();
-     
+       
         $data = $this->input->post();
         $check = $this->checkActivity($data['id_t_kegiatan'], $data['id_m_user'], "generate_sertifikat");
         if($check['code'] == 0){

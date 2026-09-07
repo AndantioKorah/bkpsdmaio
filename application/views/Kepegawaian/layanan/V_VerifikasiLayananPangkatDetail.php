@@ -255,6 +255,9 @@
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='diklat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Sertifikat Diklat PIM III </button>
   <li>
+    <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='skberhentijafung')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pemberhentian Dari Jabatan Fungsional </button>
+  <li>
   <!-- <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='ibel')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Ijin Belajar</button>
   <li> -->
@@ -733,7 +736,7 @@ function openProfileTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2" || file == "skp3"){
           dir = "arsipskp/";
-        } else if(file == "berita_acara_jabatan" || file == "pas_foto" || file == "cv" || file == "spmt" || file == "surat_pelantikan_jabatan" || file == "bukti_prestasi" || file == "sk_penetapan_prestasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi"){
+        } else if(file == "berita_acara_jabatan" || file == "pas_foto" || file == "cv" || file == "spmt" || file == "surat_pelantikan_jabatan" || file == "bukti_prestasi" || file == "sk_penetapan_prestasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "skberhentijafung" || file == "peta" || file == "akreditasi"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";

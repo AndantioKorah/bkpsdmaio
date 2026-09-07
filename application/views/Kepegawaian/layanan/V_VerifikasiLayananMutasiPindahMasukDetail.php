@@ -192,20 +192,29 @@
     data-bs-toggle="pill" data-bs-target="#pills-profil" type="button" role="tab" aria-controls="pills-profil" aria-selected="false">Profil</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='suratpengantar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pengantar</button>
+    <button onclick="getFile(file='suratpengantar')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Permohonan</button>
   <li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='surathukdis')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Pernyataan Tidak Sedang Menjalani Hukuman Disiplin</button>
-
+    <button onclick="getFile(file='surathukdis')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Keterangan Tidak Pernah/Sedang Dijatuhi Hukuman Disiplin dan Tidak Sedang Memangku Jabatan sebagai Bendahara dan Pengurus Barang tanda tangan Kepala Perangkat Daerah Asal</button>
+</li>
+ <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='surat_rekom_asal')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Rekomendasi dari Perangkat Daerah Asal dengan menyebutkan nama jabatan saat ini, ditanda tangani oleh Kepala Perangkat Daerah/Unit Kerja Asal</button>
+</li>
+ <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='surat_rekom_tujuan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Surat Rekomendasi dari Perangkat Daerah Tujuan dengan menyebutkan nama jabatan yang akan diduduki di Perangkat Daerah Tujuan</button>
+</li>
+ <li class="nav-item nav-item-layanan" role="presentation">
+    <button onclick="getFile(file='rekomendasi')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Rekomendasi Dari Dinas Kesehatan/Dinas Pendidikan dan Kebudayaan</button>
+</li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='skpangkat')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pangkat</button>
-  <li>
+</li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='peta_jabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peta Jabatan</button>
   <li>
 <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='dok_lain')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Dokumen lain apabila diperlukan</button>
-  <li>
+</li>
 
  
 
@@ -670,7 +679,7 @@ function openPresensiTab(){
           dir = "arsipdiklat/";
         } else if(file == "skjabatan"){
           dir = "arsipjabatan/";
-        } else if(file == "suratpengantar" || file == "surathukdis" || file == "suratcltn"){
+        } else if(file == "suratpengantar" || file == "surathukdis" || file == "suratcltn" || file == "rekomendasi" || file == "surat_rekom_asal" || file == "surat_rekom_tujuan"){
           if(id_layanan == 28){
             dir = "./dokumen_layanan/mutasi_pindah_masuk/";
           } else {
@@ -703,6 +712,12 @@ function openPresensiTab(){
             var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_hd+"?v="+number;
             } else if(file == "suratcltn"){
             var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_cltn+"?v="+number;
+            } else if(file == "rekomendasi"){
+            var link = "<?=base_url();?>/"+dir+"/"+data[0].rekomendasi+"?v="+number;
+            } else if(file == "surat_rekom_asal"){
+            var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_rekom_asal+"?v="+number;
+            } else if(file == "surat_rekom_tujuan"){
+            var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_rekom_tujuan+"?v="+number;
             } else {
               var link = "<?=base_url();?>/"+dir+"/"+data[0].gambarsk+"?v="+number;
             }

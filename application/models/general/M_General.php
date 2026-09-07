@@ -2742,7 +2742,8 @@
         }
 
         public function cronCheckBangkom($bulan = 0, $tahun = 0, $nip = "", $id_unitkerja = 0){
-            if($nip == ""){
+            // dd($id_unitkerja);
+            if($nip == "" && $id_unitkerja == 0){
                 $exists = $this->db->select('*')
                                 ->from('t_cek_bangkom')
                                 ->where('flag_active', 1)
@@ -2751,8 +2752,8 @@
                                 ->limit(1)
                                 ->get()->row_array();
                 if($exists){
-                    dd('exists');
-                    return;
+                    // dd('exists');
+                    // return;
                 }
             }
 
@@ -2797,7 +2798,9 @@
             }
 
             $pegawai = $this->db->get()->result_array();
-            // dd($pegawai);
+            // if($this->general_library->isProgrammer()){
+            //     dd($pegawai);
+            // }
             if($pegawai){
                 foreach($pegawai as $p){
                     $updateData['jumlah_jp'] = $p['total_jp'] ? $p['total_jp'] : 0;
@@ -2815,7 +2818,18 @@
                                 ->update('t_cek_bangkom', $updateData);
                     } else {
                         $updateData['created_by'] = $this->general_library->getId();
-                        $this->db->insert('t_cek_bangkom', $updateData);
+                        $exists = $this->db->select('*')
+                                    ->from('t_cek_bangkom')
+                                    ->where('flag_active', 1)
+                                    ->where('nip', $p['nipbaru_ws'])
+                                    ->where('bulan', $updateData['bulan'])
+                                    ->where('tahun', $updateData['tahun'])
+                                    ->get()->row_array();
+                        if($exists){
+                            $this->db->insert('t_cek_bangkom', $updateData);
+                        } else {
+                            $this->db->insert('t_cek_bangkom', $updateData);
+                        }
                     }
                 }
             }

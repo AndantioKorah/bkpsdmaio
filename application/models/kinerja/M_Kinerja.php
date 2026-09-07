@@ -101,6 +101,7 @@
             $image = $nama_file;
             $dataPost = $this->input->post();
             $this->createLaporanKegiatan($dataPost,$image);
+            // $this->updateTotalRealisasiByInsert($dataPost);
         } else {
 
         for($i=0;$i<$countfiles;$i++){
@@ -157,6 +158,7 @@
             $image = json_encode($nama_file); 
             $dataPost = $this->input->post();
             $this->createLaporanKegiatan($dataPost,$image);
+            // $this->updateTotalRealisasiByInsert($dataPost);
            }   
         }
 
@@ -356,21 +358,26 @@
         // $tahun = date('Y');
         // dd($year);
 
-        $cek = $this->db->select('a.id,
-        (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
-        ')
-                        ->from('t_rencana_kinerja a')
-                        ->where('a.id_m_user', $id)
-                        ->where('a.tahun', $tahun)
-                        ->where('a.bulan', $bulan)
-                        ->where('a.id', $dataPost['tugas_jabatan'])
+        // $cek = $this->db->select('a.id,
+        // (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
+        // ')
+        //                 ->from('t_rencana_kinerja a')
+        //                 ->where('a.id_m_user', $id)
+        //                 ->where('a.tahun', $tahun)
+        //                 ->where('a.bulan', $bulan)
+        //                 ->where('a.id', $dataPost['tugas_jabatan'])
+        //                 ->where('a.flag_active', 1)
+        //                 ->get()->result_array();
+        
+        $cek = $this->db->select('sum(a.realisasi_target_kuantitas) as realisasi_target_kuantitas')
+                        ->from('t_kegiatan a')
+                        // ->where('a.id_m_user', $id)
+                        ->where('a.id_t_rencana_kinerja', $dataPost['tugas_jabatan'])
                         ->where('a.flag_active', 1)
                         ->get()->result_array();
-        
-       
-       
+    //    dd($cek);
         if($cek){
-           $this->db->where('id',  $cek[0]['id'])
+           $this->db->where('id',  $dataPost['tugas_jabatan'])
                      ->update('t_rencana_kinerja', [
                     //  'updated_by' => $this->general_library->getId(),
                      'total_realisasi' => $cek[0]['realisasi_target_kuantitas']
@@ -388,6 +395,54 @@
         //     ]);
         //  }
         // }
+         if ($this->db->trans_status() === FALSE)
+            {
+                    $this->db->trans_rollback();
+            }
+            else
+            {
+                    $this->db->trans_commit();
+            }
+      
+
+        }
+
+        public function updateTotalRealisasiByInsert($dataPost){
+        $this->db->trans_begin();
+       
+        $id =  $this->general_library->getId();
+        $bulan = date("n",strtotime($dataPost['tanggal_kegiatan']));
+        $tahun = date("Y",strtotime($dataPost['tanggal_kegiatan']));
+
+        // $cek = $this->db->select('a.id,
+        // (select sum(b.realisasi_target_kuantitas) from t_kegiatan as b where a.id = b.id_t_rencana_kinerja and b.flag_active = 1 and b.status_verif = 1) as realisasi_target_kuantitas
+        // ')
+        //                 ->from('t_rencana_kinerja a')
+        //                 ->where('a.id_m_user', $id)
+        //                 ->where('a.tahun', $tahun)
+        //                 ->where('a.bulan', $bulan)
+        //                 ->where('a.id', $dataPost['tugas_jabatan'])
+        //                 ->where('a.flag_active', 1)
+        //                 ->get()->result_array();
+       
+         $cek = $this->db->select('sum(a.realisasi_target_kuantitas) as realisasi_target_kuantitas')
+                        ->from('t_kegiatan a')
+                        ->where('a.id_m_user', $id)
+                        ->where('a.id_t_rencana_kinerja', $dataPost['tugas_jabatan'])
+                        ->where('a.flag_active', 1)
+                        ->get()->result_array();
+
+        dd($cek);
+        if($cek){
+           $this->db->where('id',  $cek[0]['id'])
+                     ->update('t_rencana_kinerja', [
+                     'total_realisasi' => $cek[0]['realisasi_target_kuantitas']
+            ]);
+        }
+
+        
+
+
          if ($this->db->trans_status() === FALSE)
             {
                     $this->db->trans_rollback();
@@ -3767,6 +3822,9 @@
         if($flag_sekolah_kecamatan == 0){
             // ambil jika ada pegawai PLT / PLH, BAGIAN INI HARUS MENJADI YANG PALING TERAKHIR
             $pegawai = $this->rekap->getPltPlhTambahan($data['id_unitkerja'], $bulan, $tahun, $pegawai);
+            // if($this->general_library->isProgrammer()){
+            //     dd($pegawai);
+            // }
         }
 
         $presentaseTpp = null;
@@ -3803,6 +3861,11 @@
             $temp = null;
             $temp_plt = null;
             foreach($pegawai as $p){
+                $tempData = null;
+                if(isset($result[$p['id_m_user']])){
+                    $tempData = $result[$p['id_m_user']];
+                }
+
                 $result[$p['id_m_user']] = $p;
 
                 $result[$p['id_m_user']]['kepala_skpd'] = $p['kepalaskpd'];
@@ -3961,10 +4024,11 @@
                     }
                 } 
 
-                if(isset($p['flag_override_tpp']) && $p['flag_override_tpp'] == 1){
-                    $result[$p['id_m_user']]['prestasi_kerja'] = $p['prestasi_kerja'];
-                    $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
-                    $result[$p['id_m_user']]['kondisi_kerja'] = $p['kondisi_kerja'];
+                if(isset($p['flag_override_tpp']) &&
+                    $p['flag_override_tpp'] == 1){
+                        $result[$p['id_m_user']]['prestasi_kerja'] = $p['prestasi_kerja'];
+                        $result[$p['id_m_user']]['beban_kerja'] = $p['beban_kerja'];
+                        $result[$p['id_m_user']]['kondisi_kerja'] = $p['kondisi_kerja'];
                 }
                 
                 // if($p['nipbaru_ws'] == '197605242003122003'){
@@ -3992,6 +4056,9 @@
                 $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
                 
                 if(isset($p['presentasi_tpp']) || ($temp_plt && in_array($p['id_m_user'], $temp_plt))){
+                    // if($this->general_library->isProgrammer()){
+                    //     dd($temp[$p['id_m_user']]);
+                    // }
                     $uk_asal = $this->db->select('*')
                                         ->from('db_pegawai.pegawai')
                                         ->where('nipbaru_ws', $p['nipbaru_ws'])
@@ -4011,11 +4078,25 @@
                             } else {
                             // tambahkan dengan tpp plt
                                 $temp_tpp = $temp[$p['id_m_user']]['pagu_tpp'];
-                                $result[$p['id_m_user']]['tambahan_raw'] = $result[$p['id_m_user']]['pagu_tpp'];
-                                $result[$p['id_m_user']]['tambahan'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
-                                $result[$p['id_m_user']]['pagu_sebelum'] = $temp_tpp;
-                                $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
-                                $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp;
+                                $tambahanPagu = ($p['presentasi_tpp'] / 100) * $result[$p['id_m_user']]['pagu_tpp'];
+                                $result[$p['id_m_user']]['pagu_tpp'] = $tambahanPagu + $tempData['pagu_tpp'];
+
+                                // jika jabatan sebelumnya lebih tinggi dari jabatan sekarang, ambil data jabatan sebelumnya
+                                if($tempData['kelas_jabatan'] > $result[$p['id_m_user']]['kelas_jabatan']){
+                                    $result[$p['id_m_user']]['kelas_jabatan'] = $tempData['kelas_jabatan'];
+                                    $result[$p['id_m_user']]['nama_jabatan'] = $tempData['nama_jabatan'];
+                                    $result[$p['id_m_user']]['prestasi_kerja'] = $tempData['prestasi_kerja'];
+                                    $result[$p['id_m_user']]['beban_kerja'] = $tempData['beban_kerja'];
+                                    $result[$p['id_m_user']]['kondisi_kerja'] = $tempData['kondisi_kerja'];
+                                }
+                                // $result[$p['id_m_user']]['tambahan_raw'] = $result[$p['id_m_user']]['pagu_tpp'];
+                                // $result[$p['id_m_user']]['tambahan'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                                // $result[$p['id_m_user']]['pagu_sebelum'] = $temp_tpp;
+                                // $result[$p['id_m_user']]['pagu_tpp'] = $result[$p['id_m_user']]['pagu_tpp'] * ($p['presentasi_tpp'] / 100);
+                                // $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp;
+                                // if($this->general_library->isProgrammer()){
+                                //     dd($result[$p['id_m_user']]);
+                                // }
                                 // dd(json_encode($result[$p['id_m_user']]));
                             }
                             // $result[$p['id_m_user']]['pagu_tpp'] += $temp_tpp;

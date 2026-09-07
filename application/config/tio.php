@@ -22,7 +22,9 @@ $route['master/pelanggaran'] = 'master/C_Master/masterPelanggaran';
 $route['master/perangkat-daerah/detail/(:any)'] = 'master/C_Master/detailMasterSkpd/$1';
 $route['master/event'] = 'master/C_Master/masterEvent';
 $route['master/hardcode-nominatif'] = 'master/C_Master/hardCodeNominatif';
+$route['master/pending-tpp'] = 'master/C_Master/pendingTpp';
 $route['rekap/verif-pdm'] = 'rekap/C_Rekap/rekapVerifPdm';
+$route['rekap/okta'] = 'rekap/C_Rekap/rekapOkta';
 $route['master/perangkat-daerah/jft'] = 'master/C_Master/openListPegawaiDetailSkpdMenu';
 $route['notifikasi-pegawai'] = 'user/C_User/notifikasiPegawai';
 $route['master/perangkat-daerah/bangkom'] = 'kepegawaian/C_Kepegawaian/openListUploadBangkomSkpd';
@@ -145,3 +147,6 @@ $route['api/bkpsdmweb/admin/login'] = 'api/C_ApiLayanan/loginAdmin';
 //BKPSDM Bacirita
 $route['bkpsdm-bacirita/kegiatan'] = 'bacirita/C_Bacirita/manageKegiatan';
 $route['sertifikat-bkpsdm-bacirita/(:any)'] = 'kepegawaian/C_VerifTte/verifSertiBkpsdmBacirita/$1';
+
+//telegram
+$route['telegram/webhook'] = 'telegram/C_Telegram/getWebhook';

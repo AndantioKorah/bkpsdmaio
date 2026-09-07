@@ -8,9 +8,12 @@
           <th class="text-left">Tanggal Pengajuan</th>
           <th class="text-left">Status</th>
           <th class="text-left">Keterangan</th>
-          <?php if($m_layanan == 25 || $m_layanan == 26) { ?>
+          <?php if($m_layanan == 25 || $m_layanan == 26 || $m_layanan == 28) { ?>
           <th class="text-left">Surat Permohonan</th>
-          <?php } else { ?>
+          <?php } else if($m_layanan == 40) { ?>
+           <th class="text-left">Surat Rekomendasi</th>
+            <th class="text-left">SKP</th>
+           <?php } else { ?>
           <th class="text-left">Surat Pengantar</th>
           <?php } ?>
           <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25 || $m_layanan == 26 || $m_layanan == 28) { ?>
@@ -31,6 +34,16 @@
             <?php if($m_layanan == 34) { ?>
           <th class="text-left">Formulir Cuti</th>
           <?php } ?>
+           <?php if($m_layanan == 39) { ?>
+          <th class="text-left">Surat Kegiatan</th>
+          <th class="text-left">Surat Dispensasi</th>
+          <?php } ?>
+           <?php if($m_layanan == 28) { ?>
+          <th class="text-left">Surat Rekomendasi dari Perangkat Daerah Asal</th>
+          <th class="text-left">Surat Rekomendasi dari Perangkat Daerah Tujuan</th>
+          <th class="text-left">Rekomendasi Dari Dinas Kesehatan/Dinas Pendidikan dan Kebudayaan</th>
+
+          <?php } ?>
           <th style="width:40%;"></th>
         </thead>
         <tbody>
@@ -45,7 +58,7 @@
              <span class="badge badge-<?php if($rs['status'] == '0' || $rs['status'] == '1' || $rs['status'] == '3' || $rs['status'] == '4' || $rs['status'] == '7' || $rs['status'] == '8' || $rs['status'] == '10') echo "success"; else  echo "danger"; ?>"><?=$rs['status_verif'];?>
             <?php } else if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 14 || $m_layanan == 15 ||  $m_layanan == 16 ||  $m_layanan == 30) { ?>
              <span class="badge badge-<?php if($rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else  echo "success"; ?>"><?=$rs['status_verif'];?>
-            <?php } else if($m_layanan == 21) { ?>
+            <?php } else if($m_layanan == 21 || $m_layanan == 39) { ?>
             <span class="badge badge-<?php if($rs['status'] == '0' || $rs['status'] == '1' || $rs['status'] == '3' || $rs['status'] == '4' || $rs['status'] == '7' || $rs['status'] == '8') echo "success"; else  echo "danger"; ?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Tolak Siladen";  else if($rs['status'] == '6')  echo "Tolak BKN"; else if($rs['status'] == '7') echo "ACC BKN"; else if($rs['status'] == '3') echo "Selesai";  else echo "Menunggu Verifikasi BKPSDM" ?>
             <?php } else { ?>
             <span class="badge badge-<?php if($rs['status'] == '1' || $rs['status'] == '4') echo "success"; else if($rs['status'] == '2' || $rs['status'] == '5' || $rs['status'] == '7') echo "danger"; else echo "primary";?>"><?php if($rs['status'] == '1') echo "Diterima"; else if($rs['status'] == '2') echo "Ditolak"; else if($rs['status'] == '3') echo "Usul BKAD"; else if($rs['status'] == '4')  echo "Diterima BKAD"; else if($rs['status'] == '5') echo "BTL / Berkas Tidak Lengkap"; else if($rs['status'] == '7') echo "TMS / Tidak Memenuhi Syarat"; else echo "Menunggu Verifikasi BKPSDM" ?>
@@ -66,7 +79,7 @@
             <i class="fa fa-file-pdf"></i></button>
             <?php } ?>
             </td>
-            <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25 || $m_layanan == 26 || $m_layanan == 28) { ?>
+            <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23 || $m_layanan == 25 || $m_layanan == 26 || $m_layanan == 28 || $m_layanan == 39) { ?>
           <td class="text-left">
           <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
           <i class="fa fa-file-pdf"></i></button>
@@ -78,6 +91,48 @@
           <i class="fa fa-file-pdf"></i></button>
           </td>
           <?php } ?>
+            <?php if($m_layanan == 39) { ?>
+             <?php if($rs['status'] == 3) { ?>
+          <td class="text-left">
+          <button href="#modal_view_file" onclick="openSuratDispensasi('<?=$rs['surat_pernyataan_tidak_pidana']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          </td>
+            <?php } ?>
+          <?php } ?>
+
+              <?php if($m_layanan == 40) { ?>
+          <td class="text-left">
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_pernyataan_tidak_hd']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          </td>
+          <?php } ?>
+
+
+          <?php if($m_layanan == 28) { ?>
+          <td class="text-left">
+          <?php if($rs['surat_rekom_asal'] != null) { ?>
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_rekom_asal']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
+          </td>
+
+          <td class="text-left">
+            <?php if($rs['surat_rekom_tujuan'] != null) { ?>
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['surat_rekom_tujuan']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
+          </td>
+
+          <td class="text-left">
+            <?php if($rs['rekomendasi'] != null) { ?>
+          <button href="#modal_view_file" onclick="openSuratKeterangan('<?=$rs['rekomendasi']?>')" data-toggle="modal" class="btn btn-sm btn-navy-outline">
+          <i class="fa fa-file-pdf"></i></button>
+          <?php } ?>
+          </td>
+
+        
+          <?php } ?>
+
             <?php if($m_layanan == 10 || $m_layanan == 21) { ?>
           <td class="text-left">
           <?php if($rs['dokumen_layanan'] != null) { ?>
@@ -121,6 +176,7 @@
                 </div>
                 
               </div>
+              
                  <?php if($m_layanan == 12 || $m_layanan == 13 || $m_layanan == 23) { ?>
                 <button
                     data-id_m_layanan = <?=$rs['id_m_layanan'];?>
@@ -169,7 +225,20 @@
                 <?php } ?>
          
                 <?php } else { ?>
+              
                 <?php if($rs['status'] == 2 || $rs['status'] == 6) { ?>
+
+                <?php if($m_layanan == 40) { ?>
+                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button
+                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
+                data-id="<?=$rs['id_t_layanan'];?>"
+                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
+                <i class="fa fa-edit"></i> Ubah Surat Rekomendasi
+                </button>
+                <?php } else { ?>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
                 <button
@@ -177,8 +246,13 @@
                 data-id="<?=$rs['id_t_layanan'];?>"
                 data-file_pengantar="<?=$rs['file_pengantar'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahSp">
-                <i class="fa fa-edit"></i> Ubah Surat Pengantar
+                <i class="fa fa-edit"></i> Ubah Surat Pengantar 
                 </button>
+                <?php } ?>
+
+
+                
+                
             
                 <?php if($rs['id_m_layanan'] == 34) { ?>
                 <button
@@ -189,16 +263,22 @@
                 <i class="fa fa-edit"></i> Ubah Form Cuti
                 </button>
                 <?php } ?>
+
+                <?php if($rs['id_m_layanan'] == 40) { ?>
+                <button
+                data-id_m_layanan="<?=$rs['id_m_layanan'];?>"
+                data-id="<?=$rs['id_t_layanan'];?>"
+                data-file_pengantar="<?=$rs['file_pengantar'];?>" 
+                id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2" data-toggle="modal" data-target="#modalUbahFormcuti">
+                <i class="fa fa-edit"></i> Ubah SKP
+                </button>
+                <?php } ?>
                 
                 </div>
                 <div class="btn-group mr-2" role="group" aria-label="Second group">
                 <button onclick="ajukanKembali('<?=$rs['id_t_layanan']?>')" class="btn btn-sm btn-primary">Ajukan Kembali <i class="fa fa-arrow-right"></i></button> 
-
                 </div>
-                
               </div>
-              
-               
               <?php } ?>
                              
               <?php } ?>
@@ -248,7 +328,7 @@
         <input type="hidden" name="file_pengantar" id="file_pengantar">
         <input type="hidden" name="id_m_layanan" id="id_m_layanan" >
         <div class="form-group">
-        <label>Surat Pengantar</label>
+        <label>Surat </label>
         <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar_ubah" name="file"   />
         <span style="color:red;">* Maksimal Ukuran File : 1 MB</span><br>
       </div>
@@ -259,6 +339,7 @@
     </div>
   </div>
 </div>
+
 
 
 <!-- Modal -->
@@ -277,7 +358,7 @@
         <input type="hidden" name="file_pengantar" id="file_pengantar">
         <input type="hidden" name="id_m_layanan" id="ubah_form_id_m_layanan" >
         <div class="form-group">
-        <label>Form Cuti</label>
+        <label>File</label>
         <input  class="form-control my-image-field" type="file" id="pdf_surat_pengantar_ubah" name="file"   />
         <span style="color:red;">* Maksimal Ukuran File : 1 MB</span><br>
       </div>
@@ -288,6 +369,8 @@
     </div>
   </div>
 </div>
+
+
 
 
 
@@ -363,6 +446,11 @@
                                if(id_layanan == 35){
                                 loadListRiwayatCpnsPns()
                                }
+                               if(id_layanan == 28){
+                                loadListRiwayatMutasiPidahMasuk()
+                               }
+
+                               
                                
                                
                            }, error: function(e){
@@ -408,6 +496,10 @@ if(id_layanan == 6 || id_layanan == 7 || id_layanan == 8 || id_layanan == 9 || i
   $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
 } else if(id_layanan == 35){
   $link = "<?=base_url();?>dokumen_layanan/cpns_pns/"+filename+"?v="+number;
+} else if(id_layanan == 39){
+  $link = "<?=base_url();?>dokumen_layanan/dispensasi/"+filename+"?v="+number;
+}else if(id_layanan == 40){
+  $link = "<?=base_url();?>dokumen_layanan/kontrak_pppk_pw/"+filename+"?v="+number;
 }
 
 $('#iframe_view_file').attr('src', $link)
@@ -435,7 +527,11 @@ if(id_layanan == 12 || id_layanan == 13){
   $link = "<?=base_url();?>dokumen_layanan/cuti_besar/"+filename+"?v="+number;
 }  else if(id_layanan == 35){
   $link = "<?=base_url();?>dokumen_layanan/cpns_pns/"+filename+"?v="+number;
-}  else {
+}  else if(id_layanan == 39){
+  $link = "<?=base_url();?>dokumen_layanan/dispensasi/"+filename+"?v="+number;
+} else if(id_layanan == 40){
+  $link = "<?=base_url();?>dokumen_layanan/kontrak_pppk_pw/"+filename+"?v="+number;
+}   else {
   $link = "<?=base_url();?>dokumen_layanan/suratpidanahukdis/"+filename+"?v="+number;
 }
 
@@ -502,6 +598,9 @@ function ajukanKembali(id){
                                }
                                if(id_layanan == 35){
                                 loadListRiwayatCpnsPns()
+                               }
+                               if(id_layanan == 40){
+                                loadListRiwayatCutiBesar()
                                }
 
                                

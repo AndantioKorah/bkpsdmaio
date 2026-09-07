@@ -70,8 +70,8 @@
     <select class="form-control select2-navy customInput" style="width: 100%"
                  id="bulan" data-dropdown-css-class="select2-navy" name="status">
                
-                                    <option value="0" selected>Semua</option>
-                                    <option value="1" >Belum terpenuhi untuk pengurusan TPP</option>
+                                    <option value="0" >Semua</option>
+                                    <option value="1" selected>Belum terpenuhi untuk pengurusan TPP</option>
                  </select>
     </div>
 

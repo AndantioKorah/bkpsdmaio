@@ -479,33 +479,33 @@ $(function(){
 
 
         if(sk_cpns == ""){
-            errortoast(' Berkas Belum Lengkap')
+            errortoast(' SK CPNS Belum diupload')
             return false;
         }
         if(sk_pangkat == ""){
-            errortoast(' Berkas Belum Lengkap')
+            errortoast(' SK Pangkat Belum Lengkap')
             return false;
         }
         if(drh == ""){
-            errortoast(' Berkas Belum Lengkap')
+            errortoast(' DRH Belum diupload')
             return false;
         }
         if(sk_jabatan == ""){
-            errortoast(' Berkas Belum Lengkap')
+            errortoast(' SK Jabatan Belum diupload')
             return false;
         }
         
 
         if(id_m_layanan == 37){
         if(satyalancana_10 == ""){
-            errortoast(' Berkas Belum Lengkap')
+            errortoast(' Satyalancana Karya Satya 10 Tahun Belum diupload')
             return false;
         }
         } 
         if(id_m_layanan == 38){
         
         if(satyalancana_20 == ""){
-            errortoast(' Berkas Belum Lengkap')
+            errortoast(' Satyalancana Karya Satya 20 Tahun Belum diupload')
             return false;
         }
         } 

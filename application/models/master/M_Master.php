@@ -1674,5 +1674,87 @@
 
             return $rs;
         }
+
+        public function getListPendingTpp(){
+            return $this->db->select('a.*, b.nipbaru_ws, b.gelar1, b.gelar2, b.nama, c.nm_unitkerja, d.nama_jabatan')
+                            ->from('t_pending_tpp a')
+                            ->join('db_pegawai.pegawai b',' a.nip = b.nipbaru_ws')
+                            ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
+                            ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg')
+                            ->where('a.flag_active', 1)
+                            ->group_by('a.id')
+                            ->order_by('a.created_date', 'desc')
+                            ->get()->result_array();
+        }
+
+        public function savePendingTpp($data){
+            $res = [
+                'code' => 0,
+                'message' => null
+            ];
+
+            $exists = $this->db->select('a.*, b.nipbaru_ws, b.gelar1, b.gelar2')
+                            ->from('t_pending_tpp a')
+                            ->join('db_pegawai.pegawai b',' a.nip = b.nipbaru_ws')
+                            ->where_in('a.nip', $data['pegawai'])
+                            ->where('a.bulan', floatval($data['bulan']))
+                            ->where('a.tahun', $data['tahun'])
+                            ->where('a.flag_active', 1)
+                            ->get()->result_array();
+            $listExists = null;
+            if($exists){
+                foreach($exists as $e){
+                    $listExists[$e['nip']] = $e;
+                }
+            }
+
+            $this->db->trans_begin();
+
+            foreach($data['pegawai'] as $dp){
+                if(!isset($listExists[$dp])){
+                    $this->db->insert('t_pending_tpp', [
+                        'nip' => $dp,
+                        'bulan' => floatval($data['bulan']),
+                        'tahun' => $data['tahun'],
+                        'created_by' => $this->general_library->getId()
+                    ]);
+                }   
+            }
+
+            if($res['code'] != 0 || $this->db->trans_status() == FALSE){
+                $res['code'] = 0;
+                $res['message'] = "Terjadi Kesalahan";
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $res;
+        }
+
+        public function deleteDataPendingTpp($id){
+            $res = [
+                'code' => 0,
+                'message' => null
+            ];
+
+            $this->db->trans_begin();
+
+            $this->db->where('id', $id)
+                    ->update('t_pending_tpp', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            if($res['code'] != 0 || $this->db->trans_status() == FALSE){
+                $res['code'] = 0;
+                $res['message'] = "Terjadi Kesalahan";
+                $this->db->trans_rollback();
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $res;
+        }
 	}
 ?>

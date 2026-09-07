@@ -368,7 +368,7 @@ ol {
         <li>
 				<a class="<?php if($sertiukom){ if($sertiukom['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sertiukom) { ?>
 				onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi* <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi (Maksimal 3 bulan sebelum masa berkalu habis)* <i
 				class="fas fa-<?php if($sertiukom) echo ''; else echo '';?>"></i></a>
 				</li>
         <li>
@@ -418,7 +418,7 @@ ol {
           <li>
 				<a class="<?php if($sertiukom){ if($sertiukom['status'] == 1) echo "warning"; else echo "select"; } else echo "unselect" ;?>" <?php if($sertiukom) { ?>
 				onclick="viewBerkasPangkat('<?=$sertiukom['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi* <i
+				<?php } ?>> <i class="fa fa-file-pdf"></i> Sertifikat Lulus Uji Kompetensi (Maksimal 3 bulan sebelum masa berkalu habis)* <i
 				class="fas fa-<?php if($sertiukom) echo ''; else echo '';?>"></i></a>
 				</li>
          <li>

@@ -39,7 +39,7 @@ class C_Cron extends CI_Controller
     }
 
     public function cronSendWa(){
-        $this->cronSyncBangkomPerData();
+        $this->removeLog();
         // $this->general->logCron('cronSendWa');
         // $this->general->cronSendWa();
         // dd('asdd');
@@ -121,7 +121,7 @@ class C_Cron extends CI_Controller
 
     public function cronSyncSkpSiasn(){
         $this->cronHashFileBangkom();
-        // $this->cronSyncBangkom();
+        $this->cronSyncBangkom();
         $this->general->logCron('cronSyncSkpSiasn');
         $this->siasn->cronRiwayatSkpSiasn();
     }
@@ -144,7 +144,7 @@ class C_Cron extends CI_Controller
         $this->general->logCron('cronUpdateGajiBkad');
         $this->rekap->cronUpdateGajiBkad();
 
-        // $this->cronSyncBangkomToSiasn();
+        $this->cronSyncBangkomToSiasn();
     }
 
     public function cronAsyncManual(){
@@ -228,6 +228,10 @@ class C_Cron extends CI_Controller
             $this->kepegawaian->flagFixProgress($progressCuti, $nip);
         }
         dd(($progressCuti));
+    }
+
+    public function cekKenegaraanSuratTugas(){
+        $this->user->cekKenegaraanSuratTugas();
     }
 
     public function fixProgressCutiDinkes($nip = null){
@@ -331,7 +335,7 @@ class C_Cron extends CI_Controller
     }
 
     public function funcTest($str = ""){
-        dd('asd');
+        $this->rekap->rekapEkinCustom();
         // $this->general->editPdf();
         // dd(cekWaktuKerja(0));
         // $this->user->insertPesertaBkpsdmBacirita();

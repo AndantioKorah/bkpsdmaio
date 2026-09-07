@@ -320,7 +320,9 @@ ol {
             <label>Formulir Permintaan dan Pemberian Cuti yang ditandatangani atasan langsung</label>
             <input  class="form-control my-image-field" type="file" id="formulisr_cuti" name="file2" required />
           </div>
-   
+          <br>
+   <a href="<?=base_url('kepegawaian/download');?>"> <i class="fa fa-download"> <i> Download Format Formulir Cuti</i></i></a>
+
 			
 			</div>
 

@@ -3222,10 +3222,10 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 1;
-            $bulan = 4;
+            $tanggal = 3;
+            $bulan = 8;
             $tahun = 2026;
-            $namaKegiatan = "Apel Perdana Bulan April Tahun 2026"; 
+            $namaKegiatan = "Apel Perdana Bulan Agustus Tahun 2026"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;
@@ -3338,7 +3338,7 @@
             }
 
             $EXCLUDE_NIP_FBKM_ADVENT = [
-                0
+                '199502182020121013'
             ];
 
             $excludeNipPegawai = null;
@@ -3380,7 +3380,7 @@
                     $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
                     $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
                     $dokpenKenegaraan['keterangan_sistem'] = $k['keterangan_sistem'];
-                    // $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                    $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
 
                     $notif['id_m_user'] = $k['user_id'];
                     $notif['pesan'] = "Selamat ".greeting().",\nYth. ".getNamaPegawaiFull($k).", berdasarkan data di sistem kami bahwa pada ".formatDateNamaBulan($dateLengkap).", Anda dikenakan pelanggaran KENEGARAAN dengan keterangan: ".$k['keterangan_sistem']."";
@@ -3388,7 +3388,7 @@
                     $notif['jenis_notifikasi'] = "pelanggaran_kenegaraan";
                     $notif['icon_color'] = "red";
                     $notif['fa_icon'] = "fa fa-times";
-                    // $this->db->insert('t_notifikasi', $notif);
+                    $this->db->insert('t_notifikasi', $notif);
 
                     // echo "input ".$k['user_id']."\n <br>";
                 } else {
@@ -3397,6 +3397,99 @@
             }
             dd($kenegaraanFix);
             // dd("done ".count($kenegaraanFix));
+        }
+
+        public function cekKenegaraanSuratTugas(){
+            $eventSuratTugas = $this->db->select('*')
+                                    ->from('db_sip.event')
+                                    ->where('flag_surat_tugas', 1)
+                                    ->where('flag_rekap_kenegaraan', 0)
+                                    ->get()->result_array();
+            if($eventSuratTugas){
+                foreach($eventSuratTugas as $ev){
+                    if($ev['id'] == 75){
+                        // cari semua pegawai yang termasuk dalam event tersebut
+                        $listPegawai = $this->db->select('nip, id_m_user')
+                                            ->from('t_pegawai_event_detail a')
+                                            ->join('t_pegawai_event b', 'a.id_t_pegawai_event = b.id')
+                                            ->where('a.flag_active', 1)
+                                            ->where('b.flag_active', 1)
+                                            ->where('b.id_event', $ev['id'])
+                                            ->get()->result_array();
+                        $listPegawaiKenegaraan = null;
+                        $idPegawai = null;
+                        if($listPegawai){
+                            foreach($listPegawai as $lp){
+                                $idPegawai[] = $lp['id_m_user'];
+                                $listPegawaiKenegaraan[$lp['id_m_user']] = $lp;
+                            }
+
+                            // cek jika ada dokumen pendukung yang sudah diverifikasi di tanggal event
+                            $explTanggal = explode("-", $ev['tgl']);
+                            $dokpen = $this->db->select('*')
+                                            ->from('t_dokumen_pendukung')
+                                            ->where('tahun', $explTanggal[0])
+                                            ->where('bulan', $explTanggal[1])
+                                            ->where('tanggal', $explTanggal[2])
+                                            ->where('flag_active', 1)
+                                            ->where('status', 2)
+                                            ->where_in('id_m_user', $idPegawai)
+                                            ->get()->result_array();
+                            if($dokpen){
+                                foreach($dokpen as $dpen){
+                                    // jika ada nip, hapus dari $listPegawaiKenegaraan untuk tidak dimasukkan dalam kenegaraan
+                                    if(isset($listPegawaiKenegaraan[$dpen['id_m_user']])){
+                                        unset($listPegawaiKenegaraan[$dpen['id_m_user']]);
+                                    }
+                                }
+                            }
+
+                            // cari absen dari list pegawai yang tersisa
+                            $absenEvent = $this->db->select('*')
+                                                ->from('db_sip.absen_event')
+                                                ->where_in('user_id', $idPegawai)
+                                                // ->where('tgl', $ev['tgl'])
+                                                ->where('event_id', $ev['id'])
+                                                ->get()->result_array();
+                            if($absenEvent){
+                                foreach($absenEvent as $aEvent){
+                                    // jika ada absen, hapus dari $listPegawaiKenegaraan untuk tidak dimasukkan dalam kenegaraan
+                                    if(isset($listPegawaiKenegaraan[$aEvent['user_id']])){
+                                        unset($listPegawaiKenegaraan[$aEvent['user_id']]);
+                                    }
+                                }
+                            }
+
+                            foreach($listPegawaiKenegaraan as $lpk){
+                                $keterangan_sistem = ucwords("TIDAK MELAKUKAN PRESENSI UNTUK EVENT ".strtoupper($ev['judul']));
+                                $dokpenKenegaraan = null;
+                                $dokpenKenegaraan['id_m_user'] = $lpk['id_m_user'];
+                                $dokpenKenegaraan['tanggal'] = $explTanggal[2];
+                                $dokpenKenegaraan['bulan'] = $explTanggal[1];
+                                $dokpenKenegaraan['tahun'] = $explTanggal[0];
+                                $dokpenKenegaraan['id_m_jenis_disiplin_kerja'] = 6;
+                                $dokpenKenegaraan['keterangan'] = "Kenegaraan";
+                                $dokpenKenegaraan['pengurangan'] = "5";
+                                $dokpenKenegaraan['status'] = "2";
+                                $dokpenKenegaraan['id_m_user_verif'] = "0";
+                                $dokpenKenegaraan['random_string'] = generateRandomString();
+                                $dokpenKenegaraan['flag_fix_tanggal'] = 0;
+                                $dokpenKenegaraan['tanggal_verif'] = date('Y-m-d H:i:s');
+                                $dokpenKenegaraan['flag_fix_jenis_disiplin'] = 0;
+                                $dokpenKenegaraan['flag_fix_dokumen_upload'] = 0;
+                                $dokpenKenegaraan['keterangan_sistem'] = $keterangan_sistem;
+                                echo "inserting....   ".$lpk['id_m_user']."<br>\n";
+                                // dd($dokpenKenegaraan);
+                                $this->db->insert('t_dokumen_pendukung', $dokpenKenegaraan);
+                            }
+                            $this->db->where('id', $ev['id'])
+                                    ->update('db_sip.event', [
+                                        'flag_rekap_kenegaraan' => 1
+                                    ]);
+                        }
+                    }
+                }
+            }
         }
 
         public function cekUnor(){
@@ -4368,7 +4461,7 @@
             return $rs;
         }
 
-        public function loadRiwayatKonsultasi(){
+        public function loadRiwayatKonsultasi($flag_only_active = 1){
             $listChat = null;
             
             $this->db->select('a.*, b.created_date as last_message_date, b.pesan, d.fotopeg, d.gelar1, d.gelar2, d.nama, e.nm_unitkerja, f.nama_jabatan,
@@ -4397,6 +4490,10 @@
                 $this->db->where("(a.id_m_user = ".$this->general_library->getId()." OR id_m_user_assigned = ".$this->general_library->getId().")");
             } else {
                 $this->db->order_by('a.flag_read_admin', 'asc');
+            }
+
+            if($flag_only_active == 1){
+                $this->db->where('a.flag_done', 0);
             }
 
             $listChat = $this->db->get()->result_array();
@@ -5200,6 +5297,42 @@
             }
 
             return $this->db->get()->result_array();
+        }
+
+        public function inputHardcodeNominatifCpns(){
+            $data = $this->db->select('a.skpd, c.id_jabatanpeg, a.nipbaru_ws')
+                            ->from('db_pegawai.pegawai a')
+                            ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+                            ->join('db_pegawai.jabatan c', 'a.skpd = c.id_unitkerja')
+                            ->where("a.nipbaru_ws LIKE '%202505%'")
+                            ->where('c.nama_jabatan', 'Pelaksana')
+                            ->get()->result_array();
+            if($data){
+                foreach($data as $d){
+                    $exists = $this->db->select('*')
+                                    ->from('t_hardcode_nominatif')
+                                    ->where('nip', $d['nipbaru_ws'])
+                                    ->where('bulan', '7')
+                                    ->where('tahun', '2026')
+                                    ->where('flag_add', 1)
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+                    if($exists){
+                        echo "skip cause exists ".$d['nipbaru_ws']."\n<br>";
+                    } else {
+                        $this->db->insert('t_hardcode_nominatif', [
+                            'id_unitkerja' => $d['skpd'],
+                            'id_jabatan' => $d['id_jabatanpeg'],
+                            'bulan' => 7,
+                            'tahun' => 2026,
+                            'nip' => $d['nipbaru_ws'],
+                            'nama_jabatan' => "Pelaksana",
+                            'flag_add' => 1
+                        ]);
+                        echo "inserting ".$d['nipbaru_ws']."\n<br>";
+                    }
+                }
+            }
         }
 	}
 ?>

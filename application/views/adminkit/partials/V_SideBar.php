@@ -260,6 +260,12 @@
 							<i class="align-middle me-2 far fa-circle"></i>Lock TPP
 						</a>
 					</li>
+
+					<li class="sidebar-item ">
+						<a title="Pending TPP" class="sidebar-link sidebar-link-child" href="<?=base_url('master/pending-tpp')?>">
+							<i class="align-middle me-2 far fa-circle"></i>Pending TPP
+						</a>
+					</li>
 				<?php } ?>
 
 				<li class="sidebar-item ">
@@ -428,6 +434,14 @@
 				<i class="fa fa-database"></i> <span class="align-middle">Perangkat Daerah</span>
 			</a>
 		</li>
+
+		<?php if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')) { ?>
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="<?=base_url();?>kepegawaian/C_Kepegawaian/kegiatanDispensasi">
+				<i class="fa fa-database"></i> <span class="align-middle">Kegiatan Dispensasi</span>
+			</a>
+		</li>
+		<?php } ?>
 
 		<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || 
 	             $this->general_library->isHakAkses('verifikasi_layanan_jabatan_fungsional')){ ?>
@@ -803,6 +817,15 @@
 				</li>
 				<?php } ?>
 
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('verifikasi_layanan_kontrak_pppk_pw')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/40')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Kontrak PPPK PW 
+					</a>
+				</li>
+				<?php } ?>
+				
+
 
 				<?php if($this->general_library->isHakAkses('verifikasi_cpns_pns')){ ?>
 				<li class="sidebar-item ">
@@ -823,6 +846,13 @@
 				<li class="sidebar-item ">
 					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/18')?>">
 						<i class="align-middle me-2 far fa-circle"></i>Ujian Dinas
+					</a>
+				</li>
+				<?php } ?>
+				<?php if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/39')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Dispensasi
 					</a>
 				</li>
 				<?php } ?>
@@ -950,6 +980,7 @@
 				|| $this->general_library->isHakAksesRekapAbsen()
 				){
 			?>
+			
 			<li class="sidebar-item ">
 				<a title="indikator" class="sidebar-link sidebar-link-child" href="<?=base_url('rekapitulasi/absensi')?>">
 					<i class="align-middle me-2 far fa-circle"></i>Absensi
@@ -969,7 +1000,7 @@
 			<?php if($this->general_library->isProgrammer() 
 				|| $this->general_library->isAdminAplikasi() 
 				|| $this->general_library->isHakAkses('rekap_bangkom')
-				||  $this->general_library->isPegawaiBkpsdm()
+				// ||  $this->general_library->isPegawaiBkpsdm()
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
 				){ ?>
@@ -1038,11 +1069,18 @@
 			<?php if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() 
 			|| $this->general_library->isHakAkses('menu_bidang_pekin') 
 			|| $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){ ?>
-			<li class="sidebar-item ">
-				<a title="Rekapitulasi Hukuman Disipllin" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/hukdis')?>">
-					<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
-				</a>
-			</li>
+				<li class="sidebar-item ">
+					<a title="Rekapitulasi Hukuman Disipllin" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/hukdis')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Hukuman Disiplin
+					</a>
+				</li>
+			<?php } ?>
+			<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('monitoring_okta')){ ?>
+				<li class="sidebar-item ">
+					<a title="Rekapitulasi OKTA" class="sidebar-link sidebar-link-child" href="<?=base_url('rekap/okta')?>">
+						<i class="align-middle me-2 far fa-circle"></i>OKTA
+					</a>
+				</li>
 			<?php } ?>
 		</ul>
 	</li>
@@ -1541,19 +1579,18 @@
 			// { 
 			?>
 			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()) { ?>
-			<li class="sidebar-item ">
+			<!-- <li class="sidebar-item ">
 				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 					<span class="align-middle">
-					Penilaian Sejawat
+					Penilaian 360
 					</span>
 				</a>	
-			</li>
+			</li> -->
 			<?php 
 		    // }
 		    ?>
 			<?php } ?>	
-			
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))
 			{ 
 			?>	

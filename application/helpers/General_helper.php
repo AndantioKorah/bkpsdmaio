@@ -838,7 +838,7 @@ function formatDateNamaBulanWithTime($data)
 
 function getNamaPegawaiFull($pegawai, $flag_capital_nama = 0, $flag_first_name = 0)
 {
-    $nama_pegawai = trim($pegawai['nama']);
+    $nama_pegawai = strtolower(trim($pegawai['nama']));
     if($flag_capital_nama == 1){
         $nama_pegawai = strtoupper($nama_pegawai);
     }

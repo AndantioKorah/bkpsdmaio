@@ -1308,7 +1308,7 @@
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
 
-        }  else if($id_unitkerja == 3028000){ // inspektorat, kasub sementara cuti ganti irban, inspektur TL ganti sek
+        }  else if($id_unitkerja == 4011000){ // inspektorat, kasub sementara cuti ganti irban, inspektur TL ganti sek
             $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                     e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
                                     ->from('db_pegawai.pegawai a')

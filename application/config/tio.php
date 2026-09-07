@@ -147,3 +147,6 @@ $route['api/bkpsdmweb/admin/login'] = 'api/C_ApiLayanan/loginAdmin';
 //BKPSDM Bacirita
 $route['bkpsdm-bacirita/kegiatan'] = 'bacirita/C_Bacirita/manageKegiatan';
 $route['sertifikat-bkpsdm-bacirita/(:any)'] = 'kepegawaian/C_VerifTte/verifSertiBkpsdmBacirita/$1';
+
+//telegram
+$route['telegram/webhook'] = 'telegram/C_Telegram/getWebhook';

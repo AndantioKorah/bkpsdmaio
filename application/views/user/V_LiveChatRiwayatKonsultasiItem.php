@@ -209,7 +209,7 @@
         <?php } ?>
     <?php } ?>
     <?php if($flag_only_active == 1){ ?>
-        <div class="col-lg-12 mt-2 text-center" id="div_btn_load">
+        <div class="col-lg-12 mt-2 text-center pb-2" id="div_btn_load">
             <button id="btn_load_all" onclick="loadRiwayatKonsultasi(0)" class="btn btn-sm btn-navy">Muat Semua Riwayat</button>
             <!-- <button id="btn_load_all_loading" style="display: none;" class="btn btn-sm btn-outline-navy"><i class="fa fa-spin fa-spinner"></i> Memuat...</button> -->
         </div>

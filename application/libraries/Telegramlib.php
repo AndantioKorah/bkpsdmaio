@@ -6,7 +6,7 @@ class Telegramlib extends CI_Model{
   public function hashTelegram()
   {
     //   $token = "1827474004:AAH8TDfeAh8WR_iXIG-vL0CDuF0KZbwtNUk";
-      $token = "5315874699:AAFpVyGEnuSAwT5In5AxzWoL2jM5HzaR1NM";
+      $token = "8906586989:AAHy421Xp2cBYCfbOZyyPDQPutcyILKg0iw";
       $url = "https://api.telegram.org/bot$token/";
       return [
           'token' => $token,
@@ -48,9 +48,11 @@ class Telegramlib extends CI_Model{
     $url = $this->hashTelegram()['url'];
 
     if($method_telegram == 'sendMessage'){
-        $url = $url.$method_telegram.'?chat_id='.$send_to.'&text='.urlencode($data['message']);
+      $url = $url.$method_telegram.'?chat_id='.$send_to.'&text='.urlencode($data['message']);
+    } else if($method_telegram == 'setWebhook'){
+      $url = $url.$method_telegram.'?url='.$data['url_webhook'];
     }
-    
+    dd($url);
     $session = curl_init();
 
     $header[] = "Content-Type: application/json";

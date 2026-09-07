@@ -4493,7 +4493,7 @@
             }
 
             if($flag_only_active == 1){
-                $this->db->where('flag_done', 1);
+                $this->db->where('a.flag_done', 0);
             }
 
             $listChat = $this->db->get()->result_array();

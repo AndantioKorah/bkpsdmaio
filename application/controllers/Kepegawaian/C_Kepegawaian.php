@@ -2108,7 +2108,7 @@ class C_Kepegawaian extends CI_Controller
 
 	public function lakukan_download(){                                                          
 		$this->load->helper(array('url','download'));
-		force_download('./dokumen_layanan/FORMULIR CUTI.pdf',NULL);
+		force_download('./dokumen_layanan/FORMAT RENCANA TAHUNAN KEBUTUHAN PENGEMBANGAN DIRI.pdf',NULL);
 	}  
 	
 	public function insertUsulLayananKarisKarsu($id_m_layanan)

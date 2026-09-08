@@ -107,7 +107,7 @@
                 foreach($data as $d){
                     $reply = null;
                     if(strcasecmp($d['text'], "/start") == 0){
-                        $reply = "Selamat datang di Bot Telegram SILADEN. Untuk mengakses menu yang tersedia, silahkan pilih tombol Menu yang terdapat di samping kiri bawah";
+                        $reply = "Selamat datang di Bot Telegram SILADEN. Untuk mengakses menu yang tersedia, silahkan pilih tombol Menu yang terdapat di samping kiri bawah.";
                     } else if(strcasecmp($d['text'], "/integrasi_siladen") == 0){
                         // cek user yang sudah terdaftar
                         $user = $this->db->select('a.id, b.gelar1, b.gelar2, b.nama')
@@ -116,7 +116,7 @@
                                         ->where('a.user_id_telegram', $d['user_id'])
                                         ->get()->row_array();
                         if($user){ // jika sudah terintegrasi
-                            $reply = "Akun Telegram Anda saat ini sudah terintegrasi dengan Akun SILADEN.";
+                            $reply = "Akun Telegram Anda saat ini sudah terintegrasi dengan Akun SILADEN. Jika ingin mengganti akun SILADEN yang terintegrasi, silahkan klik tombol Menu yang terdapat di samping kiri bawah.";
                         } else {
                             $reply = "Silahkan masukkan NIP Anda tanpa menggunakan spasi dan tanpa teks lainnya (contoh: 197502302006071007).";
                         }
@@ -142,13 +142,10 @@
                                 if($userExists){
                                     if($userExists['user_id_telegram']){
                                         // jika sudah ada user_id_telegram, reply agar harus dihapus terlebih dahulu 
-                                        $reply = "Akun Telegram Anda saat ini sudah terintegrasi dengan Akun SILADEN.";
+                                        $reply = "Akun Telegram Anda saat ini sudah terintegrasi dengan Akun SILADEN. Jika ingin mengganti akun SILADEN yang terintegrasi, silahkan klik tombol Menu yang terdapat di samping kiri bawah.";
                                     } else {
-                                        $this->db->insert('t_notifikasi', [
-                                            'jenis_notifikasi' => "integrasi_akun_telegram",
-                                            'judul_notifikasi' => "Integrasi Akun Telegram",
-                                            'pesan' => ""
-                                        ]);
+                                        // buatkan link untuk login dengan menggunakan token di URI. 
+                                        // selesai login, jika token masih berlaku, akan muncul pesan akun telegram sudah terintegrasi
                                     }
                                 }
                             }

@@ -105,8 +105,54 @@
                         
             if($data){
                 foreach($data as $d){
-                    if(strcasecmp($d['text'], "/start")){
-                        
+                    $reply = null;
+                    if(strcasecmp($d['text'], "/start") == 0){
+                        $reply = "Selamat datang di Bot Telegram SILADEN. Untuk mengakses menu yang tersedia, silahkan pilih tombol Menu yang terdapat di samping kiri bawah";
+                    } else if(strcasecmp($d['text'], "/integrasi_siladen") == 0){
+                        // cek user yang sudah terdaftar
+                        $user = $this->db->select('a.id, b.gelar1, b.gelar2, b.nama')
+                                        ->from('m_user a')
+                                        ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                        ->where('a.user_id_telegram', $d['user_id'])
+                                        ->get()->row_array();
+                        if($user){ // jika sudah terintegrasi
+                            $reply = "Akun Telegram Anda saat ini sudah terintegrasi dengan Akun SILADEN.";
+                        } else {
+                            $reply = "Silahkan masukkan NIP Anda tanpa menggunakan spasi dan tanpa teks lainnya (contoh: 197502302006071007).";
+                        }
+                    } else if(strcasecmp($d['text'], "/reset_siladen") == 0){
+
+                    } else {
+                        // ambil chat sebelumnya dari user yang sama
+                        $chatBefore = $this->db->select('*')
+                                            ->from('t_data_updates_telegram')
+                                            ->where('user_id', $d['user_id'])
+                                            ->where('id !=', $d['id'])
+                                            ->where('update_id <', $d['update_id'])
+                                            ->order_by('update_id', 'desc')
+                                            ->get()->row_array();
+                        if($chatBefore){
+                            if(strcasecmp($chatBefore['text'], "/integrasi_siladen") == 0){
+                                //jika integrasi_siladen, maka cek text yang dimasukkan apakah NIP yang valid
+                                $userExists = $this->db->select('*')
+                                                    ->from('m_user')
+                                                    ->where('username', $d['text'])
+                                                    ->where('flag_active', 1)
+                                                    ->get()->row_array();
+                                if($userExists){
+                                    if($userExists['user_id_telegram']){
+                                        // jika sudah ada user_id_telegram, reply agar harus dihapus terlebih dahulu 
+                                        $reply = "Akun Telegram Anda saat ini sudah terintegrasi dengan Akun SILADEN.";
+                                    } else {
+                                        $this->db->insert('t_notifikasi', [
+                                            'jenis_notifikasi' => "integrasi_akun_telegram",
+                                            'judul_notifikasi' => "Integrasi Akun Telegram",
+                                            'pesan' => ""
+                                        ]);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

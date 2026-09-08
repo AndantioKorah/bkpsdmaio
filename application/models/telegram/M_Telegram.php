@@ -55,7 +55,7 @@
                                 $dateSend = new DateTime();
                                 $dateSend->setTimestamp($r['message']['date']);
 
-                                $this->db->insert('t_log_update_telegram', [
+                                $this->db->insert('t_data_updates_telegram', [
                                     'update_id' => $r['update_id'],
                                     'message_id' => $r['message']['message_id'],
                                     'flag_bot' => $r['message']['from']['is_bot'] == false ? 0 : 1,
@@ -90,6 +90,25 @@
                 }
             } else {
                 echo "belum waktunya";
+            }
+        }
+
+        public function cronSetReplyTelegram(){
+            $data = $this->db->select('*')
+                        ->from('t_data_updates_telegram')
+                        ->where('flag_active', 1)
+                        ->where('flag_set_reply', 0)
+                        ->where('flag_bot', 0)
+                        ->order_by('date_sent', 'asc')
+                        ->limit(10)
+                        ->get()->result_array(0);
+                        
+            if($data){
+                foreach($data as $d){
+                    if(strcasecmp($d['text'], "/start")){
+                        
+                    }
+                }
             }
         }
 

@@ -396,7 +396,7 @@ class C_Layanan extends CI_Controller
 	public function getSelectedFileSuratTugasEvent(){
 		$result['data'] = $this->session->userdata('upload_surat_tugas_event_'.$this->general_library->getId());
 		$result['count'] = $result['data'] ? count($result['data']) : 0;
-
+		
 		echo json_encode($result);
 	}
 	

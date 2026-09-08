@@ -2822,11 +2822,13 @@
                                     ->from('t_cek_bangkom')
                                     ->where('flag_active', 1)
                                     ->where('nip', $p['nipbaru_ws'])
-                                    ->where('bulan', $updateData['bulan'])
+                                    ->where('bulan', intval($updateData['bulan']))
                                     ->where('tahun', $updateData['tahun'])
                                     ->get()->row_array();
                         if($exists){
-                            $this->db->insert('t_cek_bangkom', $updateData);
+                            $this->db->where('id', $exists['id'])
+                                    ->update('t_cek_bangkom', $updateData);
+                            // $this->db->insert('t_cek_bangkom', $updateData);
                         } else {
                             $this->db->insert('t_cek_bangkom', $updateData);
                         }

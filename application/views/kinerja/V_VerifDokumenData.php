@@ -79,8 +79,13 @@
                                 <i class="fa fa-times"></i>Tolak
                             </button>
                             
-                            <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(4, '<?=$r['id']?>')" style="display: <?=$status == 1 || $status == 4 ? 'none' : 'block'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-warning" title="Batal"><i class="fa fa-trash"></i></button>
-                            <button disabled style="display: none;" id="btn_loading_<?=$r['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
+                            <?php // if($this->general_library->isProgrammer()) { ?>
+                                <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(4, '<?=$r['id']?>')" style="display: <?=$status == 1 || $status == 4 ? 'none' : 'block'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-warning" title="Batal"><i class="fa fa-trash"></i></button>
+                                <button disabled style="display: none;" id="btn_loading_<?=$r['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button>
+                            <?php // } else if($r['id_m_user_verif'] != 0) { ?>
+                                <!-- <button data-list_id='<?=json_encode($r['list_id'])?>' onclick="verifDokumen(4, '<?=$r['id']?>')" style="display: <?=$status == 1 || $status == 4 ? 'none' : 'block'?>" class="btn_verif_<?=$r['id']?> btn btn-sm btn-warning" title="Batal"><i class="fa fa-trash"></i></button>
+                                <button disabled style="display: none;" id="btn_loading_<?=$r['id']?>" class="btn btn-sm btn-info"><i class="fa fa-spin fa-spinner"></i></button> -->
+                            <?php // } ?>
                         </div>
                     </td>
                 </tr>

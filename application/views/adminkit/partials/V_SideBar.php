@@ -816,6 +816,14 @@
 					</a>
 				</li>
 				<?php } ?>
+
+				<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('verifikasi_layanan_kontrak_pppk_pw')){ ?>
+				<li class="sidebar-item ">
+					<a title="" class="sidebar-link sidebar-link-child" href="<?=base_url('kepegawaian/verifikasi-layanan/40')?>">
+						<i class="align-middle me-2 far fa-circle"></i>Kontrak PPPK PW 
+					</a>
+				</li>
+				<?php } ?>
 				
 
 

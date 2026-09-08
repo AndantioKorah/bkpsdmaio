@@ -3133,6 +3133,8 @@ class C_Kepegawaian extends CI_Controller
 			// dd($data['dok_pendukung']);
 			$data['kegiatan'] = $this->kepegawaian->getKegiatanDispensasi();
 			render('kepegawaian/layanan/V_VerifikasiLayananDispensasiDetail.php', '', '', $data);
+		} else if($layanan == 40){
+			render('kepegawaian/layanan/V_VerifikasiLayananKontrakPpppkPwDetail.php', '', '', $data);
 		}     
 		
 
@@ -3316,6 +3318,11 @@ class C_Kepegawaian extends CI_Controller
 			public function submitEditFormCuti()
 		{ 
 			echo json_encode($this->kepegawaian->submitEditFormCuti());
+		}
+
+			public function submitEditFormSkp()
+		{ 
+			echo json_encode($this->kepegawaian->submitEditFormSkp());
 		}
 
 	public function prosesGajiBerkala($nip,$tahun){

@@ -230,6 +230,10 @@ class C_Cron extends CI_Controller
         dd(($progressCuti));
     }
 
+    public function cekKenegaraanSuratTugas(){
+        $this->user->cekKenegaraanSuratTugas();
+    }
+
     public function fixProgressCutiDinkes($nip = null){
         $this->kepegawaian->fixProgressCutiDinkes($nip);
     }

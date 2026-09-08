@@ -2,11 +2,17 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Telegramlib extends CI_Model{
+  protected $telegramlib;
+
+  public function __construct(){
+      $this->telegramlib = &get_instance();
+      $this->telegramlib->load->model('general/M_General', 'general');
+  }
 
   public function hashTelegram()
   {
     //   $token = "1827474004:AAH8TDfeAh8WR_iXIG-vL0CDuF0KZbwtNUk";
-      $token = "5315874699:AAFpVyGEnuSAwT5In5AxzWoL2jM5HzaR1NM";
+      $token = "8906586989:AAHy421Xp2cBYCfbOZyyPDQPutcyILKg0iw";
       $url = "https://api.telegram.org/bot$token/";
       return [
           'token' => $token,
@@ -48,9 +54,14 @@ class Telegramlib extends CI_Model{
     $url = $this->hashTelegram()['url'];
 
     if($method_telegram == 'sendMessage'){
-        $url = $url.$method_telegram.'?chat_id='.$send_to.'&text='.urlencode($data['message']);
+      $url = $url.$method_telegram.'?chat_id='.$send_to.'&text='.urlencode($data['message']);
+    } else if($method_telegram == 'setWebhook'){
+      $url = $url.$method_telegram.'?url='.$data['url_webhook'];
+    } else {
+      $url = $url.$method_telegram;
     }
-    
+
+
     $session = curl_init();
 
     $header[] = "Content-Type: application/json";
@@ -69,6 +80,13 @@ class Telegramlib extends CI_Model{
         $message = curl_error($session);
     }
     curl_close($session);
+
+    $this->telegramlib->general->insert('t_log_ws_telegram', [
+      'url' => $url,
+      'request' => is_array($data) ? json_encode($data) : $data,
+      'method' => $method,
+      'response' => ($result),
+      ]);
     
     return ['result' => $result, 'message' => $message];
   }

@@ -1868,6 +1868,7 @@
                                 ->where('a.flag_exception', 0)
                                 ->where('a.flag_active', 1)
                                 ->where('bulan_tahun <=', $param['tahun']."-".$param['bulan']."-01")
+                                ->where('bulan_tahun >=', '2026-02-01')
                                 ->group_by('b.nipbaru_ws');
                                 // ->where_in('b.nipbaru_ws', $pegawai)
                                 // ->get()->result_array();

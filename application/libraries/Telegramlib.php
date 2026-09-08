@@ -2,6 +2,12 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Telegramlib extends CI_Model{
+  protected $telegramlib;
+
+  public function __construct(){
+      $this->telegramlib = &get_instance();
+      $this->telegramlib->load->model('general/M_General', 'general');
+  }
 
   public function hashTelegram()
   {
@@ -51,8 +57,11 @@ class Telegramlib extends CI_Model{
       $url = $url.$method_telegram.'?chat_id='.$send_to.'&text='.urlencode($data['message']);
     } else if($method_telegram == 'setWebhook'){
       $url = $url.$method_telegram.'?url='.$data['url_webhook'];
+    } else {
+      $url = $url.$method_telegram;
     }
-    dd($url);
+
+
     $session = curl_init();
 
     $header[] = "Content-Type: application/json";
@@ -71,6 +80,13 @@ class Telegramlib extends CI_Model{
         $message = curl_error($session);
     }
     curl_close($session);
+
+    $this->telegramlib->general->insert('t_log_ws_telegram', [
+      'url' => $url,
+      'request' => is_array($data) ? json_encode($data) : $data,
+      'method' => $method,
+      'response' => ($result),
+      ]);
     
     return ['result' => $result, 'message' => $message];
   }

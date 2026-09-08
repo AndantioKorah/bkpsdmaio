@@ -19,4 +19,8 @@ class C_Telegram extends CI_Controller
         $req = $this->telegramlib->send_curl_exec('GET', 'setWebhook', '', $data);
         dd($req);
     }
+
+    public function cronGetUpdates(){
+        $this->telegram->cronGetUpdates();
+    }
 }

@@ -7902,9 +7902,15 @@ public function submitEditJabatan(){
                 $diff = strtotime($jamPulang) - strtotime($timeOnly);
                 if($diff < ($maxJam * (3600 - 59))){
                     if($flagVerifOperator == 1){
-                        $res['code'] = 1;
-                        $res['message'] = "Waktu maksimal pengajuan Permohonan Cuti adalah ".$maxJam." jam sebelum waktu pulang";
-                        return $res;
+                        $prog = $this->session->userdata('programmer_session');
+                        if($prog['user_logged_in'] != null){
+
+                        } else {
+                            $res['code'] = 1;
+                            $res['message'] = "Waktu maksimal pengajuan Permohonan Cuti adalah ".$maxJam." jam sebelum waktu pulang";
+                            return $res;
+                        }
+                        
                     }
                 }
             }

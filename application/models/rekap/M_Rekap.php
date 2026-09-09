@@ -1880,7 +1880,14 @@
             // } else {
                 $this->db->where_in('b.nipbaru_ws', $pegawai);
             // }
-            if(stringStartWith('sekolah_', $param['skpd']) && $flag_rekap_tpp == 1){
+            if($this->general_library->isProgrammer()){
+                // dd($flag_rekap_tpp);
+                // dd($param['nm_unitkerja']);
+            }
+            if((stringStartWith('sekolah_', $param['skpd']) ||
+                stringStartWith('SD', $param['nm_unitkerja']) ||
+                stringStartWith('SMP', $param['nm_unitkerja']) || 
+                stringStartWith('TK', $param['nm_unitkerja'])) && $flag_rekap_tpp == 1){
                 $this->db->where('b.flag_terima_tpp', 1);
             }
             $cekBangkom = $this->db->get()->result_array();

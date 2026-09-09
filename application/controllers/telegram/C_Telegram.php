@@ -23,4 +23,12 @@ class C_Telegram extends CI_Controller
     public function cronGetUpdates(){
         $this->telegram->cronGetUpdates();
     }
+
+    public function cronSetReplyTelegram(){
+        $this->telegram->cronSetReplyTelegram();
+    }
+
+    public function cronSendReplyTelegram(){
+        $this->telegram->cronSendReplyTelegram();
+    }
 }

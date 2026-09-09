@@ -4682,6 +4682,17 @@ class C_Kepegawaian extends CI_Controller
 	public function syncDataUtamaSiasn($nip){
 		echo json_encode($this->kepegawaian->syncDataUtamaSiasn($nip));
 	}
+	
+	public function loadDataIntegrasiTelegram($userId){
+		$data['res'] = $this->general->getOne('m_user', 'id', $userId, 1);
+		$this->load->view('kepegawaian/V_ModalIntegrasiTelegram', $data);
+	}
 
+	public function saveUserIdTelegram($userid){
+		echo json_encode($this->kepegawaian->saveUserIdTelegram($userid));
+	}
 
+	public function deleteUserIdTelegram($userid){
+		echo json_encode($this->kepegawaian->deleteUserIdTelegram($userid));
+	}
 }

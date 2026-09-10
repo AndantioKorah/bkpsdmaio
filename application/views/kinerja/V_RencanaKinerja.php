@@ -305,9 +305,23 @@ $("#checkBoxID").click(function() {
   console.log(maxDate)
 
    var currentDate = "<?= $current_date;?>";
-   
-    if(statusLock == 0){
+
+   var id_user = "<?=$this->general_library->getId();?>"; 
+   if(id_user == 999999){
+   var bulanCurrent = bulanCurrent -1;
+   if(bulanSearch != bulanCurrent){
+      $('.customButton').hide()
+   } else {
       $('.customButton').show()
+   }
+   } else if(statusLock == 0){
+  var bulanCurrent = bulanCurrent -1;
+   if(bulanSearch != bulanCurrent){
+      $('.customButton').hide()
+   } else {
+      $('.customButton').show()
+   }
+      // $('.customButton').show()
     } else {
       if(bulanSearch != bulanCurrent){
         if(bulanSearch < previousMonth) {

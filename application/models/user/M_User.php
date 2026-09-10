@@ -1664,6 +1664,15 @@
             ->where('a.id_peg', $id_pegawai);
             return $this->db->get()->result_array();
         }
+
+         public function getIdUserByIdPeg($id_pegawai){
+            $this->db->select('b.id')
+            ->from('db_pegawai.pegawai a')
+            ->join('m_user b', 'b.username = a.nipbaru_ws')
+            ->where('a.id_peg', $id_pegawai)
+            ->where('b.flag_active', 1);
+            return $this->db->get()->row_array();
+        }
         
         public function getIdUnitKerjaMaster($id_unitkerja){
             $this->db->select('a.id_unitkerjaMaster')

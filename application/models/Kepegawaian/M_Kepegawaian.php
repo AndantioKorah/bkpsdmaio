@@ -16704,6 +16704,35 @@ public function checkListIjazahCpns($id, $id_pegawai){
          }
     }
 
+      public function tesss()
+    {
+        $this->db->select('nip')
+            ->from('nip a');
+        $pegawai = $this->db->get()->result_array();
+
+        $data = null;
+          foreach($pegawai as $peg){
+            // dd($peg['nip']);
+             $data[] = $peg['nip'];
+        }
+
+      
+        $list = json_encode($data);
+        // dd($data);
+
+        $this->db->select('a.nipbaru_ws,a.nama')
+            ->from('db_pegawai.pegawaix a')
+             ->join('db_pegawai.unitkerja b', 'a.skpd = b.id_unitkerja')
+             ->join('db_pegawai.unitkerjamaster c', 'b.id_unitkerjamaster = c.id_unitkerjamaster')
+            ->where_in('b.id_unitkerjamaster', ['8000000','8010000','8020000'])
+            ->where('a.id_m_status_pegawai', 1)
+            ->where_not_in('a.nipbaru_ws ', $list);
+        $pegawai2 = $this->db->get()->result_array();
+        // dd($pegawai2);
+       
+    
+    }
+
        public function laporanJumlahPegawaiPerKecamatan(){
 
           $unitkerjamaster = $this->db->select('*')

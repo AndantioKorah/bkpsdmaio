@@ -178,6 +178,8 @@ input:checked + .slider .off
                                               $badge = 'badge-info';
                                               } else if($l['flag_terpenuhi'] == 1){
                                               $badge = 'badge-success';
+                                              } else if($l['flag_exception'] == 1){
+                                              $badge = 'badge-warning';
                                               } else {
                                               $badge = 'badge-danger';
                                               }
@@ -232,7 +234,7 @@ input:checked + .slider .off
       $(function(){
     // $('.datatable').dataTable()
     	$('.datatable').dataTable({
-			"pageLength": 50
+			"pageLength": 100
 		}) 
   })
 

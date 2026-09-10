@@ -19,7 +19,7 @@
           <form id="form_integrasi_telegram">
             <div class="col-lg-12">
               <label>KODE INTEGRASI TELEGRAM</label>
-              <input class="form-control" style="
+              <input autocomplete="off" class="form-control" style="
                 width: 100%;
                 font-size: 1rem;
                 font-weight: bold;
@@ -57,8 +57,12 @@
               openModalIntegrasiTelegram('<?=$res['id']?>')
             } else {
               errortoast(resp.message)
+              $('#btn_submit_integrasi').show()
+              $('#btn_submit_integrasi_loading').hide()
             }
         }, error: function(e){
+            $('#btn_submit_integrasi').show()
+            $('#btn_submit_integrasi_loading').hide()
             errortoast('Terjadi Kesalahan')
         }
     })
@@ -78,9 +82,13 @@
                 successtoast('Hapus Integrasi Akun Telegram berhasil')
                 openModalIntegrasiTelegram('<?=$res['id']?>')
               } else {
+                $('#btn_delete_integrasi').show()
+                $('#btn_delete_integrasi_loading').hide()
                 errortoast(resp.message)
               }
           }, error: function(e){
+              $('#btn_delete_integrasi').show()
+              $('#btn_delete_integrasi_loading').hide()
               errortoast('Terjadi Kesalahan')
           }
       })

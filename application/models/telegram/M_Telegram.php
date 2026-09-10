@@ -54,18 +54,28 @@
                             if(isset($r['message']['text'])){
                                 $dateSend = new DateTime();
                                 $dateSend->setTimestamp($r['message']['date']);
-
-                                $this->db->insert('t_data_updates_telegram', [
+                                $firstName = isset($r['message']['from']['first_name']) ? $r['message']['from']['first_name'] : "";
+                                $lastName = isset($r['message']['from']['last_name']) ? $r['message']['from']['last_name'] : "";
+                                $senderName = $firstName." ".$lastName;
+                                
+                                $dataUpdates = null;
+                                $dataUpdates = [
                                     'update_id' => $r['update_id'],
                                     'message_id' => $r['message']['message_id'],
                                     'flag_bot' => $r['message']['from']['is_bot'] == false ? 0 : 1,
-                                    'sender_name' => $r['message']['from']['first_name']." ".$r['message']['from']['last_name'],
+                                    'sender_name' => $senderName,
                                     'username' => $r['message']['from']['username'],
                                     'user_id' => $r['message']['from']['id'],
                                     'date_sent' => $dateSend->format('Y-m-d H:i:s'),
                                     'type' => "text",
                                     'text' => $r['message']['text']
-                                ]);
+                                ];
+
+                                if(isset($r['message']['reply_to_message'])){
+                                    $dataUpdates['reply_to_message_id'] = $r['message']['reply_to_message']['message_id'];
+                                }
+
+                                $this->db->insert('t_data_updates_telegram', $dataUpdates);
                             }
                         }
                     }
@@ -94,6 +104,36 @@
         }
 
         public function cronSetReplyTelegram(){
+            // $keyboard = [
+            //     'inline_keyboard' => [
+            //         [
+            //             // Button 1: Opens a URL
+            //             [
+            //                 'text' => '🌐 Open Google', 
+            //                 'url' => 'https://google.com'
+            //             ],
+            //             // Button 2: Sends data back to your bot backend
+            //             [
+            //                 'text' => '👍 Like', 
+            //                 'callback_data' => 'like_clicked'
+            //             ]
+            //         ]
+            //     ]
+            // ];
+
+            // $data = [
+            //     'chat_id' => 713399901,
+            //     'text' => 'Click one of the inline buttons below:',
+            //     'reply_markup' => ($keyboard)
+            // ];
+
+            // $this->db->insert('t_cron_telegram', [
+            //     'type' => "text",
+            //     'sendTo' => 713399901,
+            //     'data_post' => json_encode($data),
+            //     'method' => 'sendMessageInclineKeyboard'
+            // ]);
+
             $data = $this->db->select('*')
                         ->from('t_data_updates_telegram')
                         ->where('flag_active', 1)
@@ -228,11 +268,13 @@
                         $updateCronSend['flag_sending'] = 1;
                         $updateCronSend['date_sending'] = date('Y-m-d H:i:s');
 
+                        $dataPost = $d['data_post'] ? $d['data_post'] : ["message" => $d['message']];
+
                         $reqSend = $this->telegramlib->send_curl_exec(
                             "",
-                            "sendMessage",
+                            $d['method'] ? $d['method'] : "sendMessage",
                             $d['sendTo'],
-                            ["message" => $d['message']]
+                            $dataPost
                         );
                         
                         if($reqSend){
@@ -240,6 +282,7 @@
                             if($res['ok'] == true){
                                 $updateCronSend['flag_sent'] = 1;
                                 $updateCronSend['date_sent'] = date('Y-m-d H:i:s');
+                                $updateCronSend['messageId'] = $res['result']['message_id'];
                             }
                         }
                         $updateCronSend['log'] = json_encode($reqSend);

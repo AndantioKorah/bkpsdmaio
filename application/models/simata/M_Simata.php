@@ -5,6 +5,8 @@
         {
             parent::__construct();
             $this->db = $this->load->database('main', true);
+            $this->load->model('kinerja/M_Kinerja', 'kinerja');
+
         }
 
         public function delete($fieldName, $fieldValue, $tableName)
@@ -5427,6 +5429,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                         $this->db->where_in('c.kelas_jabatan', [8,9,11,12]);
                         $this->db->group_end();
                 } else if(substr($this_user['nm_unitkerja'], 0, 9) == "Kecamatan")  {
+                    
                     $this->db->group_start(); 
                     $this->db->or_where_in('c.kelas_jabatan', [9,11,12]);
                     $this->db->where('b.skpd', $this_user['skpd']);
@@ -5834,11 +5837,15 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
     
             $datapost = $this->input->post();
          
-            
             $this->db->trans_begin();
             $id_pegawai = $datapost['id_pegawai'];
             $data["id_peg"] = $datapost["id_pegawai"];
             $data["id_pegpenilai"] = $this->general_library->getIdPegSimpeg();
+            $id_user = $this->general_library->getIdUserByIdPeg($id_pegawai);
+
+
+            $atasan = $this->kinerja->getAtasanPegawai('',$id_user['id'],'');
+            
 
             $berorientasi_pelayanan = 0;
             $akuntabel = 0;
@@ -5878,8 +5885,17 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             }
 
             $berakhlak =  $berorientasi_pelayanan + $akuntabel + $kompeten + $harmonis + $loyal + $adaptif + $kolaboratif;
-            $total_nilai = $berakhlak / 7;    
-            $data["total_nilai"] =  $total_nilai;  
+            $total_nilai = $berakhlak / 7;  
+            
+            if($data["id_pegpenilai"] == $atasan['atasan']['id_peg']){
+            $tn = $total_nilai * 60 / 100;
+            $data["bobot"] =  60;  
+            } else {
+            $tn = $total_nilai * 40 / 100;
+            $data["bobot"] =  40;  
+            }
+            
+            $data["total_nilai"] =  $tn;  
 
              $cek =  $this->db->select('*, 
              (select sum(total_nilai) from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = a.id_peg and aa.flag_active = 1) as total')
@@ -5899,8 +5915,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 }
 
                 $cek2 =  $this->db->select('*,
-                    (select sum(total_nilai) from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = a.id_peg and aa.flag_active = 1) as total,
-                    (select count(id) from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = a.id_peg and aa.flag_active = 1) as jumlah_penilai')
+                    (select sum(total_nilai) from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = a.id_peg and aa.flag_active = 1 and aa.bobot = 40) as total_bukan_atasan,
+                    (select sum(total_nilai) from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = a.id_peg and aa.flag_active = 1 and aa.bobot = 60) as total_atasan,
+                    (select count(id) from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = a.id_peg and aa.flag_active = 1 and aa.bobot = 40) as jumlah_penilai_bukan_atasan,
+                    (select count(id) from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = a.id_peg and aa.flag_active = 1 and aa.bobot = 60) as jumlah_penilai_atasan')
                     ->from('db_simata.t_penilaian_sejawat a')
                     ->where('a.id_peg', $id_pegawai)
                     ->where('a.flag_active', 1)
@@ -5908,9 +5926,21 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     
                   
                     $data2["id_peg"] = $datapost["id_pegawai"];
-                   
+                //    dd($cek2);
+                $total_nilai_bukan_atasan = 0;
+                $total_nilai_atasan = 0;
+
                     if($cek2){
-                        $total_nilai2 = $cek2[0]['total'] / $cek2[0]['jumlah_penilai'];
+
+                        if($cek2[0]['total_bukan_atasan']){
+                        $total_nilai_bukan_atasan = $cek2[0]['total_bukan_atasan'] / $cek2[0]['jumlah_penilai_bukan_atasan'];
+                        }
+
+                        if($cek2[0]['total_atasan']){
+                        $total_nilai_atasan = $cek2[0]['total_atasan'] / $cek2[0]['jumlah_penilai_atasan'];
+                        }
+                        
+                        $total_nilai2 = $total_nilai_bukan_atasan + $total_nilai_atasan;
                         if($total_nilai2 == 100){
                             $id_kriteria_penilaian = 148;
                         } else if($total_nilai2 >= 80 && $total_nilai2 < 100){
@@ -5927,8 +5957,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                         $this->db->where('id_peg', $id_pegawai)
                         ->update('db_simata.t_penilaian_sejawat', $data2);
                         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
-                    } else {
-                        $total_nilai2 = $total_nilai / 1;
+                        } else {
+                         $total_nilai2 = $tn;
                         if($total_nilai2 <= 70){
                             $id_kriteria_penilaian = 128;
                         } else if($total_nilai2 > 70 && $total_nilai2 <= 90){
@@ -5936,6 +5966,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                         } else if($total_nilai2 > 90){
                             $id_kriteria_penilaian = 126;
                         } 
+
+
                         $data2["total_nilai"] =  $total_nilai2;
                         $data2["id_m_kriteria_penilaian"] =  $id_kriteria_penilaian;
                     $this->db->insert('db_simata.t_penilaian_sejawat', $data2);

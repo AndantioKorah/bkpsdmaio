@@ -434,6 +434,8 @@ class C_Simata extends CI_Controller
         $data['jenis_pengisian'] = $jenis_pengisian;
         
         $this->load->view('simata/V_DetailNineBox', $data);
+        // render('simata/V_DetailNineBox', '','', $data);
+
     }
 
     public function profilTalenta($jenis_pengisian){

@@ -1,9 +1,9 @@
 <?php if($result){ ?>
 <?php
-    // $filename = 'DATA Talent.xls';
+    // $filename = 'DATA ASN Kota Manado.xls';
     // header("Content-type: application/vnd-ms-excel");
     // header("Content-Disposition: attachment; filename=$filename");
- ?>
+?>
 <style>
 	.list-group-item.active {
 		background-color: #222e3c;
@@ -27,13 +27,13 @@
     cursor: pointer;
     }
 </style>
-<table id="" class="display table table-bordered table_pt_adm"  border="1">
+<table id="" class="display table table-bordered table_pt_adm" style="width:100%">
         <thead>
             <tr>
                 <!-- <th>Jabatan Target</th> -->
                 <th>No</th>
                 <th>Nama</th>
-                <th>Jabatan</th>
+                <th>-</th>
                 <th>Nilai Kinerja</th>
                 <th>Pemeringkatan Kinerja</th>
                 <th>Nilai Asessment (50%)</th>
@@ -44,7 +44,7 @@
                 <th>Total Nilai </th>
                 <th>Hasil Pemetaan </th>
                 <th>Rekomendasi</th>
-				<!-- <th></th> -->
+				<th></th>
             </tr>
         </thead>
         <tbody>
@@ -71,8 +71,8 @@
                 $total_nilai = $rs2['res_potensial_cerdas'] + $rs2['res_potensial_rj'] + $rs2['res_potensial_lainnya'];?>
             <tr data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$jenis_pengisian?>" data-kode="1"
             href="#modal_detail_profil_talenta" title="Detail" class="open-DetailPT"> 
-                <td><?=$no++;?></td>
-                <td><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> <br> NIP. <?=formatNip($rs2['nipbaru_ws']);?></td>
+                <td></td>
+                <td><a target="_blank" href="<?= base_url('kepegawaian/profil-pegawai/')?><?=$rs2['nipbaru_ws'];?>" style="color:#000"><b><?=$rs2['gelar1'];?> <?=$rs2['nama'];?> <?=$rs2['gelar2'];?></b> | NIP. <?=formatNip($rs2['nipbaru_ws']);?></a><br><i><?=$rs2['jabatan_sekarang'];?></i></td>
                 <td> <span style="color:#2e4963"><?=$rs2['jabatan_sekarang'];?></span> </td>
                 <td><?=$rs2['res_kinerja'];?></td>
                 <td><?= pemeringkatanKriteriaKinerja($rs2['res_kinerja'])?></td>
@@ -86,11 +86,11 @@
                 <td>
                 <?= rekomendasi($rs2['res_potensial_total'],$rs2['res_kinerja'])  ?>
                 </td>
-				<!-- <td>
+				<td>
 				<button data-toggle="modal" data-id="<?=$rs2['id']?>" data-nip="<?=$rs2['nipbaru']?>" data-jt="<?=$jenis_pengisian?>" data-kode="1"
 										href="#modal_detail_profil_talenta" title="Detail" class="open-DetailPT btn btn-sm btn-info">
 										<i class="fa fa-search"></i></button>
-				</td> -->
+				</td>
             </tr>
 			<?php 
             // } 

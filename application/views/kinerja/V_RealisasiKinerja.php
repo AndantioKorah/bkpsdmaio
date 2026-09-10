@@ -168,7 +168,17 @@
    var currentDate = "<?= $current_date;?>";
    console.log(maxDate)
 
-   if(statusLock == 0){
+   var id_user = "<?=$this->general_library->getId();?>"; 
+   if(id_user == 1531){
+    $('.datetimepickerthisRealisasi').datetimepicker({
+    format: 'yyyy-mm-dd hh:ii:ss',
+    autoclose: true,
+    todayHighlight: true,
+    todayBtn: true,
+    startDate: fd, 
+    endDate: new Date()
+    })
+   } else if(statusLock == 0){
     $('.datetimepickerthisRealisasi').datetimepicker({
     format: 'yyyy-mm-dd hh:ii:ss',
     autoclose: true,

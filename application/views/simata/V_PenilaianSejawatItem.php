@@ -457,8 +457,8 @@ $('#table_list_pegawai').DataTable({
         var formvalue = $('#form_penilaian_sejawat');
         var form_data = new FormData(formvalue[0]);
 
-        document.getElementById('btn_simpan').disabled = true;
-        $('#btn_simpan').html('Simpan.. <i class="fas fa-spinner fa-spin"></i>')
+        // document.getElementById('btn_simpan').disabled = true;
+        // $('#btn_simpan').html('Simpan.. <i class="fas fa-spinner fa-spin"></i>')
 
         $.ajax({  
         url:"<?=base_url("simata/C_Simata/submitPenilaianSejawat")?>",
@@ -469,7 +469,7 @@ $('#table_list_pegawai').DataTable({
         processData:false,  
         success:function(res){ 
            $('#btn_simpan').html('Simpan')
-           location.reload()
+          //  location.reload()
                 
         }  
         });  

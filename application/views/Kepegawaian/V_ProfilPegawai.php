@@ -139,6 +139,17 @@
   transition: .2s;
 }
 
+.sp_telegram{
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sp_telegram:hover{
+  color: lightblue;
+  text-decoration: none;
+  transition: .2s;
+}
+
 .badge-penerima-tpp{
   box-shadow: 3px 3px 10px #888888;
   background-color: #327ba8;
@@ -478,6 +489,25 @@
                   <?php } ?>
                 </span>
               </div>
+              <?php if($this->general_library->isProgrammer()){ ?>
+                <div class="col-lg-12 div_label text-left">
+                  <span class="sp_label">
+                    Telegram
+                  </span>
+                </div>
+                <div class="col-lg-12 text-left mt-1">
+                  <span class="sp_profil_sm sp_profil_alamat">
+                    <button class="btn btn-sm <?=$profil_pegawai['user_id_telegram'] ? "btn-navy" : "btn-danger"?>"
+                      onclick="openModalIntegrasiTelegram('<?=$profil_pegawai['id_m_user']?>')">
+                      <?php if($profil_pegawai['user_id_telegram']){ ?>
+                        <span style=""><?=($profil_pegawai['user_id_telegram'])?> <i class="fa fa-check"></i></span>
+                      <?php } else { ?>
+                        <span style="">Belum terintegrasi <i class="fa fa-times"></i></span>
+                      <?php } ?>
+                    </button>
+                  </span>
+                </div>
+              <?php } ?>
               <div class="col-lg-12 div_label text-left">
                 <span class="sp_label">
                   Email
@@ -1028,7 +1058,21 @@
 
 <input type="hidden" id="bidangPegawai" value="<?=$idBidang;?>">
 
-
+<div class="modal fade" id="modal_integrasi_telegram" role="dialog" tabindex="-1" 
+aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-md">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h6 class="modal-title">INTEGRASI AKUN TELEGRAM</h6>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div id="modal_integrasi_telegram_content">
+          </div>
+      </div>
+  </div>
+</div>
 
 <!-- modal ubah foto profil -->
 <div class="modal fade" id="modalFotoProfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1284,9 +1328,6 @@
 
 <!-- Modal -->
 
-
-
-
 <script>
     $('#form_status_berkas').on('submit', function(e){  
       
@@ -1387,7 +1428,7 @@
         })
 </script>
 
-  <script>
+<script>
   var nip = "<?= trim($nip);?>"; 
   var page = "<?= $page;?>"
   $(function(){
@@ -1714,6 +1755,15 @@
     })
  }
 
+  function openModalIntegrasiTelegram(userid){
+    $('#modal_integrasi_telegram').modal('show')
+    $('#modal_integrasi_telegram_content').html('')
+    $('#modal_integrasi_telegram_content').append(divLoaderNavy)
+    $('#modal_integrasi_telegram_content').load('<?=base_url('kepegawaian/C_Kepegawaian/loadDataIntegrasiTelegram/')?>'+userid, function(){
+      $('#loader').hide()
+    })
+  }
+
   function loginAs(nip){
     $('#btn_login').hide()
     $('#btn_login_loading').show()
@@ -1789,4 +1839,3 @@ $("#id_m_bidang").change(function() {
     </div>
   </div>
 <?php } ?>
-

@@ -5162,6 +5162,7 @@ function getDataWfa()
         if($id_eselon == 4 || $id_eselon == 5 || $id_eselon == 6 || $id_eselon == 7){
         $wfa = 0; 
         }
+        dd($wfa);
 
         return $wfa;
     }

@@ -449,7 +449,7 @@ class M_Kepegawaian extends CI_Model
             }
             $this->db->select('s.nm_unitkerjamaster,a.tmtpangkat,e.kelas_jabatan,e.jenis_jabatan,a.flag_terima_tpp,q.nama_status_pegawai,f.id_unitkerjamaster,l.id as id_m_user,l.id_m_sub_bidang,o.nama_bidang,p.nama_sub_bidang,n.nama_kelurahan,m.nama_kecamatan,c.id_tktpendidikan,d.id_pangkat,k.id_statusjabatan,j.id_jenisjab,id_jenispeg,h.id_statuspeg,
             g.id_sk,b.id_agama,e.eselon,j.nm_jenisjab,i.nm_jenispeg,h.nm_statuspeg,g.nm_sk,a.*, b.nm_agama, a.id_m_status_pegawai,
-            c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan,
+            c.nm_tktpendidikan, d.nm_pangkat, e.nama_jabatan, f.nm_unitkerja, l.id as id_m_user, k.nm_statusjabatan, l.user_id_telegram,
             (SELECT CONCAT(aa.nm_jabatan,"|",aa.tmtjabatan,"|",aa.statusjabatan) from db_pegawai.pegjabatan as aa where a.id_peg = aa.id_pegawai and aa.flag_active in (1,2) and aa.status = 2 and aa.statusjabatan not in (2,3) ORDER BY aa.tmtjabatan desc limit 1) as data_jabatan,
             (SELECT CONCAT(cc.nm_pangkat,"|",bb.tmtpangkat,"|",bb.status,"|",bb.pejabat,"|",bb.nosk,"|",bb.masakerjapangkat) from db_pegawai.pegpangkat as bb
             join db_pegawai.pangkat as cc on bb.pangkat = cc.id_pangkat where a.id_peg = bb.id_pegawai and bb.flag_active = 1 and bb.status = 2  ORDER BY bb.tmtpangkat desc limit 1) as data_pangkat,
@@ -7907,9 +7907,15 @@ public function submitEditJabatan(){
                 $diff = strtotime($jamPulang) - strtotime($timeOnly);
                 if($diff < ($maxJam * (3600 - 59))){
                     if($flagVerifOperator == 1){
-                        $res['code'] = 1;
-                        $res['message'] = "Waktu maksimal pengajuan Permohonan Cuti adalah ".$maxJam." jam sebelum waktu pulang";
-                        return $res;
+                        $prog = $this->session->userdata('programmer_session');
+                        if($prog['user_logged_in'] != null){
+
+                        } else {
+                            $res['code'] = 1;
+                            $res['message'] = "Waktu maksimal pengajuan Permohonan Cuti adalah ".$maxJam." jam sebelum waktu pulang";
+                            return $res;
+                        }
+                        
                     }
                 }
             }
@@ -12340,6 +12346,31 @@ function getPengajuanLayanan($id,$id_m_layanan){
     return $this->db->get()->result_array();
 }
 
+public function saveUserIdTelegram($id){
+    $res['code'] = 0;
+    $res['message'] = "ok";
+    $data = $this->input->post();
+
+    $this->db->where('id', $id)
+            ->update('m_user', [
+                'user_id_telegram' => $data['user_id_telegram']
+            ]);
+
+    return $res;
+}
+
+public function deleteUserIdTelegram($id){
+    $res['code'] = 0;
+    $res['message'] = "ok";
+    $data = $this->input->post();
+
+    $this->db->where('id', $id)
+            ->update('m_user', [
+                'user_id_telegram' => null
+            ]);
+
+    return $res;
+}
 
 public function getFileForVerifLayanan()
     {      

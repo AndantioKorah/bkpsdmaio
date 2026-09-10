@@ -1308,6 +1308,29 @@
                                     ->where('id_m_status_pegawai', 1)
                                     ->get()->row_array();
 
+        }  else if($id_unitkerja == 4011000){ // inspektorat, kasub sementara cuti ganti irban, inspektur TL ganti sek
+            $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->where('a.nipbaru_ws', '196907291998032004')
+                                    ->where('id_m_status_pegawai', 1)
+                                    ->get()->row_array();
+
+            $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->where('a.nipbaru_ws', '197409122003121007')
+                                    ->where('id_m_status_pegawai', 1)
+                                    ->get()->row_array();
+
         } else if($id_unitkerja == 5004001){ // wenang
             $result['sek'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                     e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -1845,6 +1868,7 @@
                                 ->where('a.flag_exception', 0)
                                 ->where('a.flag_active', 1)
                                 ->where('bulan_tahun <=', $param['tahun']."-".$param['bulan']."-01")
+                                ->where('bulan_tahun >=', '2026-02-01')
                                 ->group_by('b.nipbaru_ws');
                                 // ->where_in('b.nipbaru_ws', $pegawai)
                                 // ->get()->result_array();
@@ -1856,7 +1880,14 @@
             // } else {
                 $this->db->where_in('b.nipbaru_ws', $pegawai);
             // }
-            if(stringStartWith('sekolah_', $param['skpd']) && $flag_rekap_tpp == 1){
+            if($this->general_library->isProgrammer()){
+                // dd($flag_rekap_tpp);
+                // dd($param['nm_unitkerja']);
+            }
+            if((stringStartWith('sekolah_', $param['skpd']) ||
+                stringStartWith('SD', $param['nm_unitkerja']) ||
+                stringStartWith('SMP', $param['nm_unitkerja']) || 
+                stringStartWith('TK', $param['nm_unitkerja'])) && $flag_rekap_tpp == 1){
                 $this->db->where('b.flag_terima_tpp', 1);
             }
             $cekBangkom = $this->db->get()->result_array();

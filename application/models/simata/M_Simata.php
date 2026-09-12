@@ -4812,8 +4812,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                 ->join('db_simata.t_penilaian_sejawat h', '(a.id_peg = h.id_peg AND h.bulan = "'.$data['bulan'].'" and h.tahun = "'.$data['tahun'].'" and c.flag_active = 1)', 'left')
 
                                 ->where('id_m_status_pegawai', 1)
-                                // ->where('b.tahun', $data['tahun'])
-                                // ->where('b.bulan', $data['bulan'])
+                                ->where_not_in('g.id_unitkerja', [5, 9050030])
                                 ->order_by('c.kelas_jabatan', 'desc')
                                 ->order_by('g.id_unitkerja', 'asc');
 

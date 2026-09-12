@@ -469,18 +469,8 @@ $('#table_list_pegawai').DataTable({
         cache: false,  
         processData:false,  
         success:function(res){ 
-          //  $('#btn_simpan').html('Simpan')
-          // successtoast()
+           $('#btn_simpan').html('Simpan')
           //  location.reload()
-              console.log(res)
-            var result = JSON.parse(res); 
-            console.log(result)
-            if(result.success == true){
-            successtoast(result.msg)
-              } else {
-                errortoast(result.msg)
-                return false;
-              } 
                 
         }  
         });  

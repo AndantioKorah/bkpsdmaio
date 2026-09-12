@@ -4784,6 +4784,20 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             return $result;
         }
 
+        public function loadRekap360Item($data){
+                $result = $this->db->select('*,a.total_nilai as nilai')
+                                ->from('db_simata.t_penilaian_sejawat a')
+                                ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                                ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
+                                ->join('db_pegawai.unitkerja g', 'b.skpd = g.id_unitkerja')
+                                ->join('db_simata.m_kriteria_penilaian f', 'a.id_m_kriteria_penilaian = f.id')
+                                ->where('id_m_status_pegawai', 1)
+                                ->order_by('c.kelas_jabatan', 'desc')
+                                ->order_by('g.id_unitkerja', 'asc')
+                                ->get()->result_array();
+            return $result;
+        }
+
 
         public function getListIdPegawaiForPenilaianPimpinan($data = null, $return_data_pegawai = false){
             $role = $this->general_library->getRole();
@@ -5846,6 +5860,9 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
             $atasan = $this->kinerja->getAtasanPegawai('',$id_user['id'],'');
             
+            $tahun = date('Y');
+            $bulan = date('m');
+
 
             $berorientasi_pelayanan = 0;
             $akuntabel = 0;
@@ -5895,7 +5912,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             $data["bobot"] =  40;  
             }
             
-            $data["total_nilai"] =  $tn;  
+            $data["total_nilai"] =  $tn; 
+            $data["bulan"] =  $bulan;  
+            $data["tahun"] =  $tahun;  
+
 
              $cek =  $this->db->select('*, 
              (select sum(total_nilai) from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = a.id_peg and aa.flag_active = 1) as total')
@@ -5903,6 +5923,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             ->where('a.id_peg', $id_pegawai)
                             ->where('a.id_pegpenilai', $this->general_library->getIdPegSimpeg())
                             ->where('a.flag_active', 1)
+                            ->where('a.bulan', $bulan)
+                            ->where('a.tahun', $tahun)
                             ->get()->result_array();
                           
             if($cek){
@@ -5922,6 +5944,8 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     ->from('db_simata.t_penilaian_sejawat a')
                     ->where('a.id_peg', $id_pegawai)
                     ->where('a.flag_active', 1)
+                    ->where('a.bulan', $bulan)
+                    ->where('a.tahun', $tahun)
                     ->get()->result_array();
                     
                   
@@ -5954,43 +5978,51 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                         }  
                         $data2["total_nilai"] =  $total_nilai2;
                         $data2["id_m_kriteria_penilaian"] =  $id_kriteria_penilaian;
+                        $data2["bulan"] =  $bulan;
+                        $data2["tahun"] =  $tahun;
+
                         $this->db->where('id_peg', $id_pegawai)
                         ->update('db_simata.t_penilaian_sejawat', $data2);
                         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
                         } else {
                          $total_nilai2 = $tn;
-                        if($total_nilai2 <= 70){
-                            $id_kriteria_penilaian = 128;
-                        } else if($total_nilai2 > 70 && $total_nilai2 <= 90){
-                            $id_kriteria_penilaian = 127;
-                        } else if($total_nilai2 > 90){
-                            $id_kriteria_penilaian = 126;
-                        } 
+                      if($total_nilai2 == 100){
+                            $id_kriteria_penilaian = 148;
+                        } else if($total_nilai2 >= 80 && $total_nilai2 < 100){
+                            $id_kriteria_penilaian = 149;
+                        } else if($total_nilai2 >= 60 && $total_nilai2 < 80){
+                            $id_kriteria_penilaian = 150;
+                        } else if($total_nilai2 >= 40 && $total_nilai2 < 60){
+                            $id_kriteria_penilaian = 151;
+                        } else if($total_nilai2 >= 20 && $total_nilai2 < 40){
+                            $id_kriteria_penilaian = 152;
+                        }  
 
 
-                        $data2["total_nilai"] =  $total_nilai2;
-                        $data2["id_m_kriteria_penilaian"] =  $id_kriteria_penilaian;
+                    $data2["total_nilai"] =  $total_nilai2;
+                    $data2["id_m_kriteria_penilaian"] =  $id_kriteria_penilaian;
+                    $data2["bulan"] =  $bulan;
+                    $data2["tahun"] =  $tahun;
                     $this->db->insert('db_simata.t_penilaian_sejawat', $data2);
                     $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
                     }
             
-                $eselonPeg = $this->general_library->getEselonPegawai($id_pegawai);
-                
-                if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
-                $id = 1;
-                $this->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,3,$id);
-                $this->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,2,$id);
-                } else if($eselonPeg['eselon'] == "II A" || $eselonPeg['eselon'] == "II B") {
-                $id = 2;
-                $this->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,3,$id);
-                } else if($eselonPeg['eselon'] == "IV A" || $eselonPeg['eselon'] == "IV B") {
-                $id = 3;
-                $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,2,$id);
-                $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,1,$id);
-                } else {
-                $id = 4;
-                $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,1,$id);
-                }
+                // $eselonPeg = $this->general_library->getEselonPegawai($id_pegawai);
+                // if($eselonPeg['eselon'] == "III A" || $eselonPeg['eselon'] == "III B"){
+                // $id = 1;
+                // $this->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,3,$id);
+                // $this->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,2,$id);
+                // } else if($eselonPeg['eselon'] == "II A" || $eselonPeg['eselon'] == "II B") {
+                // $id = 2;
+                // $this->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,3,$id);
+                // } else if($eselonPeg['eselon'] == "IV A" || $eselonPeg['eselon'] == "IV B") {
+                // $id = 3;
+                // $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,2,$id);
+                // $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,1,$id);
+                // } else {
+                // $id = 4;
+                // $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_pegawai,1,$id);
+                // }
                 
                 
                 // else {

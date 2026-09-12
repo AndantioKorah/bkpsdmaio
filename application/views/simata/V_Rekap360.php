@@ -1,7 +1,4 @@
 <div class="card card-default">
-
-
-
     <div class="card-header" style="margin-bottom:-40px">
         <h4>Rekap Penilaian 360</h4>
     </div>
@@ -13,14 +10,14 @@
                             <label class="label-filter">Unit Kerja</label>
                                 <select class="form-control select2-navy" style="width: 100%" 
                                     id="unitkerja" data-dropdown-css-class="select2-navy" name="unitkerja" required>
-                                    <option value="0" selected>Semua</option>
+                                    <option value="999" selected>Semua</option>
                                     <?php foreach($unitkerja as $u){ ?>
                                         <option value="<?=$u['id_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
                                     <?php } ?>
-                                    <option value="990" >Semua TK</option>
+                                    <!-- <option value="990" >Semua TK</option>
                                     <option value="991" >Semua SD</option>
                                     <option value="992" >Semua SMP</option>
-                                    <option value="993" >Semua UPTD Dinas kesehatan</option>
+                                    <option value="993" >Semua UPTD Dinas kesehatan</option> -->
                                 </select>
                         </div>
 
@@ -90,6 +87,13 @@
 
 
     $('#form_search').submit(function(e){
+
+
+        if($('#unitkerja').val() == 0){
+            errortoast("Unit Kerja belum dipilih")
+            return false;
+        }
+
         $('#result').show()
         $('#result').html('')
         $('#result').append(divLoaderNavy)

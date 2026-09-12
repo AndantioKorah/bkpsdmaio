@@ -129,7 +129,7 @@ h3 {
                     <?php } ?>
                     <td class="text-left"><?=$p['nm_unitkerja']?></td>
                     <td class="text-left"><?=$p['nama_jabatan']?></td>
-                    <td class="text-left"><?=$p['nilai']?></td>
+                    <td class="text-left"><?=$p['total_nilai']?></td>
                     <td class="text-left"><?=$p['nm_kriteria']?></td>
 
                     
@@ -306,7 +306,7 @@ if(kolaboratif == 20){
 });
 
 $('#table_list_pegawai').DataTable({
-    "ordering": false,
+   
     "aLengthMenu": [[50, 75, -1], [50, 75, "All"]],
      });
     
@@ -340,4 +340,6 @@ $('#table_list_pegawai').DataTable({
 
     </script>
 <?php } else { ?>
+
+<p>Tidak ada data</p>
 <?php } ?>

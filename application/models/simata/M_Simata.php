@@ -4785,16 +4785,44 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         }
 
         public function loadRekap360Item($data){
-                $result = $this->db->select('*,a.total_nilai as nilai')
-                                ->from('db_simata.t_penilaian_sejawat a')
-                                ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
-                                ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
-                                ->join('db_pegawai.unitkerja g', 'b.skpd = g.id_unitkerja')
-                                ->join('db_simata.m_kriteria_penilaian f', 'a.id_m_kriteria_penilaian = f.id')
+                //  $this->db->select('*,a.total_nilai as nilai')
+                //                 ->from('db_simata.t_penilaian_sejawat a')
+                //                 ->join('db_pegawai.pegawai b', 'a.id_peg = b.id_peg')
+                //                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
+                //                 ->join('db_pegawai.unitkerja g', 'b.skpd = g.id_unitkerja')
+                //                 ->join('db_simata.m_kriteria_penilaian f', 'a.id_m_kriteria_penilaian = f.id')
+                //                 ->where('id_m_status_pegawai', 1)
+                //                 ->where('a.tahun', $data['tahun'])
+                //                 ->where('a.bulan', $data['bulan'])
+                //                 ->order_by('c.kelas_jabatan', 'desc')
+                //                 ->order_by('g.id_unitkerja', 'asc');
+
+                //                 if($this->input->post('unitkerja') != 999){
+                //                 $this->db->where('b.skpd', $this->input->post('unitkerja'));
+                //                 }
+                //                $result = $this->db->get()->result_array();
+
+                                    $this->db->select('*,
+                                    (select nm_kriteria from db_simata.m_kriteria_penilaian aa where aa.id = h.id_m_kriteria_penilaian) as nm_kriteria,
+                                    ')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                ->join('db_pegawai.unitkerja g', 'a.skpd = g.id_unitkerja')
+                                // ->join('db_simata.t_penilaian_sejawat h', 'a.id_peg = h.id_peg')
+                                ->join('db_simata.t_penilaian_sejawat h', '(a.id_peg = h.id_peg AND h.bulan = "'.$data['bulan'].'" and h.tahun = "'.$data['tahun'].'" and c.flag_active = 1)', 'left')
+
                                 ->where('id_m_status_pegawai', 1)
+                                // ->where('b.tahun', $data['tahun'])
+                                // ->where('b.bulan', $data['bulan'])
                                 ->order_by('c.kelas_jabatan', 'desc')
-                                ->order_by('g.id_unitkerja', 'asc')
-                                ->get()->result_array();
+                                ->order_by('g.id_unitkerja', 'asc');
+
+                                if($this->input->post('unitkerja') != 999){
+                                $this->db->where('a.skpd', $this->input->post('unitkerja'));
+                                }
+                               $result = $this->db->get()->result_array();
+
+                    
             return $result;
         }
 

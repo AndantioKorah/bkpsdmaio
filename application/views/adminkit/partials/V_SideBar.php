@@ -1576,7 +1576,7 @@
 				<?php } ?>
 				
 			<?php if($this->general_library->isHakAkses('manajemen_talenta'))
-			// { 
+			{ 
 			?>
 			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()) { ?>
 			<li class="sidebar-item ">
@@ -1587,8 +1587,17 @@
 					</span>
 				</a>	
 			</li>
+
+				<li class="sidebar-item ">
+				<a title="Verifikasi" href="<?=base_url();?>simata/C_Simata/rekap360" class="sidebar-link">
+				<i class="align-middle me-2 fa fa-fw fa fa-tasks"></i> 
+					<span class="align-middle">
+					Rekap Penilaian 360
+					</span>
+				</a>	
+			</li>
 			<?php 
-		    // }
+		    }
 		    ?>
 			<?php } ?>	
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))

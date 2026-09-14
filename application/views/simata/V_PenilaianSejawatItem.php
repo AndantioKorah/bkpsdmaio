@@ -27,9 +27,10 @@
 .rating {
   
   --star-size: clamp(2rem, 5vw, 5rem);
-  --star-clr-inactive: rgba(128, 128, 128, 0.7);
-  --star-clr-active: rgb(245, 158, 11);
-  --star-clr-hover: rgba(236, 201, 136, 0.2);
+  --star-clr-inactive: rgba(196, 194, 194, 0.7);
+  /* --star-clr-active: rgb(245, 158, 11); */
+  --star-clr-active: #222e3c;
+  --star-clr-hover: rgba(97, 1, 15, 0.2);
   --star-clip-path: polygon(
     50% 0%,
     61% 35%,
@@ -98,7 +99,7 @@ hr.new5 {
 }
 
 h3 {
-  color: #ffffff;
+  color: #222e3c;
 }
       </style>
    
@@ -168,7 +169,7 @@ h3 {
 <div   class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content" >
-      <div class="modal-header" >
+      <div class="modal-header" style="background-color:#222e3c">
 
       <!-- <div class="row" style="width:100%">
         <div class="col-12">1</div>
@@ -182,10 +183,10 @@ h3 {
         </button>
       </div>
         
-      <div class="col-12" style="text-align: center;">
-        <img id="foto_mini"  class="rounded-circle" style="font-size: 120px;" width="80" height="80">
+      <div class="col-12" style="text-align: center; background-color:#222e3c;color:#fff;">
+        <img id="foto_mini"  class="rounded-circle" style="font-size: 120px;border-color:#fff; border: 5px solid white;" width="180" height="180">
         <h4 class="modal-title mt-2" id="exampleModalLabel">
-           <span id="nama_pegawai"></span>
+           <span style="color:#fff;" id="nama_pegawai"></span>
         </h4>
       </div>
       
@@ -198,8 +199,8 @@ h3 {
        
       </div>
 
-      <div class="modal-body" style="background-color: #222e3c;align-items: center;">
-      <!-- <div class="modal-body" style="background-color: #ffffff;"> -->
+      <!-- <div class="modal-body" style="background-color: #222e3c;align-items: center;"> -->
+      <div class="modal-body" style="background-color: #ffffff;">
 
       
        <form id="form_penilaian_sejawat" method="post" enctype="multipart/form-data" style="align-items: center;">
@@ -269,7 +270,7 @@ h3 {
       </div>
       <hr class="new5">
       </center> 
-        <button class="btn btn-warning" id="btn_simpan" style="width:100%;border-color:#f59e0b;color:#000;">Simpan</button>
+        <button class="btn" id="btn_simpan" style="background-color:#222e3c;width:100%;border-color:#222e3c;color:#fff;">Simpan</button>
         </form>
       </div>
       <div class="modal-footer">

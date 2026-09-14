@@ -372,6 +372,12 @@ class C_Cron extends CI_Controller
         // dd(AESDecrypt($encrypted, $secretKey));
     }
 
+    public function encUserSiladen(){
+        $username = "002";
+        $password = $this->general_library->encrypt($username, "wakilwalikota");
+        dd($password);
+    }
+
     public function testNomorSurat($data = null){
         $data['jenis_layanan'] = isset($data['jenis_layanan']) ? $data['jenis_layanan'] : 104;
         $data['tahun'] = isset($data['tahun']) ? $data['tahun'] : date('Y');

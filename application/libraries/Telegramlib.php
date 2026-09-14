@@ -53,12 +53,17 @@ class Telegramlib extends CI_Model{
   {
     $url = $this->hashTelegram()['url'];
 
+    $listMethodForDataPost = [
+      "sendMessageInlineKeyboard",
+      "sendMessageReplyKeyboard"
+    ];
+
     if($method_telegram == 'sendMessage'){
       $message = isset($data['message']) ? $data['message'] : $data['text'];
       $url = $url.$method_telegram.'?chat_id='.$send_to.'&text='.urlencode($message);
     } else if($method_telegram == 'setWebhook'){
       $url = $url.$method_telegram.'?url='.$data['url_webhook'];
-    } else if($method_telegram == 'sendMessageInlineKeyboard'){
+    } else if(in_array($method_telegram, $listMethodForDataPost)){
       $url = $url."sendMessage";
     } else {
       $url = $url.$method_telegram;
@@ -76,9 +81,6 @@ class Telegramlib extends CI_Model{
     curl_setopt($session, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 
-    $listMethodForDataPost = [
-      "sendMessageInlineKeyboard"
-    ];
     // dd(in_array($method_telegram, $listMethodForDataPost));
     if(in_array($method_telegram, $listMethodForDataPost)){
       curl_setopt($session, CURLOPT_POST, true);

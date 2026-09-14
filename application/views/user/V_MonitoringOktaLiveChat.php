@@ -28,7 +28,7 @@
     .sp_chat_pesan_chatkonsul{
         font-size: .9rem;
         color: #272727;
-        font-weight: 900;
+        font-weight: 600 !important;
         float: left;
         text-align: left;
     }

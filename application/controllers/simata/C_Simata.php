@@ -634,6 +634,7 @@ class C_Simata extends CI_Controller
         $data['list_pegawai'] = $this->simata->loadPegawaiPenilaianSejawat($this->input->post());
         // dd($data['list_pegawai']);
         $this->load->view('simata/V_PenilaianSejawatItem', $data);
+        
     }
 
     public function submitPenilaianPimpinan()
@@ -645,6 +646,31 @@ class C_Simata extends CI_Controller
 	{ 
 		echo json_encode( $this->simata->submitPenilaianSejawat());
 	}
+
+    	  public function rekap360(){
+        // $data['unitkerja'] = $this->master->getAllSkpd();
+        $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+		
+		// if(isKasubKepegawaian($this->general_library->getNamaJabatan())){
+        //     $data['unitkerja'] = $this->m_general->getGroupUnitKerja($this->general_library->getUnitKerjaPegawai());
+        // } else if(stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())) {
+        //     $data['unitkerja'] = $this->m_general->getGroupUnitKerja($this->general_library->getUnitKerjaPegawai());
+		// } else {	
+        //     $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        // }
+
+        
+        render('simata/V_Rekap360', '', '', $data);
+    }
+
+      public function loadRekap360Item()
+    {
+        $data['periode'] = $this->input->post();
+        $data['list_pegawai'] = $this->simata->loadRekap360Item($this->input->post());
+        // dd($data['list_pegawai']);
+        $this->load->view('simata/V_Rekap360Item', $data);
+        
+    }
 
 
     public function getRefJabatanFungsional(){

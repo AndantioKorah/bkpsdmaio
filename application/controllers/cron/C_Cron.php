@@ -21,6 +21,7 @@ class C_Cron extends CI_Controller
 		$this->load->model('kepegawaian/M_Layanan', 'layanan');
 		$this->load->model('siasn/M_Siasn', 'siasn');
 		$this->load->model('kinerja/M_Kinerja', 'kinerja');
+		$this->load->model('telegram/M_Telegram', 'telegram');
         $this->load->helper('url_helper');
         $this->load->helper('form');
         // if(!$this->general_library->isNotMenu()){
@@ -40,6 +41,9 @@ class C_Cron extends CI_Controller
 
     public function cronSendWa(){
         $this->removeLog();
+        $this->telegram->cronSendReplyTelegram();
+        $this->general->logCron('cronSendReplyTelegram');
+        
         // $this->general->logCron('cronSendWa');
         // $this->general->cronSendWa();
         // dd('asdd');
@@ -49,6 +53,12 @@ class C_Cron extends CI_Controller
     public function cronDsBulkTte(){
         // $this->general->logCron('cronDsBulkTte');
 		// $this->layanan->cronBulkDs();
+
+        $this->telegram->cronGetUpdates();
+        $this->general->logCron('cronGetUpdatesTelegram');
+
+        $this->telegram->cronSetReplyTelegram();
+        $this->general->logCron('cronSetReplyTelegram');
 	}
 
     public function cronCheckLiveChat(){

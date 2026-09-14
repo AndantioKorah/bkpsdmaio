@@ -12347,16 +12347,41 @@ function getPengajuanLayanan($id,$id_m_layanan){
 }
 
 public function saveUserIdTelegram($id){
-    $res['code'] = 0;
-    $res['message'] = "ok";
+    $rs['code'] = 0;
+    $rs['message'] = "ok";
     $data = $this->input->post();
 
-    $this->db->where('id', $id)
-            ->update('m_user', [
-                'user_id_telegram' => $data['user_id_telegram']
-            ]);
+    $user = $this->db->select('a.id, b.gelar1, b.gelar2, b.nama')
+                    ->from('m_user a')
+                    ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                    ->where('a.id', $id)
+                    ->where('a.flag_active', 1)
+                    ->get()->row_array();
 
-    return $res;
+    $reqSend = $this->telegramlib->send_curl_exec(
+                "",
+                "sendMessage",
+                $data['user_id_telegram'],
+                ["message" => "Selamat ".greeting()." ".getNamaPegawaiFull($user).", akun SILADEN Anda sudah terintegrasi dengan akun Telegram."]
+            );
+
+    if($reqSend){
+        $res = json_decode($reqSend['result'], true);
+        if($res['ok'] == true){
+            $this->db->where('id', $id)
+                    ->update('m_user', [
+                        'user_id_telegram' => $data['user_id_telegram'],
+                    ]);   
+        } else {
+            $rs['code'] = 1;
+            $rs['message'] = $res['description'];
+        }
+    } else {
+        $rs['code'] = 1;
+        $rs['message'] = "Proses gagal, pastikan Kode Integrasi tidak salah input.";
+    }
+
+    return $rs;
 }
 
 public function deleteUserIdTelegram($id){

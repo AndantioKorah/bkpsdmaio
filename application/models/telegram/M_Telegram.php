@@ -104,42 +104,42 @@
         }
 
         public function cronSetReplyTelegram(){
+            // // 1. Define the keyboard layout (Nested array: Rows contain columns)
             // $keyboard = [
-            //     'inline_keyboard' => [
-            //         [
-            //             // Button 1: Opens a URL
-            //             [
-            //                 'text' => '🌐 Open Google', 
-            //                 'url' => 'https://google.com'
-            //             ],
-            //             // Button 2: Sends data back to your bot backend
-            //             [
-            //                 'text' => '👍 Like', 
-            //                 'callback_data' => 'like_clicked'
-            //             ]
-            //         ]
-            //     ]
+            //     ['Option 1', 'Option 2'], // Row 1: Two adjacent buttons
+            //     ['Option 3'],             // Row 2: Full-width button
+            //     ['Help', 'Settings']      // Row 3: Two adjacent buttons
             // ];
 
-            // $data = [
-            //     'chat_id' => 713399901,
-            //     'text' => 'Click one of the inline buttons below:',
-            //     'reply_markup' => ($keyboard)
+            // // 2. Wrap the layout into the Telegram API reply_markup structure
+            // $replyMarkup = [
+            //     'keyboard'          => $keyboard,
+            //     'resize_keyboard'   => true,  // Automatically fits the screen layout
+            //     'one_time_keyboard' => false, // Set to true to hide after a single click
+            //     'selective'         => false
+            // ];
+
+            // // 3. Assemble the full message payload
+            // $payload = [
+            //     'chat_id'      => "713399901",
+            //     'text'         => '👋 Welcome! Please select an option from the menu below:',
+            //     'reply_markup' => json_encode($replyMarkup) // Must be sent as a JSON string
             // ];
 
             // $this->db->insert('t_cron_telegram', [
             //     'type' => "text",
-            //     'sendTo' => 713399901,
-            //     'data_post' => json_encode($data),
-            //     'method' => 'sendMessageInclineKeyboard'
+            //     'sendTo' => '713399901',
+            //     'data_post' => json_encode($payload),
+            //     'method' => "sendMessageReplyKeyboard"
             // ]);
 
-            $data = $this->db->select('*')
-                        ->from('t_data_updates_telegram')
-                        ->where('flag_active', 1)
-                        ->where('id_t_cron_telegram IS NULL')
-                        ->where('flag_bot', 0)
-                        ->order_by('date_sent', 'asc')
+            $data = $this->db->select('a.*, b.table_state')
+                        ->from('t_data_updates_telegram a')
+                        ->join('t_cron_telegram b', 'a.reply_to_message_id = b.messageId', 'LEFT')
+                        ->where('a.flag_active', 1)
+                        ->where('a.id_t_cron_telegram IS NULL')
+                        ->where('a.flag_bot', 0)
+                        ->order_by('a.date_sent', 'asc')
                         ->limit(10)
                         ->get()->result_array(0);
             if($data){
@@ -158,6 +158,12 @@
                         } else {
                             $reply = "Selamat ".greeting().", ".$d['sender_name'].". Akun Telegram Anda belum terintegrasi dengan akun SILADEN. Silahkan ikuti langkah-langkah berikut untuk mengintegrasikan akun SILADEN dan akun Telegram Anda.\n\n1. Login ke dalam Akun SILADEN,\n2. Klik menu Profile yang ada di samping kiri,\n3. Klik tab Data Pribadi,\n4. Klik tombol yang ada pada data Telegram,\n5. Masukkan kode ".$d['user_id']." pada kolom Input Kode Integrasi,\n6.Klik simpan.";
                         }
+                    } else if($d['reply_to_message_id'] != null && $d['table_state'] == 't_progress_cuti'){ // cek jika reply untuk cuti
+                        $dataCuti = $this->db->select('*')
+                                            ->from('t_progress_cuti a')
+                                            ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                                            ->where('a.id', $d['id_state'])
+                                            ->get()->row_array();
                     } else {
                         $reply = "";
                     }

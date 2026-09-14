@@ -17,10 +17,18 @@
 </button>
 
 
+
 <?php  if($this->general_library->isHakAkses('verifikasi_pendataan_mandiri') || $this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() || $this->general_library->getUserName() == $nip){ ?>
 <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
   Tambah Data Pangkat
 </button>
+
+<?php  if($this->general_library->isHakAkses('verifikasi_pengajuan_kenaikan_pangkat')){ ?>
+
+<button onclick="openModalStatusPmd('pangkat')" type="button" class="btn btn-info mb-2" data-toggle="modal" href="#modalPangkatOtomatis">
+  Input Pangkat Otomatis
+</button>
+<?php } ?>
 <!-- <button onclick="loadRiwayatUsulListPangkat()"  type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#myModal">
   Riwayat Usul Pangkat
 </button> -->
@@ -32,9 +40,12 @@
 <?php if($pdm_pangkat) {?>
 <?php
 if($pdm_pangkat[0]['flag_active'] == 1) {?>
-<button onclick="openModalStatusPmd('pangkat')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
+<!-- <button onclick="openModalStatusPmd('pangkat')" type="button" class="btn btn-danger mb-2" data-toggle="modal" href="#pdmModal">
   Batal Berkas Sudah Lengkap
-</button>
+</button> -->
+
+
+
 <?php } else if($pdm_pangkat[0]['flag_active'] == 0) { ?>
   <input type="hidden"  id="jumlahdokpangkat" value="<?=$dok['total'];?>">
   <button  onclick="openModalStatusPmd('pangkat')" type="button" class="btn btn-success mb-2" data-toggle="modal" href="#pdmModal">
@@ -64,74 +75,33 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
 </script>
   
   
-<!-- Modal -->
-<!-- <div class="modal fade" id="pdmPangkatModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal Status PDM -->
+<div class="modal fade" id="modalPangkatOtomatis" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelPdm" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <h5 class="modal-title" id="exampleModalLabelPdm"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        Simpan Perubahan Status Berkas ?
-      </div>
-      <form method="post" id="form_status_berkas" enctype="multipart/form-data" >
-      <input type="hidden" name="jenis_berkas" id="jenis_berkas" value="pangkat">
+        Input ke Data Otomatis Layanan Pangkat ?
+      <form method="post" id="form_pangkat_otomatis" enctype="multipart/form-data" >
+      <input type="hidden" name="id_layanan" id="id_layanan" value="41">
+      <input type="hidden" name="id_user" id="id_user" value="<?=$profil_pegawai['id_m_user'];?>">
+
+      
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="modal_dismis" data-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-secondary" id="modal_dismis_pdm" data-dismiss="modal">Batal</button>
         <button class="btn btn-block btn-primary" >Ya</button>
       </div>
       </form>
     </div>
   </div>
 </div>
+</div>
 
-<script>
-    $('#form_status_berkas').on('submit', function(e){  
-      
-        e.preventDefault();
-        var formvalue = $('#form_status_berkas');
-        var form_data = new FormData(formvalue[0]);
-
-        $.ajax({  
-        url:"<?=base_url("kepegawaian/C_Kepegawaian/updateStatusBerkas")?>",
-        method:"POST",  
-        data:form_data,  
-        contentType: false,  
-        cache: false,  
-        processData:false,  
-        success:function(res){ 
-            console.log(res)
-            var result = JSON.parse(res); 
-            console.log(result)
-            if(result.success == true){
-                successtoast(result.msg)
-                setTimeout(function() {$("#modal_dismis").trigger( "click" );}, 1000);
-                setTimeout(loadFormPangkat, 1500);
-              } else {
-                errortoast(result.msg)
-                return false;
-              } 
-        }  
-        });  
-          
-        });
-
-  
-</script> -->
-
-<!-- 
-<style>
-  .modal:nth-of-type(even) {
-    z-index: 1052 !important;
-}
-.modal-backdrop.show:nth-of-type(even) {
-    z-index: 1051 !important;
-}
-   
-</style> -->
 <div class="modal fade" id="myModal">
 <div id="modal-dialog" class="modal-dialog modal-xl">
       <div class="modal-content">
@@ -455,5 +425,34 @@ $(function(){
           $(this).val('');
         }
 
+        });
+
+        $('#form_pangkat_otomatis').on('submit', function(e){  
+      
+        e.preventDefault();
+        var formvalue = $('#form_pangkat_otomatis');
+        var form_data = new FormData(formvalue[0]);
+
+        $.ajax({  
+        url:"<?=base_url("kepegawaian/C_Kepegawaian/insertUsulLayananPangkatOtomatis")?>",
+        method:"POST",  
+        data:form_data,  
+        contentType: false,  
+        cache: false,  
+        processData:false,  
+        success:function(res){ 
+            console.log(res)
+            var result = JSON.parse(res); 
+            console.log(result)
+            if(result.success == true){
+                successtoast(result.msg)
+                 setTimeout(function() {$("#modalPangkatOtomatis").trigger( "click" );}, 1000);
+              } else {
+                errortoast(result.msg)
+                return false;
+              } 
+        }  
+        });  
+          
         });
 </script>

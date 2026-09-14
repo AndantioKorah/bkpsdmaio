@@ -5886,6 +5886,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
 
             $atasan = $this->kinerja->getAtasanPegawai('',$id_user['id'],'');
+            dd($atasan);
             
             $tahun = date('Y');
             $bulan = date('m');

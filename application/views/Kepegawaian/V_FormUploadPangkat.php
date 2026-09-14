@@ -86,7 +86,7 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
         </button>
       </div>
       <div class="modal-body">
-        Input ke Data Otomatis Layanan Pangkat ?
+        Input ke Data Layanan Pangkat Otomatis?
       <form method="post" id="form_pangkat_otomatis" enctype="multipart/form-data" >
       <input type="hidden" name="id_layanan" id="id_layanan" value="41">
       <input type="hidden" name="id_user" id="id_user" value="<?=$profil_pegawai['id_m_user'];?>">

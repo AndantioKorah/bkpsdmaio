@@ -201,7 +201,7 @@ input:checked + .slider .off
                 <option value="7">TMS</option>
                 <option value="6">Selesai</option>
 
-              <?php } else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29) { ?>
+              <?php } else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29 || $id_m_layanan == 41) { ?>
                   <option value="" >Semua</option>
                   <option value="0" selected>Pengajuan</option>
                   <option value="1" >Selesai verifikasi BKPSDM</option>

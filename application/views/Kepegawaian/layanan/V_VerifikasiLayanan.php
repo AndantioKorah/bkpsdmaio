@@ -298,7 +298,6 @@ input:checked + .slider .off
   })
 
   $('#form_search').on('submit', function(e){
-
     var id_m_layanan = "<?=$id_m_layanan;?>"
     $('#result_search').html('')
     $('#result_search').append(divLoaderNavy)

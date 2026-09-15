@@ -4385,6 +4385,10 @@ class C_Kepegawaian extends CI_Controller
         $this->general->delete('id', $id, 't_kebutuhan_fungsional');
     }
 
+		 public function deletePangkatOtomotasi($id){
+        $this->general->delete('id', $id, 't_layanan');
+    }
+
 	 public function deleteKegiatanDispensasi($id){
         $this->general->delete('id', $id, 't_kegiatan_dispensasi');
     }

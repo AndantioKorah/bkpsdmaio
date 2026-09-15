@@ -16,7 +16,7 @@
           
         </thead>
         <tbody>
-          <?php $no = 1; foreach($result as $rs){ ?>
+          <?php $no = 1; foreach($result as $rs){  ?>
             <tr class="text-left">
               <td class="text-left"><?=$no++;?></td>
               <td class="text-left"> <?=getNamaPegawaiFull($rs);?><br>
@@ -55,10 +55,21 @@
              <!-- <a id="btn_tolak_verifikasi" onclick="kerjakanBerkas('<?=$rs['id_pengajuan']?>','<?=$rs['id_m_layanan']?>')" type="button" class="btn btn-sm btn-primary ml-2">
              Verifikasi
                 </a> -->
-             <a href="<?= base_url();?>kepegawaian/verifikasi-layanan-detail/<?=$rs['id_pengajuan']?>/<?=$rs['id_m_layanan']?>">
+
+                <a href="<?= base_url();?>kepegawaian/verifikasi-layanan-detail/<?=$rs['id_pengajuan']?>/<?=$rs['id_m_layanan']?>">
                 <button  class="btn btn-sm btn-primary">
                 Verifikasi</button>
                 </a>
+
+
+                <?php if($rs['id_m_layanan'] == 41 && $rs['status_layanan'] == 7) { ?>
+                <button onclick="deleteData('<?=$rs['id_pengajuan']?>' )" class="btn btn-sm btn-danger mt-2"> Hapus </button> 
+                <?php } ?>
+
+                
+          
+
+                
              </td>
               <td>
               <?=$rs['verifikator']?> 
@@ -169,5 +180,20 @@ function kerjakanBerkas(id_usul){
           
         }
 }
+
+function deleteData(id){           
+                   if(confirm('Apakah Anda yakin ingin menghapus data?')){
+                       $.ajax({
+                           url: '<?=base_url("kepegawaian/C_Kepegawaian/deletePangkatOtomotasi/")?>'+id,
+                           method: 'post',
+                           data: null,
+                           success: function(){
+                           $('#form_search').submit()
+                           }, error: function(e){
+                               errortoast('Terjadi Kesalahan')
+                           }
+                       })
+                   }
+               }
   
 </script>

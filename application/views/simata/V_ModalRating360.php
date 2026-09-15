@@ -370,6 +370,7 @@ if(kolaboratif == 20){
                 errortoast(result.msg)
                 return false;
               } 
+                setTimeout(function() {$("#exampleModal").trigger( "click" );}, 1000);
                 
         }  
         });  

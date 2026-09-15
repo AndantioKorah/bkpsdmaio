@@ -4759,16 +4759,19 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
         public function loadPegawaiPenilaianSejawat($data){
             $result = null;
+            $tahun = date('Y');
+            $bulan = date('m');
+
             $list_id_pegawai = $this->getListIdPegawaiForPenilaianSejawat($data);
             if($list_id_pegawai){
                 $result = $this->db->select('*, a.id as id_m_user,
-                (select berorientasi_pelayanan from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as berorientasi_pelayanan,
-                (select akuntabel from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as akuntabel,
-                (select kompeten from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kompeten,
-                (select harmonis from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as harmonis,
-                (select loyal from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as loyal,
-                (select adaptif from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as adaptif,
-                (select kolaboratif from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kolaboratif')
+                (select berorientasi_pelayanan from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as berorientasi_pelayanan,
+                (select akuntabel from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as akuntabel,
+                (select kompeten from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kompeten,
+                (select harmonis from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as harmonis,
+                (select loyal from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as loyal,
+                (select adaptif from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as adaptif,
+                (select kolaboratif from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kolaboratif')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
@@ -4781,6 +4784,34 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                 ->order_by('g.id_unitkerja', 'asc')
                                 ->get()->result_array();
             }
+            return $result;
+        }
+
+        public function loadPegawaiPenilaianSejawatDetail($id_pegawai){
+            $result = null;
+            $tahun = date('Y');
+            $bulan = date('m');
+
+                $result = $this->db->select('*, a.id as id_m_user,
+                (select berorientasi_pelayanan from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as berorientasi_pelayanan,
+                (select akuntabel from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as akuntabel,
+                (select kompeten from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kompeten,
+                (select harmonis from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as harmonis,
+                (select loyal from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as loyal,
+                (select adaptif from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as adaptif,
+                (select kolaboratif from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kolaboratif')
+                                ->from('m_user a')
+                                ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
+                                ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
+                                ->join('m_bidang d', 'a.id_m_bidang = d.id', 'left')
+                                ->join('db_pegawai.pangkat f', 'b.pangkat = f.id_pangkat')
+                                ->join('db_pegawai.unitkerja g', 'b.skpd = g.id_unitkerja')
+                                ->where('b.id_peg', $id_pegawai)
+                                ->where('id_m_status_pegawai', 1)
+                                ->order_by('c.kelas_jabatan', 'desc')
+                                ->order_by('g.id_unitkerja', 'asc')
+                                ->get()->result_array();
+            
             return $result;
         }
 
@@ -4809,7 +4840,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                                 ->join('db_pegawai.unitkerja g', 'a.skpd = g.id_unitkerja')
                                 // ->join('db_simata.t_penilaian_sejawat h', 'a.id_peg = h.id_peg')
-                                ->join('db_simata.t_penilaian_sejawat h', '(a.id_peg = h.id_peg AND h.bulan = "'.$data['bulan'].'" and h.tahun = "'.$data['tahun'].'" and c.flag_active = 1)', 'left')
+                                ->join('db_simata.t_penilaian_sejawat h', '(a.id_peg = h.id_peg AND h.bulan = "'.$data['bulan'].'" and h.tahun = "'.$data['tahun'].'" and h.flag_active = 1)', 'left')
 
                                 ->where('id_m_status_pegawai', 1)
                                 ->where_not_in('g.id_unitkerja', [5, 9050030])
@@ -5886,7 +5917,6 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
 
             $atasan = $this->kinerja->getAtasanPegawai('',$id_user['id'],'');
-            dd($atasan);
             
             $tahun = date('Y');
             $bulan = date('m');
@@ -6001,7 +6031,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             $id_kriteria_penilaian = 150;
                         } else if($total_nilai2 >= 40 && $total_nilai2 < 60){
                             $id_kriteria_penilaian = 151;
-                        } else if($total_nilai2 >= 20 && $total_nilai2 < 40){
+                        } else if($total_nilai2 >= 0 && $total_nilai2 < 40){
                             $id_kriteria_penilaian = 152;
                         }  
                         $data2["total_nilai"] =  $total_nilai2;

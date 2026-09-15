@@ -13898,10 +13898,9 @@ public function getFileForVerifLayanan()
                 // ->join('db_pegawai.pangkat e', 'd.id_pegpangkat = e.id_pangkat')
                 ->where('a.id', $id_usul)
                 ->get()->row_array();
-        
-        
+        // dd($dataLayanan);
 
-        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Kenaikan Pangkat Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nPosisi Usulan : BKAD\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\n SK Kenaikan Pangkat Anda telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke Operator SIMGAJI Perangkat Daerah. Apabila terjadi kesalahan pada SK ,silahkan menghubungi BKPSDM.\n\nStatus  : *Input Operator SIMGAJI*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
         $cronWa = [
                     'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                     'message' => $caption,
@@ -13911,14 +13910,30 @@ public function getFileForVerifLayanan()
                     'jenis_layanan' => 'Pangkat'
                 ];
                 $this->db->insert('t_cron_wa', $cronWa);
+
+         $notifikasi = [
+                    'id_m_user' => $dataLayanan['id_m_user'],
+                    'jenis_notifikasi' => 'notifikasi_layanan',
+                    'judul_notifikasi' => 'Notifikasi layanan',
+                    'pesan' =>  $caption,
+                    'link_href' =>  'notifikasi-pegawai',
+                    'fa_icon'  =>  'fa fa-check',
+                    'icon_color' =>  'green',
+                    'flag_read'  =>  0,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_notifikasi', $notifikasi);
+
         // PANGKAT
         // GAJI BERKALA
         } else if($id_dok == 7){
             $id  = $this->input->post('id_tkgb');
-            $dataKgb = $this->db->select('*')
+            $dataKgb = $this->db->select('*, c.id as id_m_user')
                 ->from('t_gajiberkala a')
                 ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
+                ->join('m_user c', 'c.username = b.nipbaru_ws')
                 ->where('a.id', $id)
+                ->where('c.flag_active', 1)
                 ->get()->result_array();
             
             $datainsKgb["id_pegawai"] = $dataKgb[0]['id_pegawai'];
@@ -13948,6 +13963,7 @@ public function getFileForVerifLayanan()
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
             }
             } 
+            
 
                         
             $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
@@ -13976,7 +13992,7 @@ public function getFileForVerifLayanan()
         
         
 
-        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataKgb[0]).",\nBerikut kami lampirkan SK Kenaikan Gaji Berkala Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataKgb[0]).",\nSK Kenaikan Gaji Berkala Anda telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke Operator SIMGAJI Perangkat Daerah. Apabila terjadi kesalahan pada SK ini,silahkan menghubungi BKPSDM.\n\nStatus  : *Input Operator SIMGAJI*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
         $cronWa = [
                     'sendTo' => convertPhoneNumber($dataKgb[0]['handphone']),
                     'message' => $caption,
@@ -13986,6 +14002,20 @@ public function getFileForVerifLayanan()
                     'jenis_layanan' => 'Gaji Berkala'
                 ];
                 $this->db->insert('t_cron_wa', $cronWa);
+
+        $notifikasi = [
+                    'id_m_user' => $dataKgb[0]['id_m_user'],
+                    'jenis_notifikasi' => 'notifikasi_layanan',
+                    'judul_notifikasi' => 'Notifikasi layanan',
+                    'pesan' =>  $caption,
+                    'link_href' =>  'notifikasi-pegawai',
+                    'fa_icon'  =>  'fa fa-check',
+                    'icon_color' =>  'green',
+                    'flag_read'  =>  0,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_notifikasi', $notifikasi);
+
         // GAJI BERKALA
         } else if($id_dok == 46){
         // PERBAIKAN DATA

@@ -289,10 +289,17 @@
                         
                         if($reqSend){
                             $res = json_decode($reqSend['result'], true);
-                            if($res['ok'] == true){
+                            if($res && $res['ok'] == true){
                                 $updateCronSend['flag_sent'] = 1;
                                 $updateCronSend['date_sent'] = date('Y-m-d H:i:s');
                                 $updateCronSend['messageId'] = $res['result']['message_id'];
+
+                                if($d['table_state'] && $d['id_state'] && $d['column_state']){
+                                    $this->db->where('id', $d['id_state'])
+                                            ->update($d['table_state'], [
+                                                $d['column_state'] => $res['result']['message_id']
+                                            ]);
+                                }
                             }
                         }
                         $updateCronSend['log'] = json_encode($reqSend);

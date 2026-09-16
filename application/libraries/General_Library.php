@@ -678,6 +678,10 @@ class General_library
         return $this->userLoggedIn ? $this->userLoggedIn['id'] : '';
     }
 
+    public function getUserIdTelegram(){
+        return $this->userLoggedIn && $this->userLoggedIn['user_id_telegram'] ? $this->userLoggedIn['user_id_telegram'] : null;
+    }
+
     // public function getSubBidangUser(){
     //     // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
     //     // $this->refreshUserLoggedInData();

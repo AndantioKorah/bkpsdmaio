@@ -786,7 +786,7 @@
     public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
         if($id_m_user != null){
             $pegawai = $this->db->select('b.id_peg,b.gelar1, b.gelar2, b.nama, d.id_unitkerja, g.id_eselon, c.kepalaskpd, c.nama_jabatan, d.nm_unitkerja,
-                        d.id_unitkerjamaster, f.nama_sub_bidang, e.nama_bidang, a.id_m_bidang, a.id_m_sub_bidang, c.jenis_jabatan, c.flag_uptd,
+                        d.id_unitkerjamaster, f.nama_sub_bidang, e.nama_bidang, a.id_m_bidang, a.id_m_sub_bidang, c.jenis_jabatan, c.flag_uptd, a.user_id_telegram,
                         d.id_asisten_grouping, b.nipbaru_ws, d.nip_kepalaskpd_hardcode, d.nama_jabatan_kepalaskpd_hardcode, c.id_jabatanpeg')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')

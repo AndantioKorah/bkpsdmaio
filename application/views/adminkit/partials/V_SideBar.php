@@ -1576,7 +1576,7 @@
 				<?php } ?>
 				
 			<?php if($this->general_library->isHakAkses('manajemen_talenta'))
-			{ 
+			// { 
 			?>
 			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()) { ?>
 			<li class="sidebar-item ">
@@ -1597,7 +1597,7 @@
 				</a>	
 			</li>
 			<?php 
-		    }
+		    // }
 		    ?>
 			<?php } ?>	
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))

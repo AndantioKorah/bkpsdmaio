@@ -2384,20 +2384,21 @@ class C_Kepegawaian extends CI_Controller
 		$id_peg = $data['profil_pegawai']['id_peg'];
 		// dd($data['profil_pegawai']['eselon']);
 		// $this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,1);
-		if($data['profil_pegawai']['eselon'] == "III A" || $data['profil_pegawai']['eselon'] == "III B"){
-			$id = 1;
-			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
-			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
-			} else if($data['profil_pegawai']['eselon'] == "II A" || $data['profil_pegawai']['eselon'] == "II B") {
-			$id = 2;
-			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
-			} else if($data['profil_pegawai']['eselon'] == "IV A" || $data['profil_pegawai']['eselon'] == "IV B" || $data['profil_pegawai']['kelas_jabatan'] == "9") {
-			$id = 3;
-			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
-			} else {
-			$id = 4;
-			$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
-			}
+
+		// if($data['profil_pegawai']['eselon'] == "III A" || $data['profil_pegawai']['eselon'] == "III B"){
+		// 	$id = 1;
+		// 	$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+		// 	$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+		// 	} else if($data['profil_pegawai']['eselon'] == "II A" || $data['profil_pegawai']['eselon'] == "II B") {
+		// 	$id = 2;
+		// 	$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+		// 	} else if($data['profil_pegawai']['eselon'] == "IV A" || $data['profil_pegawai']['eselon'] == "IV B" || $data['profil_pegawai']['kelas_jabatan'] == "9") {
+		// 	$id = 3;
+		// 	$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+		// 	} else {
+		// 	$id = 4;
+		// 	$this->simata->getPegawaiPenilaianPotensialPerPegawai($id_peg,$jenis_pengisian,$id);
+		// 	}
 
         $data['result'] = $this->kepegawaian->loadListProfilTalenta( $id_peg,$jenis_pengisian);  
         $data['jenis_pengisian'] = $jenis_pengisian;
@@ -2854,7 +2855,7 @@ class C_Kepegawaian extends CI_Controller
 	public function searchPengajuanLayanan($id_m_layanan){
 		if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
 			$data['result'] = $this->kepegawaian->searchPengajuanLayananFungsional($id_m_layanan);
-		} else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9){
+		} else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 41){
 			$data['result'] = $this->kepegawaian->searchPengajuanLayananPangkat($id_m_layanan);
 		} else {
 			$data['result'] = $this->kepegawaian->searchPengajuanLayanan($id_m_layanan);
@@ -2863,7 +2864,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['id_m_layanan'] = $id_m_layanan;
 		if($id_m_layanan == 1){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiKarisKarsuItem', $data);
-		} else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29){
+		} else if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29 || $id_m_layanan == 41){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPangkatItem', $data);
 		} else if($id_m_layanan == 10 || $id_m_layanan == 11){
 			$this->load->view('kepegawaian/layanan/V_VerfikasiLayananPerbaikanDataItem', $data);
@@ -2919,7 +2920,7 @@ class C_Kepegawaian extends CI_Controller
 		}
 		if($layanan == 1){
 			render('kepegawaian/layanan/V_VerfikasiKarisKarsuDetail', '', '', $data);
-		} else if($layanan == 6 || $layanan == 7 || $layanan == 8 || $layanan == 9 || $layanan == 29 ){
+		} else if($layanan == 6 || $layanan == 7 || $layanan == 8 || $layanan == 9 || $layanan == 29 || $layanan == 41 ){
 		// $data['sk_cpns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','1',$id_peg);
 		// $data['sk_pns'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegberkaspns','0','2',$id_peg);        
 		// $data['sk_pangkat'] = $this->kepegawaian->getDokumenPangkatForPensiunAdmin($id_peg);
@@ -3180,7 +3181,7 @@ class C_Kepegawaian extends CI_Controller
 	public function loadModalUploadSK($id_usul,$id_m_layanan)
     {
 		$data['id_usul']= $id_usul;
-        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29 ){
+        if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29 || $id_m_layanan == 41 ){
 		$data['jenis_pengangkatan'] = $this->kepegawaian->getAllWithOrder('db_pegawai.jenispengangkatan', 'id_jenispengangkatan', 'desc');
 		$data['list_pangkat'] = $this->kepegawaian->getAllWithOrder('db_pegawai.pangkat', 'id_pangkat', 'desc');
 		$data['format_dok'] = $this->kepegawaian->getOne('db_siladen.dokumen', 'id_dokumen', 4);
@@ -4384,6 +4385,10 @@ class C_Kepegawaian extends CI_Controller
         $this->general->delete('id', $id, 't_kebutuhan_fungsional');
     }
 
+		 public function deletePangkatOtomotasi($id){
+        $this->general->delete('id', $id, 't_layanan');
+    }
+
 	 public function deleteKegiatanDispensasi($id){
         $this->general->delete('id', $id, 't_kegiatan_dispensasi');
     }
@@ -4577,6 +4582,10 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->insertUsulLayananSatyalancana($id_m_layanan));
 	}
 
+			public function insertUsulLayananPangkatOtomatis()
+	{ 
+		echo json_encode( $this->kepegawaian->insertUsulLayananPangkatOtomatis());
+	}
 
 	public function laporanDetailListPegawai($param){
 		$data['list_pegawai'] = $this->kepegawaian->laporanDetailListPegawai($param);

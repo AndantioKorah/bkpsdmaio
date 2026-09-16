@@ -6193,6 +6193,10 @@ public function submitEditJabatan(){
             $id_layanan[] = 40;
         }
 
+         if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')){
+            $id_layanan[] = 39;
+        }
+
 
         }
 
@@ -6210,9 +6214,7 @@ public function submitEditJabatan(){
             $id_layanan[] = 34;
         }
 
-         if($this->general_library->isHakAkses('verifikasi_layanan_dispensasi')){
-            $id_layanan[] = 39;
-        }
+        
 
 
 
@@ -12612,7 +12614,9 @@ public function searchPengajuanLayananPangkat($id_m_layanan){
             ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
             ->join('m_status_layanan_pangkat g', 'a.status = g.status_id')
             ->join('db_pegawai.pegpangkat h', 'h.id = a.reference_id_dok','left')
-            ->where_in('a.id_m_layanan', [6,7,8,9,29])
+            ->join('m_layanan i', 'a.id_m_layanan = i.id')
+
+            ->where_in('a.id_m_layanan', [6,7,8,9,29,41])
             ->where('a.flag_active', 1)
             ->order_by('a.created_date', 'desc');
                 if(isset($data['id_unitkerja']) && $data['id_unitkerja'] != "0"){
@@ -12676,7 +12680,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     }
     
 
-    if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29){
+    if($id_m_layanan == 6 || $id_m_layanan == 7 || $id_m_layanan == 8 || $id_m_layanan == 9 || $id_m_layanan == 29 || $id_m_layanan == 41){
         $this->db->join('db_pegawai.pegpangkat l', 'l.id = c.reference_id_dok','left');
     }
     if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
@@ -14250,10 +14254,9 @@ public function getFileForVerifLayanan()
                 // ->join('db_pegawai.pangkat e', 'd.id_pegpangkat = e.id_pangkat')
                 ->where('a.id', $id_usul)
                 ->get()->row_array();
-        
-        
+        // dd($dataLayanan);
 
-        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\nBerikut kami lampirkan SK Kenaikan Pangkat Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nPosisi Usulan : BKAD\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataLayanan).",\n SK Kenaikan Pangkat Anda telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke Operator SIMGAJI Perangkat Daerah. Apabila terjadi kesalahan pada SK ,silahkan menghubungi BKPSDM.\n\nStatus  : *Input Operator SIMGAJI*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
         $cronWa = [
                     'sendTo' => convertPhoneNumber($dataLayanan['handphone']),
                     'message' => $caption,
@@ -14263,14 +14266,30 @@ public function getFileForVerifLayanan()
                     'jenis_layanan' => 'Pangkat'
                 ];
                 $this->db->insert('t_cron_wa', $cronWa);
+
+         $notifikasi = [
+                    'id_m_user' => $dataLayanan['id_m_user'],
+                    'jenis_notifikasi' => 'notifikasi_layanan',
+                    'judul_notifikasi' => 'Notifikasi layanan',
+                    'pesan' =>  $caption,
+                    'link_href' =>  'notifikasi-pegawai',
+                    'fa_icon'  =>  'fa fa-check',
+                    'icon_color' =>  'green',
+                    'flag_read'  =>  0,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_notifikasi', $notifikasi);
+
         // PANGKAT
         // GAJI BERKALA
         } else if($id_dok == 7){
             $id  = $this->input->post('id_tkgb');
-            $dataKgb = $this->db->select('*')
+            $dataKgb = $this->db->select('*, c.id as id_m_user')
                 ->from('t_gajiberkala a')
                 ->join('db_pegawai.pegawai b', 'b.id_peg = a.id_pegawai')
+                ->join('m_user c', 'c.username = b.nipbaru_ws')
                 ->where('a.id', $id)
+                ->where('c.flag_active', 1)
                 ->get()->result_array();
             
             $datainsKgb["id_pegawai"] = $dataKgb[0]['id_pegawai'];
@@ -14300,6 +14319,7 @@ public function getFileForVerifLayanan()
                 $tmtgjberkalaberikut = date('Y-m-d', strtotime('+2 years', strtotime($dataKgb[0]['tmtgajiberkala'])));
             }
             } 
+            
 
                         
             $this->db->insert('db_pegawai.peggajiberkala', $datainsKgb);
@@ -14328,7 +14348,7 @@ public function getFileForVerifLayanan()
         
         
 
-        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataKgb[0]).",\nBerikut kami lampirkan SK Kenaikan Gaji Berkala Anda, File SK ini telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke BKAD Kota Manado. Apabila terjadi kesalahan pada SK ini,silahkan kirim pesan dinomor WA ini.\n\nStatus  : *Proses Di BKAD*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
+        $caption = "Selamat ".greeting().", Yth. ".getNamaPegawaiFull($dataKgb[0]).",\nSK Kenaikan Gaji Berkala Anda telah tersimpan dan bisa didownload pada Aplikasi Siladen anda serta telah diteruskan ke Operator SIMGAJI Perangkat Daerah. Apabila terjadi kesalahan pada SK ini,silahkan menghubungi BKPSDM.\n\nStatus  : *Input Operator SIMGAJI*\n\nStatus BKPSDM : *Selesai*\n\nTerima kasih.\n*BKPSDM Kota Manado*".FOOTER_MESSAGE_CUTI;
         $cronWa = [
                     'sendTo' => convertPhoneNumber($dataKgb[0]['handphone']),
                     'message' => $caption,
@@ -14338,6 +14358,20 @@ public function getFileForVerifLayanan()
                     'jenis_layanan' => 'Gaji Berkala'
                 ];
                 $this->db->insert('t_cron_wa', $cronWa);
+
+        $notifikasi = [
+                    'id_m_user' => $dataKgb[0]['id_m_user'],
+                    'jenis_notifikasi' => 'notifikasi_layanan',
+                    'judul_notifikasi' => 'Notifikasi layanan',
+                    'pesan' =>  $caption,
+                    'link_href' =>  'notifikasi-pegawai',
+                    'fa_icon'  =>  'fa fa-check',
+                    'icon_color' =>  'green',
+                    'flag_read'  =>  0,
+                    'created_by' => $this->general_library->getId()
+                ];
+        $this->db->insert('t_notifikasi', $notifikasi);
+
         // GAJI BERKALA
         } else if($id_dok == 46){
         // PERBAIKAN DATA
@@ -14759,7 +14793,7 @@ public function getFileForVerifLayanan()
                 ->join('db_pegawai.unitkerja f', 'e.skpd = f.id_unitkerja')
                 ->join('db_pegawai.pegpangkat g', 'g.id = a.reference_id_dok','left')
                 ->where('a.flag_active', 1)
-                ->where_in('a.id_m_layanan', [6,7,8,9,29])
+                ->where_in('a.id_m_layanan', [6,7,8,9,29,41])
                 ->order_by('g.tmtpangkat', 'desc');
                  if($this->general_library->isHakAkses('verifikasi_pangkat_bkad') || $this->general_library->isAdminAplikasi()){
                      if($data['status_pengajuan'] == ""){
@@ -19905,6 +19939,46 @@ public function checkListIjazahCpns($id, $id_pegawai){
        
     }
 
+    public function insertUsulLayananPangkatOtomatis(){
+        $res['code'] = 0;
+        $res['message'] = 'ok';
+        $res['data'] = null;
+        $this->db->trans_begin();
+        $datapost = $this->input->post();
+            $cek =  $this->db->select('*')
+                ->from('t_layanan a')
+                ->where('a.id_m_user', $datapost['id_user'])
+                ->where('a.flag_active', 1)
+                ->where('a.id_m_layanan',41)
+                ->where('a.status', 7)
+                ->get()->result_array();
+        // dd($cek);
+            if($cek){
+                $res = array('msg' => 'Sudah masuk daftar Layanan Pangkat Otomatis', 'success' => false);
+            } else {
+                $dataUsul['id_m_user']      = $this->general_library->getId();
+                $dataUsul['created_by']      = $this->general_library->getId();
+                $dataUsul['id_m_layanan']      = 41;
+                $dataUsul['id_m_user']      = $datapost['id_user'];
+                $dataUsul['status']      = 7;
+
+                $this->db->insert('db_efort.t_layanan', $dataUsul);
+                $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
+            }
+   
+        if ($this->db->trans_status() === FALSE)
+        {
+                $this->db->trans_rollback();
+        }
+        else
+        {
+                $this->db->trans_commit();
+        }
+        return $res;
+
+       
+    }
+
     public function laporanDetailListPegawai($param){
 
         $this->db->select('a.statuspeg,a.gelar1,a.gelar2,a.nama,a.nipbaru_ws,a.jk,c.eselon,d.id_unitkerjamaster,c.jenis_jabatan,
@@ -20033,6 +20107,9 @@ public function checkListIjazahCpns($id, $id_pegawai){
 //     ->where('a.id', $id_kegiatan);
 //     return $this->db->get()->row_array(); 
 // }
+
+
+
 
     
     

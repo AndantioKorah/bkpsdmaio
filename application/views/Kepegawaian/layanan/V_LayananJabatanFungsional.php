@@ -638,10 +638,10 @@ ol {
                 </li>
 
                  <li>
-                <a class="<?php if($sk_jabatan_fungsional) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional) { ?>
-                onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
-                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Jabatan Fungsional Terakhir <i
-                class="fas fa-<?php if($sk_jabatan_fungsional) echo ''; else echo '';?>"></i></a>
+                <a class="<?php if($ijazah_s1_div) echo 'select'; else echo 'unselect';?>" <?php if($ijazah_s1_div) { ?>
+                onclick="viewBerkasPangkat('<?=$ijazah_s1_div['gambarsk'];?>',7)" data-toggle="modal" data-target="#exampleModal"
+                <?php } ?>> <i class="fa fa-file-pdf"></i> Ijazah S1/D4* <i
+                class="fas fa-<?php if($ijazah_s1_div) echo ''; else echo '';?>"></i></a>
                 </li>
 
                <li>
@@ -958,10 +958,10 @@ $(function(){
             errortoast(' Berkas Belum Lengkap')
             return false;
           }
-         if(str_serdik == ""){
-            errortoast(' Berkas Belum Lengkap')
-            return false;
-         }
+        //  if(str_serdik == ""){
+        //     errortoast(' Berkas Belum Lengkap')
+        //     return false;
+        //  }
          if(skp1 == ""){
             errortoast(' Berkas Belum Lengkap')
             return false;

@@ -181,7 +181,7 @@ define('GROUP_CHAT_TPP_HARDWORKER', '628114319222-1609731398');
 define('WA_BOT', '62895355011333');
 define('FLAG_CUTI_USE_DS', 0);
 
-define('FOOTER_MESSAGE_CUTI', "\n\n_*===========================*_\n_*Semua Jenis Layanan di BKPSDM tidak dipungut biaya*_");
+define('FOOTER_MESSAGE_CUTI', "\n\n===========================\nSemua Jenis Layanan di BKPSDM tidak dipungut biaya");
 
 define('OTP_RESET_PASSWORD_TIME', "+1440 minutes");
 define('FLAG_RESET_PASSWORD_USE_OTP', 0);

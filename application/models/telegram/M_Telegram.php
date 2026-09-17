@@ -141,7 +141,7 @@
                         ->where('a.flag_bot', 0)
                         ->order_by('a.date_sent', 'asc')
                         ->limit(10)
-                        ->get()->result_array(0);
+                        ->get()->result_array();
             if($data){
                 foreach($data as $d){
                     $reply = null;
@@ -159,11 +159,15 @@
                             $reply = "Selamat ".greeting().", ".$d['sender_name'].". Akun Telegram Anda belum terintegrasi dengan akun SILADEN. Silahkan ikuti langkah-langkah berikut untuk mengintegrasikan akun SILADEN dan akun Telegram Anda.\n\n1. Login ke dalam Akun SILADEN,\n2. Klik menu Profile yang ada di samping kiri,\n3. Klik tab Data Pribadi,\n4. Klik tombol yang ada pada data Telegram,\n5. Masukkan kode ".$d['user_id']." pada kolom Input Kode Integrasi,\n6.Klik simpan.";
                         }
                     } else if($d['reply_to_message_id'] != null && $d['table_state'] == 't_progress_cuti'){ // cek jika reply untuk cuti
-                        $dataCuti = $this->db->select('*')
+                        $dataCuti = $this->db->select('b.*')
                                             ->from('t_progress_cuti a')
                                             ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
                                             ->where('a.id', $d['id_state'])
                                             ->get()->row_array();
+
+                        if($dataCuti){
+                            $this->kepegawaian->verifPermohonanCutiFromTelegram($dataCuti, $d);
+                        }
                     } else {
                         $reply = "";
                     }
@@ -285,10 +289,17 @@
                         
                         if($reqSend){
                             $res = json_decode($reqSend['result'], true);
-                            if($res['ok'] == true){
+                            if($res && $res['ok'] == true){
                                 $updateCronSend['flag_sent'] = 1;
                                 $updateCronSend['date_sent'] = date('Y-m-d H:i:s');
                                 $updateCronSend['messageId'] = $res['result']['message_id'];
+
+                                if($d['table_state'] && $d['id_state'] && $d['column_state']){
+                                    $this->db->where('id', $d['id_state'])
+                                            ->update($d['table_state'], [
+                                                $d['column_state'] => $res['result']['message_id']
+                                            ]);
+                                }
                             }
                         }
                         $updateCronSend['log'] = json_encode($reqSend);

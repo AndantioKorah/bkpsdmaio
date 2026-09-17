@@ -904,9 +904,9 @@
               ?>
               <?php  if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi() ||  $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->getUserName() == $nip){ ?>
               <?php if($profil_pegawai['statuspeg'] == 2) { ?>
-                <li class="nav-item nav-item-profile" role="presentation"> 
+                <!-- <li class="nav-item nav-item-profile" role="presentation"> 
                 <button onclick="LoadViewTalenta()"  class="nav-link nav-link-profile" id="pills-mt-tab" data-bs-toggle="pill" data-bs-target="#pills-mt" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Manajemen Talenta</button>
-              </li>
+              </li> -->
                <?php } ?>
               <?php } ?>
               <?php 

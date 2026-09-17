@@ -1084,6 +1084,14 @@
 			<?php } ?>
 		</ul>
 	</li>
+	<li class="sidebar-item ">
+				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
+				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
+					<span class="align-middle">
+					Penilaian 360
+					</span>
+				</a>	
+			</li>
 <?php if(!$this->general_library->isGuest()) { ?>
 	<li class="sidebar-header">
 		<!-- Kinerja -->
@@ -1273,12 +1281,15 @@
 		// dd($this->general_library->isSetda());
 		// if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta')){ 
 			?>
+
+<?php if($this->general_library->isHakAkses('manajemen_talenta'))
+			{ 
+			?>
     <li class="sidebar-header">
-		<!-- Manajemen Talenta -->
 		 SIPANTAS
 	</li>
 					<?php 
-					// } 
+					} 
 					?>
 
 	<?php if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('manajemen_talenta') || $this->general_library->isGuest()){ ?>
@@ -1576,17 +1587,17 @@
 				<?php } ?>
 				
 			<?php if($this->general_library->isHakAkses('manajemen_talenta'))
-			// { 
+			{ 
 			?>
 			<?php if(!$this->general_library->isWalikota() AND !$this->general_library->isGuest()) { ?>
-			<li class="sidebar-item ">
+			<!-- <li class="sidebar-item ">
 				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 					<span class="align-middle">
 					Penilaian 360
 					</span>
 				</a>	
-			</li>
+			</li> -->
 
 				<li class="sidebar-item ">
 				<a title="Verifikasi" href="<?=base_url();?>simata/C_Simata/rekap360" class="sidebar-link">
@@ -1597,7 +1608,7 @@
 				</a>	
 			</li>
 			<?php 
-		    // }
+		    }
 		    ?>
 			<?php } ?>	
 			<?php if($this->general_library->isHakAkses('admin_simponi_asn'))

@@ -35,9 +35,9 @@
                 <td style="font-weight: bold; text-align: center;">Status Pegawai</td>
                 <td style="font-weight: bold; text-align: center;">Eselon</td>
                 <td style="font-weight: bold; text-align: center;">Unit Kerja</td>
-                <td style="font-weight: bold; text-align: center;">NIK</td>
+                <!-- <td style="font-weight: bold; text-align: center;">NIK</td>
                 <td style="font-weight: bold; text-align: center;">No. HP</td>
-                <td style="font-weight: bold; text-align: center;">Email</td>
+                <td style="font-weight: bold; text-align: center;">Email</td> -->
             </tr>
             <tbody>
                 <?php if($result){ $no=1; foreach($result as $rs){
@@ -57,9 +57,9 @@
                         <td style="padding: 5px; text-align: center;"><?=$rs['nm_statuspeg']?></td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['eselon']?></td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['nm_unitkerja']?></td>
-                        <td style="padding: 5px; text-align: center;"><?=$rs['nik']?></td>
+                        <!-- <td style="padding: 5px; text-align: center;"><?=$rs['nik']?></td>
                         <td style="padding: 5px; text-align: center;"><?=$rs['handphone']?></td>
-                        <td style="padding: 5px; text-align: center;"><?=$rs['email']?></td>
+                        <td style="padding: 5px; text-align: center;"><?=$rs['email']?></td> -->
                     </tr>
                 <?php } } ?>
             </tbody>

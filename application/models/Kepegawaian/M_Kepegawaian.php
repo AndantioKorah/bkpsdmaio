@@ -7145,7 +7145,7 @@ public function submitEditJabatan(){
             if($flag_reply_thankyou == 1){
                // balasan ucapan terima kasih
                 $replyToVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]* \n\nTerima Kasih, balasan Anda sudah kami terima.";
-                $cronWaVerifikator = [
+                $cronTelegramVerifikator = [
                     'sendTo' => ($chat['user_id']),
                     'method' => 'sendMessage',
                     'type' => 'text',
@@ -7157,7 +7157,7 @@ public function submitEditJabatan(){
                         ]
                     ])
                 ];
-                $this->db->insert('t_cron_telegram', $cronWaVerifikator);
+                $this->db->insert('t_cron_telegram', $cronTelegramVerifikator);
             }
         }
 
@@ -7850,7 +7850,7 @@ public function submitEditJabatan(){
                             //     'id_state' => $last_id
                             // ];
                             // $this->db->insert('t_cron_wa', $cronWa);
-                            if($progressCuti[0]['user_id_telegram']){
+                            if(isset($progressCuti[0]['user_id_telegram']) && $progressCuti[0]['user_id_telegram']){
                                 $this->db->insert('t_cron_telegram', [
                                     'type' => 'text',
                                     'method' => 'sendMessage',
@@ -8358,17 +8358,22 @@ public function submitEditJabatan(){
             $startDate = strtotime($data['tanggal_mulai']);
             $endDate = strtotime($data['tanggal_akhir']);
             $today = strtotime(date('d-m-Y'));
-            if($endDate < $startDate){
-                $res['code'] = 1;
-                $res['message'] = 'Tanggal Akhir tidak boleh melebihi Tanggal Mulai';
-            } else if($data['id_cuti'] == 0 && $startDate < $today){
-                $res['code'] = 1;
-                $res['message'] = 'Tanggal Mulai tidak boleh kurang dari hari ini';
-            } else if($startDate == $today){
-                $res['code'] = 1;
-                $res['message'] = 'Tanggal Mulai tidak boleh sama dengan tanggal hari ini';
-            } else {
+            $prog = $this->session->userdata('programmer_session');
+            if($prog['user_logged_in'] != null){
                 $res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+            } else {
+                if($endDate < $startDate){
+                    $res['code'] = 1;
+                    $res['message'] = 'Tanggal Akhir tidak boleh melebihi Tanggal Mulai';
+                } else if($data['id_cuti'] == 0 && $startDate < $today){
+                    $res['code'] = 1;
+                    $res['message'] = 'Tanggal Mulai tidak boleh kurang dari hari ini';
+                } else if($startDate == $today){
+                    $res['code'] = 1;
+                    $res['message'] = 'Tanggal Mulai tidak boleh sama dengan tanggal hari ini';
+                } else {
+                    $res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+                }
             }
         }
 

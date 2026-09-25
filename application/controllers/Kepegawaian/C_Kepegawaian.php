@@ -4708,4 +4708,8 @@ class C_Kepegawaian extends CI_Controller
 	public function deleteUserIdTelegram($userid){
 		echo json_encode($this->kepegawaian->deleteUserIdTelegram($userid));
 	}
+
+	public function requestTokenTelegram($id, $transaksi){
+		echo json_encode($this->kepegawaian->requestTokenTelegram($id, $transaksi));
+	}
 }

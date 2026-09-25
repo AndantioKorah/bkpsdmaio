@@ -50,7 +50,6 @@ class Ttelib{
     public function verifPdf($data){
         $hash = $this->hash();
         $url = $hash['url'].'api/v2/verify/pdf';
-
         return $this->postCurl($url, $data, 'POST');
     }
 
@@ -66,7 +65,6 @@ class Ttelib{
         unset($data['table_ref']);
         
         $request_json = json_encode($data, JSON_UNESCAPED_SLASHES); 
-        
         $hash = $this->hash();
         $curl = curl_init();
         $url = $url;

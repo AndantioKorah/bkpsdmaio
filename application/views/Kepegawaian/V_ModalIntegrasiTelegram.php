@@ -1,5 +1,5 @@
 <div class="row p-3">
-  <div class="col-lg-12">
+  <div id="div_token" class="col-lg-12">
     <?php if($res){ ?>
       <div class="row">
         <?php if($res['user_id_telegram']){ ?>
@@ -39,6 +39,7 @@
       </div>
     <?php } ?>
   </div>
+  <div id="div_request_token" class="col-lg-12" style="display: none;"></div>
 </div>
 
 <script>
@@ -67,6 +68,41 @@
         }
     })
   })
+
+  function requestTokenTelegram(id, transaksi){
+    if(transaksi == 'delete_integrasi'){
+      $('#btn_delete_integrasi').hide()
+      $('#btn_delete_integrasi_loading').show()
+    } else {
+      $('#btn_submit_integrasi').hide()
+      $('#btn_submit_integrasi_loading').show()
+    }
+    $('#div_token').hide()
+    $('#div_request_token').show()
+    $.ajax({
+        url: '<?=base_url("kepegawaian/C_Kepegawaian/requestTokenTelegram/")?>'+id+'/'+transaksi,
+        method: 'post',
+        data: null,
+        success: function(data){
+            let resp = JSON.parse(data)
+            if(resp.code == 0){
+              if(transaksi == 'delete_integrasi'){
+              } else {
+              }
+              $('#div_token').show()
+              $('#div_request_token').hide()
+            } else {
+              $('#div_token').show()
+              $('#div_request_token').hide()
+              errortoast(resp.message)
+            }
+        }, error: function(e){
+            $('#div_token').show()
+            $('#div_request_token').hide()
+            errortoast('Terjadi Kesalahan')
+        }
+      })
+  }
 
   function deleteUserIdTelegram(id){
     if(confirm('Apakah Anda ingin menghapus integrasi akun Telegram?')){

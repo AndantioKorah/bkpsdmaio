@@ -12839,6 +12839,19 @@ public function deleteUserIdTelegram($id){
     return $res;
 }
 
+public function requestTokenTelegram($id, $transaksi){
+    $token = generateRandomNumber(6);
+    $req = $this->ttelib->send_curl_exec(
+        'sendMessage',
+        null,
+        null,
+        [
+            'to' => $id,
+            'text'
+        ]
+    );
+}
+
 public function getFileForVerifLayanan()
     {      
         $id_peg = $this->input->post('id_peg');

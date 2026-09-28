@@ -67,37 +67,52 @@
           data-toggle="modal" class="btn btn-navy">Detail</button> -->
           <button type="button" onclick="loadDetailCutiVerif('<?=$rs['id']?>')" class="btn btn-sm btn-navy">Detail</button>
           <?php if($rs['flag_ds_cuti'] == 1){ if($this->general_library->isProgrammer() || $this->general_library->isHakAkses('admin_pengajuan_cuti')){ ?>
-            <button type="button" class="btn btn-danger btn-sm" onclick="adminDeleteCuti('<?=$rs['id']?>')">Hapus</button>
+            <button href="#modal_delete_cuti" data-toggle="modal" type="button" class="btn btn-danger btn-sm"
+              onclick="adminDeleteCuti('<?=$rs['id']?>')">Hapus</button>
           <?php }} ?>
         </td>
       </tr>
     <?php } } ?>
   </tbody>
 </table>
-
+<div class="modal fade" id="modal_delete_cuti" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div id="modal-dialog" class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Hapus Permohonan Cuti</h5>
+      </div>
+      <div class="modal-body" id="modal_delete_cuti_detail"></div>
+    </div>
+	</div>
+</div>
 <script>
   $(function(){
     $('.table_riwayat_verif_cuti').dataTable()
   })
 
   function adminDeleteCuti(id){
-    if(confirm('Apakah Anda yakin ingin menghapus data cuti ini?')){
-      $.ajax({
-        url: '<?=base_url("kepegawaian/C_Kepegawaian/deletePermohonanCutiTerbitSk/")?>'+id,
-        method:"POST",  
-        data: [],
-        success: function(res){
-          let rs = JSON.parse(res)
-          if(rs.code == 0){
-            successtoast('Data berhasil dihapus')
-            window.location=""
-          } else {
-            errortoast(rs.message)
-          }
-        }, error: function(err){
-          errortoast('Terjadi Kesalahan')
-        }
-      })
-    }
+    $('#modal_delete_cuti_detail').html()
+    $('#modal_delete_cuti_detail').append(divLoaderNavy)
+    $('#modal_delete_cuti_detail').load('<?=base_url("kepegawaian/C_Kepegawaian/loadModalDeletePermohonanCutiTerbitSk/")?>'+id, function(){
+      $('#loader').hide()
+    })
+    // if(confirm('Apakah Anda yakin ingin menghapus data cuti ini?')){
+    //   $.ajax({
+    //     url: '<?=base_url("kepegawaian/C_Kepegawaian/deletePermohonanCutiTerbitSk/")?>'+id,
+    //     method:"POST",  
+    //     data: [],
+    //     success: function(res){
+    //       let rs = JSON.parse(res)
+    //       if(rs.code == 0){
+    //         successtoast('Data berhasil dihapus')
+    //         window.location=""
+    //       } else {
+    //         errortoast(rs.message)
+    //       }
+    //     }, error: function(err){
+    //       errortoast('Terjadi Kesalahan')
+    //     }
+    //   })
+    // }
   }
 </script>

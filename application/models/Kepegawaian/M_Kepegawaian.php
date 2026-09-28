@@ -8120,15 +8120,18 @@ public function submitEditJabatan(){
                             ->from('t_meta_cuti')
                             ->where('id_t_pengajuan_cuti', $id)
                             ->get()->result_array();
-
+                            
+        $list_tahun_meta_cuti = null;
         // if($list_meta_cuti){
             foreach($list_meta_cuti as $lmc){
                 $meta_cuti[$lmc['tahun']] = $lmc;
+                $list_tahun_meta_cuti[] = $lmc['tahun'];
             }
         // }
         $sisa_cuti = $this->db->select('*')
                             ->from('t_sisa_cuti')
                             ->where('id_m_user', $data['id_m_user'])
+                            ->where_in('tahun', $list_tahun_meta_cuti)
                             ->where('flag_active', 1)
                             ->get()->result_array();
         // if($sisa_cuti){
@@ -8151,6 +8154,29 @@ public function submitEditJabatan(){
 
         // jika SK sudah terbit, hapus data cuti di profil, di dokumen pendukung
         if($flag_sk_terbit == 1){
+            $file_permohonan_delete_cuti = null;
+            if($_FILES['file_delete_cuti']){
+                $config['upload_path'] = './assets/dokumen_pendukung_cuti/delete_request';
+                $config['allowed_types'] = '*';
+                $_FILES['file_delete_cuti']['name'] = "request_delete_".date('ymdhis')."_".$_FILES['file_delete_cuti']['name']; 
+                $this->load->library('upload',$config);
+                if($this->upload->do_upload('file_delete_cuti')){
+                    $upload = $this->upload->data();
+                    $file_permohonan_delete_cuti = $upload['file_name'];
+                } else {
+                    $res['code'] = 1;
+                    $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                }
+            }
+            
+            $inputPost = $this->input->post();
+            $this->db->insert('t_delete_pengajuan_cuti', [
+                'keterangan' => $inputPost['keterangan'],
+                'url_file' => $file_permohonan_delete_cuti,
+                'created_by' => $this->general_library->getId(),
+                'id_t_pengajuan_cuti' => $data['id']
+            ]);
+
             $expl = explode("-", $data['tanggal_mulai']);
             $dokpen = $this->db->select('*')
                             ->from('t_dokumen_pendukung')

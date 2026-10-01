@@ -4108,6 +4108,10 @@ class C_Kepegawaian extends CI_Controller
 			$this->kepegawaian->updateJabatanGuruPppk();
 	}
 
+	public function updateEmail(){
+			$this->kepegawaian->updateEmail();
+	}
+
 		public function tesss(){
 			$this->kepegawaian->tesss();
 	}

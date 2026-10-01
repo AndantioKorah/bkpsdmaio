@@ -20229,6 +20229,22 @@ public function checkListIjazahCpns($id, $id_pegawai){
 //     return $this->db->get()->row_array(); 
 // }
 
+public function updateEmail()
+    {
+        $this->db->select('*')
+            ->from('email a');
+        $pegawai = $this->db->get()->result_array();
+       
+       
+        foreach ($pegawai as $peg) {  
+         $this->db->where('nipbaru_ws', $peg['nip'])
+         ->update('db_pegawai.pegawai', 
+         ['email' => $peg['email']]);
+         }
+    }
+
+
+
 
 
 

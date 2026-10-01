@@ -1742,6 +1742,11 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode($this->kepegawaian->deletePermohonanCuti($id, 1, 1)); // jika sk sudah terbit, flag_terbit_sk set 1
 	}
 
+	public function loadModalDeletePermohonanCutiTerbitSk($id){
+		$data['result'] = $this->kepegawaian->loadDetailCutiVerif($id);
+		$this->load->view('kepegawaian/V_VerifPermohonanCutiModalDelete', $data);
+	}
+
 	public function deleteOperatorPermohonanCuti($id){
 		$this->kepegawaian->deleteOperatorPermohonanCuti($id);
 		// $this->general->delete('id', $id, 't_pengajuan_cuti');
@@ -4711,5 +4716,9 @@ class C_Kepegawaian extends CI_Controller
 
 	public function deleteUserIdTelegram($userid){
 		echo json_encode($this->kepegawaian->deleteUserIdTelegram($userid));
+	}
+
+	public function requestTokenTelegram($id, $transaksi){
+		echo json_encode($this->kepegawaian->requestTokenTelegram($id, $transaksi));
 	}
 }

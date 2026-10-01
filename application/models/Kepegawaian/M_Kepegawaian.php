@@ -6424,7 +6424,7 @@ public function submitEditJabatan(){
 
     public function verifPermohonanCutiFromWa($resp, $chat, $flag_prog = 0){
         $this->db->trans_begin();
-        $dataCuti = $this->db->select('a.*, c.skpd')
+        $dataCuti = $this->db->select('a.*, c.skpd, b.user_id_telegram')
                             ->from('t_pengajuan_cuti a')
                             ->join('m_user b', 'a.id_m_user = b.id')
                             ->join('db_pegawai.pegawai c', 'c.nipbaru_ws = b.username')
@@ -6782,10 +6782,10 @@ public function submitEditJabatan(){
                             ->from('t_pengajuan_cuti a')
                             ->join('m_user b', 'a.id_m_user = b.id')
                             ->join('db_pegawai.pegawai c', 'c.nipbaru_ws = b.username')
-                            ->where('a.id', $resp['id'])
+                            ->where('a.id', $resp['cuti']['id'])
                             ->get()->row_array();
 
-        $progress = $this->getProgressCutiAktif($resp['id']);
+        $progress = $this->getProgressCutiAktif($resp['cuti']['id']);
         if($flag_prog == 1){
             dd($progress);
         }
@@ -6797,7 +6797,7 @@ public function submitEditJabatan(){
         if($progress['indexAktif'] == 0){ // verifikasi sudah selesai
             $exists = $this->db->select('*')
                             ->from('t_pengajuan_cuti')
-                            ->where('id', $resp['id'])
+                            ->where('id', $resp['cuti']['id'])
                             ->get()->row_array();
 
             $ket_tambahan = '';
@@ -6809,71 +6809,96 @@ public function submitEditJabatan(){
             }
 
             $replyToVerifikator = 'Mohon maaf, Proses Verifikasi sudah selesai. '.$ket_tambahan;
-            $cronWaVerifikator = [
+            $cronTelegramVerifikator = [
                 'sendTo' => ($chat['user_id']),
-                'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                'method' => 'sendMessage',
                 'type' => 'text',
-                'ref_id' => $resp['id'],
-                'jenis_layanan' => 'Cuti'
+                'data_post' => json_encode([
+                    'chat_id' => $chat['user_id'],
+                    'text' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                    'reply_parameters' => [
+                        "message_id" => $resp['response']['messageId']
+                    ]
+                ])
             ];
-            $this->db->insert('t_cron_wa', $cronWaVerifikator);
-        } else if($progress['current']['nohp'] != $userIdTelegramSender){ // nomor hp tidak sesuai
+            $this->db->insert('t_cron_telegram', $cronTelegramVerifikator);
+        } else if($progress['current']['user_id_telegram'] != $userIdTelegramSender){ // nomor hp tidak sesuai
             $replyToVerifikator = 'Mohon maaf, Anda tidak memiliki akses untuk melakukan verifikasi pada tahapan ini. Progress Cuti saat ini: "'.$progress['current']['keterangan'].'"';
-            $cronWaVerifikator = [
+            $cronTelegramVerifikator = [
                 'sendTo' => ($chat['user_id']),
-                'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                'method' => 'sendMessage',
                 'type' => 'text',
-                'ref_id' => $resp['id'],
-                'jenis_layanan' => 'Cuti'
+                'data_post' => json_encode([
+                    'chat_id' => $chat['user_id'],
+                    'text' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                    'reply_parameters' => [
+                        "message_id" => $resp['response']['messageId']
+                    ]
+                ])
             ];
-            $this->db->insert('t_cron_wa', $cronWaVerifikator);
-        } else if($progress['current']['chatId'] != $chat['reply_to_message_id']){ // salah reply pesan
+            $this->db->insert('t_cron_telegram', $cronTelegramVerifikator);
+        } else if($progress['current']['messageId'] != $chat['reply_to_message_id']){ // salah reply pesan
             $replyToVerifikator = 'Mohon maaf, pesan ini tidak dapat direply untuk verifikasi cuti. Silahkan mereply pesan yang benar untuk verifikasi.';
-            $cronWaVerifikator = [
+            $cronTelegramVerifikator = [
                 'sendTo' => ($chat['user_id']),
-                'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                'method' => 'sendMessage',
                 'type' => 'text',
-                'ref_id' => $resp['id'],
-                'jenis_layanan' => 'Cuti'
+                'data_post' => json_encode([
+                    'chat_id' => $chat['user_id'],
+                    'text' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                    'reply_parameters' => [
+                        "message_id" => $resp['response']['messageId']
+                    ]
+                ])
             ];
-            $this->db->insert('t_cron_wa', $cronWaVerifikator);
+            $this->db->insert('t_cron_telegram', $cronTelegramVerifikator);
         } else if(!$progress){
             $replyToVerifikator = 'Mohon maaf, progress cuti ini tidak dapat dilakukan verifikasi.';
-            $cronWaVerifikator = [
+            $cronTelegramVerifikator = [
                 'sendTo' => ($chat['user_id']),
-                'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                'method' => 'sendMessage',
                 'type' => 'text',
-                'ref_id' => $resp['id'],
-                'jenis_layanan' => 'Cuti'
+                'data_post' => json_encode([
+                    'chat_id' => $chat['user_id'],
+                    'text' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                    'reply_parameters' => [
+                        "message_id" => $resp['response']['messageId']
+                    ]
+                ])
             ];
-            $this->db->insert('t_cron_wa', $cronWaVerifikator);
+            $this->db->insert('t_cron_telegram', $cronTelegramVerifikator);
         } else {
             //kirim pemberitahuan kepada pegawai
-            $reply = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($resp).", permohonan ".$resp['nm_cuti']." Anda telah ";
+            $reply = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", \nYth. ".getNamaPegawaiFull($resp['cuti']).", permohonan ".$resp['cuti']['nm_cuti']." Anda telah ";
             if($resp['response']['flag_diterima'] == 1){
                 $reply .= '*DISETUJUI*';
 
                 if(!$progress['next']){ // jika kaban melakukan verif, kirim pesan harus melakukan DS
                     $flag_reply_thankyou = 0;
                     $replyToVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nTerima Kasih, balasan Anda sudah kami terima. Silahkan melakukan *_Digital Signature (DS)_* melalui aplikasi Siladen.";
-                    $cronWaVerifikator = [
+                    $cronTelegramVerifikator = [
                         'sendTo' => ($chat['user_id']),
-                        'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                        'method' => 'sendMessage',
                         'type' => 'text',
-                        // 'ref_id' => $resp['id'],
-                        'jenis_layanan' => 'Cuti'
+                        'data_post' => json_encode([
+                            'chat_id' => $chat['user_id'],
+                            'text' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                            'reply_parameters' => [
+                                "message_id" => $resp['response']['messageId']
+                            ]
+                        ])
                     ];
                     $this->db->insert('t_cron_wa', $cronWaVerifikator);
                 } else {
-                    $pada_tanggal = formatDateNamaBulan($resp['tanggal_mulai']);
-                    if($resp['tanggal_mulai'] != $resp['tanggal_akhir']){
-                        $pada_tanggal .= " sampai ".formatDateNamaBulan($resp['tanggal_akhir']);
+                    $pada_tanggal = formatDateNamaBulan($resp['cuti']['tanggal_mulai']);
+                    if($resp['cuti']['tanggal_mulai'] != $resp['cuti']['tanggal_akhir']){
+                        $pada_tanggal .= " sampai ".formatDateNamaBulan($resp['cuti']['tanggal_akhir']);
                     }
                     
                     if($progress['current']){
                         $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().
-                                ", pegawai atas nama: ".getNamaPegawaiFull($resp)." telah mengajukan Permohonan ".
-                                $resp['nm_cuti']." selama ".$resp['lama_cuti']." hari pada ".$pada_tanggal.
+                                ", pegawai atas nama: ".getNamaPegawaiFull($resp['cuti'])." telah mengajukan Permohonan ".
+                                $resp['cuti']['nm_cuti']." selama ".$resp['cuti']['lama_cuti']." hari pada ".$pada_tanggal.
                                 ". Permohonan Cuti ini telah disetujui sebelumnya oleh ".
                                 $progress['current']['nama_jabatan'].
                                 ". \n\nBalas dengan cara mereply pesan ini, kemudian ketik YA untuk menyetujui atau TIDAK untuk menolak.";
@@ -6882,48 +6907,44 @@ public function submitEditJabatan(){
                     }
                     
                     // $replyToNextVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]*\n\nSelamat ".greeting().", pegawai atas nama: ".getNamaPegawaiFull($resp)." telah mengajukan Permohonan ".$resp['nm_cuti'].". \n\nBalas dengan cara mereply pesan ini, kemudian ketik YA untuk menyetujui atau TIDAK untuk menolak.";
-                    $cronWaNextVerifikator = null;
+                    $cronTelegramNextVerifikator = null;
                     // if($progress['next']['nohp'] == NOMOR_HP_KABAN){
-                    if($progress['next']['nohp'] == NOMOR_HP_KABAN){
+                    if($progress['next']['id_jabatan'] == "4018000JS01"){ // jika verifikator selanjutnya kaban
                         if($dataCuti['skpd'] == 4018000){
-                            $cronWaNextVerifikator = [
-                                'sendTo' => convertPhoneNumber($progress['next']['nohp']),
-                                'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                            $cronTelegramNextVerifikator = [
+                                'sendTo' => ($progress['next']['user_id_telegram']),
+                                'method' => 'sendMessage',
                                 'type' => 'text',
-                                'ref_id' => $resp['id'],
-                                'jenis_layanan' => 'Cuti',
-                                'table_state' => 't_progress_cuti',
-                                'column_state' => 'chatId',
-                                'id_state' => $progress['next']['id']
+                                'data_post' => json_encode([
+                                    'chat_id' => $chat['user_id'],
+                                    'text' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                                ])
                             ];
-                            // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                         }
                     } else {
-                        $cronWaNextVerifikator = [
-                            'sendTo' => convertPhoneNumber($progress['next']['nohp']),
-                            'message' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                        $cronTelegramNextVerifikator = [
+                            'sendTo' => ($progress['next']['user_id_telegram']),
+                            'method' => 'sendMessage',
                             'type' => 'text',
-                            'ref_id' => $resp['id'],
-                            'jenis_layanan' => 'Cuti',
-                            'table_state' => 't_progress_cuti',
-                            'column_state' => 'chatId',
-                            'id_state' => $progress['next']['id']
+                            'data_post' => json_encode([
+                                'chat_id' => $chat['user_id'],
+                                'text' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                            ])
                         ];
-                        // $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
                     }
-                    if($cronWaNextVerifikator){
-                        if($cronWaNextVerifikator['sendTo'] == convertPhoneNumber(NOMOR_HP_KABAN)){ // jika kaban
+                    if($cronTelegramNextVerifikator){
+                        if($cronTelegramNextVerifikator['sendTo'] == "USER_ID_TELEGRAM_KABAN"){ // hardcode user id telegram kaban
                             if($dataCuti['skpd'] == 4018000){ // hanya pegawai bkpsdm
-                                $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                                $this->db->insert('t_cron_telegram', $cronTelegramNextVerifikator);
                             }
                         } else {
-                            $this->db->insert('t_cron_wa', $cronWaNextVerifikator);
+                            $this->db->insert('t_cron_telegram', $cronTelegramNextVerifikator);
                         }
                     }
 
                     // update t_pengajuan_cuti
                     if($progress['next']){
-                        $this->db->where('id', $resp['id'])
+                        $this->db->where('id', $resp['cuti']['id'])
                                 ->update('t_pengajuan_cuti', [
                                     'id_t_progress_cuti' => $progress['next']['id'],
                                     'status_pengajuan_cuti' => $progress['next']['keterangan']
@@ -6942,7 +6963,7 @@ public function submitEditJabatan(){
                             ->join('db_pegawai.pangkat e', 'd.pangkat = e.id_pangkat')
                             ->join('db_pegawai.jabatan f', 'd.jabatan = f.id_jabatanpeg', 'left')
                             ->join('db_pegawai.unitkerja g', 'd.skpd = g.id_unitkerja')
-                            ->where('a.id', $resp['id'])
+                            ->where('a.id', $resp['cuti']['id'])
                             ->get()->row_array();
 
                     $master = $this->db->select('*')
@@ -7101,25 +7122,42 @@ public function submitEditJabatan(){
                     ->update('t_progress_cuti', $resp['response']);
 
             // send message to pegawai
-            $cronWaPegawai = [
-                'sendTo' => convertPhoneNumber($resp['handphone']),
-                'message' => trim($reply.FOOTER_MESSAGE_CUTI),
-                'type' => 'text',
-                'jenis_layanan' => 'Cuti'
-            ];
-            $this->db->insert('t_cron_wa', $cronWaPegawai);
+            // $cronWaPegawai = [
+            //     'sendTo' => convertPhoneNumber($resp['handphone']),
+            //     'message' => trim($reply.FOOTER_MESSAGE_CUTI),
+            //     'type' => 'text',
+            //     'jenis_layanan' => 'Cuti'
+            // ];
+            
+            if($dataCuti['user_id_telegram']){ // cek jika pegawai yang cuti sudah set id telegram
+                $cronTelegramPegawai = [
+                    'sendTo' => ($dataCuti['user_id_telegram']),
+                    'method' => 'sendMessage',
+                    'type' => 'text',
+                    'data_post' => json_encode([
+                        'chat_id' => $dataCuti['user_id'],
+                        'text' => trim($replyToNextVerifikator.FOOTER_MESSAGE_CUTI),
+                    ])
+                ];
+                $this->db->insert('t_cron_telegram', $cronTelegramPegawai);
+            }
 
             if($flag_reply_thankyou == 1){
                // balasan ucapan terima kasih
                 $replyToVerifikator = "*[PERMOHONAN CUTI - ".$dataCuti['random_string']."]* \n\nTerima Kasih, balasan Anda sudah kami terima.";
-                $cronWaVerifikator = [
+                $cronTelegramVerifikator = [
                     'sendTo' => ($chat['user_id']),
-                    'message' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                    'method' => 'sendMessage',
                     'type' => 'text',
-                    // 'ref_id' => $resp['id'],
-                    'jenis_layanan' => 'Cuti'
+                    'data_post' => json_encode([
+                        'chat_id' => $chat['user_id'],
+                        'text' => trim($replyToVerifikator.FOOTER_MESSAGE_CUTI),
+                        'reply_parameters' => [
+                            'message_id' => $chat['message_id']
+                        ]
+                    ])
                 ];
-                $this->db->insert('t_cron_wa', $cronWaVerifikator);
+                $this->db->insert('t_cron_telegram', $cronTelegramVerifikator);
             }
         }
 
@@ -7187,6 +7225,23 @@ public function submitEditJabatan(){
 
             $result['progress'] = $this->loadProgressCuti($result['wa']['ref_id']);
         }
+        return $result;
+    }
+
+    public function checkIfReplyCutiNew($chat){
+        $cuti = null;
+        $result = null;
+        $result['cuti'] = $this->db->select('a.*, c.handphone, c.gelar1, c.gelar2, c.nama, d.nm_cuti, a.tanggal_mulai, a.tanggal_akhir')
+                        ->from('t_pengajuan_cuti a')
+                        ->join('m_user b', 'a.id_m_user = b.id')
+                        ->join('db_pegawai.pegawai c', 'b.username = c.nipbaru_ws')
+                        ->join('db_pegawai.cuti d', 'a.id_cuti = d.id_cuti')
+                        ->join('t_progress_cuti e', 'a.id = e.id_t_pengajuan_cuti')
+                        ->where('e.id', $chat['id_state'])
+                        ->where('a.flag_active', 1)
+                        ->get()->row_array();
+
+        $result['progress'] = $this->loadProgressCuti($result['cuti']['id']);
         return $result;
     }
 
@@ -7795,7 +7850,7 @@ public function submitEditJabatan(){
                             //     'id_state' => $last_id
                             // ];
                             // $this->db->insert('t_cron_wa', $cronWa);
-                            if($progressCuti[0]['user_id_telegram']){
+                            if(isset($progressCuti[0]['user_id_telegram']) && $progressCuti[0]['user_id_telegram']){
                                 $this->db->insert('t_cron_telegram', [
                                     'type' => 'text',
                                     'method' => 'sendMessage',
@@ -8065,15 +8120,18 @@ public function submitEditJabatan(){
                             ->from('t_meta_cuti')
                             ->where('id_t_pengajuan_cuti', $id)
                             ->get()->result_array();
-
+                            
+        $list_tahun_meta_cuti = null;
         // if($list_meta_cuti){
             foreach($list_meta_cuti as $lmc){
                 $meta_cuti[$lmc['tahun']] = $lmc;
+                $list_tahun_meta_cuti[] = $lmc['tahun'];
             }
         // }
         $sisa_cuti = $this->db->select('*')
                             ->from('t_sisa_cuti')
                             ->where('id_m_user', $data['id_m_user'])
+                            ->where_in('tahun', $list_tahun_meta_cuti)
                             ->where('flag_active', 1)
                             ->get()->result_array();
         // if($sisa_cuti){
@@ -8096,6 +8154,29 @@ public function submitEditJabatan(){
 
         // jika SK sudah terbit, hapus data cuti di profil, di dokumen pendukung
         if($flag_sk_terbit == 1){
+            $file_permohonan_delete_cuti = null;
+            if($_FILES['file_delete_cuti']){
+                $config['upload_path'] = './assets/dokumen_pendukung_cuti/delete_request';
+                $config['allowed_types'] = '*';
+                $_FILES['file_delete_cuti']['name'] = "request_delete_".date('ymdhis')."_".$_FILES['file_delete_cuti']['name']; 
+                $this->load->library('upload',$config);
+                if($this->upload->do_upload('file_delete_cuti')){
+                    $upload = $this->upload->data();
+                    $file_permohonan_delete_cuti = $upload['file_name'];
+                } else {
+                    $res['code'] = 1;
+                    $res['message'] = "Data Gagal Disimpan.\n".$this->upload->display_errors();
+                }
+            }
+            
+            $inputPost = $this->input->post();
+            $this->db->insert('t_delete_pengajuan_cuti', [
+                'keterangan' => $inputPost['keterangan'],
+                'url_file' => $file_permohonan_delete_cuti,
+                'created_by' => $this->general_library->getId(),
+                'id_t_pengajuan_cuti' => $data['id']
+            ]);
+
             $expl = explode("-", $data['tanggal_mulai']);
             $dokpen = $this->db->select('*')
                             ->from('t_dokumen_pendukung')
@@ -8303,17 +8384,22 @@ public function submitEditJabatan(){
             $startDate = strtotime($data['tanggal_mulai']);
             $endDate = strtotime($data['tanggal_akhir']);
             $today = strtotime(date('d-m-Y'));
-            if($endDate < $startDate){
-                $res['code'] = 1;
-                $res['message'] = 'Tanggal Akhir tidak boleh melebihi Tanggal Mulai';
-            } else if($data['id_cuti'] == 0 && $startDate < $today){
-                $res['code'] = 1;
-                $res['message'] = 'Tanggal Mulai tidak boleh kurang dari hari ini';
-            } else if($startDate == $today){
-                $res['code'] = 1;
-                $res['message'] = 'Tanggal Mulai tidak boleh sama dengan tanggal hari ini';
-            } else {
+            $prog = $this->session->userdata('programmer_session');
+            if($prog['user_logged_in'] != null){
                 $res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+            } else {
+                if($endDate < $startDate){
+                    $res['code'] = 1;
+                    $res['message'] = 'Tanggal Akhir tidak boleh melebihi Tanggal Mulai';
+                } else if($data['id_cuti'] == 0 && $startDate < $today){
+                    $res['code'] = 1;
+                    $res['message'] = 'Tanggal Mulai tidak boleh kurang dari hari ini';
+                } else if($startDate == $today){
+                    $res['code'] = 1;
+                    $res['message'] = 'Tanggal Mulai tidak boleh sama dengan tanggal hari ini';
+                } else {
+                    $res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
+                }
             }
         }
 
@@ -12777,6 +12863,19 @@ public function deleteUserIdTelegram($id){
             ]);
 
     return $res;
+}
+
+public function requestTokenTelegram($id, $transaksi){
+    $token = generateRandomNumber(6);
+    $req = $this->ttelib->send_curl_exec(
+        'sendMessage',
+        null,
+        null,
+        [
+            'to' => $id,
+            'text'
+        ]
+    );
 }
 
 public function getFileForVerifLayanan()

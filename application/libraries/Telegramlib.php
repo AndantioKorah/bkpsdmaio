@@ -49,19 +49,21 @@ class Telegramlib extends CI_Model{
       return $result;
   }
 
-  public function send_curl_exec($method, $method_telegram, $send_to, $data = [])
+  public function send_curl_exec($method, $method_telegram, $send_to, $data = null)
   {
     $url = $this->hashTelegram()['url'];
 
     $listMethodForDataPost = [
       "sendMessageInlineKeyboard",
-      "sendMessageReplyKeyboard"
+      "sendMessageReplyKeyboard",
+      "sendMessage"
     ];
 
-    if($method_telegram == 'sendMessage'){
-      $message = isset($data['message']) ? $data['message'] : $data['text'];
-      $url = $url.$method_telegram.'?chat_id='.$send_to.'&text='.urlencode($message);
-    } else if($method_telegram == 'setWebhook'){
+    // if($method_telegram == 'sendMessage'){
+    //   $message = isset($data['message']) ? $data['message'] : $data['text'];
+    //   $url = $url.$method_telegram.'?chat_id='.$send_to.'&text='.urlencode($message);
+    // } else
+    if($method_telegram == 'setWebhook'){
       $url = $url.$method_telegram.'?url='.$data['url_webhook'];
     } else if(in_array($method_telegram, $listMethodForDataPost)){
       $url = $url."sendMessage";
@@ -83,8 +85,11 @@ class Telegramlib extends CI_Model{
 
     // dd(in_array($method_telegram, $listMethodForDataPost));
     if(in_array($method_telegram, $listMethodForDataPost)){
+      $dataPost = json_decode($data, true);
+      $dataPost['parse_mode'] = "markdown";
+
       curl_setopt($session, CURLOPT_POST, true);
-      curl_setopt($session, CURLOPT_POSTFIELDS, $data);
+      curl_setopt($session, CURLOPT_POSTFIELDS, json_encode($dataPost));
     }
     
     $result = curl_exec($session);

@@ -3231,10 +3231,10 @@
         }
         
         public function cekKenegaraan(){
-            $tanggal = 3;
-            $bulan = 8;
+            $tanggal = 7;
+            $bulan = 9;
             $tahun = 2026;
-            $namaKegiatan = "Apel Perdana Bulan Agustus Tahun 2026"; 
+            $namaKegiatan = "Apel Perdana Bulan September Tahun 2026"; 
             $tanggalLengkap = $tanggal < 10 ? "0".$tanggal : $tanggal;
             $bulanLengkap = $bulan < 10 ? "0".$bulan : $bulan;
             $dateLengkap = $tahun."-".$bulanLengkap."-".$tanggalLengkap;

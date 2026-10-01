@@ -104,42 +104,49 @@
         }
 
         public function cronSetReplyTelegram(){
-            // // 1. Define the keyboard layout (Nested array: Rows contain columns)
-            // $keyboard = [
-            //     ['Option 1', 'Option 2'], // Row 1: Two adjacent buttons
-            //     ['Option 3'],             // Row 2: Full-width button
-            //     ['Help', 'Settings']      // Row 3: Two adjacent buttons
-            // ];
+            // $chat = $this->db->select('*')
+            //                 ->from('t_data_updates_telegram')
+            //                 ->where('id', 26)
+            //                 ->get()->row_array();
 
-            // // 2. Wrap the layout into the Telegram API reply_markup structure
-            // $replyMarkup = [
-            //     'keyboard'          => $keyboard,
-            //     'resize_keyboard'   => true,  // Automatically fits the screen layout
-            //     'one_time_keyboard' => false, // Set to true to hide after a single click
-            //     'selective'         => false
-            // ];
+            // $dataCuti = $this->db->select('b.*')
+            //                     ->from('t_progress_cuti a')
+            //                     ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+            //                     ->where('a.id', 37572)
+            //                     ->where('a.flag_active', 1)
+            //                     ->get()->row_array();
 
-            // // 3. Assemble the full message payload
-            // $payload = [
-            //     'chat_id'      => "713399901",
-            //     'text'         => '👋 Welcome! Please select an option from the menu below:',
-            //     'reply_markup' => json_encode($replyMarkup) // Must be sent as a JSON string
-            // ];
+            // $explodeText = explode(" ", "ya");
+            // $keterangan = "";
+            // $i = 0;
+            // foreach($explodeText as $et){
+            //     if($i != 0){
+            //         $keterangan .= $et.' '; 
+            //     }
+            //     $i++;
+            // }
 
-            // $this->db->insert('t_cron_telegram', [
-            //     'type' => "text",
-            //     'sendTo' => '713399901',
-            //     'data_post' => json_encode($payload),
-            //     'method' => "sendMessageReplyKeyboard"
-            // ]);
+            // $response['flag_diterima'] = 1;
+            // $response['flag_verif'] = 1;
+            // $response['tanggal_verif'] = date('Y-m-d H:i:s');
+            // $response['messageId'] = $chat['message_id'];
+            // $response['keterangan_verif'] = trim($keterangan);
+            // if(strcasecmp($explodeText[0], "ya") == 0){ // jika diterima
+                
+            // } else if(strcasecmp($explodeText[0], "tidak") == 0){ // jika ditolak
+            //     $response['flag_diterima'] = 2;
+            // }
+            // $dataCuti['response'] = $response;
+            // $this->kepegawaian->verifPermohonanCutiFromTelegram($dataCuti, $chat);
 
-            $data = $this->db->select('a.*, b.table_state')
+            $data = $this->db->select('a.*, b.table_state, b.id_state, b.column_state')
                         ->from('t_data_updates_telegram a')
                         ->join('t_cron_telegram b', 'a.reply_to_message_id = b.messageId', 'LEFT')
                         ->where('a.flag_active', 1)
                         ->where('a.id_t_cron_telegram IS NULL')
                         ->where('a.flag_bot', 0)
                         ->order_by('a.date_sent', 'asc')
+                        ->where('flag_executed', 0)
                         ->limit(10)
                         ->get()->result_array();
             if($data){
@@ -159,17 +166,43 @@
                             $reply = "Selamat ".greeting().", ".$d['sender_name'].". Akun Telegram Anda belum terintegrasi dengan akun SILADEN. Silahkan ikuti langkah-langkah berikut untuk mengintegrasikan akun SILADEN dan akun Telegram Anda.\n\n1. Login ke dalam Akun SILADEN,\n2. Klik menu Profile yang ada di samping kiri,\n3. Klik tab Data Pribadi,\n4. Klik tombol yang ada pada data Telegram,\n5. Masukkan kode ".$d['user_id']." pada kolom Input Kode Integrasi,\n6.Klik simpan.";
                         }
                     } else if($d['reply_to_message_id'] != null && $d['table_state'] == 't_progress_cuti'){ // cek jika reply untuk cuti
-                        $dataCuti = $this->db->select('b.*')
-                                            ->from('t_progress_cuti a')
-                                            ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
-                                            ->where('a.id', $d['id_state'])
-                                            ->get()->row_array();
+                        // $dataCuti = $this->db->select('b.*, c.nm_cuti')
+                        //                     ->from('t_progress_cuti a')
+                        //                     ->join('t_pengajuan_cuti b', 'a.id_t_pengajuan_cuti = b.id')
+                        //                     ->join('db_pegawai.cuti c', 'b.id_cuti = c.id_cuti')
+                        //                     ->where('a.id', $d['id_state'])
+                        //                     ->where('a.flag_active', 1)
+                        //                     ->get()->row_array();
 
+                        $dataCuti = $this->kepegawaian->checkIfReplyCutiNew($d);
+                        // dd($dataCuti);
                         if($dataCuti){
+                            $explodeText = explode(" ", $d['text']);
+                            $keterangan = "";
+                            $i = 0;
+                            foreach($explodeText as $et){
+                                if($i != 0){
+                                    $keterangan .= $et.' '; 
+                                }
+                                $i++;
+                            }
+
+                            $response['flag_diterima'] = 1;
+                            $response['flag_verif'] = 1;
+                            $response['tanggal_verif'] = date('Y-m-d H:i:s');
+                            $response['id_t_data_updates_telegram'] = $d['id'];
+                            $response['keterangan_verif'] = trim($keterangan);
+                            if(strcasecmp($explodeText[0], "ya") == 0){ // jika diterima
+                                
+                            } else if(strcasecmp($explodeText[0], "tidak") == 0){ // jika ditolak
+                                $response['flag_diterima'] = 2;
+                            }
+                            $dataCuti['response'] = $response;
+
                             $this->kepegawaian->verifPermohonanCutiFromTelegram($dataCuti, $d);
                         }
                     } else {
-                        $reply = "";
+                        $reply = null;
                     }
                     // else if(strcasecmp($d['text'], "/integrasi_siladen") == 0){
                     //     if($user){ // jika sudah terintegrasi
@@ -240,20 +273,25 @@
 
                     //     }
                     // }
+                    $updateCronSet = [
+                        'flag_executed' => 1,
+                        'date_executed' => date('Y-m-d H:i:s')
+                    ];
+
                     if($reply != null){
                         $this->db->insert('t_cron_telegram', [
                             'id_t_data_updates_telegram' => $d['id'],
                             'type' => 'text',
                             'sendTo' => $d['user_id'],
+                            'method' => 'sendMessage',
                             'message' => $reply
                         ]);
                         $insert_id = $this->db->insert_id();
-
-                        $this->db->where('id', $d['id'])
-                                ->update('t_data_updates_telegram', [
-                                    'id_t_cron_telegram' => $insert_id
-                                ]);
+                        $updateCronSet['id_t_cron_telegram'] = $insert_id;
                     }
+
+                    $this->db->where('id', $d['id'])
+                                ->update('t_data_updates_telegram', $updateCronSet);
                 }
             }
         }

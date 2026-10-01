@@ -41,6 +41,8 @@ class C_Cron extends CI_Controller
 
     public function cronSendWa(){
         $this->removeLog();
+        $this->cronSyncBangkomPerData();
+
         $this->telegram->cronSendReplyTelegram();
         $this->general->logCron('cronSendReplyTelegram');
         
@@ -166,7 +168,7 @@ class C_Cron extends CI_Controller
         // $this->general->logCron('cronAsync');
         // $this->general->cronAsync();
 
-        $this->rekap->rekapKehadiranPeriodik();
+        // $this->rekap->rekapKehadiranPeriodik();
     }
 
     public function getOauthToken(){
@@ -336,12 +338,12 @@ class C_Cron extends CI_Controller
         $this->load->view('master/V_TempUpdateDataPPPK', $data);
     }
 
-    public function rekapKehadiranPeriodik($bulan = 0, $tahun = 0){
+    public function rekapKehadiranPeriodik($tahun = 0, $flag_update = 0, $id_unitkerja = 0){
         if($tahun == 0){
             $tahun = date('Y');
             $tahun = '2026';
         }
-        $this->rekap->rekapKehadiranPeriodik($tahun);
+        $this->rekap->rekapKehadiranPeriodik($tahun, $flag_update, $id_unitkerja);
     }
 
     public function funcTest($str = ""){

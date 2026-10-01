@@ -2677,6 +2677,9 @@
             if(isset($data['keteranganpegawai'])){
                     $this->db->where_in('a.id_m_status_pegawai', $data['keteranganpegawai']);
             }
+            if(isset($data['statuskawin'])){
+                    $this->db->where_in('a.status', $data['statuskawin']);
+            }
             if(isset($data['golongan'])){
                 $golongan = [];
                 foreach($data['golongan'] as $g){

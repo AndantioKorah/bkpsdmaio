@@ -502,6 +502,7 @@ class C_User extends CI_Controller
         $data['statuspeg'] = $this->m_general->getAll('db_pegawai.statuspeg', 0);
         $data['tktpendidikan'] = $this->m_general->getAll('db_pegawai.tktpendidikan', 0);
         $data['agama'] = $this->m_general->getAll('db_pegawai.agama', 0);
+        $data['statuskawin'] = $this->m_general->getAll('db_pegawai.statuskawin', 0);
         $data['keteranganpegawai'] = $this->m_general->getAll('m_status_pegawai', 0);
         $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
         $data['jft'] = $this->user->getListJabatanByJenis('JFT');

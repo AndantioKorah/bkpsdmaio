@@ -10,5 +10,6 @@
     $data['jenis_kelamin'] = $jenis_kelamin;
     $data['jenis_jabatan'] = $jenis_jabatan;
     $data['search'] = $search;
+    $data['statuskawin'] = $statuskawin;
     $this->load->view('user/V_PegawaiAll', $data);
 ?>

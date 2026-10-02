@@ -17268,7 +17268,7 @@ public function checkListIjazahCpns($id, $id_pegawai){
             // ->join('m_status_pegawai h', 'a.id_m_status_pegawai = h.id')
             // ->join('db_pegawai.tktpendidikan i', 'a.pendidikan = i.id_tktpendidikan')
             ->join('db_pegawai.unitkerjamaster j', 'b.id_unitkerjamaster = j.id_unitkerjamaster')
-             ->where_in('a.statuspeg', [1,2,3])
+            //  ->where_in('a.statuspeg', [1,2,3])
             ->where('a.id_m_status_pegawai', 1)
             ->where_not_in('b.id_unitkerja', [5, 9050030])
             ->where_in('j.id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001']);

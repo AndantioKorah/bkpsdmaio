@@ -39,6 +39,9 @@
                             <select class="form-control select2-navy" style="width: 100%"
                                 id="skpd" data-dropdown-css-class="select2-navy" name="skpd">
                                 <option selected value="0">Semua</option>
+                                <option value="pppk">PPPK</option>
+                                <option value="pppk_penuh_wwaktu">PPPK Penuh Waktu</option>
+                                <option value="pppk_paruh_wwaktu">PPPK Paruh Waktu</option>
                                 <?php foreach($unitkerja as $u){ ?>
                                     <option value="<?=$u['id_unitkerja'].';'.$u['nm_unitkerja']?>"><?=$u['nm_unitkerja']?></option>
                                 <?php } ?>

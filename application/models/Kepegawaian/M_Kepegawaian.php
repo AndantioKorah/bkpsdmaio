@@ -8385,7 +8385,7 @@ public function submitEditJabatan(){
             $endDate = strtotime($data['tanggal_akhir']);
             $today = strtotime(date('d-m-Y'));
             $prog = $this->session->userdata('programmer_session');
-            if((isset($prog['user_logged_in']) && $prog['user_logged_in'] != null) || $this->general_library->isProgrammer()){
+            if(($prog && isset($prog['user_logged_in']) && $prog['user_logged_in'] != null) || $this->general_library->isProgrammer()){
                 $res['data'] = countHariKerjaDateToDate($data['tanggal_mulai'], $data['tanggal_akhir']);
             } else {
                 if($endDate < $startDate){

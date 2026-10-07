@@ -5420,7 +5420,11 @@
                     $result[$d['id_m_user']]['rekap']['last_update'] = $d['last_update_rekap'];
                 } else { // jika sudah ada, tambahkan meta_data
                     foreach($metaData['rekap'] as $k => $v){
-                        $result[$d['id_m_user']]['rekap'][$k] += $v;
+                        if(isset($result[$d['id_m_user']]['rekap'][$k])){
+                            $result[$d['id_m_user']]['rekap'][$k] += $v;
+                        } else {
+                            $result[$d['id_m_user']]['rekap'][$k] = $v;
+                        }
                     }
                     if($d['last_update_rekap'] > $result[$d['id_m_user']]['rekap']['last_update']){
                         $result[$d['id_m_user']]['rekap']['last_update'] = $d['last_update_rekap'];

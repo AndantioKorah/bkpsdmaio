@@ -449,6 +449,9 @@
                                if(id_layanan == 28){
                                 loadListRiwayatMutasiPidahMasuk()
                                }
+                                if(id_layanan == 39){
+                                loadListRiwayatCutiBesar()
+                               }
 
                                
                                

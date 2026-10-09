@@ -185,6 +185,15 @@
                             </div>
                         </div>
                         <div class="col-lg-12 mt-2">
+                            <label class="label-filter">Status Kawin</label>
+                            <div class="filter-option">
+                                <?php foreach($statuskawin as $sk){ ?>
+                                    <span id="btn_filter_statuskawin_<?=$sk['id_sk']?>" onclick="filterClicked('statuskawin_<?=$sk['id_sk']?>')"
+                                    class="filter-btn filter-unselect"><?=$sk['nm_sk']?></span>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mt-2">
                             <label class="label-filter">Keterangan Pegawai</label>
                             <div class="filter-option">
                                 <?php foreach($keteranganpegawai as $kp){ ?>
@@ -220,6 +229,7 @@
     let satyalencana = [];
     let jenis_jabatan = [];
     let keteranganpegawai = [];
+    let statuskawin = [];
     $(function(){
         // $('#form_search').submit()
         $('.select2-navy').select2()
@@ -258,6 +268,8 @@
                 golongan.push(jenis[2])
             } else if(jenis[0] == 'keteranganpegawai'){
                 keteranganpegawai.push(jenis[1])
+            } else if(jenis[0] == 'statuskawin'){
+                statuskawin.push(jenis[1])
             }
         } else {
             $('#btn_filter_'+btn).addClass('filter-unselect')
@@ -302,6 +314,10 @@
                 keteranganpegawai = keteranganpegawai.filter(function(e){
                     return e !== jenis[1]
                 })
+            }  else if(jenis[0] == 'statuskawin'){
+                statuskawin = statuskawin.filter(function(e){
+                    return e !== jenis[1]
+                })
             }
         }
     }
@@ -324,6 +340,7 @@
                 satyalencana: satyalencana,
                 jenis_jabatan: jenis_jabatan,
                 keteranganpegawai: keteranganpegawai,
+                statuskawin: statuskawin,
                 unitkerja: $('#unitkerja').val(),
                 jft: $('#jft').val(),
                 nama_pegawai: $('#nama_pegawai').val()

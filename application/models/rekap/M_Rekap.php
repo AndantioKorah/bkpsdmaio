@@ -1359,6 +1359,19 @@
                                     ->get()->row_array();
 
             $result['kasubag']['nama_jabatan'] = "Kepala Sub Bagian Umum dan Kepegawaian"; 
+        } else if($id_unitkerja == 3017000){ // kominfo
+            $result['kasubag'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->where('a.nipbaru_ws', '198803092020122010')
+                                    ->where('id_m_status_pegawai', 1)
+                                    ->get()->row_array();
+
+            $result['kasubag']['nama_jabatan'] = "Plh. Kepala Sub Bagian Umum dan Kepegawaian"; 
         } else if($id_unitkerja == 5002001){ // kec. tuminting
             $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                                     e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -4900,7 +4913,7 @@
         return $rs;
     }
 
-    public function rekapKehadiranPeriodikPerPegawai($tahun = 2026, $flag_update = 0, $id_unitkerja = 0){
+    public function rekapKehadiranPeriodikPerPegawai($tahun = 2026, $flag_update = 0, $nip = 0){
         $tahunIni = date('Y');
         $batasBulan = 12;
         if($tahunIni == $tahun){
@@ -4941,15 +4954,19 @@
                 ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
                 // ->join('db_sip.absen d', 'c.id = d.user_id')
                 // ->where('b.id IS NULL')
-                ->where('a.id_m_status_pegawai', 1)
-                ->where('a.flag_rekap_kehadiran_periodik', 0);
+                ->where('a.id_m_status_pegawai', 1);
                 // ->where('tahun', $tahun);
                 // ->group_by('b.id');
                 // ->where_not_in('c.username', [001, 002]);
+        if($nip != 0){
+            $this->db->where('a.nipbaru_ws', $nip);
+        } else {
+            $this->db->where('a.flag_rekap_kehadiran_periodik', 0);
+        }
         // if($id_unitkerja != 0){
         //     $this->db->where('a.skpd', $id_unitkerja);
         // } else {
-            $this->db->limit(50);
+            $this->db->limit(5);
         // }
         $list_pegawai = $this->db->get()->result_array();
         // dd($list_pegawai);
@@ -5061,7 +5078,7 @@
                                         'tahun' => $tahun,
                                         'meta_data' => json_encode($pegawai[$lp['user_id']]), 
                                     ]);
-                            echo "updating ".$lp['nipbaru_ws']." bulan ".$i." tahun ".$tahun."\n";
+                            echo "updating ".$lp['nipbaru_ws']." ".getNamaBulan($i)." ".$tahun."\n<br>";
                         } else {
                             $this->db->insert('t_rekap_kehadiran',[
                                 'nip' => $lp['nipbaru_ws'],
@@ -5069,7 +5086,7 @@
                                 'tahun' => $tahun,
                                 'meta_data' => json_encode($pegawai[$lp['user_id']]), 
                             ]);
-                            echo "inserting ".$lp['nipbaru_ws']." bulan ".$i." tahun ".$tahun."\n";
+                            echo "inserting ".$lp['nipbaru_ws']." ".getNamaBulan($i)." ".$tahun."\n<br>";
                         }
                     // }
                     $this->db->where('nipbaru_ws', $lp['nipbaru_ws'])
@@ -5081,13 +5098,13 @@
         }
     }
 
-    public function rekapKehadiranPeriodik($tahun = 2026, $flag_update = 0, $id_unitkerja = 0){
+    public function rekapKehadiranPeriodik($tahun = 2026, $flag_update = 0, $nip = 0){
         $date = date('H:i:s');
         // $explode = explode(";", $date);
         // if($explode[0] < 19){ // dibawah jam 7 malam, jangan jalankan rekap
         //     dd("belum jam");
         // } else {
-            $this->rekapKehadiranPeriodikPerPegawai($tahun, $flag_update, $id_unitkerja);
+            $this->rekapKehadiranPeriodikPerPegawai($tahun, $flag_update, $nip);
         // }
         // $listJenisDisiplin = null;
         // $jenisDisiplin = $this->db->select('*')
@@ -5371,10 +5388,17 @@
                 ->order_by('d.id_pangkat DESC');
                 // ->order_by('a.tmtcpns ASC')
                 // ->group_by('a.id_peg');
-
-        if($params['skpd'] != 0){
-            $explodeUk = explode(";", $params['skpd']);
-            $this->db->where('a.skpd', $explodeUk[0]);
+        if($params['skpd'] != "0"){
+            if($params['skpd'] == "pppk"){
+                $this->db->where_in('a.statuspeg', [3,6]);
+            } else if($params['skpd'] == "pppk_penuh_waktu"){
+                $this->db->where('a.statuspeg', 3);
+            } else if($params['skpd'] == "pppk_paruh_waktu"){
+                $this->db->where('a.statuspeg', 6);
+            } else {
+                $explodeUk = explode(";", $params['skpd']);
+                $this->db->where('a.skpd', $explodeUk[0]);
+            }
         }
 
         if($params['bulan'] != 0){
@@ -5396,7 +5420,11 @@
                     $result[$d['id_m_user']]['rekap']['last_update'] = $d['last_update_rekap'];
                 } else { // jika sudah ada, tambahkan meta_data
                     foreach($metaData['rekap'] as $k => $v){
-                        $result[$d['id_m_user']]['rekap'][$k] += $v;
+                        if(isset($result[$d['id_m_user']]['rekap'][$k])){
+                            $result[$d['id_m_user']]['rekap'][$k] += $v;
+                        } else {
+                            $result[$d['id_m_user']]['rekap'][$k] = $v;
+                        }
                     }
                     if($d['last_update_rekap'] > $result[$d['id_m_user']]['rekap']['last_update']){
                         $result[$d['id_m_user']]['rekap']['last_update'] = $d['last_update_rekap'];

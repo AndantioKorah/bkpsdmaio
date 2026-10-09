@@ -1702,24 +1702,28 @@
         }
 
         public function getListHariLibur($tanggal_awal, $tanggal_akhir){
-            $new_tanggal_awal = date('Y-m-d', strtotime($tanggal_awal));
-            $new_tanggal_akhir = date('Y-m-d', strtotime($tanggal_akhir));
-
-            $explode_awal = explode("-", $new_tanggal_awal);
-            $explode_akhir = explode("-", $new_tanggal_akhir);
-            
-            return $this->db->select('*')
-                        ->from('t_hari_libur')
-                        // ->where('bulan >=', floatval($explode_awal[1]))
-                        // ->where('bulan <=', floatval($explode_akhir[1]))
-                        // ->where('tahun >=', floatval($explode_awal[0]))
-                        // ->where('tahun <=', floatval($explode_akhir[0]))
-                        ->where('tanggal >= ', $new_tanggal_awal)
-                        ->where('tanggal <= ', $new_tanggal_akhir)
-                        ->where('flag_active', 1)
-                        ->where('flag_hari_libur_nasional', 1)
-                        ->order_by('tanggal', 'asc')
-                        ->get()->result_array();
+            if($tanggal_akhir != "0000-00-00" && $tanggal_awal != "0000-00-00"){
+                $new_tanggal_awal = date('Y-m-d', strtotime($tanggal_awal));
+                $new_tanggal_akhir = date('Y-m-d', strtotime($tanggal_akhir));
+                
+                $explode_awal = explode("-", $new_tanggal_awal);
+                $explode_akhir = explode("-", $new_tanggal_akhir);
+                
+                return $this->db->select('*')
+                            ->from('t_hari_libur')
+                            // ->where('bulan >=', floatval($explode_awal[1]))
+                            // ->where('bulan <=', floatval($explode_akhir[1]))
+                            // ->where('tahun >=', floatval($explode_awal[0]))
+                            // ->where('tahun <=', floatval($explode_akhir[0]))
+                            ->where('tanggal >= ', $new_tanggal_awal)
+                            ->where('tanggal <= ', $new_tanggal_akhir)
+                            ->where('flag_active', 1)
+                            ->where('flag_hari_libur_nasional', 1)
+                            ->order_by('tanggal', 'asc')
+                            ->get()->result_array();
+            } else {
+                return null;
+            }
         }
 
         public function countHariKerjaBulanan($bulan, $tahun){

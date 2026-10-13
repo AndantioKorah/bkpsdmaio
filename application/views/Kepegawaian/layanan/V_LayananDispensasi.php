@@ -323,7 +323,7 @@ ol {
 
 		  <!-- <button type="submit" class="btn btn-primary float-right ">Ajukan</button> -->
           <?php if($status_layanan['status'] == 1) { ;?>
-					<button type="submit" class="btn btn-primary float-right mt-2">Ajukan</button>
+					<button id="btn_ajukan" type="submit" class="btn btn-primary float-right mt-2">Ajukan</button>
           <?php } else { ?>
             <p>
               <h4>
@@ -391,8 +391,8 @@ $(function(){
   loadListRiwayatCutiBesar()
     })
     $('#form_dispensasi').on('submit', function(e){  
-        //     document.getElementById('btn_upload').disabled = true;
-        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
+        document.getElementById('btn_ajukan').disabled = true;
+        $('#btn_ajukan').html('Ajukan.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
         var formvalue = $('#form_dispensasi');
         var form_data = new FormData(formvalue[0]);
@@ -412,6 +412,8 @@ $(function(){
             console.log(res)
             var result = JSON.parse(res); 
             if(result.success == true){
+               document.getElementById('btn_ajukan').disabled = false;
+              $('#btn_ajukan').html('Ajukan')
                 successtoast(result.msg)
                 loadListRiwayatCutiBesar()
                 // window.scrollTo(0, document.body.scrollHeight);

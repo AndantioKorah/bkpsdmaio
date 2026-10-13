@@ -4784,33 +4784,33 @@ public function submitEditJabatan(){
                         "unorId" => $input_post['id_unor_siasn']
                     ];
                     
-                    $reqWs = $this->siasnlib->saveJabatan($update);
-                    if($reqWs['code'] == 1){
-                        $res = array('msg' => 'Data di SILADEN berhasil disimpan tapi gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
-                        // $this->db->trans_rollback();
-                        // return $res;    
-                    } else {
-                        if($_FILES['file']['name'] != ""){
-                            $url = ('arsipjabatan/'.$filename);
-                            $request = [
-                                'id_riwayat' => $pegjabatan['id_siasn'],
-                                'id_ref_dokumen' => 872,
-                                'file' => new CURLFile ($url)
-                            ];
-                            $reqWsDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
-                        }
-                    }
+                    // $reqWs = $this->siasnlib->saveJabatan($update);
+                    // if($reqWs['code'] == 1){
+                    //     $res = array('msg' => 'Data di SILADEN berhasil disimpan tapi gagal menyimpan data di SIASN. '.$reqWs['data'], 'success' => false);
+                    //     // $this->db->trans_rollback();
+                    //     // return $res;    
+                    // } else {
+                    //     if($_FILES['file']['name'] != ""){
+                    //         $url = ('arsipjabatan/'.$filename);
+                    //         $request = [
+                    //             'id_riwayat' => $pegjabatan['id_siasn'],
+                    //             'id_ref_dokumen' => 872,
+                    //             'file' => new CURLFile ($url)
+                    //         ];
+                    //         $reqWsDokumen = $this->siasnlib->uploadRiwayatDokumen($request);
+                    //     }
+                    // }
                     
-                    $updatedJabatan = $this->siasnlib->getJabatanByIdRiwayat($pegjabatan['id_siasn']);
+                    // $updatedJabatan = $this->siasnlib->getJabatanByIdRiwayat($pegjabatan['id_siasn']);
 
-                    if($updatedJabatan['code'] == 0){
-                        $newMeta = json_decode($updatedJabatan['data'], true);
-                        $this->db->where('id', $pegjabatan['id'])
-                                ->update('db_pegawai.pegjabatan', [
-                                    'meta_data_siasn' => json_encode($newMeta['data']),
-                                    'updated_by' => $this->general_library->getId()
-                                ]);
-                    }
+                    // if($updatedJabatan['code'] == 0){
+                    //     $newMeta = json_decode($updatedJabatan['data'], true);
+                    //     $this->db->where('id', $pegjabatan['id'])
+                    //             ->update('db_pegawai.pegjabatan', [
+                    //                 'meta_data_siasn' => json_encode($newMeta['data']),
+                    //                 'updated_by' => $this->general_library->getId()
+                    //             ]);
+                    // }
                 } else {
                     // $res = array('msg' => 'Data gagal disimpan. Data Jabatan belum tersinkron dengan SIASN', 'success' => false);
                     // $this->db->trans_rollback();
@@ -15294,7 +15294,7 @@ public function getFileForVerifLayanan()
        
         $this->db->trans_begin();
         $datapost = $this->input->post();
-   
+        // dd($_FILES);
 
         if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
         $cek =  $this->db->select('*')
@@ -15499,7 +15499,7 @@ public function getFileForVerifLayanan()
 
             if(isset($_FILES['file2']['name'])){
                 $config_hd['upload_path']       = $target_dir_hd;
-                $config_hd['allowed_types']     = 'pdf';
+                $config_hd['allowed_types']     = 'pdf|application/pdf';
                 $config_hd['encrypt_name']		= FALSE;
                 $config_hd['overwrite']			= TRUE;
                 $config_hd['detect_mime']		= TRUE;

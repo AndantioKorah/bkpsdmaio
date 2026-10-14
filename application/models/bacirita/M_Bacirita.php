@@ -486,13 +486,17 @@ class M_Bacirita extends CI_Model
         $data['id_m_tipe_kegiatan'] = $data['tipe_kegiatan'];
         unset($data['tipe_kegiatan']);
         $data['created_by'] = $this->general_library->getId();
+        $data['created_by'] = $this->general_library->getId();
+
         
         $target_dir = 'arsipbkpsdmbacirita/banner_kegiatan/';
+        $target_dir2 = 'arsipbkpsdmbacirita/background/';
         
         $nama_file = str_replace(' ', '',$_FILES['file']['name']); 
+        $nama_file2 = str_replace(' ', '',$_FILES['file2']['name']); 
+
 
         if($_FILES['file']['name'] != ""){
-
             $banner_lama = $this->db->select('a.url_banner')
                     ->from('db_bacirita.t_kegiatan a')
                     ->where('a.id', $id)
@@ -519,18 +523,44 @@ class M_Bacirita extends CI_Model
 
             } else {
                 $dataFile 			= $this->upload->data();
-                 $data['url_banner'] = $target_dir.$nama_file;
+                $data['url_banner'] = $target_dir.$nama_file;
 
             }
+
+     
 
             $this->db->where('id', $id)
                     ->update('db_bacirita.t_kegiatan', $data);
 
         
         } else {
+
+            if(isset($_FILES['file2']['name'])){
+            $config2['upload_path']          = $target_dir2;
+            $config2['allowed_types']        = '*';
+            $config2['encrypt_name']			= FALSE;
+            $config2['overwrite']			= TRUE;
+            $config2['detect_mime']			= TRUE; 
+            $config2['file_name']            = $nama_file2;
+
+            $this->load->library('upload', $config2);
+        
+            if (!$this->upload->do_upload('file2')) {
+                $data['error']    = strip_tags($this->upload->display_errors());
+                $res['code'] = 1;
+                $res['message'] = "Terjadi Kesalahan";
+                return $res;
+
+            } else {
+                $dataFile 			= $this->upload->data();
+                $data['url_bg'] = $target_dir2.$nama_file2;
+
+            }
+            }
+
             $this->db->where('id', $id)
                     ->update('db_bacirita.t_kegiatan', $data);
-        }
+        } 
         return $res;
     }
 

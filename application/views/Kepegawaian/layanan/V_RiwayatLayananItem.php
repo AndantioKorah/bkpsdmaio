@@ -183,7 +183,7 @@
                 data-id="<?=$rs['id_t_layanan'];?>"
                 data-surat_pernyataan_tidak_hd="<?=$rs['surat_pernyataan_tidak_hd'];?>" 
                 id="btn_verifikasi" type="button" class="btn btn-sm btn-info ml-2 mt-2" data-toggle="modal" data-target="#modalUbahSuket">
-                <i class="fa fa-edit"></i> Ubah Surat Keterangan 
+                <i class="fa fa-edit"></i> Ubah Surat Pernyataan 
                 </button>
                  <?php } ?>
               <?php } ?>
@@ -386,9 +386,9 @@
       </div>
       <div class="modal-body">
       <form method="post" id="form_ubah_surat_keterangan" enctype="multipart/form-data" >
-        <input type="text" name="id_pengajuan" id="id_pengajuan">
-        <input type="text" name="surat_pernyataan_tidak_hd" id="surat_pernyataan_tidak_hd">
-        <input type="text" name="id_m_layanan" id="id_m_layanan" >
+        <input type="hidden" name="id_pengajuan" id="id_pengajuan">
+        <input type="hidden" name="surat_pernyataan_tidak_hd" id="surat_pernyataan_tidak_hd">
+        <input type="hidden" name="id_m_layanan" id="id_m_layanan" >
         <div class="form-group">
         <label>Surat keterangan tidak sedang hukuman disiplin dari atasan langsung</label>
         <input  class="form-control my-image-field" type="file" id="pdf_surat_keterangan_ubah" name="file"   />

@@ -170,6 +170,13 @@
 							<div class="col-lg-12 mt-1">
 								<input class="form-control" type="file" id="banner_file_edit" name="file"  />
 							</div>
+
+							<div class="col-lg-12 mt-2">
+								<label class="lbl-form-divider">Background</label>
+							</div>
+							<div class="col-lg-12 mt-1">
+								<input class="form-control" type="file" id="bg_file_edit" name="file2"  />
+							</div>
 							
 							<div class="col-lg-12 text-right">
 								<hr>

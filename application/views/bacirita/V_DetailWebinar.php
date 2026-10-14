@@ -352,6 +352,14 @@
         </a>
     </td>
     </tr>
+     <tr>
+      <td>Background</td>
+       <td>
+        <a class="btn btn-info btn-sm" href="<?=base_url();?><?=$webinar['url_bg'];?>" role="button" download>
+           <i class="fa fa-image"></i>
+        </a>
+    </td>
+    </tr>
      </tbody>
 </table>
 			</div>

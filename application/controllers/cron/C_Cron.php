@@ -42,9 +42,6 @@ class C_Cron extends CI_Controller
     public function cronSendWa(){
         $this->removeLog();
         $this->cronSyncBangkomPerData();
-
-        $this->telegram->cronSendReplyTelegram();
-        $this->general->logCron('cronSendReplyTelegram');
         
         // $this->general->logCron('cronSendWa');
         // $this->general->cronSendWa();
@@ -61,6 +58,9 @@ class C_Cron extends CI_Controller
 
         $this->telegram->cronSetReplyTelegram();
         $this->general->logCron('cronSetReplyTelegram');
+
+        $this->telegram->cronSendReplyTelegram();
+        $this->general->logCron('cronSendReplyTelegram');
 	}
 
     public function cronCheckLiveChat(){

@@ -284,7 +284,10 @@
                             'type' => 'text',
                             'sendTo' => $d['user_id'],
                             'method' => 'sendMessage',
-                            'message' => $reply
+                            'data_post' => json_encode([
+                                'text' => $reply,
+                                'chat_id' => $d['user_id']
+                            ]),
                         ]);
                         $insert_id = $this->db->insert_id();
                         $updateCronSet['id_t_cron_telegram'] = $insert_id;
@@ -316,7 +319,7 @@
                         $updateCronSend['flag_sending'] = 1;
                         $updateCronSend['date_sending'] = date('Y-m-d H:i:s');
 
-                        $dataPost = $d['data_post'] ? $d['data_post'] : ["message" => $d['message']];
+                        $dataPost = $d['data_post'] ? $d['data_post'] : ["text" => $d['message']];
 
                         $reqSend = $this->telegramlib->send_curl_exec(
                             "",

@@ -85,8 +85,14 @@ class Telegramlib extends CI_Model{
 
     // dd(in_array($method_telegram, $listMethodForDataPost));
     if(in_array($method_telegram, $listMethodForDataPost)){
-      $dataPost = json_decode($data, true);
-      $dataPost['parse_mode'] = "markdown";
+      $dataPost = null;
+      if(isset($data['message']) && $method_telegram == "sendMessage"){
+        $dataPost['chat_id'] = $send_to;
+        $dataPost['text'] = $data['message'];
+      } else {
+        $dataPost = json_decode($data, true);
+        $dataPost['parse_mode'] = "markdown";
+      }
 
       curl_setopt($session, CURLOPT_POST, true);
       curl_setopt($session, CURLOPT_POSTFIELDS, json_encode($dataPost));

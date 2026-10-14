@@ -7526,7 +7526,10 @@ public function submitEditJabatan(){
                 'type' => 'text',
                 'method' => 'sendMessage',
                 'sendTo' => $userPemohonCuti['user_id_telegram'],
-                'message' => $message.FOOTER_MESSAGE_CUTI
+                'data_post' => json_encode([
+                    'chat_id' => $userPemohonCuti['user_id_telegram'],
+                    'text' => $message.FOOTER_MESSAGE_CUTI,
+                ]),
             ]);
         }
 

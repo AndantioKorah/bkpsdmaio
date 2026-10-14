@@ -99,6 +99,14 @@
         color: green;
         transition: .2s;
     }
+
+    #hide_profile_live_chat{
+        cursor: pointer;
+    }
+
+    #hide_profile_live_chat:hover{
+        background-color: lightgrey;
+    }
 </style>
 <div class="col-lg-7 col-md-7 col-sm-7 text-left">
     <span style="cursor:pointer;" class="sp_chat_id_chatkonsul btn_back_chatkonsul"><i class="fa fa-chevron-left"></i></span>
@@ -246,6 +254,12 @@
         <span class="sp_profil_pegawai_live_chat">NIP. <?=($result['chat']['nipbaru_ws'])?></span><br>
         <span style="line-height: 10px !important;" class="sp_profil_pegawai_live_chat"><?=($result['chat']['nama_jabatan'])?></span><br>
         <span style="line-height: 10px !important;" class="sp_profil_pegawai_live_chat"><?=($result['chat']['nm_unitkerja'])?></span>
+        <div class="col-lg-12 text-right">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button id="open_profile" class="btn btn-sm btn-success"><i class="fa fa-user"></i></button>
+                <button id="hide_profile_live_chat" class="btn btn-sm btn-dark"><i class="fa fa-chevron-up"></i></button>
+            </div>
+        </div>
     </div>
 </div>
 <?php if($result['chat']['flag_done'] == 0){ ?>
@@ -548,9 +562,18 @@
         $('#detail_profile_live_chat_cotainer').show()
     })
 
-    $('#detail_profile_live_chat_cotainer').on('click', function(){
-        $(this).hide()
+    $('#hide_profile_live_chat').on('click', function(){
         $('#mini_profile_live_chat_cotainer').show()
+        $('#detail_profile_live_chat_cotainer').hide()
+    })
+
+    $('#open_profile').on('click', function(){
+        window.open('<?=base_url("kepegawaian/profil-pegawai/").$result['chat']['nipbaru_ws']?>')
+    })
+
+    $('#detail_profile_live_chat_cotainer').on('click', function(){
+        // $(this).hide()
+        // $('#mini_profile_live_chat_cotainer').show()
     })
 
     function gantiJenisLayanan(id){

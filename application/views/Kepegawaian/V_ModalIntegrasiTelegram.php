@@ -39,7 +39,8 @@
       </div>
     <?php } ?>
   </div>
-  <div id="div_request_token" class="col-lg-12" style="display: none;"></div>
+  <div id="div_request_token" class="col-lg-12" style="display: none;">
+  </div>
 </div>
 
 <script>
@@ -87,7 +88,7 @@
             let resp = JSON.parse(data)
             if(resp.code == 0){
               if(transaksi == 'delete_integrasi'){
-              } else {
+              } else if(transaksi == 'save_integrasi') {
               }
               $('#div_token').show()
               $('#div_request_token').hide()

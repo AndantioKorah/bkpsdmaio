@@ -12821,6 +12821,17 @@ public function saveUserIdTelegram($id){
     $rs['code'] = 0;
     $rs['message'] = "ok";
     $data = $this->input->post();
+    
+    $exists = $this->db->select('*')
+                    ->from('m_user')
+                    ->where('flag_active', 1)
+                    ->where('user_id_telegram', $data['user_id_telegram'])
+                    ->get()->row_array(0); 
+    if($exists){
+        $rs['code'] = 1;
+        $rs['message'] = "User ID Telegram sudah digunakan";
+        return $rs;
+    }
 
     $user = $this->db->select('a.id, b.gelar1, b.gelar2, b.nama')
                     ->from('m_user a')
@@ -12832,8 +12843,11 @@ public function saveUserIdTelegram($id){
     $reqSend = $this->telegramlib->send_curl_exec(
                 "",
                 "sendMessage",
-                $data['user_id_telegram'],
-                ["message" => "Selamat ".greeting()." ".getNamaPegawaiFull($user).", akun SILADEN Anda sudah terintegrasi dengan akun Telegram."]
+                null,
+                json_encode([
+                    "text" => "Selamat ".greeting()." ".getNamaPegawaiFull($user).", akun SILADEN Anda sudah terintegrasi dengan akun Telegram.",
+                    "chat_id" => $data['user_id_telegram']
+                ])
             );
 
     if($reqSend){
@@ -12876,7 +12890,7 @@ public function requestTokenTelegram($id, $transaksi){
         null,
         [
             'to' => $id,
-            'text'
+            'text' => $token
         ]
     );
 }

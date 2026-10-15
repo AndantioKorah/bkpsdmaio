@@ -15311,7 +15311,6 @@ public function getFileForVerifLayanan()
        
         $this->db->trans_begin();
         $datapost = $this->input->post();
-        // dd($_FILES);
 
         if($id_m_layanan == 12 || $id_m_layanan == 13 || $id_m_layanan == 14 || $id_m_layanan == 15 || $id_m_layanan == 16 || $id_m_layanan == 30 || $id_m_layanan == 31){
         $cek =  $this->db->select('*')
@@ -15328,6 +15327,20 @@ public function getFileForVerifLayanan()
         ->where('a.flag_active', 1)
         ->where('a.id_m_layanan', $id_m_layanan)
         ->where_in('a.status', [2,6])
+        ->get()->result_array();
+        } else if($id_m_layanan == 39) {
+
+        // dd(explodeRangeDateNew($datapost['range_periode']));
+        $tanggal = explodeRangeDateNew($datapost['range_periode']);
+
+         $cek =  $this->db->select('*')
+        ->from('t_layanan a')
+        ->where('a.id_m_user', $this->general_library->getId())
+        ->where('a.flag_active', 1)
+        ->where('a.id_m_layanan', $id_m_layanan)
+        ->where_in('a.status', [0,2])
+        ->where('tanggal_dispen_mulai >=', $tanggal[0])
+        ->where('tanggal_dispen_mulai <=', $tanggal[1])
         ->get()->result_array();
         } else {
         $cek =  $this->db->select('*')

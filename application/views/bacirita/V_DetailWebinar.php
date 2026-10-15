@@ -355,9 +355,13 @@
      <tr>
       <td>Background</td>
        <td>
-        <a class="btn btn-info btn-sm" href="<?=base_url();?><?=$webinar['url_bg'];?>" role="button" download>
-           <i class="fa fa-image"></i>
+         <?php if($webinar['url_bg'] != null) { ?>
+        <a tooltip="tes" class="btn btn-sm" href="<?=base_url();?><?=$webinar['url_bg'];?>" role="button" download>
+           <!-- <i style="width:500px:heignt:500px;" class="fa fa-image fa-2xl"></i> -->
+           <img title="click to download image" style="width:200px;heignt:100px;" src="<?=base_url();?><?=$webinar['url_bg'];?>" frameborder="0"></img>
         </a>
+           <?php } ?>
+
     </td>
     </tr>
      </tbody>

@@ -391,8 +391,8 @@ $(function(){
   loadListRiwayatCutiBesar()
     })
     $('#form_dispensasi').on('submit', function(e){  
-        document.getElementById('btn_ajukan').disabled = true;
-        $('#btn_ajukan').html('Ajukan.. <i class="fas fa-spinner fa-spin"></i>')
+        // document.getElementById('btn_ajukan').disabled = true;
+        // $('#btn_ajukan').html('Ajukan.. <i class="fas fa-spinner fa-spin"></i>')
         e.preventDefault();
         var formvalue = $('#form_dispensasi');
         var form_data = new FormData(formvalue[0]);

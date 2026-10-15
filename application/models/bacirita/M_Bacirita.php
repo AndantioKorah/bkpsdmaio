@@ -535,7 +535,7 @@ class M_Bacirita extends CI_Model
         
         } else {
 
-            if(isset($_FILES['file2']['name'])){
+            if($_FILES['file2']['name'] != ""){
             $config2['upload_path']          = $target_dir2;
             $config2['allowed_types']        = '*';
             $config2['encrypt_name']			= FALSE;

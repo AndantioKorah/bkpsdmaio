@@ -10447,7 +10447,7 @@ public function submitEditJabatan(){
             ->where('a.status', 2)
             // ->where('a.flag_active', 1)
             ->order_by('tmtjabatan', 'desc')
-            ->order_by('a.id', 'desc')
+            // ->order_by('a.id', 'desc')
             ->limit(1)
             ->get()->row_array();
         

@@ -156,7 +156,7 @@
 				<?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah" || substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") { ?>
 				<?= substr($profil_pegawai['nama_jabatan'], 0, 5);?> <?= substr($profil_pegawai['nm_unitkerja'], 9);?> Kota Manado
 				<?php } else { ?>
- 				<?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Pemerintah Kota Manado
+ 				<?php if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Lurah") echo "Lurah"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Camat") echo "Camat"; else if(substr($profil_pegawai['nama_jabatan'], 0, 5) == "Sekre") echo "Sekretaris"; else echo $profil_pegawai['nama_jabatan'];?> Pada <?= $profil_pegawai['nm_unitkerja'];?> Kota Manado
 				
 				<?php } ?>
 			</td>

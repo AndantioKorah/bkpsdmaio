@@ -2867,7 +2867,7 @@
 
         $bulan = date("m",strtotime($this->input->post('tanggal_absensi')));
         $tahun = date("Y",strtotime($this->input->post('tanggal_absensi')));
-        $max = 2;
+        $max = 3;
         if($bulan == "03" AND $tahun == "2026"){
         $max = 10;
         }

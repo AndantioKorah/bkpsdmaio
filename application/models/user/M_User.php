@@ -5104,7 +5104,7 @@
             $this->db->trans_begin();
             
             $dataInput = $this->input->post();
-            $data = $this->db->select('a.*, b.nama')
+            $data = $this->db->select('a.*, b.nama, b.user_id_telegram')
                             ->from('t_live_chat a')
                             ->join('m_user b', 'b.id = a.id_m_user_assigned', 'left')
                             ->where('a.id', $dataInput['id_t_live_chat'])
@@ -5139,12 +5139,24 @@
                 'id_m_user_sender' => $this->general_library->getId()
             ]);
 
-            $assignedOperator = $this->db->select('b.gelar1, b.gelar2, b.nama')
+            $assignedOperator = $this->db->select('b.gelar1, b.gelar2, b.nama, a.user_id_telegram')
                                     ->from('m_user a')
                                     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                     ->where('a.id', $dataInput['id_m_user'])
                                     ->where('a.flag_active', 1)
                                     ->get()->row_array();
+
+            if($assignedOperator['user_id_telegram']){
+                $this->db->insert('t_cron_telegram', [
+                    'method' => 'sendMessage',
+                    'type' => 'text',
+                    'sendTo' => $assignedOperator['user_id_telegram'],
+                    'data_post' => json_encode([
+                        'chat_id' => $assignedOperator['user_id_telegram'],
+                        'text' => "[KONSULTASI ONLINE #".$data['chat_id']."]\n\nSelamat ".greeting()." ".getNamaPegawaiFull($assignedOperator).', Anda telah dipilih Admin sebagai Operator Layanan Teknis'
+                    ])
+                ]);
+            }
 
             $this->db->insert('t_live_chat_detail', [
                 'id_t_live_chat' => $dataInput['id_t_live_chat'],

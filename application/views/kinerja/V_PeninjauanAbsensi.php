@@ -328,7 +328,7 @@ function loadListPeninjauan(){
 // 2. Get the zero-based month index
     bulan = date.getMonth()  + 1;
     tahun = date.getFullYear();
-    max = 2;
+    max = 3;
     if(tahun == '2026' && bulan == '3'){
     max = 8;
     }

@@ -57,7 +57,7 @@
       <div class="modal-content">
           <div class="modal-header">
               <h6 class="modal-title">Data Dokumen Pendukung</h6>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button id="btn_close_tambah_data_disiplin_kerja" type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
               </button>
           </div>

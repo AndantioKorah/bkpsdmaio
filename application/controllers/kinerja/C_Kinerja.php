@@ -674,13 +674,15 @@ class C_Kinerja extends CI_Controller
 
     public function reuploadDisiplinKerja($random_string)
     {
-        
-        $this->load->library('image_lib');
-        $countfiles = count($_FILES['files']['name']);
+        $countfiles = 0;
+        $nama_file = '[""]';
+        if(isset($_FILES['files']['name'])){
+            $countfiles = count($_FILES['files']['name']);
+        }
 
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
         $ress = 1;
-        if (implode($_FILES['files']['name']) == "") {
+        if (isset($_FILES['files']['name']) && implode($_FILES['files']['name']) == "") {
             $nama_file = '[""]';
             $image = $nama_file;
             // $dataPost = $this->input->post();

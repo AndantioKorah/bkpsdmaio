@@ -149,12 +149,14 @@
                 cache: false,  
                 processData:false,
                 success: function(data){
-                    $('#btn_tambah').show()
-                    $('#btn_loading').hide()
+                    // $('#btn_tambah').show()
+                    // $('#btn_loading').hide()
                     let rs = JSON.parse(data)
                     if(rs.code == 0){
                         successtoast('Berhasil Mengupdate Data Disiplin Kerja')
                         $('#form_search_disiplin_kerja').submit()
+                        $('#btn_close_tambah_data_disiplin_kerja').click()
+
                     } else {
                         errortoast(rs.message)
                     }

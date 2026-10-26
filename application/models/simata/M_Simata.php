@@ -91,6 +91,24 @@
                                 ->get()->result_array();
             }
 
+            public function getSubBerakhlak(){
+                return $this->db->select('a.*')
+                                ->from('db_simata.m_sub_berakhlak a')  
+                                ->where('a.flag_active', 1)
+                                ->get()->result_array();
+            }
+
+
+            public function getBerakhlak(){
+                return $this->db->select('a.*,b.nama')
+                                ->from('db_simata.m_sub_berakhlak a')
+                                ->join('db_simata.m_berakhlak b', 'a.id_m_berakhlak = b.id')  
+                                ->where('a.flag_active', 1)
+                                ->where('b.flag_active', 1)
+                                ->group_by('a.id_m_berakhlak')
+                                ->get()->result_array();
+            }
+
             function getIndikator($id){
                 $this->db->select('a.*')
                     ->from('db_simata.m_indikator_penilaian a')
@@ -4793,13 +4811,34 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             $bulan = date('m');
 
                 $result = $this->db->select('*, a.id as id_m_user,
-                (select berorientasi_pelayanan from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as berorientasi_pelayanan,
-                (select akuntabel from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as akuntabel,
-                (select kompeten from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kompeten,
-                (select harmonis from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as harmonis,
-                (select loyal from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as loyal,
-                (select adaptif from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as adaptif,
-                (select kolaboratif from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kolaboratif')
+                (select berorientasi_pelayanan1 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as berorientasi_pelayanan1,
+                (select berorientasi_pelayanan2 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as berorientasi_pelayanan2,
+                (select berorientasi_pelayanan3 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as berorientasi_pelayanan3,
+
+                (select akuntabel1 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as akuntabel1,
+                (select akuntabel2 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as akuntabel2,
+                (select akuntabel3 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as akuntabel3,
+
+
+                (select kompeten1 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kompeten1,
+                (select kompeten2 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kompeten2,
+                (select kompeten3 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kompeten3,
+                
+                (select harmonis1 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as harmonis1,
+                (select harmonis2 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as harmonis2,
+                (select harmonis3 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as harmonis3,
+                
+                (select loyal1 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as loyal1,
+                (select loyal2 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as loyal2,
+                (select loyal3 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as loyal3,
+                
+                (select adaptif1 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as adaptif1,
+                (select adaptif2 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as adaptif2,
+                (select adaptif3 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as adaptif3,
+
+                (select kolaboratif1 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kolaboratif1,
+                (select kolaboratif2 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kolaboratif2,
+                (select kolaboratif3 from db_simata.t_penilaian_sejawat_detail aa where aa.id_peg = b.id_peg and aa.tahun ="'.$tahun.'" and aa.bulan ="'.$bulan.'" and aa.flag_active = 1 and aa.id_pegpenilai = "'.$this->general_library->getIdPegSimpeg().'" limit 1) as kolaboratif3')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg')
@@ -5510,11 +5549,13 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     $this->db->group_end();
                     } else {
                     if($this_user['jenis_jabatan'] == 'JFT'){
+
                     $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
-                     $this->db->where('a.id_m_sub_bidang ', $this_user['id_m_sub_bidang']);
-                    $this->db->where_in('c.kelas_jabatan', [6,7,8,9,11,12]);
+                    $this->db->where('a.id_m_sub_bidang ', $this_user['id_m_sub_bidang']);
+                    $this->db->where_in('c.kelas_jabatan', [6,7,8,9,10,11,12]);
                     $this->db->order_by('c.kelas_jabatan', 'DESC');
                     } else {
+
                     $this->db->group_start(); 
                     $this->db->where('a.id_m_sub_bidang ', $this_user['id_m_sub_bidang']);
                     $this->db->or_where_in('c.eselon', ['III A','IV A']);
@@ -5923,41 +5964,204 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
 
 
             $berorientasi_pelayanan = 0;
-            $akuntabel = 0;
-            $kompeten = 0;
-            $harmonis = 0;
-            $loyal = 0;
-            $adaptif = 0;
-            $kolaboratif = 0;
+            $berorientasi_pelayanan1 = 0;
+            $berorientasi_pelayanan2 = 0;
+            $berorientasi_pelayanan3 = 0;
 
-            if(isset($datapost["berorientasi_pelayanan"])){
-            $data["berorientasi_pelayanan"] = $datapost["berorientasi_pelayanan"];
-            $berorientasi_pelayanan =$datapost["berorientasi_pelayanan"];
+            $akuntabel = 0;
+            $akuntabel1 = 0;
+            $akuntabel2 = 0;
+            $akuntabel3 = 0;
+
+            $kompeten = 0;
+            $kompeten1 = 0;
+            $kompeten2 = 0;
+            $kompeten3 = 0;
+
+            $harmonis = 0;
+            $harmonis1 = 0;
+            $harmonis2 = 0;
+            $harmonis3 = 0;
+            
+            $loyal = 0;
+            $loyal1 = 0;
+            $loyal2 = 0;
+            $loyal3 = 0;
+
+            $adaptif = 0;
+            $adaptif1 = 0;
+            $adaptif2 = 0;
+            $adaptif3 = 0;
+
+            $kolaboratif = 0;
+            $kolaboratif1 = 0;
+            $kolaboratif2 = 0;
+            $kolaboratif3 = 0;
+
+
+            if(isset($datapost["1"])){
+            $berorientasi_pelayanan1 =$datapost["1"];
             }
-            if(isset($datapost["akuntabel"])){
-            $data["akuntabel"] = $datapost["akuntabel"];
-            $akuntabel = $datapost["akuntabel"];
+
+            if(isset($datapost["2"])){
+            $berorientasi_pelayanan2 =$datapost["2"];
             }
-            if(isset($datapost["kompeten"])){
-            $data["kompeten"] = $datapost["kompeten"];
-            $kompeten = $datapost["kompeten"];
+
+            if(isset($datapost["3"])){
+            $berorientasi_pelayanan3 = $datapost["3"];
             }
-            if(isset($datapost["harmonis"])){
-            $data["harmonis"] = $datapost["harmonis"];
-            $harmonis = $datapost["harmonis"];
+
+            if(isset($datapost["4"])){
+            $akuntabel1 = $datapost["4"];
             }
-            if(isset($datapost["loyal"])){
-            $data["loyal"] = $datapost["loyal"];
-            $loyal = $datapost["loyal"];
+
+            if(isset($datapost["5"])){
+            $akuntabel2 = $datapost["5"];
             }
-            if(isset($datapost["adaptif"])){
-            $data["adaptif"] = $datapost["adaptif"];
-            $adaptif = $datapost["adaptif"];
+
+            if(isset($datapost["6"])){
+            $akuntabel3 = $datapost["6"];
             }
-            if(isset($datapost["kolaboratif"])){
-            $data["kolaboratif"] = $datapost["kolaboratif"];
-            $kolaboratif = $datapost["kolaboratif"];
+
+
+            if(isset($datapost["7"])){
+            $kompeten1 = $datapost["7"];
             }
+
+            if(isset($datapost["8"])){
+            $kompeten2 = $datapost["8"];
+            }
+
+            if(isset($datapost["9"])){
+            $kompeten3 = $datapost["9"];
+            }
+
+             if(isset($datapost["10"])){
+            $harmonis1 = $datapost["10"];
+            }
+
+            if(isset($datapost["11"])){
+            $harmonis2 = $datapost["11"];
+            }
+
+            if(isset($datapost["12"])){
+            $harmonis3 = $datapost["12"];
+            }
+
+
+             if(isset($datapost["13"])){
+            $loyal1 = $datapost["13"];
+            }
+
+            if(isset($datapost["14"])){
+            $loyal2 = $datapost["14"];
+            }
+
+            if(isset($datapost["15"])){
+            $loyal3 = $datapost["15"];
+            }
+
+
+             if(isset($datapost["16"])){
+            $adaptif1 = $datapost["16"];
+            }
+
+            if(isset($datapost["17"])){
+            $adaptif2 = $datapost["17"];
+            }
+
+            if(isset($datapost["18"])){
+            $adaptif3 = $datapost["18"];
+            }
+
+              if(isset($datapost["19"])){
+            $kolaboratif1 = $datapost["19"];
+            }
+
+            if(isset($datapost["20"])){
+            $kolaboratif2 = $datapost["20"];
+            }
+
+            if(isset($datapost["21"])){
+            $kolaboratif3 = $datapost["21"];
+            }
+
+
+         
+            $berorientasi_pelayanan = ($berorientasi_pelayanan1 + $berorientasi_pelayanan2 + $berorientasi_pelayanan3) / 3;
+            $akuntabel = ($akuntabel1 + $akuntabel2 + $akuntabel3) / 3;
+            $kompeten = ($kompeten1 + $kompeten2 + $kompeten3) / 3;
+            $harmonis = ($harmonis1 + $harmonis2 + $harmonis3) / 3;
+            $loyal = ($loyal1 + $loyal2 + $loyal3) / 3;
+            $adaptif = ($adaptif1 + $adaptif2 + $adaptif3) / 3;
+            $kolaboratif = ($kolaboratif1 + $kolaboratif2 + $kolaboratif3) / 3;
+
+           
+            $data["berorientasi_pelayanan"] = $berorientasi_pelayanan;
+            $data["berorientasi_pelayanan1"] = $berorientasi_pelayanan1;
+            $data["berorientasi_pelayanan2"] = $berorientasi_pelayanan2;
+            $data["berorientasi_pelayanan3"] = $berorientasi_pelayanan3;
+
+            $data["akuntabel"] = $akuntabel;
+            $data["akuntabel1"] = $akuntabel1;
+            $data["akuntabel2"] = $akuntabel2;
+            $data["akuntabel3"] = $akuntabel3;
+
+            $data["kompeten"] = $kompeten;
+            $data["kompeten1"] = $kompeten1;
+            $data["kompeten2"] = $kompeten2;
+            $data["kompeten3"] = $kompeten3;
+
+            $data["harmonis"] = $harmonis;
+            $data["harmonis1"] = $harmonis1;
+            $data["harmonis2"] = $harmonis2;
+            $data["harmonis3"] = $harmonis3;
+
+            $data["loyal"] = $loyal;
+            $data["loyal1"] = $loyal1;
+            $data["loyal2"] = $loyal2;
+            $data["loyal3"] = $loyal3;
+
+            $data["adaptif"] = $adaptif;
+            $data["adaptif1"] = $adaptif1;
+            $data["adaptif2"] = $adaptif2;
+            $data["adaptif3"] = $adaptif3;
+
+          
+
+            $data["kolaboratif"] = $kolaboratif;
+            $data["kolaboratif1"] = $kolaboratif1;
+            $data["kolaboratif2"] = $kolaboratif2;
+            $data["kolaboratif3"] = $kolaboratif3;
+
+
+        
+
+         
+            // if(isset($datapost["akuntabel"])){
+            // $data["akuntabel"] = $datapost["akuntabel"];
+            // $akuntabel = $datapost["akuntabel"];
+            // }
+            // if(isset($datapost["kompeten"])){
+            // $data["kompeten"] = $datapost["kompeten"];
+            // $kompeten = $datapost["kompeten"];
+            // }
+            // if(isset($datapost["harmonis"])){
+            // $data["harmonis"] = $datapost["harmonis"];
+            // $harmonis = $datapost["harmonis"];
+            // }
+            // if(isset($datapost["loyal"])){
+            // $data["loyal"] = $datapost["loyal"];
+            // $loyal = $datapost["loyal"];
+            // }
+            // if(isset($datapost["adaptif"])){
+            // $data["adaptif"] = $datapost["adaptif"];
+            // $adaptif = $datapost["adaptif"];
+            // }
+            // if(isset($datapost["kolaboratif"])){
+            // $data["kolaboratif"] = $datapost["kolaboratif"];
+            // $kolaboratif = $datapost["kolaboratif"];
+            // }
 
             $berakhlak =  $berorientasi_pelayanan + $akuntabel + $kompeten + $harmonis + $loyal + $adaptif + $kolaboratif;
             $total_nilai = $berakhlak / 7;  
@@ -6052,7 +6256,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             $id_kriteria_penilaian = 150;
                         } else if($total_nilai2 >= 40 && $total_nilai2 < 60){
                             $id_kriteria_penilaian = 151;
-                        } else if($total_nilai2 >= 20 && $total_nilai2 < 40){
+                        } else if($total_nilai2 >= 0 && $total_nilai2 < 40){
                             $id_kriteria_penilaian = 152;
                         }  
 

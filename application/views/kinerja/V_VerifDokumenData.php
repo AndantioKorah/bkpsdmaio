@@ -60,13 +60,23 @@
                     <td>
                         <?php if($status == 2 || $status == 3){ ?>
                             <span><strong><?=$r['keterangan_verif']?></strong></span><br>
-                            <!-- <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span> -->
-                            <span style="font-size: 14px;"><?='(pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
+                            <?php if($this->general_library->isProgrammer() ||
+                                    $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN ||
+                                    $this->general_library->isAdminAplikasi()) { ?>
+                                <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
+                            <?php } else { ?>
+                                <span style="font-size: 14px;"><?='(pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
+                            <?php } ?>
                         <?php } else if($status == 1) { ?> 
                             <input class="form-control" id="ket_verif_<?=$r['id']?>" />
                         <?php } else if($status == 4){ ?>
                             <input class="form-control" id="ket_verif_<?=$r['id']?>" />
                             <span style="font-size: 14px;"><?='(DIBATALKAN pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
+                            <?php if($this->general_library->isProgrammer() ||
+                                    $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN ||
+                                    $this->general_library->isAdminAplikasi()) { ?>
+                                <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].')'?></span>
+                            <?php } ?>
                         <?php } ?>
                     </td>
                     <td class="text-center">

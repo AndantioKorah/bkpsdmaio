@@ -2156,27 +2156,40 @@
         } else {
             $temp_filename = null;
         }
-        // dd($data);
-        $tanggal = explodeRangeDateNew($data['range_periode']);
-        $jenis_disiplin = explode(';', $data['jenis_disiplin']);
 
-        $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
-        
-        $explode_tanggal_awal = explode('-', $tanggal[0]);
-        $explode_tanggal_akhir = explode('-', $tanggal[1]);
-
-        $list_pegawai = null;
-        
         $temp_data = $this->db->select('*')
                             ->from('t_dokumen_pendukung')
                             ->where('flag_active', 1)
                             ->where('random_string', $random_string)
-                            ->get()->row_array();
+                            ->order_by('id')
+                            ->get()->result_array();
+
+        // dd($data);
+        if(isset($data['range_periode'])){
+            $tanggal = explodeRangeDateNew($data['range_periode']);
+        } else {
+            $tanggal_awal_temp = $temp_data[0]['tanggal'] >= 10 ? $temp_data[0]['tanggal'] : "0".intval($temp_data[0]['tanggal']);
+            $tanggal_akhir_temp = $temp_data[count($temp_data)-1]['tanggal'] >= 10 ? $temp_data[count($temp_data)-1]['tanggal'] : "0".intval($temp_data[count($temp_data)-1]['tanggal']);
+            $bulan_awal_temp = $temp_data[0]['bulan'] >= 10 ? $temp_data[0]['bulan'] : "0".intval($temp_data[0]['bulan']);
+            $bulan_akhir_temp = $temp_data[count($temp_data)-1]['bulan'] >= 10 ? $temp_data[count($temp_data)-1]['bulan'] : "0".intval($temp_data[count($temp_data)-1]['bulan']);
+            $full_tanggal_awal = $temp_data[0]['tahun']."-".$bulan_awal_temp."-".$tanggal_awal_temp;
+            $full_tanggal_akhir = $temp_data[count($temp_data)-1]['tahun']."-".$bulan_akhir_temp."-".$tanggal_akhir_temp;
+
+            $tanggal[0] = $full_tanggal_awal;
+            $tanggal[1] = $full_tanggal_akhir;
+        }
+        // $jenis_disiplin = explode(';', $data['jenis_disiplin']);
+
+        $list_tanggal = getDateBetweenDates($tanggal[0], $tanggal[1]);
+        $explode_tanggal_awal = explode('-', $tanggal[0]);
+        $explode_tanggal_akhir = explode('-', $tanggal[1]);
+
+        $list_pegawai = null;
 
         // foreach($data['pegawai'] as $dp){
         //     $list_pegawai[] = $dp;
         // }
-        $list_pegawai[] = $temp_data['id_m_user'];
+        $list_pegawai[] = $temp_data[0]['id_m_user'];
         $list_nama_pegawai = $this->db->select('*')
                                     ->from('m_user')
                                     ->where_in('id', $list_pegawai)
@@ -2208,7 +2221,19 @@
         $insert_data = null;
         $i = 0;
         foreach($data['pegawai'] as $d){
-            $disiplin = explode(';', $data['jenis_disiplin']);
+            if(isset($data['jenis_disiplin'])){
+                $disiplin = explode(';', $data['jenis_disiplin']);
+            } else {
+                $mDis = $this->db->select('*')
+                                ->from('m_jenis_disiplin_kerja')
+                                ->where('id', $temp_data[0]['id_m_jenis_disiplin_kerja'])
+                                ->get()->row_array();
+
+                $disiplin[0] = $mDis['id'];
+                $disiplin[1] = $mDis['keterangan'];
+                $disiplin[2] = $mDis['pengurangan'];
+                $disiplin[3] = $mDis['batas_waktu'];
+            }   
             foreach($list_tanggal as $l){
                 // if(getNamaHari($l) != 'Sabtu' && getNamaHari($l) != 'Minggu'){
                     $date = explode('-', $l);

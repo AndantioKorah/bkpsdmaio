@@ -4954,6 +4954,7 @@
                 ->join('db_pegawai.pangkat e', 'a.pangkat = e.id_pangkat')
                 // ->join('db_sip.absen d', 'c.id = d.user_id')
                 // ->where('b.id IS NULL')
+                ->where_not_in('nipbaru_ws', [001, 002])
                 ->where('a.id_m_status_pegawai', 1);
                 // ->where('tahun', $tahun);
                 // ->group_by('b.id');

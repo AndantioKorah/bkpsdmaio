@@ -4,13 +4,21 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 mt-3">
                     <label>Pilih Periode</label>  
-                    <input style="display: <?=$data['flag_fix_tanggal'] == 1 ? 'none' : 'block'?>;" <?=$data['flag_fix_tanggal'] == 0 ? 'disabled' : ''?> class="form-control range_periode form-control-sm" readonly/>
-                    <input style="display: <?=$data['flag_fix_tanggal'] == 0 ? 'none' : 'block'?>;" class="form-control form-control-sm range_periode" name="range_periode" readonly/>
+                    <?php if($data['flag_fix_tanggal'] == 1){ ?>
+                        <input style="display: <?=$data['flag_fix_tanggal'] == 1 ? 'none' : 'block'?>;" <?=$data['flag_fix_tanggal'] == 0 ? 'disabled' : ''?> class="form-control range_periode form-control-sm" readonly/>
+                        <input style="display: <?=$data['flag_fix_tanggal'] == 0 ? 'none' : 'block'?>;" class="form-control form-control-sm range_periode" name="range_periode" readonly/>
+                    <?php } else { ?>
+                    <div class="text-left">
+                        <label style="font-weight: bold; font-size: .8rem; font-style: italic; color: red;">
+                            Tidak bisa mengganti Tanggal Dokumen untuk Reupload
+                        </label>
+                    </div>
+                    <?php } ?>
                 </div>
                 <div class="col-lg-12 col-md-12 mt-3">
                     <label>Pilih Jenis Disiplin</label>  
                     <?php if($data['flag_fix_jenis_disiplin'] == 0){ ?>
-                        <select class="form-control jenis_disiplin select2-navy" onchange="suratTugas(this);"
+                        <!-- <select class="form-control jenis_disiplin select2-navy" onchange="suratTugas(this);"
                             style="display: <?=$data['flag_fix_jenis_disiplin'] == 1 ? 'none' : 'block'?>; width: 100%;"
                             data-dropdown-css-class="select2-navy" <?=$data['flag_fix_jenis_disiplin'] == 0 ? 'disabled' : ''?>>
                             <?php foreach($jenis_disiplin as $j){ ?>
@@ -19,30 +27,42 @@
                                     <?=$j['nama_jenis_disiplin_kerja']?>
                                 </option>
                             <?php } ?>
+                        </select> -->
+                        <div class="text-left">
+                            <label style="font-weight: bold; font-size: .8rem; font-style: italic; color: red;">
+                                Tidak bisa mengganti Jenis Disiplin untuk Reupload
+                            </label>
+                        </div>
+                    <?php } else { ?>
+                        <select class="form-control <?=$data['flag_fix_jenis_disiplin'] == 1 ? 'jenis_disiplin' : ''?> select2-navy" onchange="suratTugas(this);"
+                            style="width: 100%; display: <?=$data['flag_fix_jenis_disiplin'] == 1 ? 'block' : 'none'?>"
+                            data-dropdown-css-class="select2-navy" name="jenis_disiplin">
+                            <?php foreach($jenis_disiplin as $j){ ?>
+                                <option <?=$j['id'] == $data['id_m_jenis_disiplin_kerja'] ? 'selected' : '' ;?>
+                                    value="<?=$j['id'].';'.$j['nama_jenis_disiplin_kerja'].';'.$j['pengurangan'].';'.$j['batas_waktu']?>">
+                                    <?=$j['nama_jenis_disiplin_kerja']?>
+                                </option>
+                            <?php } ?>
                         </select>
                     <?php } ?>
-                    <select class="form-control <?=$data['flag_fix_jenis_disiplin'] == 1 ? 'jenis_disiplin' : ''?> select2-navy" onchange="suratTugas(this);"
-                        style="width: 100%; display: <?=$data['flag_fix_jenis_disiplin'] == 1 ? 'block' : 'none'?>"
-                        data-dropdown-css-class="select2-navy" name="jenis_disiplin">
-                        <?php foreach($jenis_disiplin as $j){ ?>
-                            <option <?=$j['id'] == $data['id_m_jenis_disiplin_kerja'] ? 'selected' : '' ;?>
-                                value="<?=$j['id'].';'.$j['nama_jenis_disiplin_kerja'].';'.$j['pengurangan'].';'.$j['batas_waktu']?>">
-                                <?=$j['nama_jenis_disiplin_kerja']?>
-                            </option>
-                        <?php } ?>
-                    </select>
                 </div>
 
                 <div class="col-lg-12 col-md-12 mt-3">
                     <label>Dokumen Pendukung</label>
-                    <input disabled style="display: <?=$data['flag_fix_dokumen_upload'] == 0 ? 'block' : 'none'?>"
-                        <?=$data['flag_fix_dokumen_upload'] == 0 ? 'disabled' : ''?> class="form-control"
-                        type="file" multiple="multiple" />
-                    <input style="display: <?=$data['flag_fix_dokumen_upload'] == 0 ? 'none' : 'block'?>" class="form-control"
-                        type="file" id="image_file" name="files[]" multiple="multiple" />
-                    <label style="font-weight: bold; font-size: .8rem; font-style: italic; color: red;">
-                        Biarkan kosong jika tidak ingin mengganti dokumen pendukung yang sudah diupload sebelumnya
-                    </label>
+                    <?php if($data['flag_fix_dokumen_upload'] == 1){ ?>
+                        <input disabled style="display: <?=$data['flag_fix_dokumen_upload'] == 0 ? 'block' : 'none'?>"
+                            <?=$data['flag_fix_dokumen_upload'] == 0 ? 'disabled' : ''?> class="form-control"
+                            type="file" multiple="multiple" />
+                        <input style="display: <?=$data['flag_fix_dokumen_upload'] == 0 ? 'none' : 'block'?>" class="form-control"
+                            type="file" id="image_file" name="files[]" multiple="multiple" />
+                        <label style="font-weight: bold; font-size: .8rem; font-style: italic; color: red;">
+                            Biarkan kosong jika tidak ingin mengganti dokumen pendukung yang sudah diupload sebelumnya
+                        </label>
+                    <?php } else { ?>
+                        <label style="font-weight: bold; font-size: .8rem; font-style: italic; color: red;">
+                            Tidak bisa mengganti Dokumen untuk Reupload
+                        </label>
+                    <?php } ?>
                 </div>
                 <div class="col-lg-12 col-md-12 mt-3" style="margin-top: 28px;">
                     <h5 id="error_label" style="color: red; font-weight: bold; display: none;"></h5>
@@ -129,12 +149,14 @@
                 cache: false,  
                 processData:false,
                 success: function(data){
-                    $('#btn_tambah').show()
-                    $('#btn_loading').hide()
+                    // $('#btn_tambah').show()
+                    // $('#btn_loading').hide()
                     let rs = JSON.parse(data)
                     if(rs.code == 0){
                         successtoast('Berhasil Mengupdate Data Disiplin Kerja')
                         $('#form_search_disiplin_kerja').submit()
+                        $('#btn_close_tambah_data_disiplin_kerja').click()
+
                     } else {
                         errortoast(rs.message)
                     }

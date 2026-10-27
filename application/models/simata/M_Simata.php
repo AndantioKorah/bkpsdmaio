@@ -5994,7 +5994,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             $id_user = $this->general_library->getIdUserByIdPeg($id_pegawai);
 
 
-            $atasan = $this->kinerja->getAtasanPegawai360('',$id_user['id'],'');
+            $atasan = $this->getAtasanPegawai360('',$id_user['id'],'');
             // dd($atasan);
             $tahun = date('Y');
             $bulan = date('m');
@@ -6222,7 +6222,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             ->where('a.id_peg', $id_pegawai)
                             ->where('a.id_pegpenilai', $this->general_library->getIdPegSimpeg())
                             ->where('a.flag_active', 1)
-                            ->where('a.bulan', $bulan)
+                            // ->where('a.bulan', $bulan)
                             ->where('a.tahun', $tahun)
                             ->get()->result_array();
                           
@@ -6243,7 +6243,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     ->from('db_simata.t_penilaian_sejawat a')
                     ->where('a.id_peg', $id_pegawai)
                     ->where('a.flag_active', 1)
-                    ->where('a.bulan', $bulan)
+                    // ->where('a.bulan', $bulan)
                     ->where('a.tahun', $tahun)
                     ->get()->result_array();
                     
@@ -6753,11 +6753,11 @@ function submitJabatanTargetNew(){
 
 }
 
-public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
+public function getAtasanPegawai360($pegawai, $id_m_user = null, $flag_cuti = 0){
         if($id_m_user != null){
             $pegawai = $this->db->select('b.id_peg,b.gelar1, b.gelar2, b.nama, d.id_unitkerja, g.id_eselon, c.kepalaskpd, c.nama_jabatan, d.nm_unitkerja,
                         d.id_unitkerjamaster, f.nama_sub_bidang, e.nama_bidang, a.id_m_bidang, a.id_m_sub_bidang, c.jenis_jabatan, c.flag_uptd, a.user_id_telegram,
-                        d.id_asisten_grouping, b.nipbaru_ws, d.nip_kepalaskpd_hardcode, d.nama_jabatan_kepalaskpd_hardcode, c.id_jabatanpeg')
+                        d.id_asisten_grouping, b.nipbaru_ws, d.nip_kepalaskpd_hardcode, d.nama_jabatan_kepalaskpd_hardcode, c.id_jabatanpeg,c.kelas_jabatan')
                                 ->from('m_user a')
                                 ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                                 ->join('db_pegawai.jabatan c', 'b.jabatan = c.id_jabatanpeg', 'left')
@@ -6780,8 +6780,7 @@ public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
         // jenis_skpd 4 puskes
         // dd($pegawai['id_unitkerja']);
         
-        
-
+        // dd($pegawai);
         if($pegawai['kepalaskpd'] != 1){ //bukan kepala skpd
             if($pegawai['id_unitkerjamaster'] == 4000000 || // 
                 $pegawai['id_unitkerjamaster'] == 3000000 || $pegawai['id_unitkerjamaster'] == 1000000 || 
@@ -6848,7 +6847,15 @@ public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
                     }
                 } else if($pegawai['jenis_jabatan'] == 'JFT'){ //jika JFT
                     // $atasan = $kepala;
-                    if($pegawai['nama_jabatan'] == "Pengawas TK/SD" || $pegawai['nama_jabatan'] == "Pengawas SMP" || $pegawai['nama_jabatan'] == "Pengawas SMA" ||  $pegawai['nama_jabatan'] == "Pengawas Sekolah Ahli Muda" || $pegawai['nama_jabatan'] == "Pengawas Sekolah Ahli Madya" || $pegawai['nama_jabatan'] == "Pengawas Sekolah Ahli Utama"){
+                    if($pegawai['kelas_jabatan'] == 10){
+                    
+
+
+                    $atasan = $this->baseQueryAtasan()
+                        ->where('b.skpd', $pegawai['id_unitkerja'])
+                        ->where('d.kelas_jabatan', 14)
+                        ->get()->row_array();
+                    } else if($pegawai['nama_jabatan'] == "Pengawas TK/SD" || $pegawai['nama_jabatan'] == "Pengawas SMP" || $pegawai['nama_jabatan'] == "Pengawas SMA" ||  $pegawai['nama_jabatan'] == "Pengawas Sekolah Ahli Muda" || $pegawai['nama_jabatan'] == "Pengawas Sekolah Ahli Madya" || $pegawai['nama_jabatan'] == "Pengawas Sekolah Ahli Utama"){
                         $atasan = $this->baseQueryAtasan()
                         ->where('b.skpd', 3010000)
                         ->where('d.nama_jabatan', 'Kepala '.$pegawai['nm_unitkerja'])
@@ -6910,11 +6917,26 @@ public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
                     }
                     $atasan = $kepala;
                 } else { //jika bukan kepsek
-                    
+                    if($pegawai['kelas_jabatan'] == 10){
+                    if($pegawai['id_unitkerjamaster'] == '8020000' || $pegawai['id_unitkerjamaster'] == '8000000' || $pegawai['id_unitkerjamaster'] == '8000000'){
+                    $atasan = $this->baseQueryAtasan()
+                    ->where('b.skpd', '3010000')
+                    ->where('d.kelas_jabatan', 14)
+                    ->get()->row_array();
+                    } else {
+                    $atasan = $this->baseQueryAtasan()
+                    ->where('b.skpd', '3010000')
+                    ->where('d.kelas_jabatan', 14)
+                    ->get()->row_array();
+                        }
+                  
+                    } else {
                     $atasan = $this->baseQueryAtasan()
                     ->where('b.skpd', $pegawai['id_unitkerja'])
                     ->where('d.nama_jabatan LIKE', 'Kepala%')
                     ->get()->row_array();
+                    }
+                   
                     
                     if(!$atasan){
                         $atasan = $this->baseQueryAtasan()
@@ -6947,7 +6969,13 @@ public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
                 }
                
             } else if($pegawai['id_unitkerjamaster'] == 6000000){ //puskesmas
-                $atasan = $this->baseQueryAtasan()
+             if($pegawai['kelas_jabatan'] == 10){
+                    $atasan = $this->baseQueryAtasan()
+                    ->where('b.skpd', '3012000')
+                    ->where('d.kelas_jabatan', 14)
+                    ->get()->row_array();
+                    } else {
+                    $atasan = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.nama_jabatan LIKE', 'Kepala%')
                                 ->get()->row_array();
@@ -6961,6 +6989,9 @@ public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
                                         ->where('d.kepalaskpd', 1)
                                         ->get()->row_array(); //kapus
+                    }
+               
+            
                 $kepala = $atasan;
             } else if(stringStartWith('Kecamatan', $pegawai['nm_unitkerja'])){ // kecamatan
                 $kepala = $this->baseQueryAtasan()
@@ -7042,15 +7073,25 @@ public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
                     }
                 }
             } else if($pegawai['id_unitkerja'] == 7005020 || $pegawai['id_unitkerja'] == 7005010){ // rumah sakit
-                $kepala = $this->baseQueryAtasan()
+            
+            $kepala = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.kepalaskpd', 1)
                                 ->get()->row_array();
                 if($pegawai['jenis_jabatan'] != "Struktural"){ //cari kepala sub
+                  if($pegawai['kelas_jabatan'] == 10){
                     $atasan = $this->baseQueryAtasan()
-                                    ->where('b.skpd', $pegawai['id_unitkerja'])
-                                    ->where('d.nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
-                                    ->get()->row_array();
+                    ->where('b.skpd', '3012000')
+                    ->where('d.kelas_jabatan', 14)
+                    ->get()->row_array();
+                    } else {
+                    $atasan = $this->baseQueryAtasan()
+                             ->where('b.skpd', $pegawai['id_unitkerja'])
+                             ->where('d.nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
+                             ->get()->row_array();
+                    }
+
+                  
                     if(!$atasan){ //cari sek
                         $atasan = $this->baseQueryAtasan()
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
@@ -7307,6 +7348,24 @@ public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
         // dd($result);
 
         return $result;
+    }
+
+
+    public function baseQueryAtasan(){
+        return $this->db->select('b.id_peg,a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, d.jenis_jabatan, b.handphone,
+            a.id_m_bidang, c.id_unitkerja, c.id_unitkerjamaster, g.nama_bidang, a.id_m_sub_bidang, d.nama_jabatan, d.kepalaskpd, f.id_eselon, a.user_id_telegram,
+            h.nama_jabatan as nama_jabatan_tambahan, h.kepalaskpd as kepalaskpd_tambahan, c.id_asisten_grouping, b.id_jabatan_tambahan, d.id_jabatanpeg')
+            ->from('m_user a')
+            ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws', 'left')
+            ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja', 'left')
+            ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
+            ->join('db_pegawai.pangkat e', 'b.pangkat = e.id_pangkat', 'left')
+            ->join('db_pegawai.eselon f', 'd.eselon = f.nm_eselon', 'left')
+            ->join('m_bidang g', 'a.id_m_bidang = g.id', 'left')
+            ->join('db_pegawai.jabatan h', 'b.id_jabatan_tambahan = h.id_jabatanpeg', 'left')
+            ->where('a.flag_active', 1)
+            ->where('b.id_m_status_pegawai', 1);
+            // ->where('b.flag_terima_tpp', 1);
     }
    
                    

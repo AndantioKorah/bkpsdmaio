@@ -750,8 +750,8 @@ if(kolaboratif3 == 20){
         var formvalue = $('#form_penilaian_sejawat');
         var form_data = new FormData(formvalue[0]);
 
-        document.getElementById('btn_simpan').disabled = true;
-        $('#btn_simpan').html('Simpan.. <i class="fas fa-spinner fa-spin"></i>')
+        // document.getElementById('btn_simpan').disabled = true;
+        // $('#btn_simpan').html('Simpan.. <i class="fas fa-spinner fa-spin"></i>')
 
         $.ajax({  
         url:"<?=base_url("simata/C_Simata/submitPenilaianSejawat")?>",

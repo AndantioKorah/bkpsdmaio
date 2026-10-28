@@ -5478,10 +5478,12 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                 // ->where('b.skpd ', $this_user['skpd'])
                 // ->where('a.id_m_bidang ', $this_user['id_m_bidang'])
                 ->where('a.flag_active', 1)
-                ->where_in('b.statuspeg', [1,2])
+                ->where('b.id_m_status_pegawai', 1)
+                // ->where_in('b.statuspeg', [1,2])
                 ->order_by('c.kelas_jabatan', 'DESC');
                
                 if($this_user['id_unitkerjamaster'] != '8010000' AND $this_user['id_unitkerjamaster'] != '8020000' AND $this_user['id_unitkerjamaster'] != '6000000' AND $this_user['id_unitkerjamaster'] != '7005000'){
+               
                 if($this_user['kelas_jabatan'] == 7){
                     if($this_user['skpd'] == '4011000'){
                     $this->db->where_in('c.kelas_jabatan', [6,7,8,9]);
@@ -5607,6 +5609,10 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     $this->db->where_in('c.eselon', ['IV A','IV B','III B']);
                     $this->db->or_where_in('d.id_unitkerjamaster', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001']);
                     $this->db->where('c.eselon', 'III A');
+                    $this->db->or_where('c.eselon', 'II A');
+                    $this->db->or_where('c.eselon', 'IV A');
+                    $this->db->where('d.id_unitkerjamaster', '5009000');
+
                     $this->db->group_end();
                     } else {
                     $this->db->where('b.skpd ', $this_user['skpd']);
@@ -5631,25 +5637,27 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     $this->db->or_where('d.id_asisten_grouping', $this_user['jabatan']);
                      $this->db->where('c.eselon', 'III A');
                     $this->db->group_end();
-                    } else {
-                    if($this_user['id_unitkerja'] == '3010000'){
-                    $this->db->where_in('c.kelas_jabatan', [14,15]);
-                    $this->db->or_where('b.skpd ', $this_user['skpd']);
-                    $this->db->where_in('c.eselon', ['II A','III A','III B']);
-                    $this->db->or_where('c.kelas_jabatan ', 10);
-                    // $this->db->where('d.id_unitkerjamaster ', '8010000');
-                    $this->db->where('b.skpd ', $this_user['skpd']);
-                    $this->db->or_where('c.kelas_jabatan ', 10);
-                    $this->db->where_in('d.id_unitkerjamaster ', ['8010000','8020000','8000000']);
-                    } else if($this_user['id_unitkerja'] == '3012000') {
-                    $this->db->where_in('c.kelas_jabatan', [14,15]);
-                    $this->db->or_where('b.skpd ', $this_user['skpd']);
-                    $this->db->where_in('c.eselon', ['II A','III A','III B']);
-                    $this->db->or_where('c.kelas_jabatan ', 10);
-                    $this->db->where('b.skpd ', $this_user['skpd']);
-                     $this->db->or_where('c.kelas_jabatan ', 10);
-                    $this->db->where_in('d.id_unitkerjamaster ', ['6000000','7005000']);
-                    } else {
+                    }
+                    //  else {
+                    // if($this_user['id_unitkerja'] == '3010000'){
+                    // $this->db->where_in('c.kelas_jabatan', [14,15]);
+                    // $this->db->or_where('b.skpd ', $this_user['skpd']);
+                    // $this->db->where_in('c.eselon', ['II A','III A','III B']);
+                    // $this->db->or_where('c.kelas_jabatan ', 10);
+                    // // $this->db->where('d.id_unitkerjamaster ', '8010000');
+                    // $this->db->where('b.skpd ', $this_user['skpd']);
+                    // $this->db->or_where('c.kelas_jabatan ', 10);
+                    // $this->db->where_in('d.id_unitkerjamaster ', ['8010000','8020000','8000000']);
+                    // } else if($this_user['id_unitkerja'] == '3012000') {
+                    // $this->db->where_in('c.kelas_jabatan', [14,15]);
+                    // $this->db->or_where('b.skpd ', $this_user['skpd']);
+                    // $this->db->where_in('c.eselon', ['II A','III A','III B']);
+                    // $this->db->or_where('c.kelas_jabatan ', 10);
+                    // $this->db->where('b.skpd ', $this_user['skpd']);
+                    //  $this->db->or_where('c.kelas_jabatan ', 10);
+                    // $this->db->where_in('d.id_unitkerjamaster ', ['6000000','7005000']);
+                    // } 
+                    else {
                     $this->db->group_start(); 
                     $this->db->where_in('c.kelas_jabatan', [14,15]);
                     $this->db->or_where('b.skpd ', $this_user['skpd']);
@@ -5658,8 +5666,11 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     $this->db->where('b.skpd ', $this_user['skpd']);
                     $this->db->group_end();
                     }
-                   
-                    }
+                    // }
+                } else if($this_user['kelas_jabatan'] == 15){
+                  $this->db->where_in('c.eselon', ['II B']);
+                  $this->db->or_where('c.kelas_jabatan ', 12);
+                  $this->db->where_in('d.id_unitkerjamaster ', ['5002000','5003000','5010001','5004000','5005000','5006000','5007000','5008000','5009000','5001000','5011001']);
                 }
                 } else if($this_user['kelas_jabatan'] == 10){
                     $this->db->where('b.skpd ', $this_user['skpd']);
@@ -5670,8 +5681,22 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     } else {
                     $this->db->where('b.skpd ', '3012000');  
                     }
+                    $this->db->where('b.skpd ', $this_user['skpd']);  
+                    // $this->db->or_where('c.nama_jabatan like', '%Kepala Sekolah%');
+                    // $this->db->where('b.skpd ', $this_user['skpd']);  
                     
-
+                }  else if($this_user['nama_jabatan'] == 'Kepala Sekolah'){
+                   $this->db->where('b.skpd ', $this_user['skpd']);
+                   $this->db->order_by('c.kelas_jabatan', 'DESC');
+                    if($this_user['id_unitkerjamaster'] == '8000000'){
+                    $this->db->or_where('b.jabatan ', '3010000JS14');
+                    }
+                    if($this_user['id_unitkerjamaster'] == '8010000'){
+                    $this->db->or_where('b.jabatan ', '3010000JS06');
+                    }
+                     if($this_user['id_unitkerjamaster'] == '8020000'){
+                    $this->db->or_where('b.jabatan ', '3010000JS10');
+                    }
                 } else {
                     $this->db->where('b.skpd ', $this_user['skpd']);
                     $this->db->order_by('c.kelas_jabatan', 'DESC');
@@ -6917,27 +6942,27 @@ public function getAtasanPegawai360($pegawai, $id_m_user = null, $flag_cuti = 0)
                     }
                     $atasan = $kepala;
                 } else { //jika bukan kepsek
-                    if($pegawai['kelas_jabatan'] == 10){
-                    if($pegawai['id_unitkerjamaster'] == '8020000' || $pegawai['id_unitkerjamaster'] == '8000000' || $pegawai['id_unitkerjamaster'] == '8000000'){
-                    $atasan = $this->baseQueryAtasan()
-                    ->where('b.skpd', '3010000')
-                    ->where('d.kelas_jabatan', 14)
-                    ->get()->row_array();
-                    } else {
-                    $atasan = $this->baseQueryAtasan()
-                    ->where('b.skpd', '3010000')
-                    ->where('d.kelas_jabatan', 14)
-                    ->get()->row_array();
-                        }
+                    // if($pegawai['kelas_jabatan'] == 10){
+                    // if($pegawai['id_unitkerjamaster'] == '8020000' || $pegawai['id_unitkerjamaster'] == '8000000' || $pegawai['id_unitkerjamaster'] == '8000000'){
+                    // $atasan = $this->baseQueryAtasan()
+                    // ->where('b.skpd', '3010000')
+                    // ->where('d.kelas_jabatan', 14)
+                    // ->get()->row_array();
+                    // } else {
+                    // $atasan = $this->baseQueryAtasan()
+                    // ->where('b.skpd', '3010000')
+                    // ->where('d.kelas_jabatan', 14)
+                    // ->get()->row_array();
+                    //     }
                   
-                    } else {
+                    // } else {
                     $atasan = $this->baseQueryAtasan()
                     ->where('b.skpd', $pegawai['id_unitkerja'])
                     ->where('d.nama_jabatan LIKE', 'Kepala%')
                     ->get()->row_array();
-                    }
+                    // }
                    
-                    
+                    // dd($atasan);
                     if(!$atasan){
                         $atasan = $this->baseQueryAtasan()
                                     ->where('b.skpd', $pegawai['id_unitkerja'])
@@ -6967,14 +6992,15 @@ public function getAtasanPegawai360($pegawai, $id_m_user = null, $flag_cuti = 0)
                         $atasan = $kepala;
                     }
                 }
+              
                
             } else if($pegawai['id_unitkerjamaster'] == 6000000){ //puskesmas
-             if($pegawai['kelas_jabatan'] == 10){
-                    $atasan = $this->baseQueryAtasan()
-                    ->where('b.skpd', '3012000')
-                    ->where('d.kelas_jabatan', 14)
-                    ->get()->row_array();
-                    } else {
+            //  if($pegawai['kelas_jabatan'] == 10){
+            //         $atasan = $this->baseQueryAtasan()
+            //         ->where('b.skpd', '3012000')
+            //         ->where('d.kelas_jabatan', 14)
+            //         ->get()->row_array();
+            //         } else {
                     $atasan = $this->baseQueryAtasan()
                                 ->where('b.skpd', $pegawai['id_unitkerja'])
                                 ->where('d.nama_jabatan LIKE', 'Kepala%')
@@ -6989,7 +7015,7 @@ public function getAtasanPegawai360($pegawai, $id_m_user = null, $flag_cuti = 0)
                                         ->where('b.skpd', $pegawai['id_unitkerja'])
                                         ->where('d.kepalaskpd', 1)
                                         ->get()->row_array(); //kapus
-                    }
+                    // }
                
             
                 $kepala = $atasan;
@@ -7079,17 +7105,17 @@ public function getAtasanPegawai360($pegawai, $id_m_user = null, $flag_cuti = 0)
                                 ->where('d.kepalaskpd', 1)
                                 ->get()->row_array();
                 if($pegawai['jenis_jabatan'] != "Struktural"){ //cari kepala sub
-                  if($pegawai['kelas_jabatan'] == 10){
-                    $atasan = $this->baseQueryAtasan()
-                    ->where('b.skpd', '3012000')
-                    ->where('d.kelas_jabatan', 14)
-                    ->get()->row_array();
-                    } else {
+                //   if($pegawai['kelas_jabatan'] == 10){
+                //     $atasan = $this->baseQueryAtasan()
+                //     ->where('b.skpd', '3012000')
+                //     ->where('d.kelas_jabatan', 14)
+                //     ->get()->row_array();
+                //     } else {
                     $atasan = $this->baseQueryAtasan()
                              ->where('b.skpd', $pegawai['id_unitkerja'])
                              ->where('d.nama_jabatan', 'Kepala '.$pegawai['nama_sub_bidang'])
                              ->get()->row_array();
-                    }
+                    // }
 
                   
                     if(!$atasan){ //cari sek
@@ -7294,7 +7320,7 @@ public function getAtasanPegawai360($pegawai, $id_m_user = null, $flag_cuti = 0)
         if($pegawai['id_unitkerja'] == 2000100){ //staf ahli
             $result['kepala'] = $atasan;
         }
-
+        
         if(isset($pegawai['nip_kepalaskpd_hardcode']) && $pegawai['nip_kepalaskpd_hardcode']){
             $hardcodeKepalaskpd = $this->db->select('a.nipbaru, a.nama, d.id_unitkerja, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat,
                                         a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws, e.id, a.handphone, e.user_id_telegram,

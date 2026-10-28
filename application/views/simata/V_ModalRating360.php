@@ -761,8 +761,7 @@ if(kolaboratif3 == 20){
         cache: false,  
         processData:false,  
         success:function(res){ 
-        document.getElementById('btn_simpan').disabled = false;
-           $('#btn_simpan').html('Simpan')
+       
           // successtoast()
           //  location.reload()
               console.log(res)
@@ -770,6 +769,8 @@ if(kolaboratif3 == 20){
             console.log(result)
             if(result.success == true){
             successtoast(result.msg)
+             document.getElementById('btn_simpan').disabled = false;
+           $('#btn_simpan').html('Simpan')
               } else {
                 errortoast(result.msg)
                 return false;

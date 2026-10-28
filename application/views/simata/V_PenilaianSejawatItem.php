@@ -457,7 +457,7 @@ $('#nama_pegawai').html(nama)
 
 $('#table_list_pegawai').DataTable({
     "ordering": false,
-    "aLengthMenu": [[50, 75, -1], [50, 75, "All"]],
+    "aLengthMenu": [[100, 75, -1], [100, 75, "All"]],
      });
     
         

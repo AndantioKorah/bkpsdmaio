@@ -26,7 +26,7 @@
     <input  class="form-control yearpicker customInput" id="tahun" name="tahun" value="<?= date('Y');?>">
   </div>
 
-    <div class="form-group" >
+    <!-- <div class="form-group" >
     <label for="exampleFormControlInput1">Bulan</label>
     <select class="form-control select2-navy customInput" style="width: 100%"
                  id="bulan" data-dropdown-css-class="select2-navy" name="bulan">
@@ -44,7 +44,7 @@
                  <option <?=date('m') == 11 ? 'selected' : '';?> value="11">November</option>
                  <option <?=date('m') == 12 ? 'selected' : '';?> value="12">Desember</option>
                  </select>
-                </div>
+                </div> -->
                 
                 <div class="col-lg-12 col-md-9" style="margin-top: 28px;">
                     <button type="submit" class="btn btn-block btn-navy float-right"><i class="fa fa-search"></i> Cari</button>

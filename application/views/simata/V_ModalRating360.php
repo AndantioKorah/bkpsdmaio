@@ -105,7 +105,7 @@ h3 {
    <center>
        <form id="form_penilaian_sejawat" method="post" enctype="multipart/form-data" style="align-items: center;">
        <input type="hidden" name="id_pegawai" id="id_pegawai" value="<?=$rating_pegawai[0]['id_peg'];?>">   
-       <div class="list-group">
+       <div class="list-group" style="">
        <?php $bobot = null; $no = 1; foreach($berakhlak as $b){ ?>
         <a class="list-group-item list-group-item-action" style="background-color:#d5dce4;">
            <h3> <b><?=$b['nama'];?></h3>

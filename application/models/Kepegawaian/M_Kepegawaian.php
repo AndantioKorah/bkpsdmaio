@@ -10485,6 +10485,7 @@ public function submitEditJabatan(){
             $getPangkat = $this->db->select('*')
             ->from('db_pegawai.pegpangkat a')
             ->join('db_pegawai.pangkat b', 'b.id_pangkat = a.pangkat')
+            ->join('db_pegawai.pegawai c', 'a.id_pegawai = c.id_peg')
             ->where('a.id_pegawai', $id_peg)
             ->where_in('a.flag_active', [1,2])
             ->where('a.status', 2)
@@ -10492,6 +10493,7 @@ public function submitEditJabatan(){
             ->order_by('a.tmtpangkat', 'desc')
             ->limit(1)
             ->get()->row_array();
+            // dd($getPangkat['nipbaru_ws']);
         
             if($getPangkat) {
                 
@@ -10506,6 +10508,22 @@ public function submitEditJabatan(){
                             ->update('db_pegawai.pegawai', $dataUpdate);
                 }
                
+            }
+
+            $cekHarcodePangkat = $this->db->select('*')
+            ->from('t_hardcode_nominatif a')
+            ->where('a.nip',$getPangkat['nipbaru_ws'])
+            ->where('a.flag_active', 1)
+            ->where('a.flag_add', 1)
+            ->where('a.bulan', date('m'))
+            ->where('a.tahun', date('Y'))
+            ->limit(1)
+            ->get()->row_array();
+            
+            if($cekHarcodePangkat){
+            $dataUpdate2["pangkat"] =   $getPangkat['pangkat'];
+            $this->db->where('id_peg', $id_peg)
+            ->update('db_pegawai.pegawai', $dataUpdate2); 
             }
     
         if($this->db->trans_status() == FALSE){

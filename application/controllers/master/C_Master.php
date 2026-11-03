@@ -679,6 +679,7 @@ class C_Master extends CI_Controller
 		$data['unit_kerja'] = $this->kepegawaian->getUnitKerja();
         $data['nama_jabatan'] = $this->kepegawaian->getNamaJabatan();
         $data['list_pegawai'] = $this->master->getAllPegawai();
+        $data['list_pangkat'] = $this->general->getAllWithOrderGeneral('db_pegawai.pangkat', 'urutan', 'asc');
         render('master/V_MasterHardcodeNominatif', '', '', $data);
     }
 

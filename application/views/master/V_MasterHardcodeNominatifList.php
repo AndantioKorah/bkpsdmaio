@@ -4,6 +4,7 @@
         <th class="text-center">Pegawai</th>
         <th class="text-center">Unit Kerja</th>
         <th class="text-center">Jabatan</th>
+        <th class="text-center">Pangkat</th>
         <th class="text-center">Periode</th>
         <th class="text-center">Keterangan</th>
         <th class="text-center">Pilihan</th>
@@ -15,6 +16,7 @@
                 <td class="text-left"><?=getNamaPegawaiFull($rs)?></td>
                 <td class="text-left"><?=$rs['nm_unitkerja']?></td>
                 <td class="text-left"><?=$rs['nama_jabatan']?></td>
+                <td class="text-left"><?=$rs['id_pangkat'] ? $rs['nm_pangkat'] : "-"?></td>
                 <td class="text-left"><?=getNamaBulan($rs['bulan'])." ".$rs['tahun']?></td>
                 <td class="text-center">
                     <?php if($rs['flag_add'] == 0){ ?>

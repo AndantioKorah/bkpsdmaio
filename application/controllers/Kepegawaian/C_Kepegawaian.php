@@ -592,6 +592,7 @@ class C_Kepegawaian extends CI_Controller
 	}
 	
 	public function profilPegawai($nip){
+	
 		if($this->general_library->cekKinerja() == null) {
             redirect('kinerja/realisasi');
         }
@@ -639,7 +640,6 @@ class C_Kepegawaian extends CI_Controller
 	}
 
 	public function uploadDokumen($page = null){
-		
 	   if($this->general_library->cekKinerja() == null) {
             redirect('kinerja/realisasi');
         }

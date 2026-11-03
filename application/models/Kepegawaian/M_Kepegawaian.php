@@ -10519,9 +10519,9 @@ public function submitEditJabatan(){
             ->where('a.tahun', date('Y'))
             ->limit(1)
             ->get()->row_array();
-            
+
             if($cekHarcodePangkat){
-            $dataUpdate2["pangkat"] =   $getPangkat['pangkat'];
+            $dataUpdate2["pangkat"] =   $cekHarcodePangkat['id_pangkat'];
             $this->db->where('id_peg', $id_peg)
             ->update('db_pegawai.pegawai', $dataUpdate2); 
             }

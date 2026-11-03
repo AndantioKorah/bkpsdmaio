@@ -167,7 +167,7 @@ h3 {
 
     <!-- Modal -->
 <div   class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content" >
       <div class="modal-header" style="background-color:#222e3c">
 
@@ -457,7 +457,7 @@ $('#nama_pegawai').html(nama)
 
 $('#table_list_pegawai').DataTable({
     "ordering": false,
-    "aLengthMenu": [[50, 75, -1], [50, 75, "All"]],
+    "aLengthMenu": [[100, 75, -1], [100, 75, "All"]],
      });
     
         

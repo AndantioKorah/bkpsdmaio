@@ -640,6 +640,9 @@ class C_Simata extends CI_Controller
     public function loadModalRating($id_pegawai)
     {
 		$data['rating_pegawai'] = $this->simata->loadPegawaiPenilaianSejawatDetail($id_pegawai);
+        $data['berakhlak'] = $this->simata->getBerakhlak();
+        $data['result'] = $this->simata->getSubBerakhlak();
+
 		$this->load->view('simata/V_ModalRating360', $data);
 		
     }

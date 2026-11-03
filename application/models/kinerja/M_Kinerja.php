@@ -783,6 +783,8 @@
                                 ->get()->row_array();
     }
 
+    
+
     public function getAtasanPegawai($pegawai, $id_m_user = null, $flag_cuti = 0){
         if($id_m_user != null){
             $pegawai = $this->db->select('b.id_peg,b.gelar1, b.gelar2, b.nama, d.id_unitkerja, g.id_eselon, c.kepalaskpd, c.nama_jabatan, d.nm_unitkerja,
@@ -1338,6 +1340,9 @@
 
         return $result;
     }
+
+
+    
 
     public function createSkpBulanan($data){
         // $pegawai = $this->db->select('a.id, b.gelar1, b.nipbaru_ws, b.nama, b.gelar2, c.nm_unitkerja, e.nm_pangkat, 

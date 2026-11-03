@@ -2586,7 +2586,7 @@ class C_Kepegawaian extends CI_Controller
 		echo json_encode( $this->kepegawaian->submitPltKepsek());
 	}
 
-	public function deleteTpltPlh($id){
+	public function deletePltPlh($id){
         $this->general->delete('id', $id, 't_plt_plh');
     }
 

@@ -14851,6 +14851,10 @@ public function getFileForVerifLayanan()
         $query = $this->db->get()->row_array();
         return $query;  
     }
+
+    public function deletePltPlh($id){
+        
+    }
     
 
     public function kirimBkad($id_usul,$status){

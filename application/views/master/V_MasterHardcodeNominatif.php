@@ -7,7 +7,7 @@
             <div class="card-body">
                 <form id="form_hardcode_nominatif">
                     <div class="row">
-                        <div class="col-lg-4 col-md-4">
+                        <div class="col-lg-3 col-md-3">
                             <div class="form-group">
                                 <label class="bmd-label-floating">Pegawai</label>
                                 <select required class="form-control select2-navy" style="width: 100%"
@@ -18,7 +18,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-3">
+                        <div class="col-lg-2 col-md-2">
                             <div class="form-group">
                                 <label class="bmd-label-floating">Unit Kerja</label>
                                 <select required class="form-control select2-navy" style="width: 100%"
@@ -37,6 +37,18 @@
                                     <option value="">Pilih Jabatan</option>
                                     <?php foreach($nama_jabatan as $nj){ ?>
                                         <option value="<?=$nj['id_jabatanpeg'].";".$nj['nama_jabatan']?>"><?=($nj['nama_jabatan'])?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Pangkat</label>
+                                <select class="form-control select2-navy" style="width: 100%"
+                                    id="id_pangkat" data-dropdown-css-class="select2-navy" name="id_pangkat">
+                                    <option selected value="">Pilih Pangkat</option>
+                                    <?php foreach($list_pangkat as $lp){ ?>
+                                        <option value="<?=$lp['id_pangkat']?>"><?=($lp['nm_pangkat'])?></option>
                                     <?php } ?>
                                 </select>
                             </div>

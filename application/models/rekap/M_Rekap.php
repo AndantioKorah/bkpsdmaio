@@ -1673,7 +1673,8 @@
         $this->db->select('d.nipbaru_ws, d.nama, d.gelar1, d.gelar2, e.nm_pangkat, g.kelas_jabatan_jfu, g.kelas_jabatan_jft, i.nm_statuspeg,
             b.kelas_jabatan, e.id_pangkat, b.kepalaskpd, b.prestasi_kerja, b.beban_kerja, b.kondisi_kerja, d.statuspeg, f.id_unitkerja,
             b.jenis_jabatan, d.flag_terima_tpp, f.id_unitkerjamaster, d.besaran_gaji, d.nipbaru_ws as nip, h.id as id_m_user, f.nm_unitkerja,
-            a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun, b.flag_override_tpp, d.tmt_hitung_absen')
+            a.nama_jabatan, b.eselon, e.id_pangkat as pangkat, a.flag_add, a.bulan, a.tahun, b.flag_override_tpp, d.tmt_hitung_absen,
+            j.id_pangkat as id_pangkat_hardcode, j.nm_pangkat as nm_pangkat_hardcode')
                                 ->from('t_hardcode_nominatif a')
                                 ->join('db_pegawai.jabatan b', 'a.id_jabatan = b.id_jabatanpeg', 'left')
                                 ->join('db_pegawai.pegawai d', 'a.nip = d.nipbaru_ws')
@@ -1682,6 +1683,7 @@
                                 ->join('m_pangkat g', 'd.pangkat = g.id_pangkat')
                                 ->join('m_user h', 'a.nip = h.username')
                                 ->join('db_pegawai.statuspeg i', 'd.statuspeg = i.id_statuspeg')
+                                ->join('db_pegawai.pangkat j', 'a.id_pangkat = j.id_pangkat')
                                 // ->where('a.bulan <=', floatval($bulan))
                                 // ->where('a.tahun <=', floatval($tahun))
                                 // ->where('a.id_unitkerja', $id_unitkerja)
@@ -1710,7 +1712,12 @@
                 if(floatval($bulan) == $peg['bulan'] && floatval($tahun) == $peg['tahun']){
                     if($peg['flag_add'] == 1){
                         $temp_list_pegawai[$peg['nipbaru_ws']] = $peg;
-                       
+
+                        if($peg['id_pangkat_hardcode'] != null){
+                            $temp_list_pegawai[$peg['nipbaru_ws']]['pangkat'] = $peg['id_pangkat_hardcode'];
+                            $temp_list_pegawai[$peg['nipbaru_ws']]['id_pangkat'] = $peg['id_pangkat_hardcode'];
+                            $temp_list_pegawai[$peg['nipbaru_ws']]['nm_pangkat'] = $peg['nm_pangkat_hardcode'];
+                        }
                     }
 
                     if($peg['flag_add'] == 0){

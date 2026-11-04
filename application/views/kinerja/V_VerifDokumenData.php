@@ -42,7 +42,7 @@
                                     <a class="dropdown-item" target="_blank" href="<?=base_url($r['url_outside'])?>">Dokumen</a>
                                 </div>
                             </div>
-                        <?php } else if($r['dokumen_pendukung']) { $dokpen = json_decode($r['dokumen_pendukung']); if($dokpen[0] != "") { $nodok = 1; ?>
+                        <?php } else if($r['dokumen_pendukung']) { $dokpen = json_decode($r['dokumen_pendukung']); if(is_iterable($dokpen)) { $nodok = 1; ?>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-navy btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-eye"></i>
@@ -61,7 +61,7 @@
                         <?php if($status == 2 || $status == 3){ ?>
                             <span><strong><?=$r['keterangan_verif']?></strong></span><br>
                             <?php if($this->general_library->isProgrammer() ||
-                                    $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN ||
+                                    $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
                                     $this->general_library->isAdminAplikasi()) { ?>
                                 <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].' pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                             <?php } else { ?>
@@ -73,7 +73,7 @@
                             <input class="form-control" id="ket_verif_<?=$r['id']?>" />
                             <span style="font-size: 14px;"><?='(DIBATALKAN pada '.formatDateNamaBulanWT($r['tanggal_verif']).')'?></span>
                             <?php if($this->general_library->isProgrammer() ||
-                                    $this->general_library->getUnitKerjaPegawai() == ID_BIDANG_PEKIN ||
+                                    $this->general_library->getBidangUser() == ID_BIDANG_PEKIN ||
                                     $this->general_library->isAdminAplikasi()) { ?>
                                 <span style="font-size: 14px;"><?='(oleh '.$r['nama_verif'].')'?></span>
                             <?php } ?>

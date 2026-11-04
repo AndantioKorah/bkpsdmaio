@@ -5643,6 +5643,7 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     }
                     
                 } else if($this_user['kelas_jabatan'] == 14){
+                    // dd(1);
                     if(substr($this_user['nama_jabatan'], 0, 7) == "Asisten"){
                     $this->db->group_start(); 
                     $this->db->where_in('c.kelas_jabatan', [14,15]);
@@ -5672,13 +5673,25 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     // $this->db->where_in('d.id_unitkerjamaster ', ['6000000','7005000']);
                     // } 
                     else {
+                        // dd(1);
+                    if($this_user['skpd'] == '4011000'){
+                         $this->db->group_start(); 
+                    $this->db->where_in('c.kelas_jabatan', [14,15]);
+                    $this->db->or_where('b.skpd ', $this_user['skpd']);
+                    $this->db->where_in('c.eselon', ['II A','III A','III B']);
+                     $this->db->or_where('c.kelas_jabatan ', 12);
+                    $this->db->where('b.skpd ', $this_user['skpd']);
+                    $this->db->group_end();
+                    } else {
                     $this->db->group_start(); 
                     $this->db->where_in('c.kelas_jabatan', [14,15]);
                     $this->db->or_where('b.skpd ', $this_user['skpd']);
                     $this->db->where_in('c.eselon', ['II A','III A','III B']);
-                     $this->db->or_where('c.kelas_jabatan ', 10);
+                    $this->db->or_where('c.kelas_jabatan ', 10);
                     $this->db->where('b.skpd ', $this_user['skpd']);
                     $this->db->group_end();
+                    }
+                   
                     }
                     // }
                 } else if($this_user['kelas_jabatan'] == 15){

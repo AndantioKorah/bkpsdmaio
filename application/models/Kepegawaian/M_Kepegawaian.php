@@ -8372,7 +8372,7 @@ public function submitEditJabatan(){
                 if($diff < ($maxJam * (3600 - 59))){
                     if($flagVerifOperator == 1){
                         $prog = $this->session->userdata('programmer_session');
-                        if($prog['user_logged_in'] != null){
+                        if($prog && $prog['user_logged_in'] != null){
 
                         } else {
                             $res['code'] = 1;

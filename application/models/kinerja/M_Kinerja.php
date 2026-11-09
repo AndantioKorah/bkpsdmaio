@@ -3847,6 +3847,9 @@
         // }
         if($id_pegawai == null){
             $pegawai = $this->rekap->getNominatifPegawaiHardCode($data['id_unitkerja'], $bulan, $tahun, $pegawai);
+            // if($this->general_library->isProgrammer()){
+            //     dd($pegawai[60]);
+            // }
         }
 
         if($flag_sekolah_kecamatan == 0){
@@ -4084,7 +4087,6 @@
                     $result[$p['id_m_user']]['pagu_tpp'] = 0;
                 }
                 $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
-                
                 if(isset($p['presentasi_tpp']) || ($temp_plt && in_array($p['id_m_user'], $temp_plt))){
                     // if($this->general_library->isProgrammer()){
                     //     dd($temp[$p['id_m_user']]);

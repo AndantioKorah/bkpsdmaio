@@ -110,7 +110,7 @@
 		<tr>
 			<td style="width:25%;">Nama</td>
 			<td style="width:5%;text-align: center;">:</td>
-			<td style="width:70%;"><?= $kaban['gelar1'];?><?= getNamaPegawaiFull($kaban);?></td> Kota Manado
+			<td style="width:70%;"><?= $kaban['gelar1'];?><?= getNamaPegawaiFull($kaban);?></td>
 		</tr>
 		<tr>
 			<td>NIP</td>
@@ -125,7 +125,7 @@
 		<tr>
 			<td valign="top">Jabatan</td>
 			<td valign="top" style="text-align: center;">:</td>
-			<td><?= $kaban['nama_jabatan'];?></td>
+			<td><?= $kaban['nama_jabatan'];?></td> Kota Manado
 		</tr>
 
 	</table>

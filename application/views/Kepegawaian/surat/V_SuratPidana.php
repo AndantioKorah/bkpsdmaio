@@ -111,7 +111,7 @@
 			<td style="width:25%;">Nama</td>
 			<td style="text-align: center;width:5%;">:</td>
 			<td style="width:70%;">
-			<?= getNamaPegawaiFull($kaban);?> Kota Manado
+			<?= getNamaPegawaiFull($kaban);?>
 		</td>
 		</tr>
 		<tr>
@@ -123,7 +123,7 @@
 		<tr>
 			<td valign="top">Jabatan</td>
 			<td valign="top" style="text-align: center;">:</td>
-			<td><?= $kaban['nama_jabatan'];?></td>
+			<td><?= $kaban['nama_jabatan'];?></td> Kota Manado
 		</tr>
 
 	</table>

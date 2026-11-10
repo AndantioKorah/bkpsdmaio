@@ -111,7 +111,7 @@
 			<td style="width:25%;">Nama</td>
 			<td style="text-align: center;width:5%;">:</td>
 			<td style="width:70%;">
-			<?= getNamaPegawaiFull($kaban);?>
+			<?= getNamaPegawaiFull($kaban);?> Kota Manado
 		</td>
 		</tr>
 		<tr>
@@ -201,7 +201,7 @@
 		<tr>
 			<td style="width:100%;">
 			Tembusan Yth. :<br>
-			1. Wali Kota Manado (sebagai laporan);<br>
+			1. Wali Kota Manado;<br>
 			2. Wakil Wali Kota Manado;<br>
 			3. Sekretaris Daerah Kota Manado;<br>
 				<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>

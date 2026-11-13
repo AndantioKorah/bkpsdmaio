@@ -123,7 +123,7 @@
 		<tr>
 			<td valign="top">Jabatan</td>
 			<td valign="top" style="text-align: center;">:</td>
-			<td><?= $kaban['nama_jabatan'];?></td> Kota Manado
+			<td><?= $kaban['nama_jabatan']." Kota Manado";?></td>
 		</tr>
 
 	</table>

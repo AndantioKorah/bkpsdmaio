@@ -17067,7 +17067,8 @@ public function checkListIjazahCpns($id, $id_pegawai){
         $this->db->where('id', $id_pasangan)
                 ->update('db_pegawai.pegkeluarga', $dataPasanganUpdate);
 
-        for ($count = 0; $count < count($datapost['id_anak']); $count++) {
+    if(isset($datapost['id_anak'])){
+for ($count = 0; $count < count($datapost['id_anak']); $count++) {
             $id_anak = $datapost['id_anak'][$count];
             $dataAnakUpdate["jenis_kelamin"] = $datapost['kp4_jk_anak_'.$id_anak];
              $dataAnakUpdate["status_tunjangan"] = $datapost['kp4_tunjangan_anak_'.$id_anak];
@@ -17079,6 +17080,8 @@ public function checkListIjazahCpns($id, $id_pegawai){
             $this->db->where('id', $id_anak)
                 ->update('db_pegawai.pegkeluarga', $dataAnakUpdate);
         }
+    }    
+        
 
         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
         if($this->db->trans_status() == FALSE){

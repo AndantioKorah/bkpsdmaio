@@ -4895,6 +4895,117 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
             return $result;
         }
 
+         public function loadDataTamplate360Bkn(){
+                              $this->db->select('*')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                ->join('db_pegawai.unitkerja g', 'a.skpd = g.id_unitkerja')
+                                // ->join('db_simata.t_penilaian_sejawat h', 'a.id_peg = h.id_peg')
+                                ->join('db_simata.t_penilaian_sejawat_detail h', '(a.id_peg = h.id_peg and h.flag_active = 1)')
+                                ->where('id_m_status_pegawai', 1)
+                                ->where_not_in('g.id_unitkerja', [5, 9050030])
+                                ->order_by('c.kelas_jabatan', 'desc')
+                                ->order_by('g.id_unitkerja', 'asc');
+                               $result = $this->db->get()->result_array();
+
+                    
+            return $result;
+        }
+
+           public function updateDataTamplate360Bkn(){
+                              $this->db->select('*,j.id as id_m_user, h.id as id_detail')
+                                ->from('db_simata.t_penilaian_sejawat_detail h')
+                                ->join('db_pegawai.pegawai a', 'a.id_peg = h.id_peg')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                ->join('db_pegawai.unitkerja g', 'a.skpd = g.id_unitkerja')
+                                ->join('m_user j', 'a.nipbaru_ws = j.username')
+                                ->join('m_user k', 'a.nipbaru_ws = j.username')
+                                // ->where('a.id_peg', 'IDPeg7458')
+                                ->where('j.flag_active', 1)
+                                ->where('h.peran_penilai', null)
+                                ->where_not_in('g.id_unitkerja', [5, 9050030])
+                               ->limit(1000);
+                               $result = $this->db->get()->result_array();
+                if($result) {
+                foreach($result as $res){
+                    $id_m_user_penilai = $this->general_library->getIdUserByIdPeg($res['id_pegpenilai']);
+                    $peran_penilai =  $this->getPeranPenilai360($res['id_pegpenilai']);
+
+                    $dataUpdate['peran_penilai'] = null;
+
+                   if($res['kelas_jabatan'] == 14 AND $peran_penilai['kelas_jabatan'] == 14) {
+                    $dataUpdate['peran_penilai'] = 20;
+                   }
+
+                   else if($res['kelas_jabatan'] == 12 AND $peran_penilai['kelas_jabatan'] == 12 || $peran_penilai['kelas_jabatan'] == 11 || $peran_penilai['kelas_jabatan'] == 10) {
+                    $dataUpdate['peran_penilai'] = 20;
+                   }
+
+                   else if($res['kelas_jabatan'] == 11 AND $peran_penilai['kelas_jabatan'] == 12 || $peran_penilai['kelas_jabatan'] == 11 || $peran_penilai['kelas_jabatan'] == 10) {
+                      $dataUpdate['peran_penilai'] = 20;
+                   }
+                   else if($res['kelas_jabatan'] == 10 AND $peran_penilai['kelas_jabatan'] == 12 || $peran_penilai['kelas_jabatan'] == 11 || $peran_penilai['kelas_jabatan'] == 10) {
+                      $dataUpdate['peran_penilai'] = 20;
+                   }
+
+                   else if($res['kelas_jabatan'] == 9 AND $peran_penilai['kelas_jabatan'] == 9) {
+                      $dataUpdate['peran_penilai'] = 20;
+                   }
+
+                   else if($res['kelas_jabatan'] == 9 AND $res['jenis_jabatan'] == 'JFT' AND $peran_penilai['kelas_jabatan'] <= 9) {
+                      $dataUpdate['peran_penilai'] = 20;
+                   }
+
+                   else if($res['kelas_jabatan'] == 8 AND $peran_penilai['kelas_jabatan'] == 8 || $peran_penilai['kelas_jabatan'] <= 8) {
+                      $dataUpdate['peran_penilai'] = 20;
+                   }
+
+                   else if($res['kelas_jabatan'] == 7 AND $peran_penilai['kelas_jabatan'] == 8 || $peran_penilai['kelas_jabatan'] == 7 || $peran_penilai['kelas_jabatan'] == 6) {
+                      $dataUpdate['peran_penilai'] = 20;
+                   }
+
+                   else if($res['kelas_jabatan'] == 6 AND $peran_penilai['kelas_jabatan'] == 8 || $peran_penilai['kelas_jabatan'] == 7 || $peran_penilai['kelas_jabatan'] == 6) {
+                      $dataUpdate['peran_penilai'] = 20;
+                   }
+                  
+                   else if($res['kelas_jabatan'] == 14 AND $peran_penilai['kelas_jabatan'] <  14) {
+                      $dataUpdate['peran_penilai'] = 30;
+                   }
+
+                   else if($res['kelas_jabatan'] == 12 AND $peran_penilai['kelas_jabatan']  < 10) {
+                      $dataUpdate['peran_penilai'] = 30;
+                   }
+
+                   else if($res['kelas_jabatan'] == 11 AND $peran_penilai['kelas_jabatan']  < 10) {
+                      $dataUpdate['peran_penilai'] = 30;
+                   }
+
+                   else if($res['kelas_jabatan'] == 9 AND $res['jenis_jabatan'] == 'Struktural' AND $peran_penilai['kelas_jabatan']  < 9) {
+                      $dataUpdate['peran_penilai'] = 30;
+                   }
+                    $this->db->where('id', $res['id_detail'])
+                    ->update('db_simata.t_penilaian_sejawat_detail', $dataUpdate);
+                    }
+                }
+
+            
+            return "selesai";
+        }
+
+          public function getPeranPenilai360($id_pegpenilai){
+                              $this->db->select('*')
+                                ->from('db_pegawai.pegawai a')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                ->join('db_pegawai.unitkerja g', 'a.skpd = g.id_unitkerja')
+                                ->where('a.id_m_status_pegawai', 1)
+                                 ->where('a.id_peg', $id_pegpenilai)
+                                ->where_not_in('g.id_unitkerja', [5, 9050030])
+                                ->order_by('c.kelas_jabatan', 'desc')
+                                ->order_by('g.id_unitkerja', 'asc');
+                               $result = $this->db->get()->row_array();
+            return $result;
+        }
+
 
         public function getListIdPegawaiForPenilaianPimpinan($data = null, $return_data_pegawai = false){
             $role = $this->general_library->getRole();
@@ -5490,7 +5601,12 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                     $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
                     } else if(substr($this_user['nm_unitkerja'], 0, 9) == "Kelurahan")  {
                     $this->db->where_in('c.kelas_jabatan', [6,7,8]);
+                    if($this_user['id_m_sub_bidang'] != 0){
+                    $this->db->where('a.id_m_sub_bidang ', $this_user['id_m_sub_bidang']);
+                    } else {
                     $this->db->where('a.id_m_bidang ', $this_user['id_m_bidang']);
+
+                    }
                     } else if(substr($this_user['nm_unitkerja'], 0, 6) == "Bagian")  {
                     $this->db->where_in('c.kelas_jabatan', [6,7,8,9,10,11,12]);
                     $this->db->where('b.skpd', $this_user['skpd']);

@@ -125,7 +125,7 @@
 		<tr>
 			<td valign="top">Jabatan</td>
 			<td valign="top" style="text-align: center;">:</td>
-			<td><?= $kaban['nama_jabatan'];?></td>
+			<td><?= $kaban['nama_jabatan']." Kota Manado";?></td>
 		</tr>
 
 	</table>
@@ -195,7 +195,7 @@
 		<tr>
 			<td style="width:100%;">
 			Tembusan Yth. :<br>
-			1. Wali Kota Manado (sebagai laporan);<br>
+			1. Wali Kota Manado;<br>
 			2. Wakil Wali Kota Manado;<br>
 			3. Sekretaris Daerah Kota Manado;<br>
 			<?php if(stringStartWith('Guru', $profil_pegawai['nama_jabatan'])) { ?>

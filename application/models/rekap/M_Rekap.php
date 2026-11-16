@@ -1362,6 +1362,19 @@
                                     ->get()->row_array();
 
             // $result['kepalaskpd']['nama_jabatan'] = "Kepala Bagian Kerja Sama"; 
+        } else if($id_unitkerja == 6130000){ // puskes tuminting
+            $result['bendahara'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
+                                    e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
+                                    ->from('db_pegawai.pegawai a')
+                                    ->join('db_pegawai.pangkat b', 'a.pangkat = b.id_pangkat')
+                                    ->join('db_pegawai.unitkerja d', 'a.skpd = d.id_unitkerja')
+                                    ->join('db_pegawai.jabatan e', 'a.jabatan = e.id_jabatanpeg')
+                                    ->join('m_user e', 'a.nipbaru_ws = e.username')
+                                    ->where('a.nipbaru_ws', '197609032010012001')
+                                    ->where('id_m_status_pegawai', 1)
+                                    ->get()->row_array();
+
+            // $result['kepalaskpd']['nama_jabatan'] = "Kepala Bagian Kerja Sama"; 
         } else if($result['flag_sekolah'] == 1){ // sekolah
             $result['kepalaskpd'] = $this->db->select('a.nipbaru, a.nama, a.gelar1, a.gelar2, b.nm_pangkat, a.tmtpangkat, a.tmtcpns, d.nm_unitkerja, a.nipbaru_ws,
                             e.id as id_m_user, a.flag_bendahara, e.nama_jabatan, e.kepalaskpd')
@@ -1660,7 +1673,7 @@
                                 ->join('m_pangkat g', 'd.pangkat = g.id_pangkat')
                                 ->join('m_user h', 'a.nip = h.username')
                                 ->join('db_pegawai.statuspeg i', 'd.statuspeg = i.id_statuspeg')
-                                ->join('db_pegawai.pangkat j', 'a.id_pangkat = j.id_pangkat')
+                                ->join('db_pegawai.pangkat j', 'a.id_pangkat = j.id_pangkat', 'left')
                                 // ->where('a.bulan <=', floatval($bulan))
                                 // ->where('a.tahun <=', floatval($tahun))
                                 // ->where('a.id_unitkerja', $id_unitkerja)
@@ -1685,7 +1698,6 @@
                 // if($peg['nipbaru_ws'] == "198302282003121005"){
                 // var_dump($peg);
                 // }
-                
                 if(floatval($bulan) == $peg['bulan'] && floatval($tahun) == $peg['tahun']){
                     if($peg['flag_add'] == 1){
                         $temp_list_pegawai[$peg['nipbaru_ws']] = $peg;

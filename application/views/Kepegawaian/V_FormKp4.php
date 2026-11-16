@@ -202,7 +202,12 @@ Data KP4
     </div>
      <div class="form-group">
     <label>Penghasilan</label>
-      <input  class="form-control" autocomplete="off" value="<?=$pasangan[0]['penghasilan'];?>" id="kp4_pasangan_penghasilan" name="kp4_pasangan_penghasilan"  required/>
+    <?php if(isset($pasangan[0]['penghasilan'])) {
+    $penghasilan_pasangan =  $pasangan[0]['penghasilan'];   
+    } else {
+      $penghasilan_pasangan = null;
+    } ?>
+      <input  class="form-control" autocomplete="off" value="<?=$penghasilan_pasangan;?>" id="kp4_pasangan_penghasilan" name="kp4_pasangan_penghasilan"  required/>
     </div>
     <?php } else { ?>
     <p>Tidak ada data Pasangan, Silahkan Input data Pasangan pada tab Keluarga jika sudah mempunyai pasangan</p>
@@ -289,7 +294,7 @@ Data KP4
  </div>
 </form> 
 <form method="post" action="<?=base_url("kepegawaian/C_Kepegawaian/downloadkp4")?>" target="_blank">
-  <input type="text" name="nip" value="<?=$kp4['nipbaru_ws'];?>" >
+  <input type="hidden" name="nip" value="<?=$kp4['nipbaru_ws'];?>" >
   <button type="submit" class="btn btn-info float-right mr-2" data-toggle="modal" data-target="#modalDownloadDraftHukdis">
         Download 
   </button>

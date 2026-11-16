@@ -181,7 +181,7 @@ UNTUK MENDAPATKAN PEMBAYARAN TUNJANGAN KELUARGA</b>
                 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-family:"Arial",sans-serif;'><?=$pasangan[0]['tptlahir'];?></span></p>
             </td>
             <td style="width: 73.55pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0cm 5.4pt;vertical-align: top;">
-                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-family:"Arial",sans-serif;'><?=($pasangan[0]['tgllahir']);?></span></p>
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-family:"Arial",sans-serif;'><?=(formatDateNamaBulan($pasangan[0]['tgllahir']));?></span></p>
             </td>
             <td style="width: 49.5pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0cm 5.4pt;vertical-align: top;">
                 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;text-align:center;'><span style='font-family:"Arial",sans-serif;'><?=$kp4['nip_nii'];?></span></p>
@@ -190,7 +190,7 @@ UNTUK MENDAPATKAN PEMBAYARAN TUNJANGAN KELUARGA</b>
                 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-family:"Arial",sans-serif;'><?=$pasangan[0]['pekerjaan'];?></span></p>
             </td>
             <td style="width: 63.8pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0cm 5.4pt;vertical-align: top;">
-                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-family:"Arial",sans-serif;'><?=($pasangan[0]['tglnikah']);?></span></p>
+                <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-family:"Arial",sans-serif;'><?=(formatDateNamaBulan($pasangan[0]['tglnikah']));?></span></p>
             </td>
             <td style="width: 42.5pt;border-top: none;border-left: none;border-bottom: 1pt solid black;border-right: 1pt solid black;padding: 0cm 5.4pt;vertical-align: top;">
                 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;font-size:15px;font-family:"Calibri",sans-serif;'><span style='font-family:"Arial",sans-serif;'><?=$pasangan[0]['pasangan_ke'];?></span></p>

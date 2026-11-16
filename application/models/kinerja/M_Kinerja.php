@@ -2108,6 +2108,8 @@
                     $insert_data[$i]['tanggal'] = $date[2];
                     if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
                         $insert_data[$i]['status'] = 2;
+                        $insert_data[$i]['id_m_user'] = $this->general_library->getId();
+                        $insert_data[$i]['tanggal_verif'] = date("Y-m-d H:i:s");
                     }
                     $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];
                     if($disiplin[0] == 14){
@@ -3847,6 +3849,9 @@
         // }
         if($id_pegawai == null){
             $pegawai = $this->rekap->getNominatifPegawaiHardCode($data['id_unitkerja'], $bulan, $tahun, $pegawai);
+            // if($this->general_library->isProgrammer()){
+            //     dd($pegawai[60]);
+            // }
         }
 
         if($flag_sekolah_kecamatan == 0){
@@ -4084,7 +4089,6 @@
                     $result[$p['id_m_user']]['pagu_tpp'] = 0;
                 }
                 $result[$p['id_m_user']]['total_beban_prestasi'] = $total_beban_prestasi;
-                
                 if(isset($p['presentasi_tpp']) || ($temp_plt && in_array($p['id_m_user'], $temp_plt))){
                     // if($this->general_library->isProgrammer()){
                     //     dd($temp[$p['id_m_user']]);

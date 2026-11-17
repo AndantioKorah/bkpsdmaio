@@ -2684,9 +2684,7 @@ class C_Kepegawaian extends CI_Controller
 		$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
 		$data['dok_lain'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','75','0');	
 		$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan();
-
 		$data['sk_jabatan_fungsional_pertama'] = $this->kepegawaian->getDokumenJabatanFungsionalPertamaForLayanan();
-
 		if(isset($data['sk_jabatan_fungsional_pertama']['jenis_jabatan'])){
 			$data['kodeberkas'] = 5;
 		} else {
@@ -3043,6 +3041,11 @@ class C_Kepegawaian extends CI_Controller
 			if($layanan == 16){
 				$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayananAdmin($id_peg); 
 				$data['sk_jabatan_fungsional_pertama'] = $this->kepegawaian->getDokumenJabatanFungsionalPertamaForLayananAdmin($id_peg); 
+				if(isset($data['sk_jabatan_fungsional_pertama']['jenis_jabatan'])){
+					$data['kodeberkas'] = 'sk_jabatan_fungsional_pertama';
+				} else {
+					$data['kodeberkas'] = 'sk_jabatan_fungsional_pertama_arsip';
+				}
 
 				$data['peta_jabatan'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','66','0',$id_peg);	
 				$data['sk_pemberhentian_dari_jabfung'] = $this->kepegawaian->getDokumenForKarisKarsuAdmin('db_pegawai.pegarsip','73','0',$id_peg);	

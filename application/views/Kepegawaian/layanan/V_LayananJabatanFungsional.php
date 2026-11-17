@@ -540,7 +540,7 @@ ol {
                  <li>
                 <a class="<?php if($sk_mutasi_instansi) echo 'select'; else echo 'unselect';?>" <?php if($sk_mutasi_instansi) { ?>
                 onclick="viewBerkasPangkat('<?=$sk_mutasi_instansi['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Mutasi Antar Instansi* <i
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Mutasi Antar Instansi (Upload di Arsip Lainnya)* <i
                 class="fas fa-<?php if($sk_mutasi_instansi) echo ''; else echo '';?>"></i></a>
                 </li>
                 
@@ -553,7 +553,7 @@ ol {
                 <li>
                 <a class="<?php if($sk_pemberhentian_dari_jabfung) echo 'select'; else echo 'unselect';?>" <?php if($sk_pemberhentian_dari_jabfung) { ?>
                 onclick="viewBerkasPangkat('<?=$sk_pemberhentian_dari_jabfung['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pemberhentian dari Jabatan Fungsional* <i
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pemberhentian dari Jabatan Fungsional (Upload di Arsip Lainnya)* <i
                 class="fas fa-<?php if($sk_pemberhentian_dari_jabfung) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>

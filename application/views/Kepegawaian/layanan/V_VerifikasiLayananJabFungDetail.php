@@ -298,7 +298,7 @@
     <button onclick="getFile(file='peta_jabatan')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Peta Jabatan</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
-    <button onclick="getFile(file='sk_jabatan_fungsional_pertama')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pengangkatan Pertama dalam Jabatan Fungsional</button>
+    <button onclick="getFile(file='<?=$kodeberkas;?>')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Pengangkatan Pertama dalam Jabatan Fungsional</button>
   </li>
   <li class="nav-item nav-item-layanan" role="presentation">
     <button onclick="getFile(file='sk_jf_asal')" class="nav-link nav-link-layanan" id="pills-pangkat-tab" data-bs-toggle="pill" data-bs-target="#pills-pangkat" type="button" role="tab" aria-controls="pills-home" aria-selected="true">SK Jabatan Fungsional Terakhir dari Instansi Asal</button>
@@ -756,7 +756,7 @@ function openPresensiTab(){
           dir = "arsipelektronik/";
         } else if(file == "skp1" || file == "skp2"){
           dir = "arsipskp/";
-        } else if(file == "sk_jf_asal" || file == "sk_tubel" || file == "tangkap_layar_myasn" || file =="sk_pengaktifan_kembali" || file == "sk_mutasi_instasi" || file == "rekom_kepala_pd" || file =="sk_pemberhentian_dari_jabfung" || file =="pengunduran_diri" || file =="surat_usul_pyb" || file =="rekom_instansi_pembina" || file =="str_serdik" || file == "dok_lain" || file == "formasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi" || file == "peta_jabatan"){
+        } else if(file == "sk_jf_asal" || file == "sk_tubel" || file == "tangkap_layar_myasn" || file =="sk_pengaktifan_kembali" || file == "sk_mutasi_instasi" || file == "rekom_kepala_pd" || file =="sk_pemberhentian_dari_jabfung" || file =="pengunduran_diri" || file =="surat_usul_pyb" || file =="rekom_instansi_pembina" || file =="str_serdik" || file == "dok_lain" || file == "formasi" || file == "pak" || file == "ibel" || file == "sertiukom" || file == "forlap" || file== "stlud" || file== "uraiantugas" || file== "pmk" || file == "skjabterusmenerus" || file == "peta" || file == "akreditasi" || file == "peta_jabatan" || "sk_jabatan_fungsional_pertama_arsip"){
           dir = "arsiplain/";
         } else if(file == "diklat"){
           dir = "arsipdiklat/";
@@ -791,7 +791,7 @@ function openPresensiTab(){
             var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_hd+"?v="+number;
             } else if(file == "surat_pernyataan_hd" || file == "surat_pernyataan_bersedia_tidak_diangkat_jabfung_lagi"){
               var link = "<?=base_url();?>/"+dir+"/"+data[0].surat_pernyataan_tidak_hd+"?v="+number;
-            }  else {
+            }   else {
               var link = "<?=base_url();?>/"+dir+"/"+data[0].gambarsk+"?v="+number;
 
             }

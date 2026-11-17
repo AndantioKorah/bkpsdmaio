@@ -1858,6 +1858,8 @@ class M_Kepegawaian extends CI_Model
             //     'docfile'  => $base64
             // ]);
 
+            $tglsk_timkerja = date("Y-m-d", strtotime($this->input->post('tglsk_timkerja')));
+
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['nm_timkerja']      = $this->input->post('nm_timkerja');
             $dataInsert['jabatan']      = $this->input->post('jabatan');
@@ -1865,7 +1867,8 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['gambarsk']         = $filename;
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['updated_by']      = $this->general_library->getId();
-            $dataInsert['flag_lingkup_baru']      = 1;
+            // $dataInsert['flag_lingkup_baru']      = 1;
+             $dataInsert['tglsk_timkerja']      =  $tglsk_timkerja;
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
                 $dataInsert['status']      = 2;
                 $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');

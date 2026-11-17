@@ -117,6 +117,10 @@ data-toggle="modal" class="btn btn-success mb-2" href="#pdmModal"> Berkas Sudah 
     </select>
   </div>
 
+  <div class="form-group">
+    <label>Tanggal SK</label>
+    <input autocomplete="off"  class="form-control datepicker"   id="tglsk_timkerja" name="tglsk_timkerja" required/>
+  </div>
 
   <div class="form-group">
     <label>File SK</label>

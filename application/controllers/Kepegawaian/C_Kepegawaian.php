@@ -2684,10 +2684,14 @@ class C_Kepegawaian extends CI_Controller
 		$data['status_layanan'] = $this->kepegawaian->getStatusLayananPangkat($id_layanan);
 		$data['dok_lain'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','75','0');	
 		$data['sk_jabatan_fungsional'] = $this->kepegawaian->getDokumenJabatanFungsionalForLayanan();
+
 		$data['sk_jabatan_fungsional_pertama'] = $this->kepegawaian->getDokumenJabatanFungsionalPertamaForLayanan();
 
-		
-
+		if(isset($data['sk_jabatan_fungsional_pertama']['jenis_jabatan'])){
+			$data['kodeberkas'] = 5;
+		} else {
+			$data['kodeberkas'] = 6;
+		}
 			if($id_layanan == 12){
 				$data['formasi'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','69','0');	
 				$data['pak'] = $this->kepegawaian->getDokumenForKarisKarsu('db_pegawai.pegarsip','11','0');	

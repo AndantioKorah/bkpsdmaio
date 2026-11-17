@@ -11924,6 +11924,15 @@ public function getFileForKarisKarsu()
         ->limit(1);
        
         $query = $this->db->get()->row_array();
+        if(!$query){
+         $this->db->select('*')
+        ->from('db_pegawai.pegarsip as a')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('a.flag_active', 1)
+        ->where('a.id_dokumen', 107)
+        ->limit(1);
+        $query = $this->db->get()->row_array();
+        }
         return $query;  
     }
 

@@ -4896,39 +4896,50 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         }
 
          public function loadDataTamplate360Bkn(){
-                              $this->db->select('*')
-                                ->from('db_pegawai.pegawai a')
-                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                                ->join('db_pegawai.unitkerja g', 'a.skpd = g.id_unitkerja')
-                                // ->join('db_simata.t_penilaian_sejawat h', 'a.id_peg = h.id_peg')
-                                ->join('db_simata.t_penilaian_sejawat_detail h', '(a.id_peg = h.id_peg and h.flag_active = 1)')
-                                ->where('id_m_status_pegawai', 1)
-                                ->where_not_in('g.id_unitkerja', [5, 9050030])
-                                ->order_by('c.kelas_jabatan', 'desc')
-                                ->order_by('g.id_unitkerja', 'asc');
-                               $result = $this->db->get()->result_array();
+                            //   $this->db->select('*')
+                            //     ->from('db_pegawai.pegawai a')
+                            //     ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                            //     ->join('db_pegawai.unitkerja g', 'a.skpd = g.id_unitkerja')
+                            //     ->join('db_simata.t_penilaian_sejawat_detail h', '(a.id_peg = h.id_peg and h.flag_active = 1)')
+                            //     ->where('id_m_status_pegawai', 1)
+                            //     ->where_not_in('g.id_unitkerja', [5, 9050030])
+                            //     ->order_by('c.kelas_jabatan', 'desc')
+                            //     ->order_by('g.id_unitkerja', 'asc')
+                            //     ->limit(100);
+                            //    $result = $this->db->get()->result_array();
 
+                                $this->db->select('*')
+                                ->from('db_simata.t_penilaian_sejawat_detail h')
+                                ->join('db_pegawai.pegawai a', 'a.id_peg = h.id_peg')
+                                ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
+                                ->where('a.id_m_status_pegawai', 1)
+                                ->where('h.flag_active', 1)
+                                ->where_not_in('a.skpd', [5, 9050030])
+                                ->order_by('c.kelas_jabatan', 'desc');
+                                // ->limit(100);
+                               $result = $this->db->get()->result_array();
+                               
                     
             return $result;
         }
 
            public function updateDataTamplate360Bkn(){
-                              $this->db->select('*,j.id as id_m_user, h.id as id_detail')
+                              $this->db->select('*, h.id as id_detail')
                                 ->from('db_simata.t_penilaian_sejawat_detail h')
                                 ->join('db_pegawai.pegawai a', 'a.id_peg = h.id_peg')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                                 ->join('db_pegawai.unitkerja g', 'a.skpd = g.id_unitkerja')
-                                ->join('m_user j', 'a.nipbaru_ws = j.username')
-                                ->join('m_user k', 'a.nipbaru_ws = j.username')
+                                // ->join('m_user j', 'a.nipbaru_ws = j.username')
+                                // ->join('m_user k', 'a.nipbaru_ws = j.username')
                                 // ->where('a.id_peg', 'IDPeg7458')
-                                ->where('j.flag_active', 1)
+                                ->where('a.id_m_status_pegawai', 1)
                                 ->where('h.peran_penilai', null)
                                 ->where_not_in('g.id_unitkerja', [5, 9050030])
-                               ->limit(1000);
+                               ->limit(500);
                                $result = $this->db->get()->result_array();
                 if($result) {
                 foreach($result as $res){
-                    $id_m_user_penilai = $this->general_library->getIdUserByIdPeg($res['id_pegpenilai']);
+                    // $id_m_user_penilai = $this->general_library->getIdUserByIdPeg($res['id_pegpenilai']);
                     $peran_penilai =  $this->getPeranPenilai360($res['id_pegpenilai']);
 
                     $dataUpdate['peran_penilai'] = null;
@@ -4993,15 +5004,13 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
         }
 
           public function getPeranPenilai360($id_pegpenilai){
-                              $this->db->select('*')
+                              $this->db->select('c.kelas_jabatan')
                                 ->from('db_pegawai.pegawai a')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
-                                ->join('db_pegawai.unitkerja g', 'a.skpd = g.id_unitkerja')
                                 ->where('a.id_m_status_pegawai', 1)
                                  ->where('a.id_peg', $id_pegpenilai)
-                                ->where_not_in('g.id_unitkerja', [5, 9050030])
-                                ->order_by('c.kelas_jabatan', 'desc')
-                                ->order_by('g.id_unitkerja', 'asc');
+                                ->where_not_in('a.skpd', [5, 9050030])
+                                ->order_by('c.kelas_jabatan', 'desc');
                                $result = $this->db->get()->row_array();
             return $result;
         }
@@ -6433,9 +6442,9 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                         }
                         
                         $total_nilai2 = $total_nilai_bukan_atasan + $total_nilai_atasan;
-                        if($total_nilai2 == 100){
+                        if($total_nilai2 > 90){
                             $id_kriteria_penilaian = 148;
-                        } else if($total_nilai2 >= 80 && $total_nilai2 < 100){
+                        } else if($total_nilai2 >= 80 && $total_nilai2 <= 90){
                             $id_kriteria_penilaian = 149;
                         } else if($total_nilai2 >= 60 && $total_nilai2 < 80){
                             $id_kriteria_penilaian = 150;
@@ -6454,9 +6463,9 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                         $res = array('msg' => 'Data berhasil disimpan', 'success' => true);
                         } else {
                          $total_nilai2 = $tn;
-                      if($total_nilai2 == 100){
+                      if($total_nilai2 > 90){
                             $id_kriteria_penilaian = 148;
-                        } else if($total_nilai2 >= 80 && $total_nilai2 < 100){
+                        } else if($total_nilai2 >= 80 && $total_nilai2 <= 90){
                             $id_kriteria_penilaian = 149;
                         } else if($total_nilai2 >= 60 && $total_nilai2 < 80){
                             $id_kriteria_penilaian = 150;

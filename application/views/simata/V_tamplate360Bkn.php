@@ -106,6 +106,7 @@ h3 {
     <div class="col-lg-12 table-responsive">
     <table class="table table-striped" id="table_tamplate">
             <thead>
+                <th class="text-left">NO</th>
                 <th class="text-left">NIP</th>
                 <th class="text-left">Peran Penilai</th>
                 <th class="text-left">Berorientasi Pelayanan</th>
@@ -119,15 +120,16 @@ h3 {
             <tbody>
             <?php $no=1; foreach($data as $p){?>
                 <tr>
+                    <td class="text-left"><?=$no++;?></td>
                     <td class="text-left"><?=$p['nipbaru_ws']?></td>
                     <td class="text-left"><?=$p['peran_penilai']?></td>
-                    <td class="text-left"><?=$p['berorientasi_pelayanan']?></td>
-                    <td class="text-left"><?=$p['akuntabel']?></td>
-                    <td class="text-left"><?=$p['kompeten']?></td>
-                    <td class="text-left"><?=$p['harmonis']?></td>
-                    <td class="text-left"><?=$p['loyal']?></td>
-                    <td class="text-left"><?=$p['adaptif']?></td>
-                    <td class="text-left"><?=$p['kolaboratif']?></td>
+                    <td class="text-left"><?=$p['berorientasi_pelayanan']/20;?></td>
+                    <td class="text-left"><?=$p['akuntabel']/20;?></td>
+                    <td class="text-left"><?=$p['kompeten']/20;?></td>
+                    <td class="text-left"><?=$p['harmonis']/20;?></td>
+                    <td class="text-left"><?=$p['loyal']/20;?></td>
+                    <td class="text-left"><?=$p['adaptif']/20;?></td>
+                    <td class="text-left"><?=$p['kolaboratif']/20;?></td>
                 </tr>
             <?php } ?>
             </tbody>
@@ -137,199 +139,16 @@ h3 {
  
     <script>
 
-$(document).on("click", ".open-DetailPT", function () {
-  
-
-$('input[name=berorientasi_pelayanan]').attr('checked',false);
-$('input[name=akuntabel]').attr('checked',false);
-$('input[name=kompeten]').attr('checked',false);
-$('input[name=harmonis]').attr('checked',false);
-$('input[name=loyal]').attr('checked',false);
-$('input[name=adaptif]').attr('checked',false);
-$('input[name=kolaboratif]').attr('checked',false);
-
-var id = $(this).data('id');
-var foto = $(this).data('foto');
-var nama = $(this).data('nama');
-var berorientasi_pelayanan = $(this).data('berorientasi_pelayanan');
-var akuntabel = $(this).data('akuntabel');
-var kompeten = $(this).data('kompeten');
-var harmonis = $(this).data('harmonis');
-var loyal = $(this).data('loyal');
-var adaptif = $(this).data('adaptif');
-var kolaboratif = $(this).data('kolaboratif');
-$('#foto_mini').attr('src', '<?=base_url('')?>assets/fotopeg/'+foto); 
-
-$('#id_pegawai').val(id)
-$('#nama_pegawai').html(nama)
-
-if(berorientasi_pelayanan == 20){
-  $("#radio-1").prop('checked',true);
-  // $("#radio-1").attr('checked', 'checked');
-} else if(berorientasi_pelayanan == 40) {
-  $("#radio-2").prop('checked',true);
-  // $("#radio-2").attr('checked', 'checked');
-} else if(berorientasi_pelayanan == 60) {
-  $("#radio-3").prop('checked',true);
-  // $("#radio-3").attr('checked', 'checked');
-} else if(berorientasi_pelayanan == 80) {
-  $("#radio-4").prop('checked',true);
-  // $("#radio-4").attr('checked', 'checked');
-} else if(berorientasi_pelayanan == 100) {
-  $("#radio-5").prop('checked',true);
-  // $("#radio-5").attr('checked', 'checked');
-} else {
-  $( "#radio-1" ).prop( "checked", false );
-  $( "#radio-2" ).prop( "checked", false );
-  $( "#radio-3" ).prop( "checked", false );
-  $( "#radio-4" ).prop( "checked", false );
-  $( "#radio-5" ).prop( "checked", false );
-}
-
-if(akuntabel == 20){
-  $("#radio-12").prop('checked',true);
-} else if(akuntabel == 40) {
-  $("#radio-22").prop('checked',true);
-} else if(akuntabel == 60) {
-  $("#radio-32").prop('checked',true);
-} else if(akuntabel == 80) {
-  $("#radio-42").prop('checked',true);
-} else if(akuntabel == 100) {
-  $("#radio-52").prop('checked',true);
-} else {
-  $( "#radio-12" ).prop( "checked", false );
-  $( "#radio-22" ).prop( "checked", false );
-  $( "#radio-32" ).prop( "checked", false );
-  $( "#radio-42" ).prop( "checked", false );
-  $( "#radio-52" ).prop( "checked", false );
-}
-
-if(kompeten == 20){
-  $("#radio-13").prop('checked',true);
-} else if(kompeten == 40) {
-  $("#radio-23").prop('checked',true);
-} else if(kompeten == 60) {
-  $("#radio-33").prop('checked',true);
-} else if(kompeten == 80) {
-  $("#radio-43").prop('checked',true);
-} else if(kompeten == 100) {
-  $("#radio-53").prop('checked',true);
-} else {
-  $( "#radio-13" ).prop( "checked", false );
-  $( "#radio-23" ).prop( "checked", false );
-  $( "#radio-33" ).prop( "checked", false );
-  $( "#radio-43" ).prop( "checked", false );
-  $( "#radio-53" ).prop( "checked", false );
-}
-
-if(harmonis == 20){
-  $("#radio-14").prop('checked',true);
-} else if(harmonis == 40) {
-  $("#radio-24").prop('checked',true);
-} else if(harmonis == 60) {
-  $("#radio-34").prop('checked',true);
-} else if(harmonis == 80) {
-  $("#radio-44").prop('checked',true);
-} else if(harmonis == 100) {
-  $("#radio-54").prop('checked',true);
-} else {
-  $( "#radio-14" ).prop( "checked", false );
-  $( "#radio-24" ).prop( "checked", false );
-  $( "#radio-34" ).prop( "checked", false );
-  $( "#radio-44" ).prop( "checked", false );
-  $( "#radio-54" ).prop( "checked", false );
-}
-
-if(loyal == 20){
-  $("#radio-15").prop('checked',true);
-} else if(loyal == 40) {
-  $("#radio-25").prop('checked',true);
-} else if(loyal == 60) {
-  $("#radio-35").prop('checked',true);
-} else if(loyal == 80) {
-  $("#radio-45").prop('checked',true);
-} else if(loyal == 100) {
-  $("#radio-55").prop('checked',true);
-} else {
-  $( "#radio-15" ).prop( "checked", false );
-  $( "#radio-25" ).prop( "checked", false );
-  $( "#radio-35" ).prop( "checked", false );
-  $( "#radio-45" ).prop( "checked", false );
-  $( "#radio-55" ).prop( "checked", false );
-}
-
-if(adaptif == 20){
-  $("#radio-16").prop('checked',true);
-} else if(adaptif == 40) {
-  $("#radio-26").prop('checked',true);
-} else if(adaptif == 60) {
-  $("#radio-36").prop('checked',true);
-} else if(adaptif == 80) {
-  $("#radio-46").prop('checked',true);
-} else if(adaptif == 100) {
-  $("#radio-56").prop('checked',true);
-} else {
-  $( "#radio-16" ).prop( "checked", false );
-  $( "#radio-26" ).prop( "checked", false );
-  $( "#radio-36" ).prop( "checked", false );
-  $( "#radio-46" ).prop( "checked", false );
-  $( "#radio-56" ).prop( "checked", false );
-}
-
-
-if(kolaboratif == 20){
-  $("#radio-17").prop('checked',true);
-} else if(kolaboratif == 40) {
-  $("#radio-27").prop('checked',true);
-} else if(kolaboratif == 60) {
-  $("#radio-37").prop('checked',true);
-} else if(kolaboratif == 80) {
-  $("#radio-47").prop('checked',true);
-} else if(kolaboratif == 100) {
-  $("#radio-57").prop('checked',true);
-} else {
-  $( "#radio-17" ).prop( "checked", false );
-  $( "#radio-27" ).prop( "checked", false );
-  $( "#radio-37" ).prop( "checked", false );
-  $( "#radio-47" ).prop( "checked", false );
-  $( "#radio-57" ).prop( "checked", false );
-}
-
-
-
-});
-
-$('#table_tamplate').DataTable({
-   
-    "aLengthMenu": [[50, 75, -1], [50, 75, "All"]],
+  $(function(){
+    $('#table_tamplate').DataTable({
+    "aLengthMenu": [[100, 75, -1], [100, 75, "All"]],
      });
     
-        
-     $('#form_penilaian_sejawat').on('submit', function(e){  
-        //     document.getElementById('btn_upload').disabled = true;
-        // $('#btn_upload').html('SIMPAN.. <i class="fas fa-spinner fa-spin"></i>')
-        e.preventDefault();
-        var formvalue = $('#form_penilaian_sejawat');
-        var form_data = new FormData(formvalue[0]);
+  })
 
-        // document.getElementById('btn_simpan').disabled = true;
-        // $('#btn_simpan').html('Simpan.. <i class="fas fa-spinner fa-spin"></i>')
 
-        $.ajax({  
-        url:"<?=base_url("simata/C_Simata/submitPenilaianSejawat")?>",
-        method:"POST",  
-        data:form_data,  
-        contentType: false,  
-        cache: false,  
-        processData:false,  
-        success:function(res){ 
-           $('#btn_simpan').html('Simpan')
-          //  location.reload()
-                
-        }  
-        });  
-          
-        });
+
+
 
 
     </script>

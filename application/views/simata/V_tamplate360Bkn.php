@@ -1,3 +1,9 @@
+<?php
+    $filename = 'Penilaian 360 ASN Kota Manado.xls';
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=$filename");
+?>
+
 <?php if($data){ ?>
   <style>
         *,
@@ -106,7 +112,6 @@ h3 {
     <div class="col-lg-12 table-responsive">
     <table class="table table-striped" id="table_tamplate">
             <thead>
-                <th class="text-left">NO</th>
                 <th class="text-left">NIP</th>
                 <th class="text-left">Peran Penilai</th>
                 <th class="text-left">Berorientasi Pelayanan</th>
@@ -120,8 +125,7 @@ h3 {
             <tbody>
             <?php $no=1; foreach($data as $p){?>
                 <tr>
-                    <td class="text-left"><?=$no++;?></td>
-                    <td class="text-left"><?=$p['nipbaru_ws']?></td>
+                    <td class="text-left">'<?=$p['nipbaru_ws']?></td>
                     <td class="text-left"><?=$p['peran_penilai']?></td>
                     <td class="text-left"><?=$p['berorientasi_pelayanan']/20;?></td>
                     <td class="text-left"><?=$p['akuntabel']/20;?></td>

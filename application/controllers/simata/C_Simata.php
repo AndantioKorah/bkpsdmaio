@@ -684,8 +684,9 @@ class C_Simata extends CI_Controller
         //     $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
         // }
 
+        $this->load->view('simata/V_tamplate360Bkn', $data);
         
-        render('simata/V_tamplate360Bkn', '', '', $data);
+        // render('simata/V_tamplate360Bkn', '', '', $data);
     }
 
      public function updateDataTamplate360Bkn(){

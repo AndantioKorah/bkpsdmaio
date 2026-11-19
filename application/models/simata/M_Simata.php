@@ -4908,12 +4908,14 @@ function getSuksesor($jenis_jabatan,$jabatan_target_jpt,$jabatan_target_adm,$jp)
                             //     ->limit(100);
                             //    $result = $this->db->get()->result_array();
 
-                                $this->db->select('*')
+                                $this->db->select('a.nipbaru_ws,
+                                h.peran_penilai,h.berorientasi_pelayanan, h.akuntabel, h.kompeten,h.harmonis,h.loyal,h.adaptif,h.kolaboratif')
                                 ->from('db_simata.t_penilaian_sejawat_detail h')
                                 ->join('db_pegawai.pegawai a', 'a.id_peg = h.id_peg')
                                 ->join('db_pegawai.jabatan c', 'a.jabatan = c.id_jabatanpeg')
                                 ->where('a.id_m_status_pegawai', 1)
                                 ->where('h.flag_active', 1)
+                                 ->where('h.peran_penilai is not null')
                                 ->where_not_in('a.skpd', [5, 9050030])
                                 ->order_by('c.kelas_jabatan', 'desc');
                                 // ->limit(100);

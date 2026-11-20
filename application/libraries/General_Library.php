@@ -639,6 +639,11 @@ class General_library
         return $this->userLoggedIn['nama_jabatan_tambahan'];
     }
 
+    public function getNamaJabatanKepalaSkpdHardcode(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        return $this->userLoggedIn['nama_jabatan_kepalaskpd_hardcode'];
+    }
+
     public function getIdJabatan(){
         return isset($this->userLoggedIn['jabatan']) ? $this->userLoggedIn['jabatan'] : null;
         // return $this->userLoggedIn['jabatan'];

@@ -85,13 +85,14 @@
             $exclude_username = ['prog', '001'];
 
             $this->db->select('a.*, b.*, c.*, a.nama as nama_user, d.nama_jabatan, e.id_eselon, d.kepalaskpd, d.eselon,
-                f.nama_jabatan as nama_jabatan_tambahan, b.id_m_status_pegawai')
+                f.nama_jabatan as nama_jabatan_tambahan, b.id_m_status_pegawai, g.nama_jabatan_kepalaskpd_hardcode')
                         ->from('m_user a')
                         ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
                         ->join('db_pegawai.unitkerja c', 'b.skpd = c.id_unitkerja')
                         ->join('db_pegawai.jabatan d', 'b.jabatan = d.id_jabatanpeg', 'left')
                         ->join('db_pegawai.eselon e', 'd.eselon = e.nm_eselon', 'left')
                         ->join('db_pegawai.jabatan f', 'b.id_jabatan_tambahan = f.id_jabatanpeg', 'left')
+                        ->join('db_pegawai.unitkerja g', 'g.nip_kepalaskpd_hardcode = b.nipbaru_ws', 'left')
                         ->where('a.username', $username)
                         // ->where('a.password', $password)
                         // ->where('id_m_status_pegawai', 1)

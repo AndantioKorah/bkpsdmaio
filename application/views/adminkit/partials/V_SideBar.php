@@ -1085,7 +1085,7 @@
 		</ul>
 	</li>
 	<li class="sidebar-item ">
-				<a title="Verifikasi" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
+				<a title="Penilaian 360" href="<?=base_url();?>mt/penilaian-sejawat/" class="sidebar-link">
 				<i class="align-middle me-2 fa fa-fw fa fa-edit"></i> 
 					<span class="align-middle">
 					Penilaian 360

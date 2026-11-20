@@ -673,6 +673,27 @@ class C_Simata extends CI_Controller
         render('simata/V_Rekap360', '', '', $data);
     }
 
+      public function template360bkn(){
+        // $data['unitkerja'] = $this->master->getAllSkpd();
+		$data['data'] = $this->simata->loadDataTamplate360Bkn();
+		// if(isKasubKepegawaian($this->general_library->getNamaJabatan())){
+        //     $data['unitkerja'] = $this->m_general->getGroupUnitKerja($this->general_library->getUnitKerjaPegawai());
+        // } else if(stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())) {
+        //     $data['unitkerja'] = $this->m_general->getGroupUnitKerja($this->general_library->getUnitKerjaPegawai());
+		// } else {	
+        //     $data['unitkerja'] = $this->m_general->getAllWithOrderGeneral('db_pegawai.unitkerja', 'nm_unitkerja', 'asc');
+        // }
+
+        $this->load->view('simata/V_tamplate360Bkn', $data);
+        
+        // render('simata/V_tamplate360Bkn', '', '', $data);
+    }
+
+     public function updateDataTamplate360Bkn(){
+        $response = $this->simata->updateDataTamplate360Bkn();
+		echo json_encode($response);
+    }
+
       public function loadRekap360Item()
     {
         $data['periode'] = $this->input->post();

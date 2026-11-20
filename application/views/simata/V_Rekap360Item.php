@@ -307,7 +307,7 @@ if(kolaboratif == 20){
 
 $('#table_list_pegawai').DataTable({
    
-    "aLengthMenu": [[50, 75, -1], [50, 75, "All"]],
+    "aLengthMenu": [[100, 50, -1], [100, 50, "All"]],
      });
     
         

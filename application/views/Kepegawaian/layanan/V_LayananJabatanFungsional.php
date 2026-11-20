@@ -540,7 +540,7 @@ ol {
                  <li>
                 <a class="<?php if($sk_mutasi_instansi) echo 'select'; else echo 'unselect';?>" <?php if($sk_mutasi_instansi) { ?>
                 onclick="viewBerkasPangkat('<?=$sk_mutasi_instansi['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Mutasi Antar Instansi* <i
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Mutasi Antar Instansi (Upload di Arsip Lainnya)* <i
                 class="fas fa-<?php if($sk_mutasi_instansi) echo ''; else echo '';?>"></i></a>
                 </li>
                 
@@ -553,7 +553,7 @@ ol {
                 <li>
                 <a class="<?php if($sk_pemberhentian_dari_jabfung) echo 'select'; else echo 'unselect';?>" <?php if($sk_pemberhentian_dari_jabfung) { ?>
                 onclick="viewBerkasPangkat('<?=$sk_pemberhentian_dari_jabfung['gambarsk'];?>',6)" data-toggle="modal" data-target="#exampleModal"
-                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pemberhentian dari Jabatan Fungsional* <i
+                <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pemberhentian dari Jabatan Fungsional (Upload di Arsip Lainnya)* <i
                 class="fas fa-<?php if($sk_pemberhentian_dari_jabfung) echo ''; else echo '';?>"></i></a>
                 </li>
                 <li>
@@ -570,7 +570,7 @@ ol {
                 </li>
                 <li>
                 <a class="<?php if($sk_jabatan_fungsional_pertama) echo 'select'; else echo 'unselect';?>" <?php if($sk_jabatan_fungsional_pertama) { ?>
-                onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional_pertama['gambarsk'];?>',5)" data-toggle="modal" data-target="#exampleModal"
+                onclick="viewBerkasPangkat('<?=$sk_jabatan_fungsional_pertama['gambarsk'];?>',<?=$kodeberkas;?>)" data-toggle="modal" data-target="#exampleModal"
                 <?php } ?>> <i class="fa fa-file-pdf"></i> SK Pengangkatan Pertama dalam Jabatan Fungsional* <i
                 class="fas fa-<?php if($sk_jabatan_fungsional_pertama) echo ''; else echo '';?>"></i></a>
                 </li>
@@ -726,7 +726,7 @@ ol {
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+				<h5 class="modal-title" id="exampleModalLabel"></h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -1020,6 +1020,35 @@ $(function(){
         });        
         });
 
+        async function isUrl404(url) {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    return response.status === 404;
+  } catch (error) {
+    // Handles network errors, invalid URLs, or CORS blocks
+    console.error('Request failed:', error);
+    return false;
+  }
+}
+
+let statusValue = "Default";
+
+async function checkPath(url) {
+  try {
+    const response = await fetch(url, { method: 'HEAD' }); // 'HEAD' checks status without downloading the whole body
+    
+    if (response.status === 404) {
+      statusValue = "Not Found";
+    } else {
+      statusValue = "Available";
+    }
+  } catch (error) {
+    statusValue = "Network Error";
+  }
+  
+  // console.log(statusValue);
+  return statusValue;
+}
 
     function viewBerkasPangkat(filename,id){
     $('#iframe_view_file_berkas_pns').hide()

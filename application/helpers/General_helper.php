@@ -1498,6 +1498,10 @@ function isKapus($nama_jabatan){
     ); 
 }
 
+function isLurah($nama_jabatan){
+    return (stringStartWith('Lurah', $nama_jabatan)); 
+}
+
 function isKasubKepegawaian($nama_jabatan, $eselon = null){
     $CI = &get_instance();
     if($eselon != null){

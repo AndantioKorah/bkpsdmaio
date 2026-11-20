@@ -1858,6 +1858,8 @@ class M_Kepegawaian extends CI_Model
             //     'docfile'  => $base64
             // ]);
 
+            $tglsk_timkerja = date("Y-m-d", strtotime($this->input->post('tglsk_timkerja')));
+
             $dataInsert['id_pegawai']     = $this->input->post('id_pegawai');
             $dataInsert['nm_timkerja']      = $this->input->post('nm_timkerja');
             $dataInsert['jabatan']      = $this->input->post('jabatan');
@@ -1865,7 +1867,8 @@ class M_Kepegawaian extends CI_Model
             $dataInsert['gambarsk']         = $filename;
             $dataInsert['created_by']      = $this->general_library->getId();
             $dataInsert['updated_by']      = $this->general_library->getId();
-            $dataInsert['flag_lingkup_baru']      = 1;
+            // $dataInsert['flag_lingkup_baru']      = 1;
+             $dataInsert['tglsk_timkerja']      =  $tglsk_timkerja;
             if($this->general_library->isProgrammer() || $this->general_library->isAdminAplikasi()){
                 $dataInsert['status']      = 2;
                 $dataInsert['tanggal_verif']      = date('Y-m-d H:i:s');
@@ -11921,6 +11924,15 @@ public function getFileForKarisKarsu()
         ->limit(1);
        
         $query = $this->db->get()->row_array();
+        if(!$query){
+         $this->db->select('*')
+        ->from('db_pegawai.pegarsip as a')
+        ->where('id_pegawai', $this->general_library->getIdPegSimpeg())
+        ->where('a.flag_active', 1)
+        ->where('a.id_dokumen', 108)
+        ->limit(1);
+        $query = $this->db->get()->row_array();
+        }
         return $query;  
     }
 
@@ -11935,8 +11947,17 @@ public function getFileForKarisKarsu()
         ->where('b.jenis_jabatan', "JFT")
         ->order_by('a.tmtjabatan', 'asc')
         ->limit(1);
-       
         $query = $this->db->get()->row_array();
+        if(!$query){
+       
+         $this->db->select('*')
+        ->from('db_pegawai.pegarsip as a')
+        ->where('id_pegawai', $id_peg)
+        ->where('a.flag_active', 1)
+        ->where('a.id_dokumen', 108)
+        ->limit(1);
+         $query = $this->db->get()->row_array();
+        }
         return $query;  
     }
 
@@ -13197,6 +13218,16 @@ public function getFileForVerifLayanan()
                 ->where('a.id_pegawai', $id_peg)
                 ->where('a.flag_active', 1)
                 ->where('a.id_dokumen', 73)
+                ->where('a.status !=', 3)
+                ->order_by('a.tahun', 'desc')
+                ->limit(1);
+                return $this->db->get()->result_array();
+        } else if($this->input->post('file') == "sk_jabatan_fungsional_pertama_arsip"){
+            $this->db->select('a.gambarsk')
+                ->from('db_pegawai.pegarsip as a')
+                ->where('a.id_pegawai', $id_peg)
+                ->where('a.flag_active', 1)
+                ->where('a.id_dokumen', 108)
                 ->where('a.status !=', 3)
                 ->order_by('a.tahun', 'desc')
                 ->limit(1);

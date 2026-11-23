@@ -10514,6 +10514,7 @@ public function submitEditJabatan(){
             $cekHarcodePangkat = $this->db->select('*')
             ->from('t_hardcode_nominatif a')
             ->where('a.nip',$getPangkat['nipbaru_ws'])
+            ->where('a.id_pangkat != ',0)
             ->where('a.flag_active', 1)
             ->where('a.flag_add', 1)
             ->where('a.bulan', date('m'))
@@ -12805,7 +12806,7 @@ function getPengajuanLayanan($id,$id_m_layanan){
     //                 ->where('a.flag_active', 1);
     // return $this->db->get()->result_array();
     if($id_m_layanan == 23){
- $this->db->select('*, c.id_m_user_verif as verifikator, b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan, l.gambarsk as dokhd, m.gambarsk as dokpidana')
+    $this->db->select('*, c.id_m_user_verif as verifikator, b.tmtpangkat as tmt_pangkat, c.id as id_pengajuan, c.status as status_layanan, l.gambarsk as dokhd, m.gambarsk as dokpidana')
     ->from('m_user a')
     ->join('db_pegawai.pegawai b', 'a.username = b.nipbaru_ws')
     ->join('t_layanan c', 'a.id = c.id_m_user')
@@ -12850,9 +12851,6 @@ function getPengajuanLayanan($id,$id_m_layanan){
      if($id_m_layanan == 34){
         $this->db->join('db_pegawai.pegcuti l', 'l.id = c.reference_id_dok','left');
     }
-    
-    
-    
     
     return $this->db->get()->result_array();
 }

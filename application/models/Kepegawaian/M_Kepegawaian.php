@@ -10518,6 +10518,7 @@ public function submitEditJabatan(){
             ->where('a.flag_add', 1)
             ->where('a.bulan', date('m'))
             ->where('a.tahun', date('Y'))
+            ->where('a.id_pangkat !=', 0)
             ->limit(1)
             ->get()->row_array();
 

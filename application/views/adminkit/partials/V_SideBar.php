@@ -553,6 +553,7 @@
 			|| $this->general_library->isAdminAplikasi()
 			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 			|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+			|| isKapus($this->general_library->getNamaJabatanKepalaSkpdHardcode())
 			|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 			|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 			|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
@@ -569,6 +570,7 @@
 			|| $this->general_library->isAdminAplikasi()
 			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 			|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+			|| isKapus($this->general_library->getNamaJabatanKepalaSkpdHardcode())
 			|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 			|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 			|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')
@@ -701,6 +703,7 @@
 	stringStartWith('Inspektur Pembantu', $this->general_library->getNamaJabatan()) ||
 	(stringStartWith('Sekretaris', $this->general_library->getNamaJabatan())) ||
 	stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan()) ||
+	isKapus($this->general_library->getNamaJabatanKepalaSkpdHardcode()) || 
 	$this->general_library->isKepalaPd()) { ?>
 		<li class="sidebar-item ">
 			<a title="Verifikasi" data-bs-target="#verifikasi" data-bs-toggle="collapse" class="sidebar-link">
@@ -750,6 +753,7 @@
 				stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan()) ||
 				stringStartWith('Inspektur Pembantu', $this->general_library->getNamaJabatan()) ||
 				(stringStartWith('Sekretaris', $this->general_library->getNamaJabatan())) ||
+				isKapus($this->general_library->getNamaJabatanKepalaSkpdHardcode()) || 
 				stringStartWith('Asisten', $this->general_library->getNamaJabatan())
 				){
 					?>
@@ -1002,6 +1006,7 @@
 				|| $this->general_library->isHakAkses('rekap_bangkom')
 				// ||  $this->general_library->isPegawaiBkpsdm()
 				|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+				|| isKapus($this->general_library->getNamaJabatanKepalaSkpdHardcode())
 				|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon()) 
 				){ ?>
 				<li class="sidebar-item ">
@@ -1031,6 +1036,7 @@
 			|| $this->general_library->isAdminAplikasi()
 			|| isKasubKepegawaian($this->general_library->getNamaJabatan(), $this->general_library->getEselon())
 			|| stringStartWith('Kepala Puskesmas', $this->general_library->getNamaJabatan())
+			|| isKapus($this->general_library->getNamaJabatanKepalaSkpdHardcode())
 			|| stringStartWith('Kepala Sekolah', $this->general_library->getNamaJabatan())
 			|| stringStartWith('Kepala Taman', $this->general_library->getNamaJabatan())
 			|| $this->general_library->isHakAkses('pengurusan_tpp_perangkat_daerah')

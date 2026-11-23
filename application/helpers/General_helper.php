@@ -1491,7 +1491,11 @@ function formatTanggal($tanggal){
 }
 
 function isKapus($nama_jabatan){
-    return (stringStartWith('Kepala Puskesmas', $nama_jabatan)); 
+    return ( 
+        stringStartWith('Kepala Puskesmas', $nama_jabatan) ||
+        stringStartWith('Plt. Kepala Puskesmas', $nama_jabatan) ||
+        stringStartWith('Plh. Kepala Puskesmas', $nama_jabatan)
+    ); 
 }
 
 function isLurah($nama_jabatan){

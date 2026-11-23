@@ -17,7 +17,7 @@
             $this->general_library->isAdminAplikasi() || 
             isKasubKepegawaian($this->general_library->getNamaJabatan()) || 
             isKapus($this->general_library->getNamaJabatan()) || 
-            isLurah($this->general_library->getNamaJabatan()) ||
+            isKapus($this->general_library->getNamaJabatanKepalaSkpdHardcode()) || 
             // $this->general_library->isHakAkses('verifikasi_keterangan_presensi') ||
             $this->general_library->getBidangUser() == ID_BIDANG_PEKIN) {
             ?>

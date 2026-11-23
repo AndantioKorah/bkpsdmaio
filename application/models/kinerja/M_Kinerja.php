@@ -2108,7 +2108,7 @@
                     $insert_data[$i]['tanggal'] = $date[2];
                     if($this->general_library->isProgrammer() || $this->general_library->getBidangUser() == ID_BIDANG_PEKIN){
                         $insert_data[$i]['status'] = 2;
-                        $insert_data[$i]['id_m_user'] = $this->general_library->getId();
+                        $insert_data[$i]['created_by'] = $this->general_library->getId();
                         $insert_data[$i]['tanggal_verif'] = date("Y-m-d H:i:s");
                     }
                     $insert_data[$i]['id_m_jenis_disiplin_kerja'] = $disiplin[0];

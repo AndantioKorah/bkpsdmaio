@@ -549,6 +549,9 @@
 <script>
 	let loadLiveChat = 0;
 	$(function(){
+		<?php if($this->general_library->getId() == 16){ ?>
+			$('#sidebar_toggle').click()
+		<?php } ?>
 	})
 
 	$('#liveChatIcon').on('click', function(e){
